@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:locationprojectflutter/others/my_media_query.dart';
+import 'package:locationprojectflutter/presentation/others/responsive_screen.dart';
 
 class AddDataFavorites extends StatefulWidget {
   final double latList, lngList;
@@ -50,11 +50,11 @@ class _AddDataFavoritesState extends State<AddDataFavorites> {
             body: SingleChildScrollView(
               child: Center(
                   child: Container(
-                width: MyMediaQuery().widthMediaQuery(context, 300),
+                width: ResponsiveScreen().widthMediaQuery(context, 300),
                 child: Column(
                   children: <Widget>[
                     SizedBox(
-                      height: MyMediaQuery().heightMediaQuery(context, 10),
+                      height: ResponsiveScreen().heightMediaQuery(context, 10),
                     ),
                     Row(
                       children: <Widget>[
@@ -72,62 +72,62 @@ class _AddDataFavoritesState extends State<AddDataFavorites> {
                       ],
                     ),
                     SizedBox(
-                      height: MyMediaQuery().heightMediaQuery(context, 10),
+                      height: ResponsiveScreen().heightMediaQuery(context, 10),
                     ),
                     Text(
                       'Add Place',
                       style: TextStyle(color: Colors.white, fontSize: 25),
                     ),
                     SizedBox(
-                      height: MyMediaQuery().heightMediaQuery(context, 20),
+                      height: ResponsiveScreen().heightMediaQuery(context, 20),
                     ),
                     Text(
                       'Name',
                       style: TextStyle(color: Colors.white),
                     ),
                     SizedBox(
-                      height: MyMediaQuery().heightMediaQuery(context, 2),
+                      height: ResponsiveScreen().heightMediaQuery(context, 2),
                     ),
                     _editText(textName),
                     SizedBox(
-                      height: MyMediaQuery().heightMediaQuery(context, 10),
+                      height: ResponsiveScreen().heightMediaQuery(context, 10),
                     ),
                     Text(
                       'Address',
                       style: TextStyle(color: Colors.white),
                     ),
                     SizedBox(
-                      height: MyMediaQuery().heightMediaQuery(context, 2),
+                      height: ResponsiveScreen().heightMediaQuery(context, 2),
                     ),
                     _editText(textAddress),
                     SizedBox(
-                      height: MyMediaQuery().heightMediaQuery(context, 10),
+                      height: ResponsiveScreen().heightMediaQuery(context, 10),
                     ),
                     Text(
                       'Coordinates',
                       style: TextStyle(color: Colors.white),
                     ),
                     SizedBox(
-                      height: MyMediaQuery().heightMediaQuery(context, 2),
+                      height: ResponsiveScreen().heightMediaQuery(context, 2),
                     ),
                     _editText(textLat),
                     SizedBox(
-                      height: MyMediaQuery().heightMediaQuery(context, 2),
+                      height: ResponsiveScreen().heightMediaQuery(context, 2),
                     ),
                     _editText(textLng),
                     SizedBox(
-                      height: MyMediaQuery().heightMediaQuery(context, 10),
+                      height: ResponsiveScreen().heightMediaQuery(context, 10),
                     ),
                     Text(
                       'Photo',
                       style: TextStyle(color: Colors.white),
                     ),
                     SizedBox(
-                      height: MyMediaQuery().heightMediaQuery(context, 2),
+                      height: ResponsiveScreen().heightMediaQuery(context, 2),
                     ),
                     _editText(textPhoto),
                     SizedBox(
-                      height: MyMediaQuery().heightMediaQuery(context, 20),
+                      height: ResponsiveScreen().heightMediaQuery(context, 20),
                     ),
                     RaisedButton(
                       padding: const EdgeInsets.all(0.0),

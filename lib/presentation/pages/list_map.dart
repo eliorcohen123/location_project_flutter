@@ -9,7 +9,7 @@ import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/data/models/error.dart';
 import 'package:locationprojectflutter/data/models/place_response.dart';
 import 'package:locationprojectflutter/data/models/result.dart';
-import 'package:locationprojectflutter/others/my_media_query.dart';
+import 'package:locationprojectflutter/presentation/others/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/pages/add_data_favorites_activity.dart';
 import 'package:locationprojectflutter/presentation/pages/map_list_activity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -90,7 +90,7 @@ class _ListMapState extends State<ListMap> {
                 },
                 separatorBuilder: (BuildContext context, int index) {
                   return Container(
-                      height: MyMediaQuery().heightMediaQuery(context, 2),
+                      height: ResponsiveScreen().heightMediaQuery(context, 2),
                       decoration: new BoxDecoration(color: Color(0xffdcdcdc)));
                 },
               ),

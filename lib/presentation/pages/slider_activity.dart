@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:locationprojectflutter/others/my_media_query.dart';
+import 'package:locationprojectflutter/presentation/others/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/pages/list_map_activity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,9 +38,9 @@ class _SliderActivityState extends State<SliderActivity> {
                     children: <Widget>[
                       Text("Distance"),
                       SizedBox(
-                          width: MyMediaQuery().widthMediaQuery(context, 5)),
+                          width: ResponsiveScreen().widthMediaQuery(context, 5)),
                       Icon(Icons.my_location,
-                          size: MyMediaQuery().heightMediaQuery(context, 40)),
+                          size: ResponsiveScreen().heightMediaQuery(context, 40)),
                     ],
                   ),
                   Slider(

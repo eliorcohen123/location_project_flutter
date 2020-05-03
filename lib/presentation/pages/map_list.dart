@@ -7,7 +7,7 @@ import 'package:locationprojectflutter/data/models/error.dart';
 import 'package:locationprojectflutter/data/models/place_response.dart';
 import 'package:locationprojectflutter/data/models/result.dart';
 import 'package:locationprojectflutter/data/models/user_location.dart';
-import 'package:locationprojectflutter/others/map_utils.dart';
+import 'package:locationprojectflutter/presentation/others/map_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geolocator/geolocator.dart' as geo;

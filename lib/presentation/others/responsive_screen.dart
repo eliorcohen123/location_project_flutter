@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class MyMediaQuery {
-  static final MyMediaQuery _singleton = MyMediaQuery._internal();
+class ResponsiveScreen {
+  static final ResponsiveScreen _singleton = ResponsiveScreen._internal();
 
-  factory MyMediaQuery() {
+  factory ResponsiveScreen() {
     return _singleton;
   }
 
-  MyMediaQuery._internal();
+  ResponsiveScreen._internal();
 
   double widthMediaQuery(BuildContext context, double width) {
     return MediaQuery.of(context).size.width * width / 375;
