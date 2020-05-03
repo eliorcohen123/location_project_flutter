@@ -58,20 +58,16 @@ class _AddDataFavoritesState extends State<AddDataFavorites> {
                     ),
                     Row(
                       children: <Widget>[
-                        ButtonTheme(
-                          minWidth: MyMediaQuery().widthMediaQuery(context, 30),
-                          height: MyMediaQuery().heightMediaQuery(context, 30),
-                          child: RaisedButton(
-                            color: Colors.grey,
-                            onPressed: () => Navigator.pop(context),
-                            child: Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                            ),
+                        RawMaterialButton(
+                          onPressed: () => Navigator.pop(context),
+                          elevation: 2.0,
+                          fillColor: Colors.white,
+                          child: Icon(
+                            Icons.arrow_back,
+                            size: 20.0,
                           ),
-                        ),
-                        SizedBox(
-                          width: MyMediaQuery().widthMediaQuery(context, 230),
+                          padding: EdgeInsets.all(10.0),
+                          shape: CircleBorder(),
                         ),
                       ],
                     ),
@@ -163,9 +159,15 @@ class _AddDataFavoritesState extends State<AddDataFavorites> {
 
   _editText(TextEditingController textEditingController) {
     return Container(
-      color: Color(0xff778899),
-      padding: EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
+      decoration: new BoxDecoration(
+          color: Color(0xff778899).withOpacity(0.9189918041229248),
+          border: Border.all(color: Color(0xff778899), width: 1),
+          borderRadius: BorderRadius.circular(24)),
       child: TextField(
+        decoration: new InputDecoration(
+          contentPadding: EdgeInsets.all(10.0),
+          border: InputBorder.none,
+        ),
         style: TextStyle(color: Colors.lightGreenAccent),
         controller: textEditingController,
       ),
