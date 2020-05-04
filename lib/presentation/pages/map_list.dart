@@ -113,6 +113,7 @@ class _MapListState extends State<MapList> {
     }
     setState(() {
       _searching = false;
+      print(_searching);
     });
   }
 
