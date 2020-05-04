@@ -44,61 +44,63 @@ class _ListMapState extends State<ListMap> {
   Widget build(BuildContext context) {
     _searchNearby(
         _currentPosition.latitude, _currentPosition.longitude, _valueRadius);
-    final dis.Distance _distance = new dis.Distance();
     return Scaffold(
-        body: Container(
-      child: Center(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: ListView.separated(
-                itemCount: _places.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final double _meter = _distance(
-                      new dis.LatLng(_currentPosition.latitude,
-                          _currentPosition.longitude),
-                      new dis.LatLng(_places[index].geometry.location.lat,
-                          _places[index].geometry.location.long));
-                  return GestureDetector(
-                    child: Container(
-                      color: Color(0xff4682B4),
-                      child: Column(
-                        children: <Widget>[
-                          Text(_places[index].name,
-                              style: TextStyle(
-                                  fontSize: 17, color: Color(0xffE9FFFF))),
-                          Text(_places[index].vicinity,
-                              style:
-                                  TextStyle(fontSize: 15, color: Colors.white)),
-                          Text(_calculateDistance(_meter),
-                              style:
-                                  TextStyle(fontSize: 15, color: Colors.white)),
-                        ],
+      body: Container(
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: ListView.separated(
+                  itemCount: _places.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final dis.Distance _distance = new dis.Distance();
+                    final double _meter = _distance(
+                        new dis.LatLng(_currentPosition.latitude,
+                            _currentPosition.longitude),
+                        new dis.LatLng(_places[index].geometry.location.lat,
+                            _places[index].geometry.location.long));
+                    return GestureDetector(
+                      child: Container(
+                        color: Color(0xff4682B4),
+                        child: Column(
+                          children: <Widget>[
+                            Text(_places[index].name,
+                                style: TextStyle(
+                                    fontSize: 17, color: Color(0xffE9FFFF))),
+                            Text(_places[index].vicinity,
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.white)),
+                            Text(_calculateDistance(_meter),
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.white)),
+                          ],
+                        ),
                       ),
-                    ),
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MapListActivity(
-                            nameList: _places[index].name,
-                            latList: _places[index].geometry.location.lat,
-                            lngList: _places[index].geometry.location.long,
-                          ),
-                        )),
-                    onLongPress: () => _showDialogList(index),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return Container(
-                      height: ResponsiveScreen().heightMediaQuery(context, 2),
-                      decoration: new BoxDecoration(color: Color(0xffdcdcdc)));
-                },
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MapListActivity(
+                              nameList: _places[index].name,
+                              latList: _places[index].geometry.location.lat,
+                              lngList: _places[index].geometry.location.long,
+                            ),
+                          )),
+                      onLongPress: () => _showDialogList(index),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Container(
+                        height: ResponsiveScreen().heightMediaQuery(context, 2),
+                        decoration:
+                            new BoxDecoration(color: Color(0xffdcdcdc)));
+                  },
+                ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 
   _initGetSharedPref() {
@@ -113,7 +115,8 @@ class _ListMapState extends State<ListMap> {
     if (_meter < 1000.0) {
       _myMeters = 'Meters: ' + (_meter.round()).toString();
     } else {
-      _myMeters = 'KM: ' + (_meter.round() / 1000.0).toString();
+      _myMeters =
+          'KM: ' + (_meter.round() / 1000.0).toStringAsFixed(2).toString();
     }
     return _myMeters;
   }

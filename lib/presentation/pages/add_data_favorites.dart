@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:locationprojectflutter/data/database/sqflite_helper.dart';
+import 'package:locationprojectflutter/data/models/geometry.dart';
+import 'package:locationprojectflutter/data/models/location.dart';
+import 'package:locationprojectflutter/data/models/photo.dart';
+import 'package:locationprojectflutter/data/models/result.dart';
 import 'package:locationprojectflutter/presentation/others/responsive_screen.dart';
+import 'package:locationprojectflutter/presentation/pages/favorites_data_activity.dart';
 
 class AddDataFavorites extends StatefulWidget {
   final double latList, lngList;
@@ -14,6 +20,7 @@ class AddDataFavorites extends StatefulWidget {
 }
 
 class _AddDataFavoritesState extends State<AddDataFavorites> {
+  SQFLiteHelper db = new SQFLiteHelper();
   final textName = TextEditingController();
   final textAddress = TextEditingController();
   final textLat = TextEditingController();
@@ -133,7 +140,12 @@ class _AddDataFavoritesState extends State<AddDataFavorites> {
                       padding: const EdgeInsets.all(0.0),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(80.0)),
-                      onPressed: () => null,
+//                      onPressed: () => _addResult(
+//                          textName.toString(),
+//                          textAddress.toString(),
+//                          double.parse(textLat.toString()),
+//                          double.parse(textLng.toString()),
+//                          textPhoto.toString()),
                       child: Container(
                         decoration: const BoxDecoration(
                             gradient: LinearGradient(
@@ -173,4 +185,22 @@ class _AddDataFavoritesState extends State<AddDataFavorites> {
       ),
     );
   }
+
+//  void _addResult(String name, String vicinity, double lat, double lng,
+//      String photo) async {
+//    var location = Location(lat: lat, long: lng);
+//    var geometry = Geometry(location: location);
+//    List<Photo> photos = new List();
+//    photos.add(photo);
+//    var add = Result(name, vicinity, geometry, photos);
+//    db.addResult(add).then((results) {
+//      setState(() {
+//        Navigator.push(
+//            context,
+//            MaterialPageRoute(
+//              builder: (context) => FavoritesDataActivity(),
+//            ));
+//      });
+//    });
+//  }
 }
