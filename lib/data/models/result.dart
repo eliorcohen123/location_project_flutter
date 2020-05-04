@@ -23,7 +23,7 @@ class Result {
 
   Result.sqlf(this.name, this.vicinity, this.lat, this.lng, this.photo);
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toSqlf() {
     var map = new Map<String, dynamic>();
     if (_id != null) {
       map['_id'] = _id;

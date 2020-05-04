@@ -41,13 +41,13 @@ class SQFLiteHelper {
 
   Future<int> addResult(Result result) async {
     var dbClient = await db;
-    var resultAdd = await dbClient.insert(tableResult, result.toJson());
+    var resultAdd = await dbClient.insert(tableResult, result.toSqlf());
     return resultAdd;
   }
 
   Future<int> updateResult(Result result) async {
     var dbClient = await db;
-    return await dbClient.update(tableResult, result.toJson(),
+    return await dbClient.update(tableResult, result.toSqlf(),
         where: "$columnId = ?", whereArgs: [result.id]);
   }
 
