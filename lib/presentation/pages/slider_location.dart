@@ -3,14 +3,14 @@ import 'package:locationprojectflutter/presentation/others/responsive_screen.dar
 import 'package:locationprojectflutter/presentation/pages/list_map_activity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SliderActivity extends StatefulWidget {
-  const SliderActivity({Key key}) : super(key: key);
+class SliderLocation extends StatefulWidget {
+  const SliderLocation({Key key}) : super(key: key);
 
   @override
-  _SliderActivityState createState() => _SliderActivityState();
+  _SliderLocationState createState() => _SliderLocationState();
 }
 
-class _SliderActivityState extends State<SliderActivity> {
+class _SliderLocationState extends State<SliderLocation> {
   SharedPreferences _sharedPrefs;
   double _valueRadius;
 

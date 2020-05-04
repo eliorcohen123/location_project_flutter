@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/presentation/pages/map_list.dart';
-import 'package:locationprojectflutter/presentation/pages/slider_activity.dart';
+import 'package:locationprojectflutter/presentation/pages/slider_location_activity.dart';
 
 class MapListActivity extends StatelessWidget {
   final double latList, lngList;
@@ -53,7 +53,7 @@ class MapListActivity extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SliderActivity(),
+                      builder: (context) => SliderLocationActivity(),
                     ));
               },
             ),

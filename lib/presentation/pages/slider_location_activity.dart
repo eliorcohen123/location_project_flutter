@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:locationprojectflutter/presentation/pages/add_data_favorites.dart';
-import 'package:locationprojectflutter/presentation/pages/slider_location_activity.dart';
+import 'package:locationprojectflutter/presentation/pages/slider_location.dart';
 
-class AddDataFavoritesActivity extends StatelessWidget {
+class SliderLocationActivity extends StatelessWidget {
   final double latList, lngList;
-  final String nameList, addressList;
+  final String nameList;
 
-  AddDataFavoritesActivity({Key key, this.nameList, this.addressList, this.latList, this.lngList})
+  SliderLocationActivity({Key key, this.nameList, this.latList, this.lngList})
       : super(key: key);
 
   @override
@@ -17,12 +16,7 @@ class AddDataFavoritesActivity extends StatelessWidget {
         backgroundColor: Colors.black,
         title: Text('Lovely Favorite Places'),
       ),
-      body: AddDataFavorites(
-        nameList: nameList,
-        latList: latList,
-        lngList: lngList,
-        addressList: addressList,
-      ),
+      body: SliderLocation(),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,

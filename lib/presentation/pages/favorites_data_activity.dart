@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
-import 'package:locationprojectflutter/presentation/pages/slider_activity.dart';
+import 'package:locationprojectflutter/presentation/pages/slider_location_activity.dart';
 
 class FavoritesDataActivity extends StatelessWidget {
   FavoritesDataActivity({Key key}) : super(key: key);
@@ -45,7 +45,7 @@ class FavoritesDataActivity extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SliderActivity(),
+                      builder: (context) => SliderLocationActivity(),
                     ));
               },
             ),
