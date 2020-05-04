@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:location/location.dart' as loc;
@@ -9,9 +8,11 @@ import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/data/models/error.dart';
 import 'package:locationprojectflutter/data/models/place_response.dart';
 import 'package:locationprojectflutter/data/models/result.dart';
+import 'package:locationprojectflutter/data/models/user_location.dart';
 import 'package:locationprojectflutter/presentation/others/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/pages/add_data_favorites_activity.dart';
 import 'package:locationprojectflutter/presentation/pages/map_list_activity.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 
@@ -29,21 +30,20 @@ class _ListMapState extends State<ListMap> {
   int _valueRadiusText;
   double _valueRadius;
   SharedPreferences _sharedPrefs;
-  Position _currentPosition;
 
   @override
   void initState() {
     super.initState();
 
     _getLocationPermission();
-    _getCurrentLocation();
     _initGetSharedPref();
   }
 
   @override
   Widget build(BuildContext context) {
+    var _userLocation = Provider.of<UserLocation>(context);
     _searchNearby(
-        _currentPosition.latitude, _currentPosition.longitude, _valueRadius);
+        _userLocation.latitude, _userLocation.longitude, _valueRadius);
     return Scaffold(
       body: Container(
         child: Center(
@@ -55,8 +55,8 @@ class _ListMapState extends State<ListMap> {
                   itemBuilder: (BuildContext context, int index) {
                     final dis.Distance _distance = new dis.Distance();
                     final double _meter = _distance(
-                        new dis.LatLng(_currentPosition.latitude,
-                            _currentPosition.longitude),
+                        new dis.LatLng(_userLocation.latitude,
+                            _userLocation.longitude),
                         new dis.LatLng(_places[index].geometry.location.lat,
                             _places[index].geometry.location.long));
                     return GestureDetector(
@@ -191,18 +191,5 @@ class _ListMapState extends State<ListMap> {
     } else {
       print(data);
     }
-  }
-
-  _getCurrentLocation() {
-    final Geolocator _geoLocator = Geolocator()..forceAndroidLocationManager;
-    _geoLocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-        .then((Position position) {
-      setState(() {
-        _currentPosition = position;
-      });
-    }).catchError((e) {
-      print(e);
-    });
   }
 }
