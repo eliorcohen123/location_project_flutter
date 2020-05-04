@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -10,7 +9,6 @@ import 'package:locationprojectflutter/data/models/user_location.dart';
 import 'package:locationprojectflutter/presentation/others/map_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:geolocator/geolocator.dart' as geo;
 
 class MapList extends StatefulWidget {
   final double latList, lngList;
@@ -36,13 +34,11 @@ class _MapListState extends State<MapList> {
   List<Marker> _markers = <Marker>[];
   List<Result> _places;
   Error _error;
-  Position _currentPosition;
 
   @override
   void initState() {
     super.initState();
 
-    _getCurrentLocation();
     _initGetSharedPref();
     _initMarkerList();
   }
@@ -71,10 +67,9 @@ class _MapListState extends State<MapList> {
         circles: _circles = Set.from([
           Circle(
             circleId: CircleId(
-                LatLng(_currentPosition.latitude, _currentPosition.longitude)
+                LatLng(_userLocation.latitude, _userLocation.longitude)
                     .toString()),
-            center:
-                LatLng(_currentPosition.latitude, _currentPosition.longitude),
+            center: LatLng(_userLocation.latitude, _userLocation.longitude),
             fillColor: Color(0x300000ff),
             strokeColor: Color(0x300000ff),
             radius: _valueRadius,
@@ -84,8 +79,8 @@ class _MapListState extends State<MapList> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          _searchNearby(_currentPosition.latitude, _currentPosition.longitude,
-              _valueRadius);
+          _searchNearby(
+              _userLocation.latitude, _userLocation.longitude, _valueRadius);
         },
         label: Text('Show nearby places'),
         icon: Icon(Icons.place),
@@ -99,38 +94,6 @@ class _MapListState extends State<MapList> {
       setState(() => _sharedPrefs = prefs);
       _valueRadius = prefs.getDouble('rangeRadius') ?? 5000.0;
     });
-  }
-
-  _initMarkerList() {
-    _markers.add(Marker(
-      markerId: MarkerId(widget.nameList != null ? widget.nameList : ""),
-      position: LatLng(widget.latList != null ? widget.latList : 0.0,
-          widget.lngList != null ? widget.lngList : 0.0),
-      onTap: () {
-        String namePlace = widget.nameList != null ? widget.nameList : "";
-        showDialog(
-          context: context,
-          builder: (_) => new AlertDialog(
-            title: new Text(namePlace),
-            content: new Text("האם תרצה לנווט ל$namePlace"),
-            actions: <Widget>[
-              FlatButton(
-                child: Text("לא"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              FlatButton(
-                child: Text("כן"),
-                onPressed: () {
-                  MapUtils.openMap(widget.latList, widget.lngList);
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    ));
   }
 
   _searchNearby(double latitude, double longitude, double radius) async {
@@ -153,23 +116,23 @@ class _MapListState extends State<MapList> {
     });
   }
 
-  _getCurrentLocation() {
-    final Geolocator _geoLocator = Geolocator()..forceAndroidLocationManager;
-    _geoLocator
-        .getCurrentPosition(desiredAccuracy: geo.LocationAccuracy.best)
-        .then((Position position) {
-      setState(() {
-        _currentPosition = position;
-      });
-    }).catchError((e) {
-      print(e);
-    });
+  _initMarkerList() {
+    _markers.add(Marker(
+      markerId: MarkerId(widget.nameList != null ? widget.nameList : ""),
+      position: LatLng(widget.latList != null ? widget.latList : 0.0,
+          widget.lngList != null ? widget.lngList : 0.0),
+      onTap: () {
+        String namePlace = widget.nameList != null ? widget.nameList : "";
+        _showDialog(namePlace, widget.latList, widget.lngList);
+      },
+    ));
   }
 
   _handleResponse(data) {
     if (data['status'] == "REQUEST_DENIED") {
       setState(() {
         _error = Error.fromJson(data);
+        print(_error);
       });
     } else if (data['status'] == "OK") {
       setState(() {
@@ -181,29 +144,10 @@ class _MapListState extends State<MapList> {
               position: LatLng(_places[i].geometry.location.lat,
                   _places[i].geometry.location.long),
               onTap: () {
-                String namePlace = _places[i].name;
-                showDialog(
-                  context: context,
-                  builder: (_) => new AlertDialog(
-                    title: new Text(namePlace),
-                    content: new Text("האם תרצה לנווט ל$namePlace"),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: Text("לא"),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      FlatButton(
-                        child: Text("כן"),
-                        onPressed: () {
-                          MapUtils.openMap(_places[i].geometry.location.lat,
-                              _places[i].geometry.location.long);
-                        },
-                      ),
-                    ],
-                  ),
-                );
+                String namePlace =
+                    _places[i].name != null ? _places[i].name : "";
+                _showDialog(namePlace, _places[i].geometry.location.lat,
+                    _places[i].geometry.location.long);
               },
             ),
           );
@@ -212,5 +156,29 @@ class _MapListState extends State<MapList> {
     } else {
       print(data);
     }
+  }
+
+  _showDialog(String namePlace, double lat, double lng) {
+    return showDialog(
+      context: context,
+      builder: (_) => new AlertDialog(
+        title: new Text(namePlace),
+        content: new Text("Would you want to navigate $namePlace?"),
+        actions: <Widget>[
+          FlatButton(
+            child: Text("לא"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          FlatButton(
+            child: Text("כן"),
+            onPressed: () {
+              MapUtils.openMap(lat, lng);
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
