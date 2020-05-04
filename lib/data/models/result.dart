@@ -3,11 +3,15 @@ import 'package:locationprojectflutter/data/models/photo.dart';
 import 'geometry.dart';
 
 class Result {
-  final String id;
-  final String name;
-  final String vicinity;
-  final Geometry geometry;
-  final List<Photo> photos;
+  String id;
+  int _id;
+  String name;
+  String vicinity;
+  Geometry geometry;
+  double lat;
+  double lng;
+  List<Photo> photos;
+  String photo;
 
   Result({
     this.id,
@@ -17,15 +21,18 @@ class Result {
     this.photos,
   });
 
+  Result.sqlf(this.name, this.vicinity, this.lat, this.lng, this.photo);
+
   Map<String, dynamic> toJson() {
     var map = new Map<String, dynamic>();
-    if (id != null) {
-      map['id'] = id;
+    if (_id != null) {
+      map['_id'] = _id;
     }
     map['name'] = name;
     map['vicinity'] = vicinity;
-    map['geometry'] = geometry;
-    map['photos'] = photos;
+    map['lat'] = lat;
+    map['lng'] = lng;
+    map['photo'] = photos;
     return map;
   }
 
@@ -39,5 +46,14 @@ class Result {
           ? json['photos'].map<Photo>((i) => Photo.fromJson(i)).toList()
           : [],
     );
+  }
+
+  Result.fromSqlf(Map<String, dynamic> map) {
+    this._id = map['_id'];
+    this.name = map['name'];
+    this.vicinity = map['vicinity'];
+    this.lat = map['lat'];
+    this.lng = map['lng'];
+    this.photo = map['photo'];
   }
 }

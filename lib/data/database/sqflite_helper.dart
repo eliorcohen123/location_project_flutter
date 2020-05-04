@@ -13,7 +13,7 @@ class SQFLiteHelper {
   final String tableResult = 'resultTable';
   final String columnId = 'id';
   final String columnName = 'name';
-  final String columnAddress = 'address';
+  final String columnVicinity = 'vicinity';
   final String columnLat = 'lat';
   final String columnLng = 'lng';
   final String columnPhoto = 'photo';
@@ -36,7 +36,7 @@ class SQFLiteHelper {
 
   void onCreate(Database db, int newVersion) async {
     await db.execute(
-        'CREATE TABLE $tableResult($columnId INTEGER PRIMARY KEY, $columnName TEXT, $columnAddress TEXT, $columnLat REAL, $columnLng REAL, $columnPhoto TEXT)');
+        'CREATE TABLE $tableResult($columnId INTEGER PRIMARY KEY, $columnName TEXT, $columnVicinity TEXT, $columnLat REAL, $columnLng REAL, $columnPhoto TEXT)');
   }
 
   Future<int> addResult(Result result) async {
@@ -67,7 +67,7 @@ class SQFLiteHelper {
     var result = await dbClient.query(tableResult, columns: [
       columnId,
       columnName,
-      columnAddress,
+      columnVicinity,
       columnLat,
       columnLng,
       columnPhoto

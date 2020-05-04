@@ -78,7 +78,7 @@ class _FavoritesDataState extends State<FavoritesData> {
       setState(() {
         _places.clear();
         results.forEach((result) {
-          _places.add(Result.fromJson(result));
+          _places.add(Result.fromSqlf(result));
         });
       });
     });

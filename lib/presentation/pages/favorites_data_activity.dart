@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:locationprojectflutter/presentation/pages/add_data_favorites.dart';
 import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
 import 'package:locationprojectflutter/presentation/pages/slider_activity.dart';
 
