@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:location/location.dart';
-import 'package:locationprojectflutter/data/models/user_location.dart';
+import 'package:locationprojectflutter/data/models/models_location/user_location.dart';
 
 class LocationService {
   UserLocation _currentLocation;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/data/database/sqflite_helper.dart';
-import 'package:locationprojectflutter/data/models/result.dart';
+import 'package:locationprojectflutter/data/models/models_sqlf/ResultSql.dart';
+import 'package:locationprojectflutter/data/models/models_location/result.dart';
 import 'package:locationprojectflutter/presentation/others/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/pages/favorites_data_activity.dart';
 
@@ -191,7 +192,7 @@ class _AddDataFavoritesState extends State<AddDataFavorites> {
 
   void _addResult(String name, String vicinity, double lat, double lng,
       String photo) async {
-    var add = Result.sqlf(name, vicinity, lat, lng, photo);
+    var add = ResultSql.sqlf(name, vicinity, lat, lng, photo);
     db.addResult(add).then((_) {
       Navigator.push(
           context,

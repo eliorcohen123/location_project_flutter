@@ -2,8 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/data/database/sqflite_helper.dart';
-import 'package:locationprojectflutter/data/models/result.dart';
-import 'package:locationprojectflutter/data/models/user_location.dart';
+import 'package:locationprojectflutter/data/models/models_sqlf/ResultSql.dart';
+import 'package:locationprojectflutter/data/models/models_location/result.dart';
+import 'package:locationprojectflutter/data/models/models_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/others/responsive_screen.dart';
 import 'package:latlong/latlong.dart' as dis;
 import 'package:provider/provider.dart';
@@ -17,7 +18,7 @@ class FavoritesData extends StatefulWidget {
 }
 
 class _FavoritesDataState extends State<FavoritesData> {
-  List<Result> _places = new List();
+  List<ResultSql> _places = new List();
   SQFLiteHelper db = new SQFLiteHelper();
   var _userLocation;
   String _API_KEY = Constants.API_KEY;
@@ -166,9 +167,9 @@ class _FavoritesDataState extends State<FavoritesData> {
         ], fontSize: fontSize, color: Color(color)));
   }
 
-  void _deleteItem(Result result, int index) async {
-    print(result.idSql);
-    db.deleteResult(result.idSql).then((results) {
+  void _deleteItem(ResultSql result, int index) async {
+    print(result.id);
+    db.deleteResult(result.id).then((results) {
       setState(() {
         _places.removeAt(index);
       });
@@ -180,7 +181,7 @@ class _FavoritesDataState extends State<FavoritesData> {
       setState(() {
         _places.clear();
         results.forEach((result) {
-          _places.add(Result.fromSqlf(result));
+          _places.add(ResultSql.fromSqlf(result));
         });
       });
     });

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/presentation/pages/list_map_activity.dart';
 import 'package:locationprojectflutter/core/services/location_service.dart';
 import 'package:provider/provider.dart';
-import 'data/models/user_location.dart';
+import 'data/models/models_location/user_location.dart';
 
 void main() => runApp(MyApp());
 

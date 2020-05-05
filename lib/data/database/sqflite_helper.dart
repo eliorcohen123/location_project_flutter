@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:locationprojectflutter/data/models/result.dart';
+import 'package:locationprojectflutter/data/models/models_sqlf/ResultSql.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -39,13 +39,13 @@ class SQFLiteHelper {
         'CREATE TABLE $tableResult($columnId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, $columnName TEXT, $columnVicinity TEXT, $columnLat REAL, $columnLng REAL, $columnPhoto TEXT)');
   }
 
-  Future<int> addResult(Result result) async {
+  Future<int> addResult(ResultSql result) async {
     var dbClient = await db;
     var resultAdd = await dbClient.insert(tableResult, result.toSqlf());
     return resultAdd;
   }
 
-  Future<int> updateResult(Result result) async {
+  Future<int> updateResult(ResultSql result) async {
     var dbClient = await db;
     return await dbClient.update(tableResult, result.toSqlf(),
         where: "$columnId = ?", whereArgs: [result.id]);
