@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -32,6 +33,8 @@ class _ListMapState extends State<ListMap> {
   double _valueRadius;
   SharedPreferences _sharedPrefs;
   var _userLocation;
+  String _baseUrl = Constants.baseUrl;
+  String _API_KEY = Constants.API_KEY;
 
   @override
   void initState() {
@@ -45,8 +48,6 @@ class _ListMapState extends State<ListMap> {
   Widget build(BuildContext context) {
     _userLocation = Provider.of<UserLocation>(context);
     _searchNearby(_searching, "");
-    _places.sort((a, b) => sqrt(pow(a.geometry.location.lat - _userLocation.latitude, 2) + pow(a.geometry.location.long - _userLocation.longitude, 2))
-        .compareTo(sqrt(pow(b.geometry.location.lat - _userLocation.latitude, 2) + pow(b.geometry.location.long  - _userLocation.longitude, 2))));
     return Scaffold(
       body: Container(
         child: Center(
@@ -81,7 +82,7 @@ class _ListMapState extends State<ListMap> {
                       child: ListView.separated(
                         itemCount: _places.length,
                         itemBuilder: (BuildContext context, int index) {
-                         final dis.Distance _distance = new dis.Distance();
+                          final dis.Distance _distance = new dis.Distance();
                           final double _meter = _distance(
                               new dis.LatLng(_userLocation.latitude,
                                   _userLocation.longitude),
@@ -90,19 +91,84 @@ class _ListMapState extends State<ListMap> {
                                   _places[index].geometry.location.long));
                           return GestureDetector(
                             child: Container(
-                              color: Color(0xff4682B4),
-                              child: Column(
+                              color: Colors.grey,
+                              child: Stack(
                                 children: <Widget>[
-                                  Text(_places[index].name,
-                                      style: TextStyle(
-                                          fontSize: 17,
-                                          color: Color(0xffE9FFFF))),
-                                  Text(_places[index].vicinity,
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.white)),
-                                  Text(_calculateDistance(_meter),
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.white)),
+                                  Column(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: ResponsiveScreen()
+                                            .heightMediaQuery(context, 5),
+                                        width: double.infinity,
+                                        child: const DecoratedBox(
+                                          decoration: const BoxDecoration(
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                      CachedNetworkImage(
+                                        fit: BoxFit.fill,
+                                        height: ResponsiveScreen()
+                                            .heightMediaQuery(context, 150),
+                                        width: double.infinity,
+                                        imageUrl: _places[index]
+                                                .photos
+                                                .isNotEmpty
+                                            ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                                                _places[index]
+                                                    .photos[0]
+                                                    .photoReference +
+                                                "&key=$_API_KEY"
+                                            : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
+                                        placeholder: (context, url) =>
+                                            const CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
+                                      ),
+                                      SizedBox(
+                                        height: ResponsiveScreen()
+                                            .heightMediaQuery(context, 5),
+                                        width: double.infinity,
+                                        child: const DecoratedBox(
+                                          decoration: const BoxDecoration(
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    height: ResponsiveScreen()
+                                        .heightMediaQuery(context, 160),
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          const Color(0xAA000000),
+                                          const Color(0x00000000),
+                                          const Color(0x00000000),
+                                          const Color(0xAA000000),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        _textList(_places[index].name, 17.0,
+                                            0xffE9FFFF),
+                                        _textList(_places[index].vicinity, 15.0,
+                                            0xFFFFFFFF),
+                                        _textList(_calculateDistance(_meter),
+                                            15.0, 0xFFFFFFFF),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -123,9 +189,9 @@ class _ListMapState extends State<ListMap> {
                         separatorBuilder: (BuildContext context, int index) {
                           return Container(
                               height: ResponsiveScreen()
-                                  .heightMediaQuery(context, 2),
+                                  .heightMediaQuery(context, 10),
                               decoration:
-                                  new BoxDecoration(color: Color(0xffdcdcdc)));
+                                  new BoxDecoration(color: Colors.grey));
                         },
                       ),
                     ),
@@ -162,7 +228,7 @@ class _ListMapState extends State<ListMap> {
           padding: EdgeInsets.all(0.0),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-          onPressed: () => _searchNearby(_searching = true, type),
+          onPressed: () => _searchNearby(true, type),
           child: Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -182,6 +248,22 @@ class _ListMapState extends State<ListMap> {
         SizedBox(width: ResponsiveScreen().widthMediaQuery(context, 5)),
       ],
     );
+  }
+
+  _textList(String text, double fontSize, int color) {
+    return Text(text,
+        style: TextStyle(shadows: <Shadow>[
+          Shadow(
+            offset: Offset(1.0, 1.0),
+            blurRadius: 1.0,
+            color: Color(0xAA000000),
+          ),
+          Shadow(
+            offset: Offset(1.0, 1.0),
+            blurRadius: 1.0,
+            color: Color(0xAA000000),
+          ),
+        ], fontSize: fontSize, color: Color(color)));
   }
 
   _showDialogList(int index) async {
@@ -226,8 +308,6 @@ class _ListMapState extends State<ListMap> {
   _searchNearby(bool search, String type) async {
     if (search) {
       _valueRadiusText = _valueRadius.round();
-      String _baseUrl = Constants.baseUrl;
-      String _API_KEY = Constants.API_KEY;
       double latitude = _userLocation.latitude;
       double longitude = _userLocation.longitude;
       String url =
@@ -242,6 +322,12 @@ class _ListMapState extends State<ListMap> {
       }
       setState(() {
         _searching = false;
+        _places.sort((a, b) => sqrt(
+                pow(a.geometry.location.lat - _userLocation.latitude, 2) +
+                    pow(a.geometry.location.long - _userLocation.longitude, 2))
+            .compareTo(sqrt(pow(
+                    b.geometry.location.lat - _userLocation.latitude, 2) +
+                pow(b.geometry.location.long - _userLocation.longitude, 2))));
         print(_searching);
       });
     }

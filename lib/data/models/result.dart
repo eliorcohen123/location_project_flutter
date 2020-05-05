@@ -32,7 +32,7 @@ class Result {
     map['vicinity'] = vicinity;
     map['lat'] = lat;
     map['lng'] = lng;
-    map['photo'] = photos;
+    map['photo'] = photo;
     return map;
   }
 
@@ -42,7 +42,7 @@ class Result {
       name: json['name'],
       vicinity: json['vicinity'],
       geometry: Geometry.fromJson(json['geometry']),
-      photos: json['photos'] != null
+      photos: json.containsKey("photos")
           ? json['photos'].map<Photo>((i) => Photo.fromJson(i)).toList()
           : [],
     );

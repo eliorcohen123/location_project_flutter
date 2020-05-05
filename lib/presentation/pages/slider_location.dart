@@ -50,7 +50,7 @@ class _SliderLocationState extends State<SliderLocation> {
                       divisions: 50000,
                       activeColor: Colors.green,
                       inactiveColor: Colors.grey,
-                      label: _valueRadius.toString(),
+                      label: _valueRadius.round().toString(),
                       onChanged: (double newValue) {
                         setState(() {
                           _valueRadius = newValue;
