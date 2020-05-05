@@ -7,8 +7,12 @@ import 'package:locationprojectflutter/data/models/models_location/place_respons
 import 'package:locationprojectflutter/data/models/models_location/result.dart';
 import 'package:locationprojectflutter/data/models/models_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/others/map_utils.dart';
+import 'package:locationprojectflutter/presentation/pages/slider_location.dart';
+import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'favorites_data.dart';
 
 class MapList extends StatefulWidget {
   final double latList, lngList;
@@ -50,6 +54,10 @@ class _MapListState extends State<MapList> {
         LatLng(_userLocation.latitude, _userLocation.longitude);
     return MaterialApp(
         home: Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Text('Lovely Favorite Places'),
+      ),
       body: GoogleMap(
         onMapCreated: (controller) {
           setState(() {
@@ -77,6 +85,7 @@ class _MapListState extends State<MapList> {
         ]),
         mapType: MapType.normal,
       ),
+      drawer: DrawerTotal().drawerImp(context),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           _searchNearby(

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/data/database/sqflite_helper.dart';
 import 'package:locationprojectflutter/data/models/models_sqlf/ResultSql.dart';
-import 'package:locationprojectflutter/data/models/models_location/result.dart';
-import 'package:locationprojectflutter/presentation/others/responsive_screen.dart';
-import 'package:locationprojectflutter/presentation/pages/favorites_data_activity.dart';
+import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
+import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
+import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
+import 'package:locationprojectflutter/presentation/pages/slider_location.dart';
 
 class AddDataFavorites extends StatefulWidget {
   final double latList, lngList;
@@ -58,6 +59,10 @@ class _AddDataFavoritesState extends State<AddDataFavorites> {
         home: Scaffold(
             resizeToAvoidBottomPadding: false,
             backgroundColor: Colors.grey,
+            appBar: AppBar(
+              backgroundColor: Colors.black,
+              title: Text('Lovely Favorite Places'),
+            ),
             body: SingleChildScrollView(
               child: Center(
                   child: Container(
@@ -170,7 +175,8 @@ class _AddDataFavoritesState extends State<AddDataFavorites> {
                   ],
                 ),
               )),
-            )));
+            ),
+            drawer: DrawerTotal().drawerImp(context)));
   }
 
   _editText(TextEditingController textEditingController) {
@@ -197,7 +203,7 @@ class _AddDataFavoritesState extends State<AddDataFavorites> {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => FavoritesDataActivity(),
+            builder: (context) => FavoritesData(),
           ));
     });
   }

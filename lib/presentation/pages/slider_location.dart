@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:locationprojectflutter/presentation/others/responsive_screen.dart';
-import 'package:locationprojectflutter/presentation/pages/list_map_activity.dart';
+import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
+import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'favorites_data.dart';
+import 'list_map.dart';
 
 class SliderLocation extends StatefulWidget {
   const SliderLocation({Key key}) : super(key: key);
@@ -26,6 +29,10 @@ class _SliderLocationState extends State<SliderLocation> {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.black,
+              title: Text('Lovely Favorite Places'),
+            ),
             backgroundColor: Colors.white,
             body: Center(
                 child: Column(
@@ -38,9 +45,11 @@ class _SliderLocationState extends State<SliderLocation> {
                     children: <Widget>[
                       Text("Distance"),
                       SizedBox(
-                          width: ResponsiveScreen().widthMediaQuery(context, 5)),
+                          width:
+                              ResponsiveScreen().widthMediaQuery(context, 5)),
                       Icon(Icons.my_location,
-                          size: ResponsiveScreen().heightMediaQuery(context, 40)),
+                          size:
+                              ResponsiveScreen().heightMediaQuery(context, 40)),
                     ],
                   ),
                   Slider(
@@ -66,10 +75,11 @@ class _SliderLocationState extends State<SliderLocation> {
                     onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ListMapActivity(),
+                          builder: (context) => ListMap(),
                         )),
                   )
-                ]))));
+                ])),
+            drawer: DrawerTotal().drawerImp(context)));
   }
 
   _initSharedPref() async {

@@ -10,13 +10,16 @@ import 'package:locationprojectflutter/data/models/models_location/error.dart';
 import 'package:locationprojectflutter/data/models/models_location/place_response.dart';
 import 'package:locationprojectflutter/data/models/models_location/result.dart';
 import 'package:locationprojectflutter/data/models/models_location/user_location.dart';
-import 'package:locationprojectflutter/presentation/others/responsive_screen.dart';
-import 'package:locationprojectflutter/presentation/pages/add_data_favorites_activity.dart';
-import 'package:locationprojectflutter/presentation/pages/map_list_activity.dart';
+import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
+import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
+import 'package:locationprojectflutter/presentation/pages/slider_location.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
+import 'add_data_favorites.dart';
+import 'favorites_data.dart';
+import 'map_list.dart';
 
 class ListMap extends StatefulWidget {
   ListMap({Key key}) : super(key: key);
@@ -49,157 +52,168 @@ class _ListMapState extends State<ListMap> {
     _userLocation = Provider.of<UserLocation>(context);
     _searchNearby(_searching, "");
     return Scaffold(
-      body: Container(
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: <Widget>[
-                    _btnType('Banks', 'bank'),
-                    _btnType('Bars', 'bar|night_club'),
-                    _btnType('Beauty', 'beauty_salon|hair_care'),
-                    _btnType('Books', 'book_store|library'),
-                    _btnType('Bus stations', 'bus_station'),
-                    _btnType(
-                        'Cars', 'car_dealer|car_rental|car_repair|car_wash'),
-                    _btnType('Clothing', 'clothing_store'),
-                    _btnType('Doctors', 'doctor'),
-                    _btnType('Gas stations', 'gas_station'),
-                    _btnType('Gym', 'gym'),
-                    _btnType('Jewelries', 'jewelry_store'),
-                    _btnType('Parks', 'park|amusement_park|parking|rv_park'),
-                    _btnType('Restaurants', 'food|restaurant|cafe|bakery'),
-                    _btnType('School', 'school'),
-                    _btnType('Spa', 'spa'),
-                  ],
-                ),
+        appBar: AppBar(
+            backgroundColor: Colors.black,
+            title: Text('Lovely Favorite Places'),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.navigation),
+                onPressed: () {
+                  _searchNearby(_searching = true, "");
+                },
               ),
-              _searching
-                  ? CircularProgressIndicator()
-                  : Expanded(
-                      child: ListView.separated(
-                        itemCount: _places.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final dis.Distance _distance = new dis.Distance();
-                          final double _meter = _distance(
-                              new dis.LatLng(_userLocation.latitude,
-                                  _userLocation.longitude),
-                              new dis.LatLng(
-                                  _places[index].geometry.location.lat,
-                                  _places[index].geometry.location.long));
-                          return GestureDetector(
-                            child: Container(
-                              color: Colors.grey,
-                              child: Stack(
-                                children: <Widget>[
-                                  Column(
-                                    children: <Widget>[
-                                      SizedBox(
-                                        height: ResponsiveScreen()
-                                            .heightMediaQuery(context, 5),
-                                        width: double.infinity,
-                                        child: const DecoratedBox(
-                                          decoration: const BoxDecoration(
-                                              color: Colors.white),
+            ]),
+        body: Container(
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: <Widget>[
+                      _btnType('Banks', 'bank'),
+                      _btnType('Bars', 'bar|night_club'),
+                      _btnType('Beauty', 'beauty_salon|hair_care'),
+                      _btnType('Books', 'book_store|library'),
+                      _btnType('Bus stations', 'bus_station'),
+                      _btnType(
+                          'Cars', 'car_dealer|car_rental|car_repair|car_wash'),
+                      _btnType('Clothing', 'clothing_store'),
+                      _btnType('Doctors', 'doctor'),
+                      _btnType('Gas stations', 'gas_station'),
+                      _btnType('Gym', 'gym'),
+                      _btnType('Jewelries', 'jewelry_store'),
+                      _btnType('Parks', 'park|amusement_park|parking|rv_park'),
+                      _btnType('Restaurants', 'food|restaurant|cafe|bakery'),
+                      _btnType('School', 'school'),
+                      _btnType('Spa', 'spa'),
+                    ],
+                  ),
+                ),
+                _searching
+                    ? CircularProgressIndicator()
+                    : Expanded(
+                        child: ListView.separated(
+                          itemCount: _places.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final dis.Distance _distance = new dis.Distance();
+                            final double _meter = _distance(
+                                new dis.LatLng(_userLocation.latitude,
+                                    _userLocation.longitude),
+                                new dis.LatLng(
+                                    _places[index].geometry.location.lat,
+                                    _places[index].geometry.location.long));
+                            return GestureDetector(
+                              child: Container(
+                                color: Colors.grey,
+                                child: Stack(
+                                  children: <Widget>[
+                                    Column(
+                                      children: <Widget>[
+                                        SizedBox(
+                                          height: ResponsiveScreen()
+                                              .heightMediaQuery(context, 5),
+                                          width: double.infinity,
+                                          child: const DecoratedBox(
+                                            decoration: const BoxDecoration(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                        CachedNetworkImage(
+                                          fit: BoxFit.fill,
+                                          height: ResponsiveScreen()
+                                              .heightMediaQuery(context, 150),
+                                          width: double.infinity,
+                                          imageUrl: _places[index]
+                                                  .photos
+                                                  .isNotEmpty
+                                              ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                                                  _places[index]
+                                                      .photos[0]
+                                                      .photoReference +
+                                                  "&key=$_API_KEY"
+                                              : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
+                                          placeholder: (context, url) =>
+                                              const CircularProgressIndicator(),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                        ),
+                                        SizedBox(
+                                          height: ResponsiveScreen()
+                                              .heightMediaQuery(context, 5),
+                                          width: double.infinity,
+                                          child: const DecoratedBox(
+                                            decoration: const BoxDecoration(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      height: ResponsiveScreen()
+                                          .heightMediaQuery(context, 160),
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: [
+                                            const Color(0xAA000000),
+                                            const Color(0x00000000),
+                                            const Color(0x00000000),
+                                            const Color(0xAA000000),
+                                          ],
                                         ),
                                       ),
-                                      CachedNetworkImage(
-                                        fit: BoxFit.fill,
-                                        height: ResponsiveScreen()
-                                            .heightMediaQuery(context, 150),
-                                        width: double.infinity,
-                                        imageUrl: _places[index]
-                                                .photos
-                                                .isNotEmpty
-                                            ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                                                _places[index]
-                                                    .photos[0]
-                                                    .photoReference +
-                                                "&key=$_API_KEY"
-                                            : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
-                                        placeholder: (context, url) =>
-                                            const CircularProgressIndicator(),
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
-                                      ),
-                                      SizedBox(
-                                        height: ResponsiveScreen()
-                                            .heightMediaQuery(context, 5),
-                                        width: double.infinity,
-                                        child: const DecoratedBox(
-                                          decoration: const BoxDecoration(
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Container(
-                                    height: ResponsiveScreen()
-                                        .heightMediaQuery(context, 160),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                        colors: [
-                                          const Color(0xAA000000),
-                                          const Color(0x00000000),
-                                          const Color(0x00000000),
-                                          const Color(0xAA000000),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          _textList(_places[index].name, 17.0,
+                                              0xffE9FFFF),
+                                          _textList(_places[index].vicinity,
+                                              15.0, 0xFFFFFFFF),
+                                          _textList(_calculateDistance(_meter),
+                                              15.0, 0xFFFFFFFF),
                                         ],
                                       ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        _textList(_places[index].name, 17.0,
-                                            0xffE9FFFF),
-                                        _textList(_places[index].vicinity, 15.0,
-                                            0xFFFFFFFF),
-                                        _textList(_calculateDistance(_meter),
-                                            15.0, 0xFFFFFFFF),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MapListActivity(
-                                    nameList: _places[index].name,
-                                    latList:
-                                        _places[index].geometry.location.lat,
-                                    lngList:
-                                        _places[index].geometry.location.long,
-                                  ),
-                                )),
-                            onLongPress: () => _showDialogList(index),
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return Container(
-                              height: ResponsiveScreen()
-                                  .heightMediaQuery(context, 10),
-                              decoration:
-                                  new BoxDecoration(color: Colors.grey));
-                        },
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MapList(
+                                      nameList: _places[index].name,
+                                      latList:
+                                          _places[index].geometry.location.lat,
+                                      lngList:
+                                          _places[index].geometry.location.long,
+                                    ),
+                                  )),
+                              onLongPress: () => _showDialogList(index),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return Container(
+                                height: ResponsiveScreen()
+                                    .heightMediaQuery(context, 10),
+                                decoration:
+                                    new BoxDecoration(color: Colors.grey));
+                          },
+                        ),
                       ),
-                    ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
+        drawer: DrawerTotal().drawerImp(context));
   }
 
   _initGetSharedPref() {
@@ -277,7 +291,7 @@ class _ListMapState extends State<ListMap> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddDataFavoritesActivity(
+                    builder: (context) => AddDataFavorites(
                       nameList: _places[index].name,
                       addressList: _places[index].vicinity,
                       latList: _places[index].geometry.location.lat,
