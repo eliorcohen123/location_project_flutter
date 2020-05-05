@@ -1,7 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/data/database/sqflite_helper.dart';
 import 'package:locationprojectflutter/data/models/result.dart';
+import 'package:locationprojectflutter/data/models/user_location.dart';
 import 'package:locationprojectflutter/presentation/others/responsive_screen.dart';
+import 'package:latlong/latlong.dart' as dis;
+import 'package:provider/provider.dart';
+import 'map_list_activity.dart';
 
 class FavoritesData extends StatefulWidget {
   const FavoritesData({Key key}) : super(key: key);
@@ -13,6 +19,8 @@ class FavoritesData extends StatefulWidget {
 class _FavoritesDataState extends State<FavoritesData> {
   List<Result> _places = new List();
   SQFLiteHelper db = new SQFLiteHelper();
+  var _userLocation;
+  String _API_KEY = Constants.API_KEY;
 
   @override
   void initState() {
@@ -23,54 +31,148 @@ class _FavoritesDataState extends State<FavoritesData> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-            body: Center(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-          Expanded(
-            child: ListView.separated(
-              itemCount: _places.length,
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                  child: Container(
-                    color: Color(0xff4682B4),
-                    child: Column(
+    _userLocation = Provider.of<UserLocation>(context);
+    return Scaffold(
+        body: Center(
+            child: Column(children: <Widget>[
+      Expanded(
+        child: ListView.separated(
+          itemCount: _places.length,
+          itemBuilder: (BuildContext context, int index) {
+            final dis.Distance _distance = new dis.Distance();
+            final double _meter = _distance(
+                new dis.LatLng(_userLocation.latitude, _userLocation.longitude),
+                new dis.LatLng(_places[index].lat, _places[index].lng));
+            return GestureDetector(
+              child: Container(
+                color: Colors.grey,
+                child: Stack(
+                  children: <Widget>[
+                    Column(
                       children: <Widget>[
-                        Text(_places[index].name,
-                            style: TextStyle(
-                                fontSize: 17, color: Color(0xffE9FFFF))),
-                        Text(_places[index].vicinity,
-                            style:
-                                TextStyle(fontSize: 15, color: Colors.white)),
-//                        Text(_calculateDistance(_meter),
-//                            style:
-//                                TextStyle(fontSize: 15, color: Colors.white)),
+                        SizedBox(
+                          height:
+                              ResponsiveScreen().heightMediaQuery(context, 5),
+                          width: double.infinity,
+                          child: const DecoratedBox(
+                            decoration:
+                                const BoxDecoration(color: Colors.white),
+                          ),
+                        ),
+                        CachedNetworkImage(
+                          fit: BoxFit.fill,
+                          height:
+                              ResponsiveScreen().heightMediaQuery(context, 150),
+                          width: double.infinity,
+                          imageUrl: _places[index].photo.isNotEmpty
+                              ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                                  _places[index].photo +
+                                  "&key=$_API_KEY"
+                              : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                        SizedBox(
+                          height:
+                              ResponsiveScreen().heightMediaQuery(context, 5),
+                          width: double.infinity,
+                          child: const DecoratedBox(
+                            decoration:
+                                const BoxDecoration(color: Colors.white),
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-//                  onTap: () => Navigator.push(
-//                      context,
-//                      MaterialPageRoute(
-//                        builder: (context) => MapListActivity(
-//                          nameList: _places[index].name,
-//                          latList: _places[index].geometry.location.lat,
-//                          lngList: _places[index].geometry.location.long,
-//                        ),
-//                      )),
-//                  onLongPress: () => _showDialogList(index),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return Container(
-                    height: ResponsiveScreen().heightMediaQuery(context, 2),
-                    decoration: new BoxDecoration(color: Color(0xffdcdcdc)));
-              },
-            ),
+                    Container(
+                      height: ResponsiveScreen().heightMediaQuery(context, 160),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            const Color(0xAA000000),
+                            const Color(0x00000000),
+                            const Color(0x00000000),
+                            const Color(0xAA000000),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          _textList(_places[index].name, 17.0, 0xffE9FFFF),
+                          _textList(_places[index].vicinity, 15.0, 0xFFFFFFFF),
+                          _textList(
+                              _calculateDistance(_meter), 15.0, 0xFFFFFFFF),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MapListActivity(
+                      nameList: _places[index].name,
+                      latList: _places[index].lat,
+                      lngList: _places[index].lng,
+                    ),
+                  )),
+              onLongPress: () => _deleteItem(_places[index], index),
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return Container(
+                height: ResponsiveScreen().heightMediaQuery(context, 10),
+                decoration: new BoxDecoration(color: Colors.grey));
+          },
+        ),
+      ),
+    ])));
+  }
+
+  _calculateDistance(double _meter) {
+    String _myMeters;
+    if (_meter < 1000.0) {
+      _myMeters = 'Meters: ' + (_meter.round()).toString();
+    } else {
+      _myMeters =
+          'KM: ' + (_meter.round() / 1000.0).toStringAsFixed(2).toString();
+    }
+    return _myMeters;
+  }
+
+  _textList(String text, double fontSize, int color) {
+    return Text(text,
+        style: TextStyle(shadows: <Shadow>[
+          Shadow(
+            offset: Offset(1.0, 1.0),
+            blurRadius: 1.0,
+            color: Color(0xAA000000),
           ),
-        ]))));
+          Shadow(
+            offset: Offset(1.0, 1.0),
+            blurRadius: 1.0,
+            color: Color(0xAA000000),
+          ),
+        ], fontSize: fontSize, color: Color(color)));
+  }
+
+  void _deleteItem(Result result, int index) async {
+    print(result.idSql);
+    db.deleteResult(result.idSql).then((results) {
+      setState(() {
+        _places.removeAt(index);
+      });
+    });
   }
 
   void _getItems() async {

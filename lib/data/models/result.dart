@@ -1,10 +1,9 @@
 import 'package:locationprojectflutter/data/models/photo.dart';
-
 import 'geometry.dart';
 
 class Result {
   String id;
-  int _id;
+  int idSql;
   String name;
   String vicinity;
   Geometry geometry;
@@ -25,8 +24,8 @@ class Result {
 
   Map<String, dynamic> toSqlf() {
     var map = new Map<String, dynamic>();
-    if (_id != null) {
-      map['_id'] = _id;
+    if (idSql != null) {
+      map['idsql'] = idSql;
     }
     map['name'] = name;
     map['vicinity'] = vicinity;
@@ -49,7 +48,7 @@ class Result {
   }
 
   Result.fromSqlf(Map<String, dynamic> map) {
-    this._id = map['_id'];
+    this.idSql = map['idsql'];
     this.name = map['name'];
     this.vicinity = map['vicinity'];
     this.lat = map['lat'];

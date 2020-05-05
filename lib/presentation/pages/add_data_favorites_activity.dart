@@ -5,9 +5,9 @@ import 'package:locationprojectflutter/presentation/pages/slider_location_activi
 
 class AddDataFavoritesActivity extends StatelessWidget {
   final double latList, lngList;
-  final String nameList, addressList;
+  final String nameList, addressList, photoList;
 
-  AddDataFavoritesActivity({Key key, this.nameList, this.addressList, this.latList, this.lngList})
+  AddDataFavoritesActivity({Key key, this.nameList, this.addressList, this.latList, this.lngList, this.photoList})
       : super(key: key);
 
   @override
@@ -19,9 +19,10 @@ class AddDataFavoritesActivity extends StatelessWidget {
       ),
       body: AddDataFavorites(
         nameList: nameList,
+        addressList: addressList,
         latList: latList,
         lngList: lngList,
-        addressList: addressList,
+        photoList: photoList,
       ),
       drawer: Drawer(
         child: ListView(

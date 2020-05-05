@@ -279,9 +279,10 @@ class _ListMapState extends State<ListMap> {
                   MaterialPageRoute(
                     builder: (context) => AddDataFavoritesActivity(
                       nameList: _places[index].name,
+                      addressList: _places[index].vicinity,
                       latList: _places[index].geometry.location.lat,
                       lngList: _places[index].geometry.location.long,
-                      addressList: _places[index].vicinity,
+                      photoList: _places[index].photos[0].photoReference,
                     ),
                   ));
             },

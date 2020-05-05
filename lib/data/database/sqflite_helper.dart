@@ -36,7 +36,7 @@ class SQFLiteHelper {
 
   void onCreate(Database db, int newVersion) async {
     await db.execute(
-        'CREATE TABLE $tableResult($columnId INTEGER PRIMARY KEY, $columnName TEXT, $columnVicinity TEXT, $columnLat REAL, $columnLng REAL, $columnPhoto TEXT)');
+        'CREATE TABLE $tableResult($columnId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, $columnName TEXT, $columnVicinity TEXT, $columnLat REAL, $columnLng REAL, $columnPhoto TEXT)');
   }
 
   Future<int> addResult(Result result) async {
