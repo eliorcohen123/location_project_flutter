@@ -38,6 +38,8 @@ class _ListMapState extends State<ListMap> {
   var _userLocation;
   String _baseUrl = Constants.baseUrl;
   String _API_KEY = Constants.API_KEY;
+  bool activeSearch = false;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -47,22 +49,78 @@ class _ListMapState extends State<ListMap> {
     _initGetSharedPref();
   }
 
+  PreferredSizeWidget _appBar() {
+    if (activeSearch) {
+      return AppBar(
+        backgroundColor: Color(0xFF1E2538),
+        title: Form(
+          key: _formKey,
+          child: Row(
+            children: <Widget>[
+              Flexible(
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Search a place...',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    enabledBorder: new UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.white,
+                          width: 1.0,
+                          style: BorderStyle.solid),
+                    ),
+                  ),
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter some text';
+                    } else {
+                      return _searchNearby(true, "", value);
+                    }
+                  },
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  if (_formKey.currentState.validate()) {}
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.close),
+            onPressed: () => setState(() => activeSearch = false),
+          )
+        ],
+      );
+    } else {
+      return AppBar(
+        backgroundColor: Colors.black,
+        title: Text("Lovely Favorite Places"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () => setState(() => activeSearch = true),
+          ),
+          IconButton(
+            icon: Icon(Icons.navigation),
+            onPressed: () => _searchNearby(true, "", ""),
+          ),
+        ],
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _userLocation = Provider.of<UserLocation>(context);
-    _searchNearby(_searching, "");
+    _searchNearby(_searching, "", "");
     return Scaffold(
-        appBar: AppBar(
-            backgroundColor: Colors.black,
-            title: Text('Lovely Favorite Places'),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.navigation),
-                onPressed: () {
-                  _searchNearby(_searching = true, "");
-                },
-              ),
-            ]),
+        appBar: _appBar(),
         body: Container(
           child: Center(
             child: Column(
@@ -242,7 +300,7 @@ class _ListMapState extends State<ListMap> {
           padding: EdgeInsets.all(0.0),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-          onPressed: () => _searchNearby(true, type),
+          onPressed: () => _searchNearby(true, type, ""),
           child: Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -320,13 +378,13 @@ class _ListMapState extends State<ListMap> {
     }
   }
 
-  _searchNearby(bool search, String type) async {
+  _searchNearby(bool search, String type, String text) async {
     if (search) {
       _valueRadiusText = _valueRadius.round();
       double latitude = _userLocation.latitude;
       double longitude = _userLocation.longitude;
       String url =
-          '$_baseUrl?key=$_API_KEY&location=$latitude,$longitude&opennow=true&types=$type&radius=$_valueRadiusText&keyword=';
+          '$_baseUrl?key=$_API_KEY&location=$latitude,$longitude&opennow=true&types=$type&radius=$_valueRadiusText&keyword=$text';
       print(url);
       final response = await http.get(url);
       if (response.statusCode == 200) {
