@@ -6,12 +6,10 @@ import 'package:locationprojectflutter/data/models/models_location/error.dart';
 import 'package:locationprojectflutter/data/models/models_location/place_response.dart';
 import 'package:locationprojectflutter/data/models/models_location/result.dart';
 import 'package:locationprojectflutter/data/models/models_location/user_location.dart';
-import 'package:locationprojectflutter/presentation/others/map_utils.dart';
+import 'package:locationprojectflutter/presentation/foreign_communications/map_utils.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'favorites_data.dart';
 
 class MapList extends StatefulWidget {
   final double latList, lngList;
@@ -84,7 +82,7 @@ class _MapListState extends State<MapList> {
         ]),
         mapType: MapType.normal,
       ),
-      drawer: DrawerTotal().drawerImp(context),
+      drawer: DrawerTotal().drawerImpl(context),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           _searchNearby(
@@ -127,6 +125,7 @@ class _MapListState extends State<MapList> {
 
   _initMarkerList() {
     _markers.add(Marker(
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
       markerId: MarkerId(widget.nameList != null ? widget.nameList : ""),
       position: LatLng(widget.latList != null ? widget.latList : 0.0,
           widget.lngList != null ? widget.lngList : 0.0),

@@ -146,7 +146,7 @@ class _FavoritesDataState extends State<FavoritesData> {
             ),
           ),
         ])),
-        drawer: DrawerTotal().drawerImp(context));
+        drawer: DrawerTotal().drawerImpl(context));
   }
 
   _calculateDistance(double _meter) {

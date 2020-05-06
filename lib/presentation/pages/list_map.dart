@@ -268,7 +268,7 @@ class _ListMapState extends State<ListMap> {
             ),
           ),
         ),
-        drawer: DrawerTotal().drawerImp(context));
+        drawer: DrawerTotal().drawerImpl(context));
   }
 
   _initGetSharedPref() {
@@ -351,7 +351,9 @@ class _ListMapState extends State<ListMap> {
                       addressList: _places[index].vicinity,
                       latList: _places[index].geometry.location.lat,
                       lngList: _places[index].geometry.location.long,
-                      photoList: _places[index].photos[0].photoReference,
+                      photoList: _places[index].photos.isNotEmpty
+                          ? _places[index].photos[0].photoReference
+                          : "",
                     ),
                   ));
             },

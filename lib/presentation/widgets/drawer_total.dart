@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:locationprojectflutter/presentation/pages/custom_map_list.dart';
 import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
 import 'package:locationprojectflutter/presentation/pages/slider_location.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
@@ -12,7 +13,7 @@ class DrawerTotal {
 
   DrawerTotal._internal();
 
-  Widget drawerImp(BuildContext context) {
+  Widget drawerImpl(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
         canvasColor: Color(0xFF1E2538),
@@ -64,6 +65,58 @@ class DrawerTotal {
               title: Row(
                 children: <Widget>[
                   Icon(
+                    Icons.favorite,
+                    color: Color(0xFFcd4312),
+                  ),
+                  SizedBox(
+                    width: ResponsiveScreen().widthMediaQuery(context, 10),
+                  ),
+                  Text(
+                    'Favorites',
+                    style: TextStyle(
+                      color: Color(0xFF9FA31C),
+                    ),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FavoritesData(),
+                    ));
+              },
+            ),
+            ListTile(
+              title: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.edit,
+                    color: Color(0xFFcd4312),
+                  ),
+                  SizedBox(
+                    width: ResponsiveScreen().widthMediaQuery(context, 10),
+                  ),
+                  Text(
+                    'Add custom marker',
+                    style: TextStyle(
+                      color: Color(0xFF9FA31C),
+                    ),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CustomMapList(),
+                    ));
+              },
+            ),
+            ListTile(
+              title: Row(
+                children: <Widget>[
+                  Icon(
                     Icons.settings,
                     color: Color(0xFFcd4312),
                   ),
@@ -83,32 +136,6 @@ class DrawerTotal {
                     context,
                     MaterialPageRoute(
                       builder: (context) => SliderLocation(),
-                    ));
-              },
-            ),
-            ListTile(
-              title: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.favorite,
-                    color: Color(0xFFcd4312),
-                  ),
-                  SizedBox(
-                    width: ResponsiveScreen().widthMediaQuery(context, 10),
-                  ),
-                  Text(
-                    'Favorites list',
-                    style: TextStyle(
-                      color: Color(0xFF9FA31C),
-                    ),
-                  ),
-                ],
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FavoritesData(),
                     ));
               },
             ),

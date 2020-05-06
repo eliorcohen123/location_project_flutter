@@ -77,7 +77,7 @@ class _SliderLocationState extends State<SliderLocation> {
                         )),
                   )
                 ])),
-            drawer: DrawerTotal().drawerImp(context)));
+            drawer: DrawerTotal().drawerImpl(context)));
   }
 
   _initSharedPref() async {
