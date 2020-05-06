@@ -12,13 +12,11 @@ import 'package:locationprojectflutter/data/models/models_location/result.dart';
 import 'package:locationprojectflutter/data/models/models_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
-import 'package:locationprojectflutter/presentation/pages/slider_location.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
 import 'add_data_favorites.dart';
-import 'favorites_data.dart';
 import 'map_list.dart';
 
 class ListMap extends StatefulWidget {
@@ -31,14 +29,13 @@ class ListMap extends StatefulWidget {
 class _ListMapState extends State<ListMap> {
   Error _error;
   List<Result> _places;
-  bool _searching = true;
+  bool _searching = true, activeSearch = false;
   int _valueRadiusText;
   double _valueRadius;
   SharedPreferences _sharedPrefs;
   var _userLocation;
   String _baseUrl = Constants.baseUrl;
   String _API_KEY = Constants.API_KEY;
-  bool activeSearch = false;
   final _formKey = GlobalKey<FormState>();
 
   @override

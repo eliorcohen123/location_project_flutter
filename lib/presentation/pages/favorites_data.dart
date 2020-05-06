@@ -7,7 +7,6 @@ import 'package:locationprojectflutter/data/models/models_location/user_location
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:latlong/latlong.dart' as dis;
-import 'package:locationprojectflutter/presentation/pages/slider_location.dart';
 import 'package:provider/provider.dart';
 
 import 'map_list.dart';

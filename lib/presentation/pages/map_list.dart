@@ -7,7 +7,6 @@ import 'package:locationprojectflutter/data/models/models_location/place_respons
 import 'package:locationprojectflutter/data/models/models_location/result.dart';
 import 'package:locationprojectflutter/data/models/models_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/others/map_utils.dart';
-import 'package:locationprojectflutter/presentation/pages/slider_location.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

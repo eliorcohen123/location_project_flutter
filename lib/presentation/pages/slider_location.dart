@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'favorites_data.dart';
 import 'list_map.dart';
 
 class SliderLocation extends StatefulWidget {

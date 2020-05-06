@@ -4,7 +4,6 @@ import 'package:locationprojectflutter/data/models/models_sqlf/ResultSql.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
-import 'package:locationprojectflutter/presentation/pages/slider_location.dart';
 
 class AddDataFavorites extends StatefulWidget {
   final double latList, lngList;
