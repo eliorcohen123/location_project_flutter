@@ -5,24 +5,28 @@ import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
 
-class AddDataFavorites extends StatefulWidget {
+class AddOrEditDataFavorites extends StatefulWidget {
   final double latList, lngList;
   final String nameList, addressList, photoList;
+  final bool edit;
+  final int id;
 
-  AddDataFavorites(
+  AddOrEditDataFavorites(
       {Key key,
       this.nameList,
       this.addressList,
       this.latList,
       this.lngList,
-      this.photoList})
+      this.photoList,
+      this.edit,
+      this.id})
       : super(key: key);
 
   @override
-  _AddDataFavoritesState createState() => _AddDataFavoritesState();
+  _AddOrEditDataFavoritesState createState() => _AddOrEditDataFavoritesState();
 }
 
-class _AddDataFavoritesState extends State<AddDataFavorites> {
+class _AddOrEditDataFavoritesState extends State<AddOrEditDataFavorites> {
   SQFLiteHelper db = new SQFLiteHelper();
   final textName = TextEditingController();
   final textAddress = TextEditingController();
@@ -60,7 +64,11 @@ class _AddDataFavoritesState extends State<AddDataFavorites> {
             backgroundColor: Colors.grey,
             appBar: AppBar(
               backgroundColor: Colors.black,
-              title: Text('Lovely Favorite Places'),
+              title: Text(
+                'Lovely Favorite Places',
+                style: TextStyle(color: Color(0xFFE9FFFF)),
+              ),
+              iconTheme: new IconThemeData(color: Color(0xFFE9FFFF)),
             ),
             body: SingleChildScrollView(
               child: Center(
@@ -90,7 +98,7 @@ class _AddDataFavoritesState extends State<AddDataFavorites> {
                       height: ResponsiveScreen().heightMediaQuery(context, 10),
                     ),
                     Text(
-                      'Add Place',
+                      widget.edit ? 'Edit Place' : 'Add Place',
                       style: TextStyle(color: Colors.white, fontSize: 25),
                     ),
                     SizedBox(
@@ -148,12 +156,20 @@ class _AddDataFavoritesState extends State<AddDataFavorites> {
                       padding: const EdgeInsets.all(0.0),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(80.0)),
-                      onPressed: () => _addResult(
-                          textName.text,
-                          textAddress.text,
-                          double.parse(textLat.text),
-                          double.parse(textLng.text),
-                          textPhoto.text),
+                      onPressed: () => widget.edit
+                          ? _updateResult(
+                              widget.id,
+                              textName.text,
+                              textAddress.text,
+                              double.parse(textLat.text),
+                              double.parse(textLng.text),
+                              textPhoto.text)
+                          : _addResult(
+                              textName.text,
+                              textAddress.text,
+                              double.parse(textLat.text),
+                              double.parse(textLng.text),
+                              textPhoto.text),
                       child: Container(
                         decoration: const BoxDecoration(
                             gradient: LinearGradient(
@@ -165,8 +181,8 @@ class _AddDataFavoritesState extends State<AddDataFavorites> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(80.0))),
                         padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                        child: const Text(
-                          'Add Your Place',
+                        child: Text(
+                          widget.edit ? 'Edit Your Place' : 'Add Your Place',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -199,6 +215,26 @@ class _AddDataFavoritesState extends State<AddDataFavorites> {
       String photo) async {
     var add = ResultSql.sqlf(name, vicinity, lat, lng, photo);
     db.addResult(add).then((_) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FavoritesData(),
+          ));
+    });
+  }
+
+  void _updateResult(int id, String name, String vicinity, double lat,
+      double lng, String photo) async {
+    db
+        .updateResult(ResultSql.fromSqlf({
+      'id': id,
+      'name': name,
+      'vicinity': vicinity,
+      'lat': lat,
+      'lng': lng,
+      'photo': photo
+    }))
+        .then((_) {
       Navigator.push(
           context,
           MaterialPageRoute(

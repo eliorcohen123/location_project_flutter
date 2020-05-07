@@ -383,6 +383,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  slide_item:
+    dependency: "direct main"
+    description:
+      name: slide_item
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.7"
   source_span:
     dependency: transitive
     description:

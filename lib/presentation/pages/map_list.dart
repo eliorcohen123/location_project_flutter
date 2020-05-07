@@ -53,7 +53,11 @@ class _MapListState extends State<MapList> {
         home: Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text('Lovely Favorite Places'),
+        title: Text(
+          'Lovely Favorite Places',
+          style: TextStyle(color: Color(0xFFE9FFFF)),
+        ),
+        iconTheme: new IconThemeData(color: Color(0xFFE9FFFF)),
       ),
       body: GoogleMap(
         onMapCreated: (controller) {

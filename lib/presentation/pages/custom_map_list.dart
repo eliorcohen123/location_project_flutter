@@ -5,7 +5,7 @@ import 'package:locationprojectflutter/presentation/foreign_communications/map_u
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
 
-import 'add_data_favorites.dart';
+import 'add_or_edit_data_favorites.dart';
 
 class CustomMapList extends StatefulWidget {
   final double latList, lngList;
@@ -32,7 +32,11 @@ class _CustomMapListState extends State<CustomMapList> {
         home: Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text('Lovely Favorite Places'),
+        title: Text(
+          'Lovely Favorite Places',
+          style: TextStyle(color: Color(0xFFE9FFFF)),
+        ),
+        iconTheme: new IconThemeData(color: Color(0xFFE9FFFF)),
       ),
       body: GoogleMap(
         onMapCreated: (controller) {
@@ -63,12 +67,14 @@ class _CustomMapListState extends State<CustomMapList> {
         onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddDataFavorites(
+              builder: (context) => AddOrEditDataFavorites(
                 latList: point.latitude,
                 lngList: point.longitude,
+                edit: false,
               ),
             )),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueMagenta),
+        icon:
+            BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueMagenta),
       ));
     });
 
