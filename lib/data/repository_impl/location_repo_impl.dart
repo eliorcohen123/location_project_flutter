@@ -1,4 +1,4 @@
-import 'package:locationprojectflutter/data/data_resource/location_remote_data_source.dart';
+import 'package:locationprojectflutter/data/data_resource/remote/location_remote_data_source.dart';
 
 class LocationRepositoryImpl {
   LocationRemoteDataSource locationRemoteDataSource =
