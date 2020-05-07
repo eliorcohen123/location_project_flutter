@@ -10,7 +10,6 @@ import 'package:locationprojectflutter/presentation/widgets/responsive_screen.da
 import 'package:latlong/latlong.dart' as dis;
 import 'package:provider/provider.dart';
 import 'package:slide_item/slide_item.dart';
-
 import 'map_list.dart';
 
 class FavoritesData extends StatefulWidget {
