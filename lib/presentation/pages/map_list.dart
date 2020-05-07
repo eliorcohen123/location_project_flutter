@@ -1,12 +1,8 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:locationprojectflutter/data/models/models_location/error.dart';
-import 'package:locationprojectflutter/data/models/models_location/place_response.dart';
 import 'package:locationprojectflutter/data/models/models_location/result.dart';
 import 'package:locationprojectflutter/data/models/models_location/user_location.dart';
-import 'package:locationprojectflutter/data/repository_impl/location_repo_impl.dart';
+import 'package:locationprojectflutter/domain/usecases_domain/get_location_json_usecase.dart';
 import 'package:locationprojectflutter/presentation/foreign_communications/map_utils.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
@@ -28,13 +24,11 @@ class _MapListState extends State<MapList> {
   Set<Circle> _circles;
   SharedPreferences _sharedPrefs;
   double _valueRadius;
-  int _valueRadiusText;
   bool _zoomGesturesEnabled = true, _searching = true;
   List<Marker> _markers = <Marker>[];
   List<Result> _places;
-  Error _error;
   var _userLocation;
-  LocationRepositoryImpl responseJsonLocation = LocationRepositoryImpl();
+  GetLocationJsonUsecase _getLocationJsonUsecase;
 
   @override
   void initState() {
@@ -109,12 +103,13 @@ class _MapListState extends State<MapList> {
     setState(() {
       _markers.clear();
     });
-    _places = await responseJsonLocation.getResponseLocation(
-        _userLocation.latitude,
-        _userLocation.longitude,
-        '',
-        _valueRadius.round(),
-        '');
+    _places = await _getLocationJsonUsecase(
+        paramsLocation: ParamsLocation(
+            latitude: _userLocation.latitude,
+            longitude: _userLocation.longitude,
+            type: '',
+            valueRadiusText: _valueRadius.round(),
+            text: ''));
     setState(() {
       for (int i = 0; i < _places.length; i++) {
         _markers.add(

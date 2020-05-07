@@ -6,7 +6,7 @@ import 'package:latlong/latlong.dart' as dis;
 import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/data/models/models_location/result.dart';
 import 'package:locationprojectflutter/data/models/models_location/user_location.dart';
-import 'package:locationprojectflutter/data/repository_impl/location_repo_impl.dart';
+import 'package:locationprojectflutter/domain/usecases_domain/get_location_json_usecase.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +31,7 @@ class _ListMapState extends State<ListMap> {
   SharedPreferences _sharedPrefs;
   var _userLocation;
   String _API_KEY = Constants.API_KEY;
-  LocationRepositoryImpl responseJsonLocation = LocationRepositoryImpl();
+  GetLocationJsonUsecase _getLocationJsonUsecase = GetLocationJsonUsecase();
   final _formKeySearch = GlobalKey<FormState>();
 
   @override
@@ -422,12 +422,13 @@ class _ListMapState extends State<ListMap> {
 
   _searchNearby(bool search, String type, String text) async {
     if (search) {
-      _places = await responseJsonLocation.getResponseLocation(
-          _userLocation.latitude,
-          _userLocation.longitude,
-          type,
-          _valueRadius.round(),
-          text);
+      _places = await _getLocationJsonUsecase(
+          paramsLocation: ParamsLocation(
+              latitude: _userLocation.latitude,
+              longitude: _userLocation.longitude,
+              type: type,
+              valueRadiusText: _valueRadius.round(),
+              text: text));
       setState(() {
         _searching = false;
         _places.sort((a, b) => sqrt(
