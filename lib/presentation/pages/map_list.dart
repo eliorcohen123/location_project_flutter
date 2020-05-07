@@ -6,6 +6,7 @@ import 'package:locationprojectflutter/data/models/models_location/error.dart';
 import 'package:locationprojectflutter/data/models/models_location/place_response.dart';
 import 'package:locationprojectflutter/data/models/models_location/result.dart';
 import 'package:locationprojectflutter/data/models/models_location/user_location.dart';
+import 'package:locationprojectflutter/data/repository_impl/location_repo_impl.dart';
 import 'package:locationprojectflutter/presentation/foreign_communications/map_utils.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
@@ -29,12 +30,11 @@ class _MapListState extends State<MapList> {
   double _valueRadius;
   int _valueRadiusText;
   bool _zoomGesturesEnabled = true, _searching = true;
-  static const String _API_KEY = 'AIzaSyCiH1NZGzqJE2T_X5CphQD3iazzrjJbL4A';
-  static const String _baseUrl =
-      "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
   List<Marker> _markers = <Marker>[];
   List<Result> _places;
   Error _error;
+  var _userLocation;
+  LocationRepositoryImpl responseJsonLocation = LocationRepositoryImpl();
 
   @override
   void initState() {
@@ -46,7 +46,7 @@ class _MapListState extends State<MapList> {
 
   @override
   Widget build(BuildContext context) {
-    var _userLocation = Provider.of<UserLocation>(context);
+    _userLocation = Provider.of<UserLocation>(context);
     var _currentLocation =
         LatLng(_userLocation.latitude, _userLocation.longitude);
     return MaterialApp(
@@ -86,11 +86,10 @@ class _MapListState extends State<MapList> {
         ]),
         mapType: MapType.normal,
       ),
-      drawer: DrawerTotal().drawerImpl(context),
+      drawer: DrawerTotal(),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          _searchNearby(
-              _userLocation.latitude, _userLocation.longitude, _valueRadius);
+          _searchNearby();
         },
         label: Text('Show nearby places'),
         icon: Icon(Icons.place),
@@ -106,22 +105,32 @@ class _MapListState extends State<MapList> {
     });
   }
 
-  _searchNearby(double latitude, double longitude, double radius) async {
-    _valueRadiusText = radius.round();
+  _searchNearby() async {
     setState(() {
       _markers.clear();
     });
-    String url =
-        '$_baseUrl?key=$_API_KEY&location=$latitude,$longitude&opennow=true&radius=$_valueRadiusText&keyword=';
-    print(url);
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      _handleResponse(data);
-    } else {
-      throw Exception('An error occurred getting places nearby');
-    }
+    _places = await responseJsonLocation.getResponseLocation(
+        _userLocation.latitude,
+        _userLocation.longitude,
+        '',
+        _valueRadius.round(),
+        '');
     setState(() {
+      for (int i = 0; i < _places.length; i++) {
+        _markers.add(
+          Marker(
+            markerId: MarkerId(_places[i].name),
+            position: LatLng(_places[i].geometry.location.lat,
+                _places[i].geometry.location.long),
+            onTap: () {
+              String namePlace =
+              _places[i].name != null ? _places[i].name : "";
+              _showDialog(namePlace, _places[i].geometry.location.lat,
+                  _places[i].geometry.location.long);
+            },
+          ),
+        );
+      }
       _searching = false;
       print(_searching);
     });
@@ -138,36 +147,6 @@ class _MapListState extends State<MapList> {
         _showDialog(namePlace, widget.latList, widget.lngList);
       },
     ));
-  }
-
-  _handleResponse(data) {
-    if (data['status'] == "REQUEST_DENIED") {
-      setState(() {
-        _error = Error.fromJson(data);
-        print(_error);
-      });
-    } else if (data['status'] == "OK") {
-      setState(() {
-        _places = PlaceResponse.parseResults(data['results']);
-        for (int i = 0; i < _places.length; i++) {
-          _markers.add(
-            Marker(
-              markerId: MarkerId(_places[i].name),
-              position: LatLng(_places[i].geometry.location.lat,
-                  _places[i].geometry.location.long),
-              onTap: () {
-                String namePlace =
-                    _places[i].name != null ? _places[i].name : "";
-                _showDialog(namePlace, _places[i].geometry.location.lat,
-                    _places[i].geometry.location.long);
-              },
-            ),
-          );
-        }
-      });
-    } else {
-      print(data);
-    }
   }
 
   _showDialog(String namePlace, double lat, double lng) {

@@ -191,7 +191,7 @@ class _AddOrEditDataFavoritesState extends State<AddOrEditDataFavorites> {
                 ),
               )),
             ),
-            drawer: DrawerTotal().drawerImpl(context)));
+            drawer: DrawerTotal()));
   }
 
   _editText(TextEditingController textEditingController) {

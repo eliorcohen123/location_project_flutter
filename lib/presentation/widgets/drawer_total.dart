@@ -5,16 +5,13 @@ import 'package:locationprojectflutter/presentation/pages/list_map.dart';
 import 'package:locationprojectflutter/presentation/pages/slider_location.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 
-class DrawerTotal {
-  static final DrawerTotal _singleton = DrawerTotal._internal();
+class DrawerTotal extends StatelessWidget {
+  DrawerTotal({
+    Key key,
+  }) : super(key: key);
 
-  factory DrawerTotal() {
-    return _singleton;
-  }
-
-  DrawerTotal._internal();
-
-  Widget drawerImpl(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
         canvasColor: Color(0xFF1E2538),

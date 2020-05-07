@@ -342,7 +342,7 @@ class _ListMapState extends State<ListMap> {
             ),
           ),
         ),
-        drawer: DrawerTotal().drawerImpl(context));
+        drawer: DrawerTotal());
   }
 
   _initGetSharedPref() {
@@ -422,8 +422,12 @@ class _ListMapState extends State<ListMap> {
 
   _searchNearby(bool search, String type, String text) async {
     if (search) {
-      _places = await responseJsonLocation.getResponseLocation(_userLocation.latitude,
-          _userLocation.longitude, type, _valueRadius.round(), text);
+      _places = await responseJsonLocation.getResponseLocation(
+          _userLocation.latitude,
+          _userLocation.longitude,
+          type,
+          _valueRadius.round(),
+          text);
       setState(() {
         _searching = false;
         _places.sort((a, b) => sqrt(
