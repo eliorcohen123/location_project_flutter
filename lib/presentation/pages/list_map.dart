@@ -30,7 +30,7 @@ class ListMap extends StatefulWidget {
 class _ListMapState extends State<ListMap> {
   Error _error;
   List<Result> _places;
-  bool _searching = true, activeSearch = false;
+  bool _searching = true, _activeSearch = false;
   int _valueRadiusText;
   double _valueRadius;
   SharedPreferences _sharedPrefs;
@@ -48,7 +48,7 @@ class _ListMapState extends State<ListMap> {
   }
 
   PreferredSizeWidget _appBar() {
-    if (activeSearch) {
+    if (_activeSearch) {
       return AppBar(
         backgroundColor: Color(0xFF1E2538),
         title: Form(
@@ -93,7 +93,7 @@ class _ListMapState extends State<ListMap> {
           IconButton(
             icon: Icon(Icons.close),
             color: Color(0xFFE9FFFF),
-            onPressed: () => setState(() => activeSearch = false),
+            onPressed: () => setState(() => _activeSearch = false),
           )
         ],
       );
@@ -109,7 +109,7 @@ class _ListMapState extends State<ListMap> {
           IconButton(
             icon: Icon(Icons.search),
             color: Color(0xFFE9FFFF),
-            onPressed: () => setState(() => activeSearch = true),
+            onPressed: () => setState(() => _activeSearch = true),
           ),
           IconButton(
             icon: Icon(Icons.navigation),

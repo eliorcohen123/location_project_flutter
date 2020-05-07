@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/presentation/pages/custom_map_list.dart';
 import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
+import 'package:locationprojectflutter/presentation/pages/list_map.dart';
 import 'package:locationprojectflutter/presentation/pages/slider_location.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 
@@ -43,14 +44,14 @@ class DrawerTotal {
               title: Row(
                 children: <Widget>[
                   Icon(
-                    Icons.favorite,
+                    Icons.view_list,
                     color: Color(0xFFcd4312),
                   ),
                   SizedBox(
                     width: ResponsiveScreen().widthMediaQuery(context, 10),
                   ),
                   Text(
-                    'Credits',
+                    'Main List',
                     style: TextStyle(
                       color: Color(0xFF9FA31C),
                     ),
@@ -58,7 +59,11 @@ class DrawerTotal {
                 ],
               ),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ListMap(),
+                    ));
               },
             ),
             ListTile(
@@ -98,7 +103,7 @@ class DrawerTotal {
                     width: ResponsiveScreen().widthMediaQuery(context, 10),
                   ),
                   Text(
-                    'Add custom marker',
+                    'Add Custom Marker',
                     style: TextStyle(
                       color: Color(0xFF9FA31C),
                     ),
@@ -124,7 +129,7 @@ class DrawerTotal {
                     width: ResponsiveScreen().widthMediaQuery(context, 10),
                   ),
                   Text(
-                    'List settings',
+                    'List Settings',
                     style: TextStyle(
                       color: Color(0xFF9FA31C),
                     ),
