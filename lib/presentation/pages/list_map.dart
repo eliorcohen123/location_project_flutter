@@ -1,15 +1,12 @@
-import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:location/location.dart' as loc;
 import 'package:latlong/latlong.dart' as dis;
 import 'package:locationprojectflutter/core/constants/constants.dart';
-import 'package:locationprojectflutter/data/models/models_location/error.dart';
-import 'package:locationprojectflutter/data/models/models_location/place_response.dart';
 import 'package:locationprojectflutter/data/models/models_location/result.dart';
 import 'package:locationprojectflutter/data/models/models_location/user_location.dart';
+import 'package:locationprojectflutter/data/repository_impl/location_repo_impl.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:provider/provider.dart';
@@ -28,15 +25,13 @@ class ListMap extends StatefulWidget {
 }
 
 class _ListMapState extends State<ListMap> {
-  Error _error;
   List<Result> _places;
   bool _searching = true, _activeSearch = false;
-  int _valueRadiusText;
   double _valueRadius;
   SharedPreferences _sharedPrefs;
   var _userLocation;
-  String _baseUrl = Constants.baseUrl;
   String _API_KEY = Constants.API_KEY;
+  LocationRepositoryImpl responseJsonLocation = LocationRepositoryImpl();
   final _formKeySearch = GlobalKey<FormState>();
 
   @override
@@ -427,19 +422,8 @@ class _ListMapState extends State<ListMap> {
 
   _searchNearby(bool search, String type, String text) async {
     if (search) {
-      _valueRadiusText = _valueRadius.round();
-      double latitude = _userLocation.latitude;
-      double longitude = _userLocation.longitude;
-      String url =
-          '$_baseUrl?key=$_API_KEY&location=$latitude,$longitude&opennow=true&types=$type&radius=$_valueRadiusText&keyword=$text';
-      print(url);
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        _handleResponse(data);
-      } else {
-        throw Exception('An error occurred getting places nearby');
-      }
+      _places = await responseJsonLocation.getResponseLocation(_userLocation.latitude,
+          _userLocation.longitude, type, _valueRadius.round(), text);
       setState(() {
         _searching = false;
         _places.sort((a, b) => sqrt(
@@ -450,21 +434,6 @@ class _ListMapState extends State<ListMap> {
                 pow(b.geometry.location.long - _userLocation.longitude, 2))));
         print(_searching);
       });
-    }
-  }
-
-  _handleResponse(data) {
-    if (data['status'] == "REQUEST_DENIED") {
-      setState(() {
-        _error = Error.fromJson(data);
-        print(_error);
-      });
-    } else if (data['status'] == "OK") {
-      setState(() {
-        _places = PlaceResponse.parseResults(data['results']);
-      });
-    } else {
-      print(data);
     }
   }
 }
