@@ -9,7 +9,7 @@ class GetLocationJsonUsecase implements UseCaseCore<ParamsLocation> {
   GetLocationJsonUsecase();
 
   @override
-  Future call({@required ParamsLocation paramsLocation}) async {
+  Future callLocation({@required ParamsLocation paramsLocation}) async {
     return await locationRepositoryImpl.getLocationJson(paramsLocation.latitude,
         paramsLocation.longitude, paramsLocation.type, paramsLocation.valueRadiusText, paramsLocation.text);
   }

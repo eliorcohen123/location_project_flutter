@@ -422,7 +422,7 @@ class _ListMapState extends State<ListMap> {
 
   _searchNearby(bool search, String type, String text) async {
     if (search) {
-      _places = await _getLocationJsonUsecase(
+      _places = await _getLocationJsonUsecase.callLocation(
           paramsLocation: ParamsLocation(
               latitude: _userLocation.latitude,
               longitude: _userLocation.longitude,

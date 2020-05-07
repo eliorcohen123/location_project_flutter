@@ -103,7 +103,7 @@ class _MapListState extends State<MapList> {
     setState(() {
       _markers.clear();
     });
-    _places = await _getLocationJsonUsecase(
+    _places = await _getLocationJsonUsecase.callLocation(
         paramsLocation: ParamsLocation(
             latitude: _userLocation.latitude,
             longitude: _userLocation.longitude,
