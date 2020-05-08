@@ -42,14 +42,12 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   List<ResultSql> _places = new List();
   var _userLocation;
   String _API_KEY = Constants.API_KEY;
-  var _provLoc;
 
   @override
   void initState() {
     super.initState();
 
-    _provLoc = Provider.of<ResultsSqlfProvider>(context, listen: false);
-    _provLoc.getItems(_places);
+    Provider.of<ResultsSqlfProvider>(context, listen: false).getItems(_places);
   }
 
   @override
@@ -188,8 +186,10 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                                   builder: (context) => AddOrEditDataFavorites(
                                     id: _places[index].id,
                                     nameList: _places[index].name,
+                                    addressList: _places[index].vicinity,
                                     latList: _places[index].lat,
                                     lngList: _places[index].lng,
+                                    photoList: _places[index].photo,
                                     edit: true,
                                   ),
                                 ));

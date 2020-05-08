@@ -28,14 +28,14 @@ class _MapListState extends State<MapList> {
   List<Marker> _markers = <Marker>[];
   List<Result> _places;
   var _userLocation;
-  GetLocationJsonUsecase _getLocationJsonUsecase;
+  GetLocationJsonUsecase _getLocationJsonUsecase = GetLocationJsonUsecase();
 
   @override
   void initState() {
     super.initState();
 
     _initGetSharedPref();
-    _initMarkerList();
+    _initMarker();
   }
 
   @override
@@ -83,7 +83,7 @@ class _MapListState extends State<MapList> {
       drawer: DrawerTotal(),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          _searchNearby();
+          _searchNearbyList();
         },
         label: Text('Show nearby places'),
         icon: Icon(Icons.place),
@@ -99,7 +99,7 @@ class _MapListState extends State<MapList> {
     });
   }
 
-  _searchNearby() async {
+  _searchNearbyList() async {
     setState(() {
       _markers.clear();
     });
@@ -114,12 +114,13 @@ class _MapListState extends State<MapList> {
       for (int i = 0; i < _places.length; i++) {
         _markers.add(
           Marker(
+            icon: BitmapDescriptor.defaultMarkerWithHue(
+                BitmapDescriptor.hueViolet),
             markerId: MarkerId(_places[i].name),
             position: LatLng(_places[i].geometry.location.lat,
                 _places[i].geometry.location.long),
             onTap: () {
-              String namePlace =
-              _places[i].name != null ? _places[i].name : "";
+              String namePlace = _places[i].name != null ? _places[i].name : "";
               _showDialog(namePlace, _places[i].geometry.location.lat,
                   _places[i].geometry.location.long);
             },
@@ -131,7 +132,7 @@ class _MapListState extends State<MapList> {
     });
   }
 
-  _initMarkerList() {
+  _initMarker() {
     _markers.add(Marker(
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
       markerId: MarkerId(widget.nameList != null ? widget.nameList : ""),
