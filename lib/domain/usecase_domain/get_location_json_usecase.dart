@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
-import 'package:locationprojectflutter/core/usecases_core/usecase_core.dart';
+import 'package:locationprojectflutter/core/usecase_core/usecase_core_location.dart';
 import 'package:locationprojectflutter/data/repository_impl/location_repo_impl.dart';
 import 'package:meta/meta.dart';
 
-class GetLocationJsonUsecase implements UseCaseCore<ParamsLocation> {
+class GetLocationJsonUsecase implements UseCaseCoreLocation<ParamsLocation> {
   LocationRepositoryImpl locationRepositoryImpl = LocationRepositoryImpl();
 
   GetLocationJsonUsecase();

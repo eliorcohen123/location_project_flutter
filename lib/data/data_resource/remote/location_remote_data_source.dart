@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:locationprojectflutter/core/constants/constants.dart';
-import 'package:locationprojectflutter/data/models/models_location/error.dart';
-import 'package:locationprojectflutter/data/models/models_location/place_response.dart';
-import 'package:locationprojectflutter/data/models/models_location/result.dart';
+import 'package:locationprojectflutter/core/constant/constants.dart';
+import 'package:locationprojectflutter/data/model/models_location/error.dart';
+import 'package:locationprojectflutter/data/model/models_location/place_response.dart';
+import 'package:locationprojectflutter/data/model/models_location/result.dart';
 
 class LocationRemoteDataSource {
   static final LocationRemoteDataSource _singleton = LocationRemoteDataSource._internal();

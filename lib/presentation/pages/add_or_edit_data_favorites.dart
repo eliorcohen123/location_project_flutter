@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/data/database/sqflite_helper.dart';
-import 'package:locationprojectflutter/data/models/models_sqlf/ResultSql.dart';
+import 'package:locationprojectflutter/data/model/models_sqlf/ResultSql.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
