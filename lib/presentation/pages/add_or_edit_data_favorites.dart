@@ -204,28 +204,16 @@ class _AddOrEditDataFavoritesProvState
                               textAddress.text,
                               double.parse(textLat.text),
                               double.parse(textLng.text),
-                              textPhoto.text)
-                          .then((_) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FavoritesData(),
-                              ));
-                        })
+                              textPhoto.text,
+                              context)
                       : Provider.of<ResultsSqlfProvider>(context, listen: false)
                           .addResult(
                               textName.text,
                               textAddress.text,
                               double.parse(textLat.text),
                               double.parse(textLng.text),
-                              textPhoto.text)
-                          .then((_) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FavoritesData(),
-                              ));
-                        }),
+                              textPhoto.text,
+                              context),
                   child: Container(
                     decoration: const BoxDecoration(
                         gradient: LinearGradient(
