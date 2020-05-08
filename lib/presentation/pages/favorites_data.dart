@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/core/constant/constants.dart';
-import 'package:locationprojectflutter/data/database/sqflite_helper.dart';
 import 'package:locationprojectflutter/data/model/models_sqlf/ResultSql.dart';
 import 'package:locationprojectflutter/data/model/models_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/pages/add_or_edit_data_favorites.dart';
+import 'package:locationprojectflutter/presentation/state_management/results_sqlf_provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:latlong/latlong.dart' as dis;
@@ -20,16 +20,36 @@ class FavoritesData extends StatefulWidget {
 }
 
 class _FavoritesDataState extends State<FavoritesData> {
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<ResultsSqlfProvider>(
+        create: (context) => ResultsSqlfProvider(),
+        child:
+            Consumer<ResultsSqlfProvider>(builder: (context, results, child) {
+          return FavoritesDataProv();
+        }));
+  }
+}
+
+class FavoritesDataProv extends StatefulWidget {
+  const FavoritesDataProv({Key key}) : super(key: key);
+
+  @override
+  _FavoritesDataProvState createState() => _FavoritesDataProvState();
+}
+
+class _FavoritesDataProvState extends State<FavoritesDataProv> {
   List<ResultSql> _places = new List();
-  SQFLiteHelper db = new SQFLiteHelper();
   var _userLocation;
   String _API_KEY = Constants.API_KEY;
+  var _provLoc;
 
   @override
   void initState() {
     super.initState();
 
-    _getItems();
+    _provLoc = Provider.of<ResultsSqlfProvider>(context, listen: false);
+    _provLoc.getItems(_places);
   }
 
   @override
@@ -47,7 +67,9 @@ class _FavoritesDataState extends State<FavoritesData> {
             IconButton(
               icon: Icon(Icons.delete_forever),
               color: Color(0xFFE9FFFF),
-              onPressed: () => setState(() => _deleteData()),
+              onPressed: () =>
+                  Provider.of<ResultsSqlfProvider>(context, listen: false)
+                      .deleteData(_places),
             )
           ],
         ),
@@ -196,7 +218,9 @@ class _FavoritesDataState extends State<FavoritesData> {
                           color: Colors.red,
                         ),
                         tapCallback: (_) {
-                          _deleteItem(_places[index], index);
+                          Provider.of<ResultsSqlfProvider>(context,
+                                  listen: false)
+                              .deleteItem(_places[index], index, _places);
                         },
                       )
                     ],
@@ -239,33 +263,5 @@ class _FavoritesDataState extends State<FavoritesData> {
             color: Color(0xAA000000),
           ),
         ], fontSize: fontSize, color: Color(color)));
-  }
-
-  void _deleteItem(ResultSql result, int index) async {
-    print(result.id);
-    db.deleteResult(result.id).then((_) {
-      setState(() {
-        _places.removeAt(index);
-      });
-    });
-  }
-
-  void _deleteData() async {
-    db.deleteData().then((_) {
-      setState(() {
-        _getItems();
-      });
-    });
-  }
-
-  void _getItems() async {
-    db.getAllResults().then((results) {
-      setState(() {
-        _places.clear();
-        results.forEach((result) {
-          _places.add(ResultSql.fromSqlf(result));
-        });
-      });
-    });
   }
 }

@@ -25,7 +25,7 @@ class ListMap extends StatefulWidget {
 }
 
 class _ListMapState extends State<ListMap> {
-  List<Result> _places;
+  List<Result> _places = new List();
   bool _searching = true, _activeSearch = false;
   double _valueRadius;
   SharedPreferences _sharedPrefs;
