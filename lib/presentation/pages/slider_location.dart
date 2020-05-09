@@ -25,22 +25,21 @@ class _SliderLocationState extends State<SliderLocation> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.black,
-              title: Text(
-                'Lovely Favorite Places',
-                style: TextStyle(color: Color(0xFFE9FFFF)),
-              ),
-              iconTheme: new IconThemeData(color: Color(0xFFE9FFFF)),
-            ),
-            backgroundColor: Colors.white,
-            body: Center(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          title: Text(
+            'Lovely Favorite Places',
+            style: TextStyle(color: Color(0xFFE9FFFF)),
+          ),
+          iconTheme: new IconThemeData(color: Color(0xFFE9FFFF)),
+        ),
+        backgroundColor: Colors.white,
+        body: Center(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -48,10 +47,10 @@ class _SliderLocationState extends State<SliderLocation> {
                       Text("Distance"),
                       SizedBox(
                           width:
-                              ResponsiveScreen().widthMediaQuery(context, 5)),
+                          ResponsiveScreen().widthMediaQuery(context, 5)),
                       Icon(Icons.my_location,
                           size:
-                              ResponsiveScreen().heightMediaQuery(context, 40)),
+                          ResponsiveScreen().heightMediaQuery(context, 40)),
                     ],
                   ),
                   Slider(
@@ -81,7 +80,7 @@ class _SliderLocationState extends State<SliderLocation> {
                         )),
                   )
                 ])),
-            drawer: DrawerTotal()));
+        drawer: DrawerTotal());
   }
 
   _initSharedPref() async {

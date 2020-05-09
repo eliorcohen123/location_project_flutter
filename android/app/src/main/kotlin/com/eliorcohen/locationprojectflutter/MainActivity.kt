@@ -1,4 +1,4 @@
-package com.libraryoftheweak.locationprojectflutter
+package com.eliorcohen.locationprojectflutter
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

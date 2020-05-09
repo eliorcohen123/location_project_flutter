@@ -1,14 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/presentation/pages/custom_map_list.dart';
 import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
 import 'package:locationprojectflutter/presentation/pages/list_map.dart';
+import 'package:locationprojectflutter/presentation/pages/signin_email_firebase.dart';
 import 'package:locationprojectflutter/presentation/pages/slider_location.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 
 class DrawerTotal extends StatelessWidget {
-  DrawerTotal({
-    Key key,
-  }) : super(key: key);
+  static final DrawerTotal _instance = new DrawerTotal.internal();
+
+  factory DrawerTotal() => _instance;
+
+  DrawerTotal.internal();
 
   @override
   Widget build(BuildContext context) {
@@ -139,6 +143,31 @@ class DrawerTotal extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) => SliderLocation(),
                     ));
+              },
+            ),
+            ListTile(
+              title: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.settings,
+                    color: Color(0xFFcd4312),
+                  ),
+                  SizedBox(
+                    width: ResponsiveScreen().widthMediaQuery(context, 10),
+                  ),
+                  Text(
+                    'Sign Out',
+                    style: TextStyle(
+                      color: Color(0xFF9FA31C),
+                    ),
+                  ),
+                ],
+              ),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    (Route<dynamic> route) => false);
               },
             ),
           ],

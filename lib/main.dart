@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:locationprojectflutter/presentation/pages/list_map.dart';
 import 'package:locationprojectflutter/core/services/location_service.dart';
+import 'package:locationprojectflutter/presentation/pages/signin_email_firebase.dart';
 import 'package:provider/provider.dart';
 import 'package:locationprojectflutter/data/model/models_location/user_location.dart';
 
@@ -11,6 +11,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamProvider<UserLocation>(
         create: (context) => LocationService().locationStream,
-        child: MaterialApp(home: ListMap()));
+        child: MaterialApp(home: LoginPage()));
   }
 }

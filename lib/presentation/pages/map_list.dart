@@ -43,8 +43,7 @@ class _MapListState extends State<MapList> {
     _userLocation = Provider.of<UserLocation>(context);
     var _currentLocation =
         LatLng(_userLocation.latitude, _userLocation.longitude);
-    return MaterialApp(
-        home: Scaffold(
+    return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text(
@@ -89,7 +88,7 @@ class _MapListState extends State<MapList> {
         icon: Icon(Icons.place),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    ));
+    );
   }
 
   _initGetSharedPref() {

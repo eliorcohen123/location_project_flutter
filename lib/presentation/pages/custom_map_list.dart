@@ -28,34 +28,33 @@ class _CustomMapListState extends State<CustomMapList> {
     var _userLocation = Provider.of<UserLocation>(context);
     var _currentLocation =
         LatLng(_userLocation.latitude, _userLocation.longitude);
-    return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.black,
-              title: Text(
-                'Lovely Favorite Places',
-                style: TextStyle(color: Color(0xFFE9FFFF)),
-              ),
-              iconTheme: new IconThemeData(color: Color(0xFFE9FFFF)),
-            ),
-            body: GoogleMap(
-              onMapCreated: (controller) {
-                setState(() {
-                  _myMapController = controller;
-                });
-              },
-              initialCameraPosition: CameraPosition(
-                target: _currentLocation,
-                zoom: 10.0,
-              ),
-              markers: Set<Marker>.of(_markers),
-              myLocationEnabled: true,
-              myLocationButtonEnabled: true,
-              zoomGesturesEnabled: _zoomGesturesEnabled,
-              mapType: MapType.normal,
-              onTap: _handleTap,
-            ),
-            drawer: DrawerTotal()));
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          title: Text(
+            'Lovely Favorite Places',
+            style: TextStyle(color: Color(0xFFE9FFFF)),
+          ),
+          iconTheme: new IconThemeData(color: Color(0xFFE9FFFF)),
+        ),
+        body: GoogleMap(
+          onMapCreated: (controller) {
+            setState(() {
+              _myMapController = controller;
+            });
+          },
+          initialCameraPosition: CameraPosition(
+            target: _currentLocation,
+            zoom: 10.0,
+          ),
+          markers: Set<Marker>.of(_markers),
+          myLocationEnabled: true,
+          myLocationButtonEnabled: true,
+          zoomGesturesEnabled: _zoomGesturesEnabled,
+          mapType: MapType.normal,
+          onTap: _handleTap,
+        ),
+        drawer: DrawerTotal());
   }
 
   _handleTap(LatLng point) {
