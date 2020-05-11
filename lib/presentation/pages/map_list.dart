@@ -24,6 +24,7 @@ class _MapListState extends State<MapList> {
   Set<Circle> _circles;
   SharedPreferences _sharedPrefs;
   double _valueRadius;
+  String _open;
   bool _zoomGesturesEnabled = true, _searching = true;
   List<Marker> _markers = <Marker>[];
   List<Result> _places;
@@ -95,6 +96,7 @@ class _MapListState extends State<MapList> {
     SharedPreferences.getInstance().then((prefs) {
       setState(() => _sharedPrefs = prefs);
       _valueRadius = prefs.getDouble('rangeRadius') ?? 5000.0;
+      _open = prefs.getString('open') ?? '';
     });
   }
 
@@ -106,6 +108,7 @@ class _MapListState extends State<MapList> {
         paramsLocation: ParamsLocation(
             latitude: _userLocation.latitude,
             longitude: _userLocation.longitude,
+            open: _open,
             type: '',
             valueRadiusText: _valueRadius.round(),
             text: ''));

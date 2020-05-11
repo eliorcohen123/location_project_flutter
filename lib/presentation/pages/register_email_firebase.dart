@@ -105,6 +105,9 @@ class RegisterPageState extends State<RegisterPage> {
                       width: MediaQuery.of(context).size.width,
                     ),
                   ),
+                  SizedBox(
+                    height: ResponsiveScreen().heightMediaQuery(context, 5),
+                  ),
                   Container(
                     alignment: Alignment.center,
                     child: Text(

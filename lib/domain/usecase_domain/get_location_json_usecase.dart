@@ -11,13 +11,14 @@ class GetLocationJsonUsecase implements UseCaseCoreLocation<ParamsLocation> {
   @override
   Future callLocation({@required ParamsLocation paramsLocation}) async {
     return await locationRepositoryImpl.getLocationJson(paramsLocation.latitude,
-        paramsLocation.longitude, paramsLocation.type, paramsLocation.valueRadiusText, paramsLocation.text);
+        paramsLocation.longitude, paramsLocation.open, paramsLocation.type, paramsLocation.valueRadiusText, paramsLocation.text);
   }
 }
 
 class ParamsLocation extends Equatable {
   final double latitude;
   final double longitude;
+  final String open;
   final String type;
   final int valueRadiusText;
   final String text;
@@ -25,11 +26,12 @@ class ParamsLocation extends Equatable {
   ParamsLocation({
     @required this.latitude,
     @required this.longitude,
+    @required this.open,
     @required this.type,
     @required this.valueRadiusText,
     @required this.text,
   });
 
   @override
-  List<Object> get props => [latitude, longitude, type, valueRadiusText, text];
+  List<Object> get props => [latitude, longitude, open, type, valueRadiusText, text];
 }

@@ -6,9 +6,9 @@ class LocationRepositoryImpl implements LocationRepository {
       LocationRemoteDataSource();
 
   @override
-  Future getLocationJson(double latitude, double longitude, String type,
+  Future getLocationJson(double latitude, double longitude, String open, String type,
       int valueRadiusText, String text) {
     return locationRemoteDataSource.responseJsonLocation(
-        latitude, longitude, type, valueRadiusText, text);
+        latitude, longitude, open, type, valueRadiusText, text);
   }
 }

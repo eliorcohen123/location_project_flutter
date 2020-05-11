@@ -19,10 +19,10 @@ class LocationRemoteDataSource {
   String _baseUrl = Constants.baseUrl;
   String _API_KEY = Constants.API_KEY;
 
-  responseJsonLocation(double latitude, double longitude, String type,
+  responseJsonLocation(double latitude, double longitude, String open, String type,
       int valueRadiusText, String text) async {
     String url =
-        '$_baseUrl?key=$_API_KEY&location=$latitude,$longitude&opennow=true&types=$type&radius=$valueRadiusText&keyword=$text';
+        '$_baseUrl?key=$_API_KEY&location=$latitude,$longitude$open&types=$type&radius=$valueRadiusText&keyword=$text';
     print(url);
     final response = await http.get(url);
     if (response.statusCode == 200) {

@@ -10,6 +10,7 @@ import 'package:locationprojectflutter/domain/usecase_domain/get_location_json_u
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 import 'package:slide_item/slide_item.dart';
@@ -28,6 +29,7 @@ class _ListMapState extends State<ListMap> {
   List<Result> _places = new List();
   bool _searching = true, _activeSearch = false;
   double _valueRadius;
+  String _open;
   SharedPreferences _sharedPrefs;
   var _userLocation;
   String _API_KEY = Constants.API_KEY;
@@ -324,6 +326,27 @@ class _ListMapState extends State<ListMap> {
                                               ),
                                             ));
                                       }),
+                                  SlideAction(
+                                      actionWidget: Container(
+                                        child: Icon(Icons.share),
+                                        color: Colors.blueGrey,
+                                      ),
+                                      tapCallback: (_) {
+                                        _shareContent(
+                                            _places[index].name,
+                                            _places[index].vicinity,
+                                            _places[index]
+                                                .geometry
+                                                .location
+                                                .lat,
+                                            _places[index]
+                                                .geometry
+                                                .location
+                                                .long,
+                                            _places[index]
+                                                .photos[0]
+                                                .photoReference);
+                                      }),
                                 ],
                               );
                             },
@@ -349,6 +372,7 @@ class _ListMapState extends State<ListMap> {
     SharedPreferences.getInstance().then((prefs) {
       setState(() => _sharedPrefs = prefs);
       _valueRadius = prefs.getDouble('rangeRadius') ?? 5000.0;
+      _open = prefs.getString('open') ?? '';
     });
   }
 
@@ -426,6 +450,7 @@ class _ListMapState extends State<ListMap> {
           paramsLocation: ParamsLocation(
               latitude: _userLocation.latitude,
               longitude: _userLocation.longitude,
+              open: _open,
               type: type,
               valueRadiusText: _valueRadius.round(),
               text: text));
@@ -440,5 +465,21 @@ class _ListMapState extends State<ListMap> {
         print(_searching);
       });
     }
+  }
+
+  _shareContent(
+      String name, String vicinity, double lat, double lng, String photo) {
+    final RenderBox box = context.findRenderObject();
+    Share.share(
+        'Name: $name' +
+            '\n' +
+            'Vicinity: $vicinity' +
+            '\n' +
+            'Latitude: $lat' +
+            '\n' +
+            'Longitude: $lng' +
+            '\n' +
+            'Photo: $photo',
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 }
