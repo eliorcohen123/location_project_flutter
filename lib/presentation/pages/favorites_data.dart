@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/core/constant/constants.dart';
-import 'package:locationprojectflutter/data/model/models_sqlf/ResultSql.dart';
+import 'package:locationprojectflutter/data/model/models_sqfl/ResultSqfl.dart';
 import 'package:locationprojectflutter/data/model/models_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/pages/add_or_edit_data_favorites.dart';
 import 'package:locationprojectflutter/presentation/state_management/results_sqlf_provider.dart';
@@ -9,6 +9,7 @@ import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:latlong/latlong.dart' as dis;
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 import 'package:slide_item/slide_item.dart';
 import 'map_list.dart';
 
@@ -22,10 +23,10 @@ class FavoritesData extends StatefulWidget {
 class _FavoritesDataState extends State<FavoritesData> {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ResultsSqlfProvider>(
-        create: (context) => ResultsSqlfProvider(),
+    return ChangeNotifierProvider<ResultsSqflProvider>(
+        create: (context) => ResultsSqflProvider(),
         child:
-            Consumer<ResultsSqlfProvider>(builder: (context, results, child) {
+            Consumer<ResultsSqflProvider>(builder: (context, results, child) {
           return FavoritesDataProv();
         }));
   }
@@ -39,15 +40,16 @@ class FavoritesDataProv extends StatefulWidget {
 }
 
 class _FavoritesDataProvState extends State<FavoritesDataProv> {
-  List<ResultSql> _places = new List();
-  var _userLocation;
+  List<ResultSqfl> _places = new List();
+  var _userLocation, _sqflProv;
   String _API_KEY = Constants.API_KEY;
 
   @override
   void initState() {
     super.initState();
 
-    Provider.of<ResultsSqlfProvider>(context, listen: false).getItems(_places);
+    _sqflProv = Provider.of<ResultsSqflProvider>(context, listen: false);
+    _sqflProv.getItems(_places);
   }
 
   @override
@@ -65,9 +67,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
             IconButton(
               icon: Icon(Icons.delete_forever),
               color: Color(0xFFE9FFFF),
-              onPressed: () =>
-                  Provider.of<ResultsSqlfProvider>(context, listen: false)
-                      .deleteData(_places),
+              onPressed: () => _sqflProv.deleteData(_places),
             )
           ],
         ),
@@ -82,8 +82,8 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                   deleteStep2AnimDuration: Duration(milliseconds: 300),
                   supportElasticity: true,
                   closeOpenedItemOnTouch: true,
-                  slideWidth: ResponsiveScreen().widthMediaQuery(context, 100),
-                  actionOpenCloseThreshold: 0.7,
+                  slideWidth: ResponsiveScreen().widthMediaQuery(context, 40),
+                  actionOpenCloseThreshold: 0.3,
                   backgroundColor: Colors.white),
               child: ListView.separated(
                 itemCount: _places.length,
@@ -210,6 +210,19 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                                   ),
                                 ));
                           }),
+                      SlideAction(
+                          actionWidget: Container(
+                            child: Icon(Icons.share),
+                            color: Colors.blueGrey,
+                          ),
+                          tapCallback: (_) {
+                            _shareContent(
+                                _places[index].name,
+                                _places[index].vicinity,
+                                _places[index].lat,
+                                _places[index].lng,
+                                _places[index].photo);
+                          }),
                     ],
                     leftActions: <SlideAction>[
                       SlideAction(
@@ -218,9 +231,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                           color: Colors.red,
                         ),
                         tapCallback: (_) {
-                          Provider.of<ResultsSqlfProvider>(context,
-                                  listen: false)
-                              .deleteItem(_places[index], index, _places);
+                          _sqflProv.deleteItem(_places[index], index, _places);
                         },
                       )
                     ],
@@ -263,5 +274,21 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
             color: Color(0xAA000000),
           ),
         ], fontSize: fontSize, color: Color(color)));
+  }
+
+  _shareContent(
+      String name, String vicinity, double lat, double lng, String photo) {
+    final RenderBox box = context.findRenderObject();
+    Share.share(
+        'Name: $name' +
+            '\n' +
+            'Vicinity: $vicinity' +
+            '\n' +
+            'Latitude: $lat' +
+            '\n' +
+            'Longitude: $lng' +
+            '\n' +
+            'Photo: $photo',
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 }

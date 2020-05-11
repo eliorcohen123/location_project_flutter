@@ -1,4 +1,4 @@
-class ResultSql {
+class ResultSqfl {
   int id;
   String name;
   String vicinity;
@@ -6,9 +6,9 @@ class ResultSql {
   double lng;
   String photo;
 
-  ResultSql.sqlf(this.name, this.vicinity, this.lat, this.lng, this.photo);
+  ResultSqfl.sqfl(this.name, this.vicinity, this.lat, this.lng, this.photo);
 
-  Map<String, dynamic> toSqlf() {
+  Map<String, dynamic> toSqfl() {
     var map = Map<String, dynamic>();
     if (id != null) {
       map['id'] = id;
@@ -21,7 +21,7 @@ class ResultSql {
     return map;
   }
 
-  ResultSql.fromSqlf(Map<String, dynamic> map) {
+  ResultSqfl.fromSqfl(Map<String, dynamic> map) {
     this.id = map['id'];
     this.name = map['name'];
     this.vicinity = map['vicinity'];

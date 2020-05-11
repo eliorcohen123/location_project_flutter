@@ -167,8 +167,8 @@ class _ListMapState extends State<ListMap> {
                               supportElasticity: true,
                               closeOpenedItemOnTouch: true,
                               slideWidth: ResponsiveScreen()
-                                  .widthMediaQuery(context, 100),
-                              actionOpenCloseThreshold: 0.7,
+                                  .widthMediaQuery(context, 40),
+                              actionOpenCloseThreshold: 0.3,
                               backgroundColor: Colors.white),
                           child: ListView.separated(
                             itemCount: _places.length,

@@ -4,7 +4,7 @@ import 'package:locationprojectflutter/presentation/pages/custom_map_list.dart';
 import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
 import 'package:locationprojectflutter/presentation/pages/list_map.dart';
 import 'package:locationprojectflutter/presentation/pages/signin_email_firebase.dart';
-import 'package:locationprojectflutter/presentation/pages/slider_location.dart';
+import 'package:locationprojectflutter/presentation/pages/settings_app.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 
 class DrawerTotal extends StatelessWidget {
@@ -141,7 +141,7 @@ class DrawerTotal extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SliderLocation(),
+                      builder: (context) => SettingsApp(),
                     ));
               },
             ),

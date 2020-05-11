@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
@@ -7,14 +5,14 @@ import 'package:locationprojectflutter/presentation/widgets/responsive_screen.da
 import 'package:shared_preferences/shared_preferences.dart';
 import 'list_map.dart';
 
-class SliderLocation extends StatefulWidget {
-  const SliderLocation({Key key}) : super(key: key);
+class SettingsApp extends StatefulWidget {
+  const SettingsApp({Key key}) : super(key: key);
 
   @override
-  _SliderLocationState createState() => _SliderLocationState();
+  _SettingsAppState createState() => _SettingsAppState();
 }
 
-class _SliderLocationState extends State<SliderLocation> {
+class _SettingsAppState extends State<SettingsApp> {
   SharedPreferences _sharedPrefs;
   double _valueRadius;
 

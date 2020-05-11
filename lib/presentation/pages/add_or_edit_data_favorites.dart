@@ -29,10 +29,10 @@ class AddOrEditDataFavorites extends StatefulWidget {
 class _AddOrEditDataFavoritesState extends State<AddOrEditDataFavorites> {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ResultsSqlfProvider>(
-        create: (context) => ResultsSqlfProvider(),
+    return ChangeNotifierProvider<ResultsSqflProvider>(
+        create: (context) => ResultsSqflProvider(),
         child:
-            Consumer<ResultsSqlfProvider>(builder: (context, results, child) {
+            Consumer<ResultsSqflProvider>(builder: (context, results, child) {
           return AddOrEditDataFavoritesProv(
               nameList: widget.nameList,
               addressList: widget.addressList,
@@ -197,7 +197,7 @@ class _AddOrEditDataFavoritesProvState
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(80.0)),
                   onPressed: () => widget.edit
-                      ? Provider.of<ResultsSqlfProvider>(context, listen: false)
+                      ? Provider.of<ResultsSqflProvider>(context, listen: false)
                           .updateResult(
                               widget.id,
                               textName.text,
@@ -206,7 +206,7 @@ class _AddOrEditDataFavoritesProvState
                               double.parse(textLng.text),
                               textPhoto.text,
                               context)
-                      : Provider.of<ResultsSqlfProvider>(context, listen: false)
+                      : Provider.of<ResultsSqflProvider>(context, listen: false)
                           .addResult(
                               textName.text,
                               textAddress.text,
