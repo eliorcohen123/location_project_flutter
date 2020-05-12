@@ -198,7 +198,7 @@ class _AddOrEditDataFavoritesProvState
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(80.0)),
                   onPressed: () => widget.edit
-                      ? _sqflProv.updateResult(
+                      ? _sqflProv.updateItem(
                           widget.id,
                           textName.text,
                           textAddress.text,
@@ -206,7 +206,7 @@ class _AddOrEditDataFavoritesProvState
                           double.parse(textLng.text),
                           textPhoto.text,
                           context)
-                      : _sqflProv.addResult(
+                      : _sqflProv.addItem(
                           textName.text,
                           textAddress.text,
                           double.parse(textLat.text),

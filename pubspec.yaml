@@ -26,6 +26,7 @@ dependencies:
   grouped_buttons: ^1.0.4
   firebase_auth: ^0.16.0
   provider: ^4.0.5+1
+  slim: ^1.1.2
 
 dev_dependencies:
   flutter_test:

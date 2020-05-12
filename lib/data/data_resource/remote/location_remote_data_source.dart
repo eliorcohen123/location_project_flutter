@@ -6,11 +6,10 @@ import 'package:locationprojectflutter/data/model/models_location/place_response
 import 'package:locationprojectflutter/data/model/models_location/result.dart';
 
 class LocationRemoteDataSource {
-  static final LocationRemoteDataSource _singleton = LocationRemoteDataSource._internal();
+  static final LocationRemoteDataSource _singleton =
+      LocationRemoteDataSource._internal();
 
-  factory LocationRemoteDataSource() {
-    return _singleton;
-  }
+  factory LocationRemoteDataSource() => _singleton;
 
   LocationRemoteDataSource._internal();
 
@@ -19,8 +18,8 @@ class LocationRemoteDataSource {
   String _baseUrl = Constants.baseUrl;
   String _API_KEY = Constants.API_KEY;
 
-  responseJsonLocation(double latitude, double longitude, String open, String type,
-      int valueRadiusText, String text) async {
+  responseJsonLocation(double latitude, double longitude, String open,
+      String type, int valueRadiusText, String text) async {
     String url =
         '$_baseUrl?key=$_API_KEY&location=$latitude,$longitude$open&types=$type&radius=$valueRadiusText&keyword=$text';
     print(url);

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/core/services/location_service.dart';
 import 'package:locationprojectflutter/presentation/pages/signin_email_firebase.dart';
 import 'package:provider/provider.dart';
-import 'package:locationprojectflutter/data/model/models_location/user_location.dart';
+import 'file:///C:/android/location_project_flutter/lib/data/model/models_stream_location/user_location.dart';
 
 void main() => runApp(MyApp());
 

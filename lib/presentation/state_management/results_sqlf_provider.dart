@@ -7,7 +7,7 @@ import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
 class ResultsSqflProvider extends ChangeNotifier {
   final SQFLiteHelper _db = new SQFLiteHelper();
 
-  Future addResult(String name, String vicinity, double lat, double lng,
+  Future addItem(String name, String vicinity, double lat, double lng,
       String photo, BuildContext context) async {
     var add = ResultSqfl.sqfl(name, vicinity, lat, lng, photo);
     _db.addResult(add).then((_) {
@@ -19,7 +19,7 @@ class ResultsSqflProvider extends ChangeNotifier {
     });
   }
 
-  Future updateResult(int id, String name, String vicinity, double lat,
+  Future updateItem(int id, String name, String vicinity, double lat,
       double lng, String photo, BuildContext context) async {
     _db
         .updateResult(ResultSqfl.fromSqfl({
