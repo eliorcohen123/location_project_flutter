@@ -12,7 +12,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:icon="@mipmap/ic_launcher"
-        android:label="locationprojectflutter">
+        android:label="Lovely Favorite Places">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDc7oNJ8FQZc6xmDVEvj-vewU5-ohnlwR0" />

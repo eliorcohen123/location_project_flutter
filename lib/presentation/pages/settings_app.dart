@@ -20,7 +20,6 @@ class _SettingsAppState extends State<SettingsApp> {
   void initState() {
     super.initState();
 
-    _initSharedPref();
     _initGetSharedPref();
   }
 
@@ -121,10 +120,6 @@ class _SettingsAppState extends State<SettingsApp> {
               ])),
         ),
         drawer: DrawerTotal());
-  }
-
-  _initSharedPref() async {
-    _sharedPrefs = await SharedPreferences.getInstance();
   }
 
   _initGetSharedPref() {

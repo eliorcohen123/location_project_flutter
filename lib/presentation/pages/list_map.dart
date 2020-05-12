@@ -425,11 +425,7 @@ class _ListMapState extends State<ListMap> {
             blurRadius: 1.0,
             color: Color(0xAA000000),
           ),
-          Shadow(
-            offset: Offset(1.0, 1.0),
-            blurRadius: 1.0,
-            color: Color(0xAA000000),
-          ),
+
         ], fontSize: fontSize, color: Color(color)));
   }
 
