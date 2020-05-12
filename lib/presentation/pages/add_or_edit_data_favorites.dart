@@ -73,6 +73,7 @@ class _AddOrEditDataFavoritesProvState
   final textLat = TextEditingController();
   final textLng = TextEditingController();
   final textPhoto = TextEditingController();
+  var _sqflProv;
 
   @override
   void initState() {
@@ -83,6 +84,7 @@ class _AddOrEditDataFavoritesProvState
     textLat.text = widget.latList.toString();
     textLng.text = widget.lngList.toString();
     textPhoto.text = widget.photoList;
+    _sqflProv = Provider.of<ResultsSqflProvider>(context, listen: false);
   }
 
   @override
@@ -196,23 +198,21 @@ class _AddOrEditDataFavoritesProvState
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(80.0)),
                   onPressed: () => widget.edit
-                      ? Provider.of<ResultsSqflProvider>(context, listen: false)
-                          .updateResult(
-                              widget.id,
-                              textName.text,
-                              textAddress.text,
-                              double.parse(textLat.text),
-                              double.parse(textLng.text),
-                              textPhoto.text,
-                              context)
-                      : Provider.of<ResultsSqflProvider>(context, listen: false)
-                          .addResult(
-                              textName.text,
-                              textAddress.text,
-                              double.parse(textLat.text),
-                              double.parse(textLng.text),
-                              textPhoto.text,
-                              context),
+                      ? _sqflProv.updateResult(
+                          widget.id,
+                          textName.text,
+                          textAddress.text,
+                          double.parse(textLat.text),
+                          double.parse(textLng.text),
+                          textPhoto.text,
+                          context)
+                      : _sqflProv.addResult(
+                          textName.text,
+                          textAddress.text,
+                          double.parse(textLat.text),
+                          double.parse(textLng.text),
+                          textPhoto.text,
+                          context),
                   child: Container(
                     decoration: const BoxDecoration(
                         gradient: LinearGradient(
