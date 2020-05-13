@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:locationprojectflutter/data/models/model_location/result.dart';
 import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
+import 'package:locationprojectflutter/presentation/others/validations.dart';
 
 void main() {
   group("Unit tests for app", () {
@@ -16,6 +17,11 @@ void main() {
           latitude, longitude, open, type, valueRadiusText, text);
       expect(searchString, isNot(null));
       expect(searchString, isNotEmpty);
+    });
+
+    test('Email validation', () async {
+      bool valid = Validations().validateEmail('eliorjobcohen@gmail.com');
+      expect(valid, true);
     });
   });
 }

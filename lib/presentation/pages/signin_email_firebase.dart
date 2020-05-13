@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:locationprojectflutter/presentation/others/validations.dart';
 import 'package:locationprojectflutter/presentation/pages/register_email_firebase.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/tff_firebase.dart';
@@ -16,7 +17,7 @@ class LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _success, _loading = false, isLoggedIn;
-  String _userEmail;
+  String _userEmail, _textError = "";
 
   @override
   void initState() {
@@ -113,17 +114,28 @@ class LoginPageState extends State<LoginPage> {
                               ),
                               onPressed: () async {
                                 if (_formKey.currentState.validate()) {
-                                  setState(() {
-                                    _loading = true;
-                                  });
-                                  Future.delayed(
-                                      const Duration(milliseconds: 3000), () {
+                                  if (Validations()
+                                      .validateEmail(_emailController.text)) {
+                                    setState(() {
+                                      _loading = true;
+                                      _textError = '';
+                                    });
+                                    Future.delayed(
+                                        const Duration(milliseconds: 5000), () {
+                                      setState(() {
+                                        _success = false;
+                                        _loading = false;
+                                        _textError =
+                                            'Something wrong with connection';
+                                      });
+                                    });
+                                    _loginFirebase();
+                                  } else {
                                     setState(() {
                                       _success = false;
-                                      _loading = false;
+                                      _textError = 'Invalid Email';
                                     });
-                                  });
-                                  _loginFirebase();
+                                  }
                                 }
                               },
                             ),
@@ -141,9 +153,7 @@ class LoginPageState extends State<LoginPage> {
                           child: Text(
                             _success == null
                                 ? ''
-                                : (_success
-                                    ? ''
-                                    : 'Something wrong with connection'),
+                                : (_success ? '' : _textError),
                             style: TextStyle(color: Colors.redAccent),
                           ),
                         ),

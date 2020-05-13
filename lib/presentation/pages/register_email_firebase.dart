@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:locationprojectflutter/presentation/others/validations.dart';
 import 'package:locationprojectflutter/presentation/pages/signin_email_firebase.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/tff_firebase.dart';
@@ -17,8 +18,8 @@ class RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _success;
-  String _userEmail;
+  bool _success, _loading = false;
+  String _userEmail, _textError = '';
 
   @override
   void dispose() {
@@ -96,7 +97,28 @@ class RegisterPageState extends State<RegisterPage> {
                         ),
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
-                            _registerFirebase();
+                            if (Validations()
+                                .validateEmail(_emailController.text)) {
+                              setState(() {
+                                _loading = true;
+                                _textError = '';
+                              });
+                              Future.delayed(const Duration(milliseconds: 5000),
+                                  () {
+                                setState(() {
+                                  _success = false;
+                                  _loading = false;
+                                  _textError =
+                                      'Something wrong with connection';
+                                });
+                              });
+                              _registerFirebase();
+                            } else {
+                              setState(() {
+                                _success = false;
+                                _textError = 'Invalid Email';
+                              });
+                            }
                           }
                         },
                       ),
@@ -110,9 +132,7 @@ class RegisterPageState extends State<RegisterPage> {
                   Container(
                     alignment: Alignment.center,
                     child: Text(
-                      _success == null
-                          ? ''
-                          : (_success ? '' : 'Registration failed'),
+                      _success == null ? '' : (_success ? '' : _textError),
                       style: TextStyle(color: Colors.redAccent),
                     ),
                   ),
@@ -129,6 +149,10 @@ class RegisterPageState extends State<RegisterPage> {
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                   ),
+                  SizedBox(
+                    height: ResponsiveScreen().heightMediaQuery(context, 20),
+                  ),
+                  _loading == true ? CircularProgressIndicator() : Container(),
                 ],
               ),
             ),
@@ -147,6 +171,7 @@ class RegisterPageState extends State<RegisterPage> {
     if (user != null) {
       setState(() {
         _success = true;
+        _loading = false;
         _userEmail = user.email;
         print(_userEmail);
         Navigator.push(
@@ -157,6 +182,7 @@ class RegisterPageState extends State<RegisterPage> {
       });
     } else {
       _success = false;
+      _loading = false;
     }
   }
 }

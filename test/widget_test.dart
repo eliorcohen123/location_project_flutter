@@ -7,23 +7,40 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:locationprojectflutter/main.dart';
+import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
+import 'package:locationprojectflutter/presentation/pages/signin_email_firebase.dart';
+
+import 'mock_api.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+  group("Widget tests for app", () {
+    testWidgets('Test Mock', (WidgetTester tester) async {
+      double latitude = 31.7428444;
+      double longitude = 34.9847567;
+      String open = '';
+      String type = 'bar';
+      int valueRadiusText = 50000;
+      String text = 'Bar';
+      LocationRepositoryImpl service = MockRemoteReverseServiceAPI();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      expect(
+          service.getLocationJson(
+              latitude, longitude, open, type, valueRadiusText, text),
+          null);
+    });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    testWidgets('Login Page', (WidgetTester tester) async {
+      MaterialApp app = MaterialApp(
+        home: Scaffold(body: LoginPage()),
+      );
+      await tester.pumpWidget(app);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      expect(find.byType(TextFormField), findsNWidgets(2));
+      expect(find.byType(Text), findsNWidgets(6));
+      expect(find.text('Login'), findsNWidgets(2));
+      expect(
+          find.text('Don' + "'" + 't Have an account? click here to register'),
+          findsOneWidget);
+    });
   });
 }
