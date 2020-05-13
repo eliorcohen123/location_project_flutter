@@ -9,8 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
 import 'package:locationprojectflutter/presentation/pages/signin_email_firebase.dart';
+import 'package:mockito/mockito.dart';
 
-import 'mock_api.dart';
+class MockRemoteReverseServiceAPI extends Mock
+    implements LocationRepositoryImpl {}
 
 void main() {
   group("Widget tests for app", () {
@@ -34,6 +36,12 @@ void main() {
         home: Scaffold(body: LoginPage()),
       );
       await tester.pumpWidget(app);
+
+      Finder emailField = find.byKey(Key('emailLogin'));
+      await tester.enterText(emailField, 'eliorjobcohen@gmail.com');
+
+      Finder passwordField = find.byKey(Key('passwordLogin'));
+      await tester.enterText(passwordField, '12345678');
 
       expect(find.byType(TextFormField), findsNWidgets(2));
       expect(find.byType(Text), findsNWidgets(6));

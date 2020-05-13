@@ -23,6 +23,7 @@ class TFFFirebaseState extends State<TFFFirebase> {
           left: ResponsiveScreen().widthMediaQuery(context, 20),
           right: ResponsiveScreen().widthMediaQuery(context, 20)),
       child: TextFormField(
+        key: widget.key,
         controller: widget.controller,
         obscureText: widget.obSecure,
         validator: (String value) {

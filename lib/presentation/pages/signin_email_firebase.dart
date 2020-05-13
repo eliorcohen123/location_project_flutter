@@ -69,6 +69,7 @@ class LoginPageState extends State<LoginPage> {
                               bottom: ResponsiveScreen()
                                   .heightMediaQuery(context, 20)),
                           child: TFFFirebase(
+                              key: Key('emailLogin'),
                               icon: Icon(Icons.email),
                               hint: "Email",
                               controller: _emailController,
@@ -79,6 +80,7 @@ class LoginPageState extends State<LoginPage> {
                               bottom: ResponsiveScreen()
                                   .heightMediaQuery(context, 20)),
                           child: TFFFirebase(
+                              key: Key('passwordLogin'),
                               icon: Icon(Icons.lock),
                               hint: "Password",
                               controller: _passwordController,
