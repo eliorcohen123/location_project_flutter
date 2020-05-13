@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>800911410598-g2h4foe5i4h55psttvo33bsn5oq0ou09.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.800911410598-g2h4foe5i4h55psttvo33bsn5oq0ou09</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBik9g4ltp7icRt0I5BtOsZK39avWvDPw4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>800911410598</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.eliorcohen.locationprojectflutter</string>
+	<key>PROJECT_ID</key>
+	<string>locationprojectflutter</string>
+	<key>STORAGE_BUCKET</key>
+	<string>locationprojectflutter.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:800911410598:ios:61f6bbd1e32bed61cffb67</string>
+	<key>DATABASE_URL</key>
+	<string>https://locationprojectflutter.firebaseio.com</string>
+</dict>
+</plist>
