@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:locationprojectflutter/presentation/state_management/results_sqlf_provider.dart';
+import 'package:locationprojectflutter/presentation/state_management/results_sqfl_provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:provider/provider.dart';

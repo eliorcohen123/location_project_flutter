@@ -1,4 +1,4 @@
-import 'package:locationprojectflutter/data/model/models_location/photo.dart';
+import 'package:locationprojectflutter/data/models/model_location/photo.dart';
 import 'geometry.dart';
 
 class Result {

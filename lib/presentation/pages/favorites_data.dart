@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:locationprojectflutter/core/constant/constants.dart';
-import 'package:locationprojectflutter/data/model/models_sqfl/ResultSqfl.dart';
-import 'package:locationprojectflutter/data/model/models_stream_location/user_location.dart';
+import 'package:locationprojectflutter/core/constants/constant.dart';
+import 'package:locationprojectflutter/data/models/model_sqfl/ResultSqfl.dart';
+import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/pages/add_or_edit_data_favorites.dart';
-import 'package:locationprojectflutter/presentation/state_management/results_sqlf_provider.dart';
+import 'package:locationprojectflutter/presentation/state_management/results_sqfl_provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:latlong/latlong.dart' as dis;

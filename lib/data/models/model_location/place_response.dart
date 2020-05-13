@@ -1,4 +1,4 @@
-import 'package:locationprojectflutter/data/model/models_location/result.dart';
+import 'package:locationprojectflutter/data/models/model_location/result.dart';
 
 class PlaceResponse {
   final List<Result> results;
