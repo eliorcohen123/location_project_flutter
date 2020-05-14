@@ -9,18 +9,18 @@
 //// ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 //
 //mixin _$ResultsSqlfStore on _ResultsSqflBase, Store {
-//  final _$_dbAtom = Atom(name: '_ResultsSqflBase._db');
+//  final _$resultsSqflAtom = Atom(name: '_ResultsSqflBase.resultsSqfl');
 //
 //  @override
-//  SQFLiteHelper get _db {
-//    _$_dbAtom.reportRead();
-//    return super._db;
+//  List<ResultSqfl> get resultsSqfl {
+//    _$resultsSqflAtom.reportRead();
+//    return super.resultsSqfl;
 //  }
 //
 //  @override
-//  set _db(SQFLiteHelper value) {
-//    _$_dbAtom.reportWrite(value, super._db, () {
-//      super._db = value;
+//  set resultsSqfl(List<ResultSqfl> value) {
+//    _$resultsSqflAtom.reportWrite(value, super.resultsSqfl, () {
+//      super.resultsSqfl = value;
 //    });
 //  }
 //
@@ -45,30 +45,42 @@
 //  final _$deleteItemAsyncAction = AsyncAction('_ResultsSqflBase.deleteItem');
 //
 //  @override
-//  Future<dynamic> deleteItem(
-//      ResultSqfl result, int index, List<ResultSqfl> _places) {
-//    return _$deleteItemAsyncAction
-//        .run(() => super.deleteItem(result, index, _places));
+//  Future<dynamic> deleteItem(ResultSqfl result, int index) {
+//    return _$deleteItemAsyncAction.run(() => super.deleteItem(result, index));
 //  }
 //
 //  final _$deleteDataAsyncAction = AsyncAction('_ResultsSqflBase.deleteData');
 //
 //  @override
-//  Future<dynamic> deleteData(List<ResultSqfl> _places) {
-//    return _$deleteDataAsyncAction.run(() => super.deleteData(_places));
+//  Future<dynamic> deleteData() {
+//    return _$deleteDataAsyncAction.run(() => super.deleteData());
 //  }
 //
 //  final _$getItemsAsyncAction = AsyncAction('_ResultsSqflBase.getItems');
 //
 //  @override
-//  Future<dynamic> getItems(List<ResultSqfl> _places) {
-//    return _$getItemsAsyncAction.run(() => super.getItems(_places));
+//  Future<dynamic> getItems() {
+//    return _$getItemsAsyncAction.run(() => super.getItems());
+//  }
+//
+//  final _$_ResultsSqflBaseActionController =
+//      ActionController(name: '_ResultsSqflBase');
+//
+//  @override
+//  dynamic initList(List<ResultSqfl> resultsSqfl) {
+//    final _$actionInfo = _$_ResultsSqflBaseActionController.startAction(
+//        name: '_ResultsSqflBase.initList');
+//    try {
+//      return super.initList(resultsSqfl);
+//    } finally {
+//      _$_ResultsSqflBaseActionController.endAction(_$actionInfo);
+//    }
 //  }
 //
 //  @override
 //  String toString() {
 //    return '''
-//
+//resultsSqfl: ${resultsSqfl}
 //    ''';
 //  }
 //}

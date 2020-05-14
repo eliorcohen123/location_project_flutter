@@ -11,6 +11,14 @@
 //abstract class _ResultsSqflBase with Store {
 //  SQFLiteHelper _db = new SQFLiteHelper();
 //
+//  @observable
+//  List<ResultSqfl> resultsSqfl = List();
+//
+//  @action
+//  initList(List<ResultSqfl> resultsSqfl) {
+//    this.resultsSqfl = resultsSqfl;
+//  }
+//
 //  @action
 //  Future addItem(String name, String vicinity, double lat, double lng,
 //      String photo, BuildContext context) async {
@@ -47,27 +55,26 @@
 //  }
 //
 //  @action
-//  Future deleteItem(
-//      ResultSqfl result, int index, List<ResultSqfl> _places) async {
+//  Future deleteItem(ResultSqfl result, int index) async {
 //    print(result.id);
 //    _db.deleteResult(result.id).then((_) {
-//      _places.removeAt(index);
+//      resultsSqfl.removeAt(index);
 //    });
 //  }
 //
 //  @action
-//  Future deleteData(List<ResultSqfl> _places) async {
+//  Future deleteData() async {
 //    _db.deleteData().then((_) {
-//      getItems(_places);
+//      getItems();
 //    });
 //  }
 //
 //  @action
-//  Future getItems(List<ResultSqfl> _places) async {
+//  Future getItems() async {
 //    _db.getAllResults().then((results) {
-//      _places.clear();
+//      resultsSqfl.clear();
 //      results.forEach((result) {
-//        _places.add(ResultSqfl.fromSqfl(result));
+//        resultsSqfl.add(ResultSqfl.fromSqfl(result));
 //      });
 //    });
 //  }
