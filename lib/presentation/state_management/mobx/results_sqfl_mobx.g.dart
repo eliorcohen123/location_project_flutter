@@ -12,13 +12,13 @@
 //  final _$resultsSqflAtom = Atom(name: '_ResultsSqflBase.resultsSqfl');
 //
 //  @override
-//  List<ResultSqfl> get resultsSqfl {
+//  ObservableList<ResultSqfl> get resultsSqfl {
 //    _$resultsSqflAtom.reportRead();
 //    return super.resultsSqfl;
 //  }
 //
 //  @override
-//  set resultsSqfl(List<ResultSqfl> value) {
+//  set resultsSqfl(ObservableList<ResultSqfl> value) {
 //    _$resultsSqflAtom.reportWrite(value, super.resultsSqfl, () {
 //      super.resultsSqfl = value;
 //    });
@@ -67,7 +67,7 @@
 //      ActionController(name: '_ResultsSqflBase');
 //
 //  @override
-//  dynamic initList(List<ResultSqfl> resultsSqfl) {
+//  dynamic initList(ObservableList<ResultSqfl> resultsSqfl) {
 //    final _$actionInfo = _$_ResultsSqflBaseActionController.startAction(
 //        name: '_ResultsSqflBase.initList');
 //    try {

@@ -5,8 +5,6 @@ import 'package:locationprojectflutter/data/models/model_sqfl/ResultSqfl.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/pages/add_or_edit_data_favorites.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/results_sqfl_provider.dart';
-
-//import 'package:locationprojectflutter/presentation/state_management/mobx/results_sqfl_mobx.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:latlong/latlong.dart' as dis;
@@ -14,6 +12,9 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:slide_item/slide_item.dart';
 import 'map_list.dart';
+
+//import 'package:locationprojectflutter/presentation/state_management/mobx/results_sqfl_mobx.dart';
+//import 'package:mobx/mobx.dart';
 
 class FavoritesData extends StatefulWidget {
   const FavoritesData({Key key}) : super(key: key);
@@ -44,9 +45,10 @@ class FavoritesDataProv extends StatefulWidget {
 class _FavoritesDataProvState extends State<FavoritesDataProv> {
   var _userLocation, _sqflProv;
   String _API_KEY = Constants.API_KEY;
-  List<ResultSqfl> _places = List();
 
+//  ObservableList<ResultSqfl> _places = ObservableList.of([]); // MobX
 //  final ResultsSqlfStore _sqlfMobx = ResultsSqlfStore(); // MobX
+  List<ResultSqfl> _places = List();
 
   @override
   void initState() {

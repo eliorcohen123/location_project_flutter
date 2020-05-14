@@ -12,10 +12,10 @@
 //  SQFLiteHelper _db = new SQFLiteHelper();
 //
 //  @observable
-//  List<ResultSqfl> resultsSqfl = List();
+//  ObservableList<ResultSqfl> resultsSqfl = ObservableList.of([]);
 //
 //  @action
-//  initList(List<ResultSqfl> resultsSqfl) {
+//  initList(ObservableList<ResultSqfl> resultsSqfl) {
 //    this.resultsSqfl = resultsSqfl;
 //  }
 //
