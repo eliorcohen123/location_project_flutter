@@ -4,7 +4,8 @@ import 'package:locationprojectflutter/core/constants/constant.dart';
 import 'package:locationprojectflutter/data/models/model_sqfl/ResultSqfl.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/pages/add_or_edit_data_favorites.dart';
-import 'package:locationprojectflutter/presentation/state_management/results_sqfl_provider.dart';
+//import 'package:locationprojectflutter/presentation/state_management/mobx/results_sqfl_mobx.dart';
+import 'file:///C:/android/locationprojectflutter/lib/presentation/state_management/provider/results_sqfl_provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:latlong/latlong.dart' as dis;
@@ -43,12 +44,16 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   List<ResultSqfl> _places = new List();
   var _userLocation, _sqflProv;
   String _API_KEY = Constants.API_KEY;
+//  final ResultsSqlfStore _sqlfMobx = ResultsSqlfStore(); // MobX
 
   @override
   void initState() {
     super.initState();
-    _sqflProv = Provider.of<ResultsSqflProvider>(context, listen: false);
-    _sqflProv.getItems(_places);
+
+    _sqflProv = Provider.of<ResultsSqflProvider>(context, listen: false); // Provider
+    _sqflProv.getItems(_places); // Provider
+
+//    _sqlfMobx.getItems(_places);
   }
 
   @override
@@ -66,7 +71,8 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
             IconButton(
               icon: Icon(Icons.delete_forever),
               color: Color(0xFFE9FFFF),
-              onPressed: () => _sqflProv.deleteData(_places),
+              onPressed: () => _sqflProv.deleteData(_places), // Provider
+//              onPressed: () => _sqlfMobx.deleteData(_places), // MobX
             )
           ],
         ),
@@ -230,7 +236,8 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                           color: Colors.red,
                         ),
                         tapCallback: (_) {
-                          _sqflProv.deleteItem(_places[index], index, _places);
+                          _sqflProv.deleteItem(_places[index], index, _places); // Provider
+//                          _sqlfMobx.deleteItem(_places[index], index, _places); // Mobx
                         },
                       )
                     ],

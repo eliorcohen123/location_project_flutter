@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:locationprojectflutter/presentation/state_management/results_sqfl_provider.dart';
+//import 'package:locationprojectflutter/presentation/state_management/mobx/results_sqfl_mobx.dart';
+import 'file:///C:/android/locationprojectflutter/lib/presentation/state_management/provider/results_sqfl_provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
 import 'package:provider/provider.dart';
@@ -75,6 +76,8 @@ class _AddOrEditDataFavoritesProvState
   final textPhoto = TextEditingController();
   var _sqflProv;
 
+//  final ResultsSqlfStore _sqlfMobx = ResultsSqlfStore(); MobX
+
   @override
   void initState() {
     super.initState();
@@ -84,7 +87,8 @@ class _AddOrEditDataFavoritesProvState
     textLat.text = widget.latList.toString();
     textLng.text = widget.lngList.toString();
     textPhoto.text = widget.photoList;
-    _sqflProv = Provider.of<ResultsSqflProvider>(context, listen: false);
+    _sqflProv =
+        Provider.of<ResultsSqflProvider>(context, listen: false); // Provider
   }
 
   @override
@@ -205,14 +209,29 @@ class _AddOrEditDataFavoritesProvState
                           double.parse(textLat.text),
                           double.parse(textLng.text),
                           textPhoto.text,
-                          context)
+                          context) // Provider
                       : _sqflProv.addItem(
                           textName.text,
                           textAddress.text,
                           double.parse(textLat.text),
                           double.parse(textLng.text),
                           textPhoto.text,
-                          context),
+                          context), // Provider
+//                      ? _sqlfMobx.updateItem(
+//                          widget.id,
+//                          textName.text,
+//                          textAddress.text,
+//                          double.parse(textLat.text),
+//                          double.parse(textLng.text),
+//                          textPhoto.text,
+//                          context) // MobX
+//                      : _sqlfMobx.addItem(
+//                          textName.text,
+//                          textAddress.text,
+//                          double.parse(textLat.text),
+//                          double.parse(textLng.text),
+//                          textPhoto.text,
+//                          context), // MobX
                   child: Container(
                     decoration: const BoxDecoration(
                         gradient: LinearGradient(

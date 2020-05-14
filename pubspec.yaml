@@ -26,7 +26,8 @@ dependencies:
   grouped_buttons: ^1.0.4
   firebase_auth: ^0.16.0
   provider: ^4.0.5+1
-  slim: ^1.1.2
+#  flutter_mobx: ^1.1.0
+#  mobx: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -34,6 +35,8 @@ dev_dependencies:
   test: any
   mockito: ^4.1.1
   flutter_launcher_icons: ^0.7.4
+#  build_runner: ^1.8.1
+#  mobx_codegen: ^1.0.3
 
 flutter_icons:
   android: true
