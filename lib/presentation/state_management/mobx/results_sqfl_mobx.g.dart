@@ -9,6 +9,21 @@
 //// ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 //
 //mixin _$ResultsSqlfStore on _ResultsSqflBase, Store {
+//  final _$_dbAtom = Atom(name: '_ResultsSqflBase._db');
+//
+//  @override
+//  SQFLiteHelper get _db {
+//    _$_dbAtom.reportRead();
+//    return super._db;
+//  }
+//
+//  @override
+//  set _db(SQFLiteHelper value) {
+//    _$_dbAtom.reportWrite(value, super._db, () {
+//      super._db = value;
+//    });
+//  }
+//
 //  final _$resultsSqflAtom = Atom(name: '_ResultsSqflBase.resultsSqfl');
 //
 //  @override

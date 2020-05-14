@@ -29,7 +29,7 @@ class _FavoritesDataState extends State<FavoritesData> {
     return ChangeNotifierProvider<ResultsSqflProvider>(
         create: (context) => ResultsSqflProvider(),
         child:
-            Consumer<ResultsSqflProvider>(builder: (context, results, child) {
+        Consumer<ResultsSqflProvider>(builder: (context, results, child) {
           return FavoritesDataProv();
         }));
   }
@@ -85,181 +85,195 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
         ),
         body: Center(
             child: Column(children: <Widget>[
-          Expanded(
-            child: SlideConfiguration(
-              config: SlideConfig(
-                  slideOpenAnimDuration: Duration(milliseconds: 200),
-                  slideCloseAnimDuration: Duration(milliseconds: 400),
-                  deleteStep1AnimDuration: Duration(milliseconds: 250),
-                  deleteStep2AnimDuration: Duration(milliseconds: 300),
-                  supportElasticity: true,
-                  closeOpenedItemOnTouch: true,
-                  slideWidth: ResponsiveScreen().widthMediaQuery(context, 40),
-                  actionOpenCloseThreshold: 0.3,
-                  backgroundColor: Colors.white),
-              child: ListView.separated(
-                itemCount: _places.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final dis.Distance _distance = new dis.Distance();
-                  final double _meter = _distance(
-                      new dis.LatLng(
-                          _userLocation.latitude, _userLocation.longitude),
-                      new dis.LatLng(_places[index].lat, _places[index].lng));
-                  return SlideItem(
-                    indexInList: index,
-                    child: GestureDetector(
-                      child: Container(
-                        color: Colors.grey,
-                        child: Stack(
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                SizedBox(
-                                  height: ResponsiveScreen()
-                                      .heightMediaQuery(context, 5),
-                                  width: double.infinity,
-                                  child: const DecoratedBox(
-                                    decoration: const BoxDecoration(
-                                        color: Colors.white),
-                                  ),
-                                ),
-                                CachedNetworkImage(
-                                  fit: BoxFit.fill,
-                                  height: ResponsiveScreen()
-                                      .heightMediaQuery(context, 150),
-                                  width: double.infinity,
-                                  imageUrl: _places[index].photo.isNotEmpty
-                                      ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                                          _places[index].photo +
-                                          "&key=$_API_KEY"
-                                      : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
-                                  placeholder: (context, url) =>
-                                      const CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
-                                ),
-                                SizedBox(
-                                  height: ResponsiveScreen()
-                                      .heightMediaQuery(context, 5),
-                                  width: double.infinity,
-                                  child: const DecoratedBox(
-                                    decoration: const BoxDecoration(
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              height: ResponsiveScreen()
-                                  .heightMediaQuery(context, 160),
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    const Color(0xAA000000),
-                                    const Color(0x00000000),
-                                    const Color(0x00000000),
-                                    const Color(0xAA000000),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
+              Expanded(
+                child: SlideConfiguration(
+                    config: SlideConfig(
+                        slideOpenAnimDuration: Duration(milliseconds: 200),
+                        slideCloseAnimDuration: Duration(milliseconds: 400),
+                        deleteStep1AnimDuration: Duration(milliseconds: 250),
+                        deleteStep2AnimDuration: Duration(milliseconds: 300),
+                        supportElasticity: true,
+                        closeOpenedItemOnTouch: true,
+                        slideWidth: ResponsiveScreen().widthMediaQuery(
+                            context, 40),
+                        actionOpenCloseThreshold: 0.3,
+                        backgroundColor: Colors.white),
+//              child: Observer(builder: (_) { // MobX
+                    child: ListView.separated(
+                      itemCount: _places.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final dis.Distance _distance = new dis.Distance();
+                        final double _meter = _distance(
+                            new dis.LatLng(
+                                _userLocation.latitude,
+                                _userLocation.longitude),
+                            new dis.LatLng(
+                                _places[index].lat, _places[index].lng));
+                        return SlideItem(
+                          indexInList: index,
+                          child: GestureDetector(
+                            child: Container(
+                              color: Colors.grey,
+                              child: Stack(
                                 children: <Widget>[
-                                  _textList(
-                                      _places[index].name, 17.0, 0xffE9FFFF),
-                                  _textList(_places[index].vicinity, 15.0,
-                                      0xFFFFFFFF),
-                                  _textList(_calculateDistance(_meter), 15.0,
-                                      0xFFFFFFFF),
+                                  Column(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: ResponsiveScreen()
+                                            .heightMediaQuery(context, 5),
+                                        width: double.infinity,
+                                        child: const DecoratedBox(
+                                          decoration: const BoxDecoration(
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                      CachedNetworkImage(
+                                        fit: BoxFit.fill,
+                                        height: ResponsiveScreen()
+                                            .heightMediaQuery(context, 150),
+                                        width: double.infinity,
+                                        imageUrl: _places[index].photo
+                                            .isNotEmpty
+                                            ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                                            _places[index].photo +
+                                            "&key=$_API_KEY"
+                                            : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
+                                        placeholder: (context, url) =>
+                                        const CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                      ),
+                                      SizedBox(
+                                        height: ResponsiveScreen()
+                                            .heightMediaQuery(context, 5),
+                                        width: double.infinity,
+                                        child: const DecoratedBox(
+                                          decoration: const BoxDecoration(
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    height: ResponsiveScreen()
+                                        .heightMediaQuery(context, 160),
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          const Color(0xAA000000),
+                                          const Color(0x00000000),
+                                          const Color(0x00000000),
+                                          const Color(0xAA000000),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment
+                                          .start,
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .start,
+                                      children: <Widget>[
+                                        _textList(
+                                            _places[index].name, 17.0,
+                                            0xffE9FFFF),
+                                        _textList(_places[index].vicinity, 15.0,
+                                            0xFFFFFFFF),
+                                        _textList(
+                                            _calculateDistance(_meter), 15.0,
+                                            0xFFFFFFFF),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
+                          ),
+                          actions: <SlideAction>[
+                            SlideAction(
+                                actionWidget: Container(
+                                  child: Icon(Icons.edit),
+                                  color: Colors.orange,
+                                ),
+                                tapCallback: (_) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            AddOrEditDataFavorites(
+                                              id: _places[index].id,
+                                              nameList: _places[index].name,
+                                              addressList: _places[index]
+                                                  .vicinity,
+                                              latList: _places[index].lat,
+                                              lngList: _places[index].lng,
+                                              photoList: _places[index].photo,
+                                              edit: true,
+                                            ),
+                                      ));
+                                }),
+                            SlideAction(
+                                actionWidget: Container(
+                                  child: Icon(Icons.directions),
+                                  color: Colors.greenAccent,
+                                ),
+                                tapCallback: (_) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            MapList(
+                                              nameList: _places[index].name,
+                                              latList: _places[index].lat,
+                                              lngList: _places[index].lng,
+                                            ),
+                                      ));
+                                }),
+                            SlideAction(
+                                actionWidget: Container(
+                                  child: Icon(Icons.share),
+                                  color: Colors.blueGrey,
+                                ),
+                                tapCallback: (_) {
+                                  _shareContent(
+                                      _places[index].name,
+                                      _places[index].vicinity,
+                                      _places[index].lat,
+                                      _places[index].lng,
+                                      _places[index].photo);
+                                }),
                           ],
-                        ),
-                      ),
+                          leftActions: <SlideAction>[
+                            SlideAction(
+                              actionWidget: Container(
+                                child: Icon(Icons.delete),
+                                color: Colors.red,
+                              ),
+                              tapCallback: (_) {
+                                _sqflProv.deleteItem(
+                                    _places[index], index); // Provider
+//                            _sqlfMobx.deleteItem(_places[index], index); // Mobx
+                              },
+                            )
+                          ],
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Container(
+                            height:
+                            ResponsiveScreen().heightMediaQuery(context, 10),
+                            decoration: new BoxDecoration(color: Colors.grey));
+                      },
                     ),
-                    actions: <SlideAction>[
-                      SlideAction(
-                          actionWidget: Container(
-                            child: Icon(Icons.edit),
-                            color: Colors.orange,
-                          ),
-                          tapCallback: (_) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AddOrEditDataFavorites(
-                                    id: _places[index].id,
-                                    nameList: _places[index].name,
-                                    addressList: _places[index].vicinity,
-                                    latList: _places[index].lat,
-                                    lngList: _places[index].lng,
-                                    photoList: _places[index].photo,
-                                    edit: true,
-                                  ),
-                                ));
-                          }),
-                      SlideAction(
-                          actionWidget: Container(
-                            child: Icon(Icons.directions),
-                            color: Colors.greenAccent,
-                          ),
-                          tapCallback: (_) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MapList(
-                                    nameList: _places[index].name,
-                                    latList: _places[index].lat,
-                                    lngList: _places[index].lng,
-                                  ),
-                                ));
-                          }),
-                      SlideAction(
-                          actionWidget: Container(
-                            child: Icon(Icons.share),
-                            color: Colors.blueGrey,
-                          ),
-                          tapCallback: (_) {
-                            _shareContent(
-                                _places[index].name,
-                                _places[index].vicinity,
-                                _places[index].lat,
-                                _places[index].lng,
-                                _places[index].photo);
-                          }),
-                    ],
-                    leftActions: <SlideAction>[
-                      SlideAction(
-                        actionWidget: Container(
-                          child: Icon(Icons.delete),
-                          color: Colors.red,
-                        ),
-                        tapCallback: (_) {
-                          _sqflProv.deleteItem(
-                              _places[index], index); // Provider
-//                          _sqlfMobx.deleteItem(_places[index], index); // Mobx
-                        },
-                      )
-                    ],
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return Container(
-                      height: ResponsiveScreen().heightMediaQuery(context, 10),
-                      decoration: new BoxDecoration(color: Colors.grey));
-                },
+//              }),
+                ),
               ),
-            ),
-          ),
-        ])),
+            ])),
         drawer: DrawerTotal());
   }
 
@@ -290,8 +304,8 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
         ], fontSize: fontSize, color: Color(color)));
   }
 
-  _shareContent(
-      String name, String vicinity, double lat, double lng, String photo) {
+  _shareContent(String name, String vicinity, double lat, double lng,
+      String photo) {
     final RenderBox box = context.findRenderObject();
     Share.share(
         'Name: $name' +

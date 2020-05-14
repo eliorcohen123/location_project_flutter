@@ -9,8 +9,8 @@
 //class ResultsSqlfStore = _ResultsSqflBase with _$ResultsSqlfStore;
 //
 //abstract class _ResultsSqflBase with Store {
+//  @observable
 //  SQFLiteHelper _db = new SQFLiteHelper();
-//
 //  @observable
 //  ObservableList<ResultSqfl> resultsSqfl = ObservableList.of([]);
 //
@@ -51,7 +51,6 @@
 //            builder: (context) => FavoritesData(),
 //          ));
 //    });
-//    ;
 //  }
 //
 //  @action
