@@ -6,6 +6,11 @@ import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
 
 class ResultsSqflProvider extends ChangeNotifier {
   final SQFLiteHelper _db = new SQFLiteHelper();
+  List<ResultSqfl> resultsSqfl = List();
+
+  initList(List<ResultSqfl> resultsSqfl) {
+    this.resultsSqfl = resultsSqfl;
+  }
 
   Future addItem(String name, String vicinity, double lat, double lng,
       String photo, BuildContext context) async {
@@ -17,6 +22,7 @@ class ResultsSqflProvider extends ChangeNotifier {
             builder: (context) => FavoritesData(),
           ));
     });
+    notifyListeners();
   }
 
   Future updateItem(int id, String name, String vicinity, double lat,
@@ -37,30 +43,29 @@ class ResultsSqflProvider extends ChangeNotifier {
             builder: (context) => FavoritesData(),
           ));
     });
-    ;
+    notifyListeners();
   }
 
-  Future deleteItem(
-      ResultSqfl result, int index, List<ResultSqfl> _places) async {
+  Future deleteItem(ResultSqfl result, int index) async {
     print(result.id);
     _db.deleteResult(result.id).then((_) {
-      _places.removeAt(index);
+      resultsSqfl.removeAt(index);
       notifyListeners();
     });
   }
 
-  Future deleteData(List<ResultSqfl> _places) async {
+  Future deleteData() async {
     _db.deleteData().then((_) {
-      getItems(_places);
+      getItems();
       notifyListeners();
     });
   }
 
-  Future getItems(List<ResultSqfl> _places) async {
+  Future getItems() async {
     _db.getAllResults().then((results) {
-      _places.clear();
+      resultsSqfl.clear();
       results.forEach((result) {
-        _places.add(ResultSqfl.fromSqfl(result));
+        resultsSqfl.add(ResultSqfl.fromSqfl(result));
       });
       notifyListeners();
     });
