@@ -29,19 +29,16 @@ class AddOrEditDataFavorites extends StatefulWidget {
 class _AddOrEditDataFavoritesState extends State<AddOrEditDataFavorites> {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ResultsSqflProvider>(
-        create: (context) => ResultsSqflProvider(),
-        child:
-            Consumer<ResultsSqflProvider>(builder: (context, results, child) {
-          return AddOrEditDataFavoritesProv(
-              nameList: widget.nameList,
-              addressList: widget.addressList,
-              latList: widget.latList,
-              lngList: widget.lngList,
-              photoList: widget.photoList,
-              edit: widget.edit,
-              id: widget.id);
-        }));
+    return Consumer<ResultsSqflProvider>(builder: (context, results, child) {
+      return AddOrEditDataFavoritesProv(
+          nameList: widget.nameList,
+          addressList: widget.addressList,
+          latList: widget.latList,
+          lngList: widget.lngList,
+          photoList: widget.photoList,
+          edit: widget.edit,
+          id: widget.id);
+    });
   }
 }
 
