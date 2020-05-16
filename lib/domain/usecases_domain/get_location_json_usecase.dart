@@ -6,8 +6,6 @@ import 'package:meta/meta.dart';
 class GetLocationJsonUsecase implements UseCaseCoreLocation<ParamsLocation> {
   LocationRepositoryImpl locationRepositoryImpl = LocationRepositoryImpl();
 
-  GetLocationJsonUsecase();
-
   @override
   Future callLocation({@required ParamsLocation paramsLocation}) async {
     return await locationRepositoryImpl.getLocationJson(paramsLocation.latitude,
