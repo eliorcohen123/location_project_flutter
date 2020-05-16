@@ -6,7 +6,7 @@ import 'package:locationprojectflutter/presentation/utils/validations.dart';
 void main() {
   group("Unit tests for app", () {
     test('String should be JSON', () async {
-      LocationRepositoryImpl locationRepositoryImpl = LocationRepositoryImpl();
+      LocationRepoImpl locationRepositoryImpl = LocationRepoImpl();
       double latitude = 31.7428444;
       double longitude = 34.9847567;
       String open = '';

@@ -1,7 +1,7 @@
 import 'package:locationprojectflutter/data/data_resources/remotes/location_remote_data_source.dart';
-import 'package:locationprojectflutter/domain/repositories_api/location_repository.dart';
+import 'package:locationprojectflutter/domain/repositories_api/location_repo_api.dart';
 
-class LocationRepositoryImpl implements LocationRepository {
+class LocationRepoImpl implements LocationRepoApi {
   LocationRemoteDataSource locationRemoteDataSource =
       LocationRemoteDataSource();
 

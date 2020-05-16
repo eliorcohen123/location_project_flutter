@@ -1,10 +1,3 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
@@ -12,7 +5,7 @@ import 'package:locationprojectflutter/presentation/pages/signin_email_firebase.
 import 'package:mockito/mockito.dart';
 
 class MockRemoteReverseServiceAPI extends Mock
-    implements LocationRepositoryImpl {}
+    implements LocationRepoImpl {}
 
 void main() {
   group("Widget tests for app", () {
@@ -23,7 +16,7 @@ void main() {
       String type = 'bar';
       int valueRadiusText = 50000;
       String text = 'Bar';
-      LocationRepositoryImpl service = MockRemoteReverseServiceAPI();
+      LocationRepoImpl service = MockRemoteReverseServiceAPI();
 
       expect(
           service.getLocationJson(

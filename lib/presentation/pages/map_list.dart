@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:locationprojectflutter/data/models/model_location/result.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
-import 'package:locationprojectflutter/domain/usecases_domain/get_location_json_usecase.dart';
+import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
 import 'package:locationprojectflutter/presentation/utils/map_utils.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +29,7 @@ class _MapListState extends State<MapList> {
   List<Marker> _markers = <Marker>[];
   List<Result> _places;
   var _userLocation;
-  GetLocationJsonUsecase _getLocationJsonUsecase = GetLocationJsonUsecase();
+  LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
 
   @override
   void initState() {
@@ -104,14 +104,13 @@ class _MapListState extends State<MapList> {
     setState(() {
       _markers.clear();
     });
-    _places = await _getLocationJsonUsecase.callLocation(
-        paramsLocation: ParamsLocation(
-            latitude: _userLocation.latitude,
-            longitude: _userLocation.longitude,
-            open: _open,
-            type: '',
-            valueRadiusText: _valueRadius.round(),
-            text: ''));
+    _places = await _locationRepoImpl.getLocationJson(
+        _userLocation.latitude,
+        _userLocation.longitude,
+        _open,
+        '',
+        _valueRadius.round(),
+        '');
     setState(() {
       for (int i = 0; i < _places.length; i++) {
         _markers.add(
