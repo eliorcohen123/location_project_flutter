@@ -32,7 +32,7 @@ class _SettingsAppState extends State<SettingsApp> {
             'Lovely Favorite Places',
             style: TextStyle(color: Color(0xFFE9FFFF)),
           ),
-          iconTheme: new IconThemeData(color: Color(0xFFE9FFFF)),
+          iconTheme: IconThemeData(color: Color(0xFFE9FFFF)),
         ),
         backgroundColor: Colors.white,
         body: Container(

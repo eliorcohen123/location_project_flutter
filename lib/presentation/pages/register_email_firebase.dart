@@ -87,7 +87,7 @@ class RegisterPageState extends State<RegisterPage> {
                         elevation: 0.0,
                         color: Colors.greenAccent,
                         shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
+                            borderRadius: BorderRadius.circular(30.0)),
                         child: Text(
                           'Register',
                           style: TextStyle(

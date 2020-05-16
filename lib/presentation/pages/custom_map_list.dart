@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
-import 'package:locationprojectflutter/presentation/utils/map_utils.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +34,7 @@ class _CustomMapListState extends State<CustomMapList> {
             'Lovely Favorite Places',
             style: TextStyle(color: Color(0xFFE9FFFF)),
           ),
-          iconTheme: new IconThemeData(color: Color(0xFFE9FFFF)),
+          iconTheme: IconThemeData(color: Color(0xFFE9FFFF)),
         ),
         body: GoogleMap(
           onMapCreated: (controller) {
@@ -75,29 +74,5 @@ class _CustomMapListState extends State<CustomMapList> {
             BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueMagenta),
       ));
     });
-
-    _showDialog(String namePlace, double lat, double lng) {
-      return showDialog(
-        context: context,
-        builder: (_) => new AlertDialog(
-          title: new Text(namePlace),
-          content: new Text("Would you want to navigate $namePlace?"),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("לא"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Text("כן"),
-              onPressed: () {
-                MapUtils.openMap(lat, lng);
-              },
-            ),
-          ],
-        ),
-      );
-    }
   }
 }

@@ -110,7 +110,7 @@ class _AddOrEditDataFavoritesProvState
             'Lovely Favorite Places',
             style: TextStyle(color: Color(0xFFE9FFFF)),
           ),
-          iconTheme: new IconThemeData(color: Color(0xFFE9FFFF)),
+          iconTheme: IconThemeData(color: Color(0xFFE9FFFF)),
         ),
         body: SingleChildScrollView(
           child: Center(
@@ -254,12 +254,12 @@ class _AddOrEditDataFavoritesProvState
 
   _editText(TextEditingController textEditingController) {
     return Container(
-      decoration: new BoxDecoration(
+      decoration: BoxDecoration(
           color: Color(0xff778899).withOpacity(0.9189918041229248),
           border: Border.all(color: Color(0xff778899), width: 1),
           borderRadius: BorderRadius.circular(24)),
       child: TextField(
-        decoration: new InputDecoration(
+        decoration: InputDecoration(
           contentPadding: EdgeInsets.all(10.0),
           border: InputBorder.none,
         ),

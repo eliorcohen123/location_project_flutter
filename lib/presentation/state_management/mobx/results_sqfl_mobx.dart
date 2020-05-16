@@ -10,7 +10,7 @@
 //
 //abstract class _ResultsSqflBase with Store {
 //  @observable
-//  SQFLiteHelper _db = new SQFLiteHelper();
+//  SQFLiteHelper _db = SQFLiteHelper();
 //  @observable
 //  ObservableList<ResultSqfl> resultsSqfl = ObservableList.of([]);
 //

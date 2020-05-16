@@ -70,7 +70,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
             'Lovely Favorite Places',
             style: TextStyle(color: Color(0xFFE9FFFF)),
           ),
-          iconTheme: new IconThemeData(color: Color(0xFFE9FFFF)),
+          iconTheme: IconThemeData(color: Color(0xFFE9FFFF)),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.delete_forever),
@@ -98,11 +98,11 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
               child: ListView.separated(
                 itemCount: _places.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final dis.Distance _distance = new dis.Distance();
+                  final dis.Distance _distance = dis.Distance();
                   final double _meter = _distance(
-                      new dis.LatLng(
+                      dis.LatLng(
                           _userLocation.latitude, _userLocation.longitude),
-                      new dis.LatLng(_places[index].lat, _places[index].lng));
+                      dis.LatLng(_places[index].lat, _places[index].lng));
                   return SlideItem(
                     indexInList: index,
                     child: GestureDetector(
@@ -252,7 +252,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                 separatorBuilder: (BuildContext context, int index) {
                   return Container(
                       height: ResponsiveScreen().heightMediaQuery(context, 10),
-                      decoration: new BoxDecoration(color: Colors.grey));
+                      decoration:  BoxDecoration(color: Colors.grey));
                 },
               ),
 //              }),

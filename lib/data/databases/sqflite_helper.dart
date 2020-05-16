@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class SQFLiteHelper {
-  static final SQFLiteHelper _instance = new SQFLiteHelper.internal();
+  static final SQFLiteHelper _instance = SQFLiteHelper.internal();
 
   factory SQFLiteHelper() => _instance;
 

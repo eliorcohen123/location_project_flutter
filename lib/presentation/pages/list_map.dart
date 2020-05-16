@@ -57,7 +57,7 @@ class _ListMapState extends State<ListMap> {
                   decoration: InputDecoration(
                     hintText: 'Search a place...',
                     hintStyle: TextStyle(color: Colors.grey),
-                    enabledBorder: new UnderlineInputBorder(
+                    enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
                           color: Colors.white,
                           width: 1.0,
@@ -101,7 +101,7 @@ class _ListMapState extends State<ListMap> {
           'Lovely Favorite Places',
           style: TextStyle(color: Color(0xFFE9FFFF)),
         ),
-        iconTheme: new IconThemeData(color: Color(0xFFE9FFFF)),
+        iconTheme: IconThemeData(color: Color(0xFFE9FFFF)),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
@@ -173,11 +173,11 @@ class _ListMapState extends State<ListMap> {
                           child: ListView.separated(
                             itemCount: _places.length,
                             itemBuilder: (BuildContext context, int index) {
-                              final dis.Distance _distance = new dis.Distance();
+                              final dis.Distance _distance = dis.Distance();
                               final double _meter = _distance(
-                                  new dis.LatLng(_userLocation.latitude,
+                                  dis.LatLng(_userLocation.latitude,
                                       _userLocation.longitude),
-                                  new dis.LatLng(
+                                  dis.LatLng(
                                       _places[index].geometry.location.lat,
                                       _places[index].geometry.location.long));
                               return SlideItem(
@@ -356,7 +356,7 @@ class _ListMapState extends State<ListMap> {
                                   height: ResponsiveScreen()
                                       .heightMediaQuery(context, 10),
                                   decoration:
-                                      new BoxDecoration(color: Colors.grey));
+                                      BoxDecoration(color: Colors.grey));
                             },
                           ),
                         ),
@@ -425,12 +425,11 @@ class _ListMapState extends State<ListMap> {
             blurRadius: 1.0,
             color: Color(0xAA000000),
           ),
-
         ], fontSize: fontSize, color: Color(color)));
   }
 
   _getLocationPermission() async {
-    var location = new loc.Location();
+    var location = loc.Location();
     try {
       location.requestPermission();
     } on PlatformException catch (e) {

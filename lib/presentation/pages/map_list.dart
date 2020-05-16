@@ -51,7 +51,7 @@ class _MapListState extends State<MapList> {
           'Lovely Favorite Places',
           style: TextStyle(color: Color(0xFFE9FFFF)),
         ),
-        iconTheme: new IconThemeData(color: Color(0xFFE9FFFF)),
+        iconTheme: IconThemeData(color: Color(0xFFE9FFFF)),
       ),
       body: GoogleMap(
         onMapCreated: (controller) {
@@ -150,9 +150,9 @@ class _MapListState extends State<MapList> {
   _showDialog(String namePlace, double lat, double lng) {
     return showDialog(
       context: context,
-      builder: (_) => new AlertDialog(
-        title: new Text(namePlace),
-        content: new Text("Would you want to navigate $namePlace?"),
+      builder: (_) => AlertDialog(
+        title: Text(namePlace),
+        content: Text("Would you want to navigate $namePlace?"),
         actions: <Widget>[
           FlatButton(
             child: Text("לא"),

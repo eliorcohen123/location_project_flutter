@@ -42,8 +42,8 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return isLoggedIn
-        ? new ListMap()
-        : new Scaffold(
+        ? ListMap()
+        : Scaffold(
             body: Form(
               key: _formKey,
               child: Container(
@@ -105,8 +105,7 @@ class LoginPageState extends State<LoginPage> {
                               elevation: 0.0,
                               color: Colors.greenAccent,
                               shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      new BorderRadius.circular(30.0)),
+                                  borderRadius: BorderRadius.circular(30.0)),
                               child: Text(
                                 'Login',
                                 style: TextStyle(

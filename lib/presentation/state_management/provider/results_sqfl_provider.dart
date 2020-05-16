@@ -5,7 +5,7 @@ import 'package:locationprojectflutter/data/models/model_sqfl/ResultSqfl.dart';
 import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
 
 class ResultsSqflProvider extends ChangeNotifier {
-  SQFLiteHelper _db = new SQFLiteHelper();
+  SQFLiteHelper _db = SQFLiteHelper();
   List<ResultSqfl> resultsSqfl = List();
 
   initList(List<ResultSqfl> resultsSqfl) {
