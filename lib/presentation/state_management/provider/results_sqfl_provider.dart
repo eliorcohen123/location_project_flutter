@@ -47,7 +47,6 @@ class ResultsSqflProvider extends ChangeNotifier {
   }
 
   Future deleteItem(ResultSqfl result, int index) async {
-    print(result.id);
     _db.deleteResult(result.id).then((_) {
       resultsSqfl.removeAt(index);
       notifyListeners();

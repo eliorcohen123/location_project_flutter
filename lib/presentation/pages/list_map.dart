@@ -1,6 +1,8 @@
+import 'package:auto_animated/auto_animated.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:location/location.dart' as loc;
 import 'package:latlong/latlong.dart' as dis;
 import 'package:locationprojectflutter/core/constants/constant.dart';
@@ -13,7 +15,6 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
-import 'package:slide_item/slide_item.dart';
 import 'dart:math';
 import 'add_or_edit_data_favorites.dart';
 import 'map_list.dart';
@@ -154,211 +155,13 @@ class _ListMapState extends State<ListMap> {
                 _searching
                     ? CircularProgressIndicator()
                     : Expanded(
-                        child: SlideConfiguration(
-                          config: SlideConfig(
-                              slideOpenAnimDuration:
-                                  Duration(milliseconds: 200),
-                              slideCloseAnimDuration:
-                                  Duration(milliseconds: 400),
-                              deleteStep1AnimDuration:
-                                  Duration(milliseconds: 250),
-                              deleteStep2AnimDuration:
-                                  Duration(milliseconds: 300),
-                              supportElasticity: true,
-                              closeOpenedItemOnTouch: true,
-                              slideWidth: ResponsiveScreen()
-                                  .widthMediaQuery(context, 40),
-                              actionOpenCloseThreshold: 0.3,
-                              backgroundColor: Colors.white),
-                          child: ListView.separated(
-                            itemCount: _places.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final dis.Distance _distance = dis.Distance();
-                              final double _meter = _distance(
-                                  dis.LatLng(_userLocation.latitude,
-                                      _userLocation.longitude),
-                                  dis.LatLng(
-                                      _places[index].geometry.location.lat,
-                                      _places[index].geometry.location.long));
-                              return SlideItem(
-                                indexInList: index,
-                                child: GestureDetector(
-                                  child: Container(
-                                    color: Colors.grey,
-                                    child: Stack(
-                                      children: <Widget>[
-                                        Column(
-                                          children: <Widget>[
-                                            SizedBox(
-                                              height: ResponsiveScreen()
-                                                  .heightMediaQuery(context, 5),
-                                              width: double.infinity,
-                                              child: const DecoratedBox(
-                                                decoration: const BoxDecoration(
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                            CachedNetworkImage(
-                                              fit: BoxFit.fill,
-                                              height: ResponsiveScreen()
-                                                  .heightMediaQuery(
-                                                      context, 150),
-                                              width: double.infinity,
-                                              imageUrl: _places[index]
-                                                      .photos
-                                                      .isNotEmpty
-                                                  ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                                                      _places[index]
-                                                          .photos[0]
-                                                          .photoReference +
-                                                      "&key=$_API_KEY"
-                                                  : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
-                                              placeholder: (context, url) =>
-                                                  const CircularProgressIndicator(),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      const Icon(Icons.error),
-                                            ),
-                                            SizedBox(
-                                              height: ResponsiveScreen()
-                                                  .heightMediaQuery(context, 5),
-                                              width: double.infinity,
-                                              child: const DecoratedBox(
-                                                decoration: const BoxDecoration(
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Container(
-                                          height: ResponsiveScreen()
-                                              .heightMediaQuery(context, 160),
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                const Color(0xAA000000),
-                                                const Color(0x00000000),
-                                                const Color(0x00000000),
-                                                const Color(0xAA000000),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: <Widget>[
-                                              _textList(_places[index].name,
-                                                  17.0, 0xffE9FFFF),
-                                              _textList(_places[index].vicinity,
-                                                  15.0, 0xFFFFFFFF),
-                                              _textList(
-                                                  _calculateDistance(_meter),
-                                                  15.0,
-                                                  0xFFFFFFFF),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                actions: <SlideAction>[
-                                  SlideAction(
-                                      actionWidget: Container(
-                                        child: Icon(Icons.add),
-                                        color: Colors.green,
-                                      ),
-                                      tapCallback: (_) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AddOrEditDataFavorites(
-                                                nameList: _places[index].name,
-                                                addressList:
-                                                    _places[index].vicinity,
-                                                latList: _places[index]
-                                                    .geometry
-                                                    .location
-                                                    .lat,
-                                                lngList: _places[index]
-                                                    .geometry
-                                                    .location
-                                                    .long,
-                                                photoList: _places[index]
-                                                        .photos
-                                                        .isNotEmpty
-                                                    ? _places[index]
-                                                        .photos[0]
-                                                        .photoReference
-                                                    : "",
-                                                edit: false,
-                                              ),
-                                            ));
-                                      }),
-                                  SlideAction(
-                                      actionWidget: Container(
-                                        child: Icon(Icons.directions),
-                                        color: Colors.greenAccent,
-                                      ),
-                                      tapCallback: (_) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => MapList(
-                                                nameList: _places[index].name,
-                                                latList: _places[index]
-                                                    .geometry
-                                                    .location
-                                                    .lat,
-                                                lngList: _places[index]
-                                                    .geometry
-                                                    .location
-                                                    .long,
-                                              ),
-                                            ));
-                                      }),
-                                  SlideAction(
-                                      actionWidget: Container(
-                                        child: Icon(Icons.share),
-                                        color: Colors.blueGrey,
-                                      ),
-                                      tapCallback: (_) {
-                                        _shareContent(
-                                            _places[index].name,
-                                            _places[index].vicinity,
-                                            _places[index]
-                                                .geometry
-                                                .location
-                                                .lat,
-                                            _places[index]
-                                                .geometry
-                                                .location
-                                                .long,
-                                            _places[index]
-                                                .photos[0]
-                                                .photoReference);
-                                      }),
-                                ],
-                              );
-                            },
-                            separatorBuilder:
-                                (BuildContext context, int index) {
-                              return Container(
-                                  height: ResponsiveScreen()
-                                      .heightMediaQuery(context, 10),
-                                  decoration:
-                                      BoxDecoration(color: Colors.grey));
-                            },
-                          ),
+                        child: LiveList(
+                          showItemInterval: Duration(milliseconds: 50),
+                          showItemDuration: Duration(milliseconds: 50),
+                          reAnimateOnVisibility: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: _places.length,
+                          itemBuilder: buildAnimatedItem,
                         ),
                       ),
               ],
@@ -366,6 +169,156 @@ class _ListMapState extends State<ListMap> {
           ),
         ),
         drawer: DrawerTotal());
+  }
+
+  Widget buildAnimatedItem(
+    BuildContext context,
+    int index,
+    Animation<double> animation,
+  ) =>
+      FadeTransition(
+        opacity: Tween<double>(
+          begin: 0,
+          end: 1,
+        ).animate(animation),
+        child: SlideTransition(
+          position: Tween<Offset>(
+            begin: Offset(0, -0.1),
+            end: Offset.zero,
+          ).animate(animation),
+          child: _childLiveList(index),
+        ),
+      );
+
+  _childLiveList(int index) {
+    final dis.Distance _distance = dis.Distance();
+    final double _meter = _distance(
+        dis.LatLng(_userLocation.latitude, _userLocation.longitude),
+        dis.LatLng(_places[index].geometry.location.lat,
+            _places[index].geometry.location.long));
+    return Slidable(
+      key: UniqueKey(),
+      actionPane: SlidableDrawerActionPane(),
+      actionExtentRatio: 0.10,
+      secondaryActions: <Widget>[
+        IconSlideAction(
+          color: Colors.green,
+          icon: Icons.add,
+          onTap: () => {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddOrEditDataFavorites(
+                    nameList: _places[index].name,
+                    addressList: _places[index].vicinity,
+                    latList: _places[index].geometry.location.lat,
+                    lngList: _places[index].geometry.location.long,
+                    photoList: _places[index].photos.isNotEmpty
+                        ? _places[index].photos[0].photoReference
+                        : "",
+                    edit: false,
+                  ),
+                ))
+          },
+        ),
+        IconSlideAction(
+          color: Colors.greenAccent,
+          icon: Icons.directions,
+          onTap: () => {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MapList(
+                    nameList: _places[index].name,
+                    latList: _places[index].geometry.location.lat,
+                    lngList: _places[index].geometry.location.long,
+                  ),
+                ))
+          },
+        ),
+        IconSlideAction(
+          color: Colors.blueGrey,
+          icon: Icons.share,
+          onTap: () => {
+            _shareContent(
+                _places[index].name,
+                _places[index].vicinity,
+                _places[index].geometry.location.lat,
+                _places[index].geometry.location.long,
+                _places[index].photos[0].photoReference)
+          },
+        ),
+      ],
+      child: GestureDetector(
+        child: Container(
+          color: Colors.grey,
+          child: Stack(
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: ResponsiveScreen().heightMediaQuery(context, 5),
+                    width: double.infinity,
+                    child: const DecoratedBox(
+                      decoration: const BoxDecoration(color: Colors.white),
+                    ),
+                  ),
+                  CachedNetworkImage(
+                    fit: BoxFit.fill,
+                    height: ResponsiveScreen().heightMediaQuery(context, 150),
+                    width: double.infinity,
+                    imageUrl: _places[index].photos.isNotEmpty
+                        ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                            _places[index].photos[0].photoReference +
+                            "&key=$_API_KEY"
+                        : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
+                  SizedBox(
+                    height: ResponsiveScreen().heightMediaQuery(context, 5),
+                    width: double.infinity,
+                    child: const DecoratedBox(
+                      decoration: const BoxDecoration(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                height: ResponsiveScreen().heightMediaQuery(context, 160),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      const Color(0xAA000000),
+                      const Color(0x00000000),
+                      const Color(0x00000000),
+                      const Color(0xAA000000),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    _textList(_places[index].name, 17.0, 0xffE9FFFF),
+                    _textList(_places[index].vicinity, 15.0, 0xFFFFFFFF),
+                    _textList(_calculateDistance(_meter), 15.0, 0xFFFFFFFF),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   _initGetSharedPref() {
@@ -441,13 +394,8 @@ class _ListMapState extends State<ListMap> {
 
   _searchNearby(bool search, String type, String text) async {
     if (search) {
-      _places = await _locationRepoImpl.getLocationJson(
-          _userLocation.latitude,
-          _userLocation.longitude,
-          _open,
-          type,
-          _valueRadius.round(),
-          text);
+      _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
+          _userLocation.longitude, _open, type, _valueRadius.round(), text);
       setState(() {
         _searching = false;
         _places.sort((a, b) => sqrt(
