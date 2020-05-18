@@ -36,6 +36,7 @@ class _ListMapState extends State<ListMap> {
   String _API_KEY = Constants.API_KEY;
   LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
   final _formKeySearch = GlobalKey<FormState>();
+  final controllerSearch = TextEditingController();
 
   @override
   void initState() {
@@ -65,6 +66,7 @@ class _ListMapState extends State<ListMap> {
                           style: BorderStyle.solid),
                     ),
                   ),
+                  controller: controllerSearch,
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -72,7 +74,7 @@ class _ListMapState extends State<ListMap> {
                     if (value.isEmpty) {
                       return 'Please enter some text';
                     } else {
-                      return _searchNearby(true, "", value);
+                      return null;
                     }
                   },
                 ),
@@ -81,7 +83,9 @@ class _ListMapState extends State<ListMap> {
                 icon: Icon(Icons.search),
                 color: Color(0xFFE9FFFF),
                 onPressed: () {
-                  if (_formKeySearch.currentState.validate()) {}
+                  if (_formKeySearch.currentState.validate()) {
+                    _searchNearby(true, "", controllerSearch.text);
+                  }
                 },
               ),
             ],
