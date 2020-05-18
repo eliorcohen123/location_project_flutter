@@ -18,7 +18,7 @@ class LocationRemoteDataSource {
   String _baseUrl = Constants.baseUrl;
   String _API_KEY = Constants.API_KEY;
 
-  responseJsonLocation(double latitude, double longitude, String open,
+  Future responseJsonLocation(double latitude, double longitude, String open,
       String type, int valueRadiusText, String text) async {
     String url =
         '$_baseUrl?key=$_API_KEY&location=$latitude,$longitude$open&types=$type&radius=$valueRadiusText&keyword=$text';
