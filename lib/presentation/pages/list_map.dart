@@ -396,7 +396,7 @@ class _ListMapState extends State<ListMap> {
     }
   }
 
-  _searchNearby(bool search, String type, String text) async {
+  Future _searchNearby(bool search, String type, String text) async {
     if (search) {
       _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
           _userLocation.longitude, _open, type, _valueRadius.round(), text);
