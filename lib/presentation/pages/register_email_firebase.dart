@@ -98,7 +98,9 @@ class RegisterPageState extends State<RegisterPage> {
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
                             if (Validations()
-                                .validateEmail(_emailController.text)) {
+                                    .validateEmail(_emailController.text) &&
+                                Validations().validatePassword(
+                                    _passwordController.text)) {
                               setState(() {
                                 _loading = true;
                                 _textError = '';
@@ -113,10 +115,18 @@ class RegisterPageState extends State<RegisterPage> {
                                 });
                               });
                               _registerFirebase();
-                            } else {
+                            } else if (!Validations()
+                                .validateEmail(_emailController.text)) {
                               setState(() {
                                 _success = false;
                                 _textError = 'Invalid Email';
+                              });
+                            } else if (!Validations()
+                                .validatePassword(_passwordController.text)) {
+                              setState(() {
+                                _success = false;
+                                _textError =
+                                    'Password must be at least 8 characters';
                               });
                             }
                           }

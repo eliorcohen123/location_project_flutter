@@ -115,8 +115,10 @@ class LoginPageState extends State<LoginPage> {
                               ),
                               onPressed: () async {
                                 if (_formKey.currentState.validate()) {
-                                  if (Validations()
-                                      .validateEmail(_emailController.text)) {
+                                  if (Validations().validateEmail(
+                                          _emailController.text) &&
+                                      Validations().validatePassword(
+                                          _passwordController.text)) {
                                     setState(() {
                                       _loading = true;
                                       _textError = '';
@@ -131,10 +133,18 @@ class LoginPageState extends State<LoginPage> {
                                       });
                                     });
                                     _loginFirebase();
-                                  } else {
+                                  } else if (!Validations()
+                                      .validateEmail(_emailController.text)) {
                                     setState(() {
                                       _success = false;
                                       _textError = 'Invalid Email';
+                                    });
+                                  } else if (!Validations().validatePassword(
+                                      _passwordController.text)) {
+                                    setState(() {
+                                      _success = false;
+                                      _textError =
+                                          'Password must be at least 8 characters';
                                     });
                                   }
                                 }

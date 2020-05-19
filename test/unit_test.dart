@@ -21,7 +21,16 @@ void main() {
 
     test('Email validation', () async {
       bool valid = Validations().validateEmail('eliorjobcohen@gmail.com');
+      bool invalid = Validations().validateEmail('eliorjobcohengmail.com');
       expect(valid, true);
+      expect(invalid, false);
+    });
+
+    test('Password validation', () async {
+      bool valid = Validations().validatePassword('12345678');
+      bool invalid = Validations().validatePassword('123456');
+      expect(valid, true);
+      expect(invalid, false);
     });
   });
 }
