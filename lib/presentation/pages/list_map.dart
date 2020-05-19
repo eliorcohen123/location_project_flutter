@@ -1,5 +1,6 @@
 import 'package:auto_animated/auto_animated.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -37,6 +38,7 @@ class _ListMapState extends State<ListMap> {
   LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
   final _formKeySearch = GlobalKey<FormState>();
   final controllerSearch = TextEditingController();
+  final databaseReference = Firestore.instance;
 
   @override
   void initState() {
@@ -228,17 +230,7 @@ class _ListMapState extends State<ListMap> {
         IconSlideAction(
           color: Colors.greenAccent,
           icon: Icons.directions,
-          onTap: () => {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MapList(
-                    nameList: _places[index].name,
-                    latList: _places[index].geometry.location.lat,
-                    lngList: _places[index].geometry.location.long,
-                  ),
-                ))
-          },
+          onTap: () => {_createPlace(index)},
         ),
         IconSlideAction(
           color: Colors.blueGrey,
@@ -323,6 +315,33 @@ class _ListMapState extends State<ListMap> {
         ),
       ),
     );
+  }
+
+  Future _createPlace(int index) async {
+    await databaseReference
+        .collection("places")
+        .document(_places[index].id)
+        .setData({
+          "name": _places[index].name,
+          "vicinity": _places[index].vicinity,
+          "lat": _places[index].geometry.location.lat,
+          "lng": _places[index].geometry.location.long,
+          "photo": _places[index].photos.isNotEmpty
+              ? _places[index].photos[0].photoReference
+              : "",
+        })
+        .then((result) => {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MapList(
+                      nameList: _places[index].name,
+                      latList: _places[index].geometry.location.lat,
+                      lngList: _places[index].geometry.location.long,
+                    ),
+                  ))
+            })
+        .catchError((err) => print(err));
   }
 
   _initGetSharedPref() {

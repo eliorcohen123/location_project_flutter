@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/presentation/pages/custom_map_list.dart';
 import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
 import 'package:locationprojectflutter/presentation/pages/list_map.dart';
+import 'package:locationprojectflutter/presentation/pages/live_favorite_places.dart';
 import 'package:locationprojectflutter/presentation/pages/signin_email_firebase.dart';
 import 'package:locationprojectflutter/presentation/pages/settings_app.dart';
 import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
@@ -64,6 +65,32 @@ class DrawerTotal extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ListMap(),
+                    ));
+              },
+            ),
+            ListTile(
+              title: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.done,
+                    color: Color(0xFFcd4312),
+                  ),
+                  SizedBox(
+                    width: ResponsiveScreen().widthMediaQuery(context, 10),
+                  ),
+                  Text(
+                    'Top Places',
+                    style: TextStyle(
+                      color: Color(0xFF9FA31C),
+                    ),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LiveFavoritePlaces(),
                     ));
               },
             ),
