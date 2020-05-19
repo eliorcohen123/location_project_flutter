@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_geofence/geofence.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:locationprojectflutter/data/models/model_location/result.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
@@ -23,13 +25,14 @@ class _MapListState extends State<MapList> {
   GoogleMapController _myMapController;
   Set<Circle> _circles;
   SharedPreferences _sharedPrefs;
-  double _valueRadius;
+  double _valueRadius, _valueGeofence;
   String _open;
   bool _zoomGesturesEnabled = true, _searching = true;
   List<Marker> _markers = <Marker>[];
   List<Result> _places;
   var _userLocation;
   LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
+  FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
 
   @override
   void initState() {
@@ -37,6 +40,9 @@ class _MapListState extends State<MapList> {
 
     _initGetSharedPref();
     _initMarker();
+    _initGeofence();
+    _initPlatformState();
+    _initNotifications();
   }
 
   @override
@@ -92,25 +98,71 @@ class _MapListState extends State<MapList> {
     );
   }
 
+  Future _initPlatformState() async {
+    String namePlace = widget.nameList;
+    Geofence.initialize();
+    Geofence.startListening(GeolocationEvent.entry, (entry) {
+      print("Entry to place");
+      _showNotification(
+          "Entry of a place",
+          "Welcome to: $namePlace + in " +
+              _valueGeofence.round().toString() +
+              " Meters");
+    });
+
+    Geofence.startListening(GeolocationEvent.exit, (entry) {
+      print("Exit from place");
+      _showNotification("Exit of a place", "Goodbye to: $namePlace");
+    });
+  }
+
+  _initNotifications() {
+    _flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    var android = new AndroidInitializationSettings('assets/icon.png');
+    var iOS = new IOSInitializationSettings();
+    var initSettings = new InitializationSettings(android, iOS);
+    _flutterLocalNotificationsPlugin.initialize(initSettings);
+  }
+
+  _showNotification(String title, String subtitle) async {
+    var android = new AndroidNotificationDetails(
+        'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
+        priority: Priority.High, importance: Importance.Max);
+    var iOS = new IOSNotificationDetails();
+    var platform = new NotificationDetails(android, iOS);
+    await _flutterLocalNotificationsPlugin.show(0, title, subtitle, platform,
+        payload: subtitle);
+  }
+
+  _initGeofence() {
+    Geofence.requestPermissions();
+    Geolocation location = Geolocation(
+        latitude: widget.latList != null ? widget.latList : 0.0,
+        longitude: widget.lngList != null ? widget.lngList : 0.0,
+        radius: _valueGeofence,
+        id: widget.nameList != null ? widget.nameList : 'id');
+    Geofence.addGeolocation(location, GeolocationEvent.entry).then((onValue) {
+      print("great success");
+    }).catchError((onError) {
+      print("great failure");
+    });
+  }
+
   _initGetSharedPref() {
     SharedPreferences.getInstance().then((prefs) {
       setState(() => _sharedPrefs = prefs);
       _valueRadius = prefs.getDouble('rangeRadius') ?? 5000.0;
+      _valueGeofence = prefs.getDouble('rangeGeofence') ?? 500.0;
       _open = prefs.getString('open') ?? '';
     });
   }
 
-  _searchNearbyList() async {
+  Future _searchNearbyList() async {
     setState(() {
       _markers.clear();
     });
-    _places = await _locationRepoImpl.getLocationJson(
-        _userLocation.latitude,
-        _userLocation.longitude,
-        _open,
-        '',
-        _valueRadius.round(),
-        '');
+    _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
+        _userLocation.longitude, _open, '', _valueRadius.round(), '');
     setState(() {
       for (int i = 0; i < _places.length; i++) {
         _markers.add(

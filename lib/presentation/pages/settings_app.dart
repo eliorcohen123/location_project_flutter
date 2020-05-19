@@ -14,7 +14,7 @@ class SettingsApp extends StatefulWidget {
 
 class _SettingsAppState extends State<SettingsApp> {
   SharedPreferences _sharedPrefs;
-  double _valueRadius;
+  double _valueRadius, _valueGeofence;
 
   @override
   void initState() {
@@ -76,7 +76,7 @@ class _SettingsAppState extends State<SettingsApp> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "Distance",
+                      "Radius Search",
                       style: TextStyle(
                         color: Colors.greenAccent,
                       ),
@@ -99,7 +99,41 @@ class _SettingsAppState extends State<SettingsApp> {
                     onChanged: (double newValue) {
                       setState(() {
                         _valueRadius = newValue;
-                        _addRadiusToSF(_valueRadius);
+                        _addRadiusSearchToSF(_valueRadius);
+                      });
+                    },
+                    semanticFormatterCallback: (double newValue) {
+                      return '${newValue.round()}';
+                    }),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Radius Geofence",
+                      style: TextStyle(
+                        color: Colors.greenAccent,
+                      ),
+                    ),
+                    SizedBox(
+                        width: ResponsiveScreen().widthMediaQuery(context, 5)),
+                    Icon(Icons.location_searching,
+                        color: Colors.greenAccent,
+                        size: ResponsiveScreen().heightMediaQuery(context, 40)),
+                  ],
+                ),
+                Slider(
+                    value: _valueGeofence,
+                    min: 500.0,
+                    max: 1000.0,
+                    divisions: 500,
+                    activeColor: Colors.indigo,
+                    inactiveColor: Colors.grey,
+                    label: _valueGeofence.round().toString(),
+                    onChanged: (double newValue) {
+                      setState(() {
+                        _valueGeofence = newValue;
+                        _addGeofenceToSF(_valueGeofence);
                       });
                     },
                     semanticFormatterCallback: (double newValue) {
@@ -126,11 +160,16 @@ class _SettingsAppState extends State<SettingsApp> {
     SharedPreferences.getInstance().then((prefs) {
       setState(() => _sharedPrefs = prefs);
       _valueRadius = prefs.getDouble('rangeRadius') ?? 5000.0;
+      _valueGeofence = prefs.getDouble('rangeGeofence') ?? 500.0;
     });
   }
 
-  _addRadiusToSF(double value) async {
+  _addRadiusSearchToSF(double value) async {
     _sharedPrefs.setDouble('rangeRadius', value);
+  }
+
+  _addGeofenceToSF(double value) async {
+    _sharedPrefs.setDouble('rangeGeofence', value);
   }
 
   _addOpenToSF(String value) async {
