@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/core/services/location_service.dart';
-import 'package:locationprojectflutter/presentation/pages/list_map.dart';
 import 'package:locationprojectflutter/presentation/pages/signin_email_firebase.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/results_sqfl_provider.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +17,6 @@ class MyApp extends StatelessWidget {
       ChangeNotifierProvider<ResultsSqflProvider>(
         create: (context) => ResultsSqflProvider(),
       )
-    ], child: MaterialApp(home: ListMap()));
+    ], child: MaterialApp(home: LoginPage()));
   }
 }
