@@ -49,12 +49,12 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
 
     _placeSub?.cancel();
     _placeSub = _snapshots.listen((QuerySnapshot snapshot) {
-      final List<ResultSqfl> notes = snapshot.documents
+      final List<ResultSqfl> places = snapshot.documents
           .map((documentSnapshot) => ResultSqfl.fromSqfl(documentSnapshot.data))
           .toList();
 
       setState(() {
-        this._places = notes;
+        this._places = places;
       });
     });
   }
