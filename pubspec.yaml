@@ -16,7 +16,6 @@ dependencies:
   google_maps_flutter: ^0.5.26
   location: ^3.0.2
   http: ^0.12.0+2
-  url_launcher: ^5.4.2
   shared_preferences: ^0.5.6+3
   sqflite: ^1.3.0
   cached_network_image: ^2.2.0
@@ -27,6 +26,7 @@ dependencies:
   cloud_firestore: ^0.13.5
   firebase_messaging: ^6.0.15
   auto_animated: ^2.1.0
+  map_launcher: ^0.4.5
   flutter_geofence: ^0.2.0
   flutter_local_notifications: ^1.4.3
   provider: ^4.0.5+1

@@ -161,6 +161,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                 MaterialPageRoute(
                   builder: (context) => MapList(
                     nameList: _places[index].name,
+                    vicinityList: _places[index].vicinity,
                     latList: _places[index].lat,
                     lngList: _places[index].lng,
                   ),

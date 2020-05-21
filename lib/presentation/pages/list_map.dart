@@ -336,6 +336,7 @@ class _ListMapState extends State<ListMap> {
                   MaterialPageRoute(
                     builder: (context) => MapList(
                       nameList: _places[index].name,
+                      vicinityList: _places[index].vicinity,
                       latList: _places[index].geometry.location.lat,
                       lngList: _places[index].geometry.location.long,
                     ),

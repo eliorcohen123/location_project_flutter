@@ -12,9 +12,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MapList extends StatefulWidget {
   final double latList, lngList;
-  final String nameList;
+  final String nameList, vicinityList;
 
-  MapList({Key key, this.nameList, this.latList, this.lngList})
+  MapList(
+      {Key key, this.nameList, this.vicinityList, this.latList, this.lngList})
       : super(key: key);
 
   @override
@@ -29,7 +30,7 @@ class _MapListState extends State<MapList> {
   String _open;
   bool _zoomGesturesEnabled = true, _searching = true;
   List<Marker> _markers = <Marker>[];
-  List<Result> _places;
+  List<Result> _places = List();
   var _userLocation;
   LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
   FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
@@ -174,7 +175,12 @@ class _MapListState extends State<MapList> {
                 _places[i].geometry.location.long),
             onTap: () {
               String namePlace = _places[i].name != null ? _places[i].name : "";
-              _showDialog(namePlace, _places[i].geometry.location.lat,
+              String vicinityPlace =
+                  _places[i].vicinity != null ? _places[i].vicinity : "";
+              _showDialog(
+                  namePlace,
+                  vicinityPlace,
+                  _places[i].geometry.location.lat,
                   _places[i].geometry.location.long);
             },
           ),
@@ -193,12 +199,15 @@ class _MapListState extends State<MapList> {
           widget.lngList != null ? widget.lngList : 0.0),
       onTap: () {
         String namePlace = widget.nameList != null ? widget.nameList : "";
-        _showDialog(namePlace, widget.latList, widget.lngList);
+        String vicinityPlace =
+            widget.vicinityList != null ? widget.vicinityList : "";
+        _showDialog(namePlace, vicinityPlace, widget.latList, widget.lngList);
       },
     ));
   }
 
-  _showDialog(String namePlace, double lat, double lng) {
+  Future _showDialog(
+      String namePlace, String vicinity, double lat, double lng) async {
     return showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -214,7 +223,7 @@ class _MapListState extends State<MapList> {
           FlatButton(
             child: Text("כן"),
             onPressed: () {
-              MapUtils.openMap(lat, lng);
+              MapUtils().openMaps(context, namePlace, vicinity, lat, lng);
             },
           ),
         ],

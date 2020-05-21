@@ -12,6 +12,7 @@ import 'package:locationprojectflutter/presentation/widgets/responsive_screen.da
 import 'package:latlong/latlong.dart' as dis;
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
+import 'add_or_edit_data_favorites.dart';
 import 'map_list.dart';
 
 class LiveFavoritePlaces extends StatefulWidget {
@@ -128,6 +129,26 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
       actionExtentRatio: 0.10,
       secondaryActions: <Widget>[
         IconSlideAction(
+          color: Colors.green,
+          icon: Icons.add,
+          onTap: () => {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddOrEditDataFavorites(
+                    nameList: _places[index].name,
+                    addressList: _places[index].vicinity,
+                    latList: _places[index].lat,
+                    lngList: _places[index].lng,
+                    photoList: _places[index].photo.isNotEmpty
+                        ? _places[index].photo
+                        : "",
+                    edit: false,
+                  ),
+                ))
+          },
+        ),
+        IconSlideAction(
           color: Colors.greenAccent,
           icon: Icons.directions,
           onTap: () => {
@@ -136,6 +157,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                 MaterialPageRoute(
                   builder: (context) => MapList(
                     nameList: _places[index].name,
+                    vicinityList: _places[index].vicinity,
                     latList: _places[index].lat,
                     lngList: _places[index].lng,
                   ),
