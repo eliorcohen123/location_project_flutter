@@ -11,7 +11,7 @@ import 'package:locationprojectflutter/data/models/model_location/result.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
-import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
+import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';

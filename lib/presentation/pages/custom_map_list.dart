@@ -3,7 +3,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
-
 import 'add_or_edit_data_favorites.dart';
 
 class CustomMapList extends StatefulWidget {

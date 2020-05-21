@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
+import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 
 class TFFFirebase extends StatefulWidget {
   const TFFFirebase(

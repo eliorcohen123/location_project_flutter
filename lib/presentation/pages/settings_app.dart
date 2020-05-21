@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
-import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
+import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'list_map.dart';
 

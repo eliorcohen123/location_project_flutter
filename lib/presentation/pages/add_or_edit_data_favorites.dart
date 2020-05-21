@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/results_sqfl_provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
-import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
+import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:provider/provider.dart';
 //import 'package:locationprojectflutter/presentation/state_management/mobx/results_sqfl_mobx.dart';
 

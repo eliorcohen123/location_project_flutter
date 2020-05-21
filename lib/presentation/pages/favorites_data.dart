@@ -8,7 +8,7 @@ import 'package:locationprojectflutter/data/models/model_stream_location/user_lo
 import 'package:locationprojectflutter/presentation/pages/add_or_edit_data_favorites.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/results_sqfl_provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
-import 'package:locationprojectflutter/presentation/widgets/responsive_screen.dart';
+import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:latlong/latlong.dart' as dis;
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
