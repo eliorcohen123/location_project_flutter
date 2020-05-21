@@ -29,7 +29,7 @@ class ListMap extends StatefulWidget {
 
 class _ListMapState extends State<ListMap> {
   List<Result> _places = List();
-  bool _searching = true, _activeSearch = false;
+  bool _searching = true, _activeSearch = false, activeNav = false;
   double _valueRadius;
   String _open;
   SharedPreferences _sharedPrefs;
@@ -132,46 +132,59 @@ class _ListMapState extends State<ListMap> {
     return Scaffold(
         appBar: _appBar(),
         body: Container(
-          child: Center(
-            child: Column(
-              children: <Widget>[
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: <Widget>[
-                      _btnType('Banks', 'bank'),
-                      _btnType('Bars', 'bar|night_club'),
-                      _btnType('Beauty', 'beauty_salon|hair_care'),
-                      _btnType('Books', 'book_store|library'),
-                      _btnType('Bus stations', 'bus_station'),
-                      _btnType(
-                          'Cars', 'car_dealer|car_rental|car_repair|car_wash'),
-                      _btnType('Clothing', 'clothing_store'),
-                      _btnType('Doctors', 'doctor'),
-                      _btnType('Gas stations', 'gas_station'),
-                      _btnType('Gym', 'gym'),
-                      _btnType('Jewelries', 'jewelry_store'),
-                      _btnType('Parks', 'park|amusement_park|parking|rv_park'),
-                      _btnType('Restaurants', 'food|restaurant|cafe|bakery'),
-                      _btnType('School', 'school'),
-                      _btnType('Spa', 'spa'),
-                    ],
+          child: Stack(
+            children: [
+              Center(
+                child: Column(
+                  children: <Widget>[
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: <Widget>[
+                          _btnType('Banks', 'bank'),
+                          _btnType('Bars', 'bar|night_club'),
+                          _btnType('Beauty', 'beauty_salon|hair_care'),
+                          _btnType('Books', 'book_store|library'),
+                          _btnType('Bus stations', 'bus_station'),
+                          _btnType('Cars',
+                              'car_dealer|car_rental|car_repair|car_wash'),
+                          _btnType('Clothing', 'clothing_store'),
+                          _btnType('Doctors', 'doctor'),
+                          _btnType('Gas stations', 'gas_station'),
+                          _btnType('Gym', 'gym'),
+                          _btnType('Jewelries', 'jewelry_store'),
+                          _btnType(
+                              'Parks', 'park|amusement_park|parking|rv_park'),
+                          _btnType(
+                              'Restaurants', 'food|restaurant|cafe|bakery'),
+                          _btnType('School', 'school'),
+                          _btnType('Spa', 'spa'),
+                        ],
+                      ),
+                    ),
+                    _searching
+                        ? CircularProgressIndicator()
+                        : Expanded(
+                            child: LiveList(
+                              showItemInterval: Duration(milliseconds: 50),
+                              showItemDuration: Duration(milliseconds: 50),
+                              reAnimateOnVisibility: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: _places.length,
+                              itemBuilder: buildAnimatedItem,
+                            ),
+                          ),
+                  ],
+                ),
+              ),
+              if (activeNav)
+                Container(
+                  decoration: new BoxDecoration(color: Color(0x80000000)),
+                  child: Center(
+                    child: CircularProgressIndicator(),
                   ),
                 ),
-                _searching
-                    ? CircularProgressIndicator()
-                    : Expanded(
-                        child: LiveList(
-                          showItemInterval: Duration(milliseconds: 50),
-                          showItemDuration: Duration(milliseconds: 50),
-                          reAnimateOnVisibility: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: _places.length,
-                          itemBuilder: buildAnimatedItem,
-                        ),
-                      ),
-              ],
-            ),
+            ],
           ),
         ),
         drawer: DrawerTotal());
@@ -230,7 +243,7 @@ class _ListMapState extends State<ListMap> {
         IconSlideAction(
           color: Colors.greenAccent,
           icon: Icons.directions,
-          onTap: () => {_createPlace(index)},
+          onTap: () => {_createNavPlace(index)},
         ),
         IconSlideAction(
           color: Colors.blueGrey,
@@ -317,7 +330,10 @@ class _ListMapState extends State<ListMap> {
     );
   }
 
-  Future _createPlace(int index) async {
+  Future _createNavPlace(int index) async {
+    setState(() {
+      activeNav = true;
+    });
     await databaseReference
         .collection("places")
         .document(_places[index].id)
@@ -340,7 +356,10 @@ class _ListMapState extends State<ListMap> {
                       latList: _places[index].geometry.location.lat,
                       lngList: _places[index].geometry.location.long,
                     ),
-                  ))
+                  )),
+              setState(() {
+                activeNav = false;
+              }),
             })
         .catchError((err) => print(err));
   }
