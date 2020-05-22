@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/data/databases/sqflite_helper.dart';
-import 'package:locationprojectflutter/data/models/model_sqfl/ResultSqfl.dart';
+import 'package:locationprojectflutter/data/models/model_sqfl/result_sqfl.dart';
 import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
 
 class ResultsSqflProvider extends ChangeNotifier {

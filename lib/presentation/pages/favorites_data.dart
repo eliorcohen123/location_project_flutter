@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:locationprojectflutter/core/constants/constant.dart';
-import 'package:locationprojectflutter/data/models/model_sqfl/ResultSqfl.dart';
+import 'package:locationprojectflutter/data/models/model_sqfl/result_sqfl.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/pages/add_or_edit_data_favorites.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/results_sqfl_provider.dart';
@@ -45,7 +45,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   String _API_KEY = Constants.API_KEY;
 
 //  ObservableList<ResultSqfl> _places = ObservableList.of([]); // MobX
-//  final ResultsSqlfStore _sqlfMobx = ResultsSqlfStore(); // MobX
+//  final ResultsSqflStore _sqflMobx = ResultsSqflStore(); // MobX
   List<ResultSqfl> _places = List();
 
   @override
@@ -57,8 +57,8 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
     _sqflProv.initList(_places); // Provider
     _sqflProv.getItems(); // Provider
 
-//    _sqlfMobx.initList(_places); // MobX
-//    _sqlfMobx.getItems(); // MobX
+//    _sqflMobx.initList(_places); // MobX
+//    _sqflMobx.getItems(); // MobX
   }
 
   @override
@@ -77,7 +77,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
               icon: Icon(Icons.delete_forever),
               color: Color(0xFFE9FFFF),
               onPressed: () => _sqflProv.deleteData(), // Provider
-//              onPressed: () => _sqlfMobx.deleteData(), // MobX
+//              onPressed: () => _sqflMobx.deleteData(), // MobX
             )
           ],
         ),
@@ -182,9 +182,8 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           color: Colors.red,
           icon: Icons.delete,
           onTap: () => {
-            _sqflProv.deleteItem(_places[index], index)
-            // Provider
-//                            _sqlfMobx.deleteItem(_places[index], index); // Mobx
+            _sqflProv.deleteItem(_places[index], index) // Provider
+//                            _sqflMobx.deleteItem(_places[index], index); // Mobx
           },
         ),
       ],
@@ -195,7 +194,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
         },
         onDismissed: (actionType) {
           _sqflProv.deleteItem(_places[index], index); // Provider
-//                            _sqlfMobx.deleteItem(_places[index], index); // Mobx
+//                            _sqflMobx.deleteItem(_places[index], index); // Mobx
         },
       ),
       child: GestureDetector(

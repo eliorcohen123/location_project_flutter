@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:locationprojectflutter/data/models/model_sqfl/ResultSqfl.dart';
+import 'package:locationprojectflutter/data/models/model_sqfl/result_sqfl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 

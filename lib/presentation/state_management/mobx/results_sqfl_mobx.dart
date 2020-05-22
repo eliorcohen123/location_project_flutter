@@ -1,12 +1,12 @@
 //import 'package:flutter/material.dart';
 //import 'package:locationprojectflutter/data/databases/sqflite_helper.dart';
-//import 'package:locationprojectflutter/data/models/model_sqfl/ResultSqfl.dart';
+//import 'package:locationprojectflutter/data/models/model_sqfl/result_sqfl.dart';
 //import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
 //import 'package:mobx/mobx.dart';
 //
 //part 'results_sqfl_mobx.g.dart';
 //
-//class ResultsSqlfStore = _ResultsSqflBase with _$ResultsSqlfStore;
+//class ResultsSqflStore = _ResultsSqflBase with _$ResultsSqflStore;
 //
 //abstract class _ResultsSqflBase with Store {
 //  @observable

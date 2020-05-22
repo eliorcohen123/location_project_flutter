@@ -73,7 +73,7 @@ class _AddOrEditDataFavoritesProvState
   final textPhoto = TextEditingController();
   var _sqflProv;
 
-//  final ResultsSqlfStore _sqlfMobx = ResultsSqlfStore(); // MobX
+//  final ResultsSqflStore _sqflMobx = ResultsSqflStore(); // MobX
 
   @override
   void initState() {
@@ -214,7 +214,7 @@ class _AddOrEditDataFavoritesProvState
                           double.parse(textLng.text),
                           textPhoto.text,
                           context), // Provider
-//                      ? _sqlfMobx.updateItem(
+//                      ? _sqflMobx.updateItem(
 //                          widget.id,
 //                          textName.text,
 //                          textAddress.text,
@@ -222,7 +222,7 @@ class _AddOrEditDataFavoritesProvState
 //                          double.parse(textLng.text),
 //                          textPhoto.text,
 //                          context) // MobX
-//                      : _sqlfMobx.addItem(
+//                      : _sqflMobx.addItem(
 //                          textName.text,
 //                          textAddress.text,
 //                          double.parse(textLat.text),
