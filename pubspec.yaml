@@ -29,6 +29,7 @@ dependencies:
   map_launcher: ^0.4.5
   flutter_geofence: ^0.2.0
   flutter_local_notifications: ^1.4.3
+  flutter_instagram_stories: ^0.1.3+4
   provider: ^4.0.5+1
 #  flutter_mobx: ^1.1.0
 #  mobx: ^1.1.1

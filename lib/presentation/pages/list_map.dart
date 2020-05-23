@@ -3,6 +3,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_stories/flutter_instagram_stories.dart';
+import 'package:flutter_instagram_stories/settings.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:location/location.dart' as loc;
 import 'package:latlong/latlong.dart' as dis;
@@ -37,8 +39,8 @@ class _ListMapState extends State<ListMap> {
   String _API_KEY = Constants.API_KEY;
   LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
   final _formKeySearch = GlobalKey<FormState>();
-  final controllerSearch = TextEditingController();
-  final databaseReference = Firestore.instance;
+  final _controllerSearch = TextEditingController();
+  final _databaseReference = Firestore.instance;
 
   @override
   void initState() {
@@ -68,7 +70,7 @@ class _ListMapState extends State<ListMap> {
                           style: BorderStyle.solid),
                     ),
                   ),
-                  controller: controllerSearch,
+                  controller: _controllerSearch,
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -86,7 +88,7 @@ class _ListMapState extends State<ListMap> {
                 color: Color(0xFFE9FFFF),
                 onPressed: () {
                   if (_formKeySearch.currentState.validate()) {
-                    _searchNearby(true, "", controllerSearch.text);
+                    _searchNearby(true, "", _controllerSearch.text);
                   }
                 },
               ),
@@ -137,6 +139,63 @@ class _ListMapState extends State<ListMap> {
               Center(
                 child: Column(
                   children: <Widget>[
+                    FlutterInstagramStories(
+                      collectionDbName: 'stories',
+                      showTitleOnIcon: true,
+                      iconTextStyle: TextStyle(
+                        shadows: <Shadow>[
+                          Shadow(
+                            offset: Offset(1.0, 1.0),
+                            blurRadius: 1.0,
+                            color: Color(0xAA000000),
+                          ),
+                        ],
+                        fontSize: 7,
+                        color: Colors.white,
+                      ),
+                      iconImageBorderRadius: BorderRadius.circular(30),
+                      iconBoxDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        color: Color(0xFFffffff),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0xff333333),
+                            blurRadius: 10.0,
+                            offset: Offset(
+                              0.0,
+                              4.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                      iconWidth:
+                          ResponsiveScreen().widthMediaQuery(context, 50),
+                      iconHeight:
+                          ResponsiveScreen().heightMediaQuery(context, 50),
+                      imageStoryDuration: 7,
+                      progressPosition: ProgressPosition.top,
+                      repeat: true,
+                      inline: false,
+                      languageCode: 'en',
+                      backgroundColorBetweenStories: Colors.black,
+                      closeButtonIcon: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 28.0,
+                      ),
+                      closeButtonBackgroundColor: Color(0x11000000),
+                      sortingOrderDesc: true,
+                      lastIconHighlight: true,
+                      lastIconHighlightColor: Colors.deepOrange,
+                      lastIconHighlightRadius: const Radius.circular(30),
+                    ),
+                    SizedBox(
+                      height: ResponsiveScreen().heightMediaQuery(context, 2),
+                      width: double.infinity,
+                      child: const DecoratedBox(
+                        decoration: const BoxDecoration(color: Colors.grey),
+                      ),
+                    ),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -334,32 +393,62 @@ class _ListMapState extends State<ListMap> {
     setState(() {
       activeNav = true;
     });
-    await databaseReference
-        .collection("places")
+
+    Map<String, dynamic> dataFile = new Map();
+    dataFile["filetype"] = 'image';
+    dataFile["url"] = {
+      'en': _places[index].photos.isNotEmpty
+          ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+              _places[index].photos[0].photoReference +
+              "&key=$_API_KEY"
+          : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
+    };
+
+    var listFile = new List<Map<String, dynamic>>();
+    listFile.add(dataFile);
+
+    DateTime now = DateTime.now();
+
+    await _databaseReference
+        .collection("stories")
         .document(_places[index].id)
         .setData({
-          "name": _places[index].name,
-          "vicinity": _places[index].vicinity,
-          "lat": _places[index].geometry.location.lat,
-          "lng": _places[index].geometry.location.long,
-          "photo": _places[index].photos.isNotEmpty
-              ? _places[index].photos[0].photoReference
-              : "",
+          "date": now,
+          "file": listFile,
+          "previewImage": _places[index].photos.isNotEmpty
+              ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                  _places[index].photos[0].photoReference +
+                  "&key=$_API_KEY"
+              : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
+          "previewTitle": {'en': _places[index].name},
         })
-        .then((result) => {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MapList(
-                      nameList: _places[index].name,
-                      vicinityList: _places[index].vicinity,
-                      latList: _places[index].geometry.location.lat,
-                      lngList: _places[index].geometry.location.long,
-                    ),
-                  )),
-              setState(() {
-                activeNav = false;
-              }),
+        .then((result) async => {
+              await _databaseReference
+                  .collection("places")
+                  .document(_places[index].id)
+                  .setData({
+                "name": _places[index].name,
+                "vicinity": _places[index].vicinity,
+                "lat": _places[index].geometry.location.lat,
+                "lng": _places[index].geometry.location.long,
+                "photo": _places[index].photos.isNotEmpty
+                    ? _places[index].photos[0].photoReference
+                    : "",
+              }).then((result) => {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MapList(
+                                nameList: _places[index].name,
+                                vicinityList: _places[index].vicinity,
+                                latList: _places[index].geometry.location.lat,
+                                lngList: _places[index].geometry.location.long,
+                              ),
+                            )),
+                        setState(() {
+                          activeNav = false;
+                        }),
+                      })
             })
         .catchError((err) => print(err));
   }
