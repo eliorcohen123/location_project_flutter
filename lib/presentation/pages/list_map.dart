@@ -150,7 +150,7 @@ class _ListMapState extends State<ListMap> {
                             color: Color(0xAA000000),
                           ),
                         ],
-                        fontSize: 7,
+                        fontSize: 6,
                         color: Colors.white,
                       ),
                       iconImageBorderRadius: BorderRadius.circular(30),
@@ -190,7 +190,7 @@ class _ListMapState extends State<ListMap> {
                       lastIconHighlightRadius: const Radius.circular(30),
                     ),
                     SizedBox(
-                      height: ResponsiveScreen().heightMediaQuery(context, 2),
+                      height: ResponsiveScreen().heightMediaQuery(context, 1),
                       width: double.infinity,
                       child: const DecoratedBox(
                         decoration: const BoxDecoration(color: Colors.grey),
@@ -273,7 +273,7 @@ class _ListMapState extends State<ListMap> {
     final double _meter = _distance(
         dis.LatLng(_userLocation.latitude, _userLocation.longitude),
         dis.LatLng(_places[index].geometry.location.lat,
-            _places[index].geometry.location.long));
+            _places[index].geometry.location.lng));
     return Slidable(
       key: UniqueKey(),
       actionPane: SlidableDrawerActionPane(),
@@ -290,7 +290,7 @@ class _ListMapState extends State<ListMap> {
                     nameList: _places[index].name,
                     addressList: _places[index].vicinity,
                     latList: _places[index].geometry.location.lat,
-                    lngList: _places[index].geometry.location.long,
+                    lngList: _places[index].geometry.location.lng,
                     photoList: _places[index].photos.isNotEmpty
                         ? _places[index].photos[0].photoReference
                         : "",
@@ -312,7 +312,7 @@ class _ListMapState extends State<ListMap> {
                 _places[index].name,
                 _places[index].vicinity,
                 _places[index].geometry.location.lat,
-                _places[index].geometry.location.long,
+                _places[index].geometry.location.lng,
                 _places[index].photos[0].photoReference)
           },
         ),
@@ -427,10 +427,11 @@ class _ListMapState extends State<ListMap> {
                   .collection("places")
                   .document(_places[index].id)
                   .setData({
+                "date": now,
                 "name": _places[index].name,
                 "vicinity": _places[index].vicinity,
                 "lat": _places[index].geometry.location.lat,
-                "lng": _places[index].geometry.location.long,
+                "lng": _places[index].geometry.location.lng,
                 "photo": _places[index].photos.isNotEmpty
                     ? _places[index].photos[0].photoReference
                     : "",
@@ -442,7 +443,7 @@ class _ListMapState extends State<ListMap> {
                                 nameList: _places[index].name,
                                 vicinityList: _places[index].vicinity,
                                 latList: _places[index].geometry.location.lat,
-                                lngList: _places[index].geometry.location.long,
+                                lngList: _places[index].geometry.location.lng,
                               ),
                             )),
                         setState(() {
@@ -532,10 +533,10 @@ class _ListMapState extends State<ListMap> {
         _searching = false;
         _places.sort((a, b) => sqrt(
                 pow(a.geometry.location.lat - _userLocation.latitude, 2) +
-                    pow(a.geometry.location.long - _userLocation.longitude, 2))
+                    pow(a.geometry.location.lng - _userLocation.longitude, 2))
             .compareTo(sqrt(pow(
                     b.geometry.location.lat - _userLocation.latitude, 2) +
-                pow(b.geometry.location.long - _userLocation.longitude, 2))));
+                pow(b.geometry.location.lng - _userLocation.longitude, 2))));
         print(_searching);
       });
     }

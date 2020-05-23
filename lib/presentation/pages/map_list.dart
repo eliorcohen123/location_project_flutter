@@ -172,7 +172,7 @@ class _MapListState extends State<MapList> {
                 BitmapDescriptor.hueViolet),
             markerId: MarkerId(_places[i].name),
             position: LatLng(_places[i].geometry.location.lat,
-                _places[i].geometry.location.long),
+                _places[i].geometry.location.lng),
             onTap: () {
               String namePlace = _places[i].name != null ? _places[i].name : "";
               String vicinityPlace =
@@ -181,7 +181,7 @@ class _MapListState extends State<MapList> {
                   namePlace,
                   vicinityPlace,
                   _places[i].geometry.location.lat,
-                  _places[i].geometry.location.long);
+                  _places[i].geometry.location.lng);
             },
           ),
         );

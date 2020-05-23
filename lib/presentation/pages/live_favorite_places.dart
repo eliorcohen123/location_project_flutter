@@ -70,6 +70,9 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   @override
   Widget build(BuildContext context) {
     _userLocation = Provider.of<UserLocation>(context);
+    _places.sort((a, b) {
+      return b.date.compareTo(a.date);
+    });
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black,
