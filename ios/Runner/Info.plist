@@ -53,5 +53,7 @@
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<key>io.flutter.embedded_views_preview</key>
+    <true/>
 </dict>
 </plist>
