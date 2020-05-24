@@ -11,7 +11,7 @@
         android:label="Lovely Favorite Places">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDc7oNJ8FQZc6xmDVEvj-vewU5-ohnlwR0" />
+            android:value="API_KEY" />
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
