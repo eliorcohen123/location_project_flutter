@@ -66,11 +66,11 @@ class AddOrEditDataFavoritesProv extends StatefulWidget {
 
 class _AddOrEditDataFavoritesProvState
     extends State<AddOrEditDataFavoritesProv> {
-  final textName = TextEditingController();
-  final textAddress = TextEditingController();
-  final textLat = TextEditingController();
-  final textLng = TextEditingController();
-  final textPhoto = TextEditingController();
+  final _textName = TextEditingController();
+  final _textAddress = TextEditingController();
+  final _textLat = TextEditingController();
+  final _textLng = TextEditingController();
+  final _textPhoto = TextEditingController();
   var _sqflProv;
 
 //  final ResultsSqflStore _sqflMobx = ResultsSqflStore(); // MobX
@@ -79,11 +79,11 @@ class _AddOrEditDataFavoritesProvState
   void initState() {
     super.initState();
 
-    textName.text = widget.nameList;
-    textAddress.text = widget.addressList;
-    textLat.text = widget.latList.toString();
-    textLng.text = widget.lngList.toString();
-    textPhoto.text = widget.photoList;
+    _textName.text = widget.nameList;
+    _textAddress.text = widget.addressList;
+    _textLat.text = widget.latList.toString();
+    _textLng.text = widget.lngList.toString();
+    _textPhoto.text = widget.photoList;
     _sqflProv =
         Provider.of<ResultsSqflProvider>(context, listen: false); // Provider
   }
@@ -92,11 +92,11 @@ class _AddOrEditDataFavoritesProvState
   void dispose() {
     super.dispose();
 
-    textName.dispose();
-    textAddress.dispose();
-    textLat.dispose();
-    textLng.dispose();
-    textPhoto.dispose();
+    _textName.dispose();
+    _textAddress.dispose();
+    _textLat.dispose();
+    _textLng.dispose();
+    _textPhoto.dispose();
   }
 
   @override
@@ -153,7 +153,7 @@ class _AddOrEditDataFavoritesProvState
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 2),
                 ),
-                _editText(textName),
+                _editText(_textName),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 10),
                 ),
@@ -164,7 +164,7 @@ class _AddOrEditDataFavoritesProvState
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 2),
                 ),
-                _editText(textAddress),
+                _editText(_textAddress),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 10),
                 ),
@@ -175,11 +175,11 @@ class _AddOrEditDataFavoritesProvState
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 2),
                 ),
-                _editText(textLat),
+                _editText(_textLat),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 2),
                 ),
-                _editText(textLng),
+                _editText(_textLng),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 10),
                 ),
@@ -190,7 +190,7 @@ class _AddOrEditDataFavoritesProvState
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 2),
                 ),
-                _editText(textPhoto),
+                _editText(_textPhoto),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 20),
                 ),
@@ -201,18 +201,18 @@ class _AddOrEditDataFavoritesProvState
                   onPressed: () => widget.edit
                       ? _sqflProv.updateItem(
                           widget.id,
-                          textName.text,
-                          textAddress.text,
-                          double.parse(textLat.text),
-                          double.parse(textLng.text),
-                          textPhoto.text,
+                          _textName.text,
+                          _textAddress.text,
+                          double.parse(_textLat.text),
+                          double.parse(_textLng.text),
+                          _textPhoto.text,
                           context) // Provider
                       : _sqflProv.addItem(
-                          textName.text,
-                          textAddress.text,
-                          double.parse(textLat.text),
-                          double.parse(textLng.text),
-                          textPhoto.text,
+                          _textName.text,
+                          _textAddress.text,
+                          double.parse(_textLat.text),
+                          double.parse(_textLng.text),
+                          _textPhoto.text,
                           context), // Provider
 //                      ? _sqflMobx.updateItem(
 //                          widget.id,
