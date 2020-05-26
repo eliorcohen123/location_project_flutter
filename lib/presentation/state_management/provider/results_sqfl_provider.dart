@@ -21,8 +21,8 @@ class ResultsSqflProvider extends ChangeNotifier {
           MaterialPageRoute(
             builder: (context) => FavoritesData(),
           ));
+      notifyListeners();
     });
-    notifyListeners();
   }
 
   Future updateItem(int id, String name, String vicinity, double lat,
@@ -42,8 +42,8 @@ class ResultsSqflProvider extends ChangeNotifier {
           MaterialPageRoute(
             builder: (context) => FavoritesData(),
           ));
+      notifyListeners();
     });
-    notifyListeners();
   }
 
   Future deleteItem(ResultSqfl result, int index) async {
@@ -65,8 +65,8 @@ class ResultsSqflProvider extends ChangeNotifier {
       resultsSqfl.clear();
       results.forEach((result) {
         resultsSqfl.add(ResultSqfl.fromSqfl(result));
+        notifyListeners();
       });
-      notifyListeners();
     });
   }
 }
