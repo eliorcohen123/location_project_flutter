@@ -48,16 +48,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   void initState() {
     super.initState();
 
-    _placeSub?.cancel();
-    _placeSub = _snapshots.listen((QuerySnapshot snapshot) {
-      final List<ResultSqfl> places = snapshot.documents
-          .map((documentSnapshot) => ResultSqfl.fromSqfl(documentSnapshot.data))
-          .toList();
-
-      setState(() {
-        this._places = places;
-      });
-    });
+    _readFirebase();
   }
 
   @override
@@ -71,7 +62,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   Widget build(BuildContext context) {
     _userLocation = Provider.of<UserLocation>(context);
     _places.sort((a, b) {
-      return b.date.compareTo(a.date);
+      return b.count.compareTo(a.count);
     });
     return Scaffold(
         appBar: AppBar(
@@ -246,6 +237,19 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
         ),
       ),
     );
+  }
+
+  _readFirebase() {
+    _placeSub?.cancel();
+    _placeSub = _snapshots.listen((QuerySnapshot snapshot) {
+      final List<ResultSqfl> places = snapshot.documents
+          .map((documentSnapshot) => ResultSqfl.fromSqfl(documentSnapshot.data))
+          .toList();
+
+      setState(() {
+        this._places = places;
+      });
+    });
   }
 
   _calculateDistance(double _meter) {
