@@ -403,8 +403,10 @@ class _ListMapState extends State<ListMap> {
       setState(() {
         count = document['count'];
       });
-    });
+    }).then((value) => _addToFirebase(index, count));
+  }
 
+  Future _addToFirebase(int index, int count) async {
     Map<String, dynamic> dataFile = new Map();
     dataFile["filetype"] = 'image';
     dataFile["url"] = {
