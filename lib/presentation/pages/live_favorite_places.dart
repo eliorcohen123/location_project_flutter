@@ -40,9 +40,9 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   var _userLocation;
   String _API_KEY = Constants.API_KEY;
   StreamSubscription<QuerySnapshot> _placeSub;
-  List<ResultSqfl> _places = List();
   Stream<QuerySnapshot> _snapshots =
       Firestore.instance.collection('places').snapshots();
+  List<ResultSqfl> _places = List();
 
   @override
   void initState() {

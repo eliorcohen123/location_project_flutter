@@ -31,7 +31,7 @@ class ListMap extends StatefulWidget {
 
 class _ListMapState extends State<ListMap> {
   List<Result> _places = List();
-  bool _searching = true, _activeSearch = false, activeNav = false;
+  bool _searching = true, _activeSearch = false, _activeNav = false;
   double _valueRadius;
   String _open;
   SharedPreferences _sharedPrefs;
@@ -236,7 +236,7 @@ class _ListMapState extends State<ListMap> {
                   ],
                 ),
               ),
-              if (activeNav)
+              if (_activeNav)
                 Container(
                   decoration: new BoxDecoration(color: Color(0x80000000)),
                   child: Center(
@@ -391,7 +391,7 @@ class _ListMapState extends State<ListMap> {
 
   Future _createNavPlace(int index) async {
     setState(() {
-      activeNav = true;
+      _activeNav = true;
     });
 
     Map<String, dynamic> dataFile = new Map();
@@ -447,7 +447,7 @@ class _ListMapState extends State<ListMap> {
                               ),
                             )),
                         setState(() {
-                          activeNav = false;
+                          _activeNav = false;
                         }),
                       })
             })
