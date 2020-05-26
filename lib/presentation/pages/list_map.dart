@@ -424,15 +424,13 @@ class _ListMapState extends State<ListMap> {
 
     int count;
 
-    for (var i = 0; i < _placesLive.length; i++) {
-      var document =
-          Firestore.instance.collection('places').document(_places[index].id);
-      document.get().then((document) {
-        setState(() {
-          count = document['count'];
-        });
+    var document =
+        Firestore.instance.collection('places').document(_places[index].id);
+    document.get().then((document) {
+      setState(() {
+        count = document['count'];
       });
-    }
+    });
 
     Map<String, dynamic> dataFile = new Map();
     dataFile["filetype"] = 'image';
