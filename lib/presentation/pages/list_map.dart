@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:auto_animated/auto_animated.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,7 +11,6 @@ import 'package:location/location.dart' as loc;
 import 'package:latlong/latlong.dart' as dis;
 import 'package:locationprojectflutter/core/constants/constant.dart';
 import 'package:locationprojectflutter/data/models/model_location/result.dart';
-import 'package:locationprojectflutter/data/models/model_sqfl/result_sqfl.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
@@ -44,10 +42,6 @@ class _ListMapState extends State<ListMap> {
   final _formKeySearch = GlobalKey<FormState>();
   final _controllerSearch = TextEditingController();
   final _databaseReference = Firestore.instance;
-  StreamSubscription<QuerySnapshot> _placeSub;
-  Stream<QuerySnapshot> _snapshots =
-      Firestore.instance.collection('places').snapshots();
-  List<ResultSqfl> _placesLive = List();
 
   @override
   void initState() {
@@ -55,14 +49,6 @@ class _ListMapState extends State<ListMap> {
 
     _getLocationPermission();
     _initGetSharedPref();
-    _readFirebase();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    _placeSub?.cancel();
   }
 
   PreferredSizeWidget _appBar() {
@@ -402,19 +388,6 @@ class _ListMapState extends State<ListMap> {
         ),
       ),
     );
-  }
-
-  _readFirebase() {
-    _placeSub?.cancel();
-    _placeSub = _snapshots.listen((QuerySnapshot snapshot) {
-      final List<ResultSqfl> _placesLive = snapshot.documents
-          .map((documentSnapshot) => ResultSqfl.fromSqfl(documentSnapshot.data))
-          .toList();
-
-      setState(() {
-        this._placesLive = _placesLive;
-      });
-    });
   }
 
   Future _createNavPlace(int index) async {
