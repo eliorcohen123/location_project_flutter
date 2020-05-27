@@ -19,7 +19,7 @@ class LocationRemoteDataSource {
   String _baseUrl = Constants.baseUrl;
   String _API_KEY = Constants.API_KEY;
 
-//  Dio dio = new Dio();
+//  Dio _dio = new Dio();
 
   Future responseJsonLocation(double latitude, double longitude, String open,
       String type, int valueRadiusText, String text) async {
@@ -27,11 +27,11 @@ class LocationRemoteDataSource {
         '$_baseUrl?key=$_API_KEY&location=$latitude,$longitude$open&types=$type&radius=$valueRadiusText&keyword=$text';
     print(url);
     final response = await http.get(url);
-//    final response = await dio.get(url); // dio
+//    final response = await _dio.get(url); // dio
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       _handleResponse(data);
-//      _places = PlaceResponse.parseResults(response.data['results']); // dio
+//      _handleResponse(response.data); // dio
     } else {
       throw Exception('An error occurred getting places nearby');
     }
