@@ -1,7 +1,7 @@
-import 'package:locationprojectflutter/data/models/model_location/result.dart';
+import 'package:locationprojectflutter/data/models/model_location/results.dart';
 
 class PlaceResponse {
-  final List<Result> results;
+  final List<Results> results;
 
   PlaceResponse({this.results});
 
@@ -9,7 +9,7 @@ class PlaceResponse {
     return PlaceResponse(results: parseResults(json['results']));
   }
 
-  static List<Result> parseResults(List<dynamic> list) {
-    return list.map((i) => Result.fromJson(i)).toList();
+  static List<Results> parseResults(List<dynamic> list) {
+    return list.map((i) => Results.fromJson(i)).toList();
   }
 }

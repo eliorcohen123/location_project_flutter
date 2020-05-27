@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_geofence/geofence.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:locationprojectflutter/data/models/model_location/result.dart';
+import 'package:locationprojectflutter/data/models/model_location/results.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
 import 'package:locationprojectflutter/presentation/utils/map_utils.dart';
@@ -30,7 +30,7 @@ class _MapListState extends State<MapList> {
   String _open;
   bool _zoomGesturesEnabled = true, _searching = true;
   List<Marker> _markers = <Marker>[];
-  List<Result> _places = List();
+  List<Results> _places = List();
   var _userLocation;
   LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
   FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;

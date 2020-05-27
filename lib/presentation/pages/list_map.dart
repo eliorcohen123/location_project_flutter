@@ -10,7 +10,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:location/location.dart' as loc;
 import 'package:latlong/latlong.dart' as dis;
 import 'package:locationprojectflutter/core/constants/constant.dart';
-import 'package:locationprojectflutter/data/models/model_location/result.dart';
+import 'package:locationprojectflutter/data/models/model_location/results.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
@@ -31,7 +31,7 @@ class ListMap extends StatefulWidget {
 }
 
 class _ListMapState extends State<ListMap> {
-  List<Result> _places = List();
+  List<Results> _places = List();
   bool _searching = true, _activeSearch = false, _activeNav = false;
   double _valueRadius;
   String _open;

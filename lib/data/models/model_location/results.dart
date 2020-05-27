@@ -1,14 +1,14 @@
 import 'package:locationprojectflutter/data/models/model_location/photo.dart';
 import 'geometry.dart';
 
-class Result {
+class Results {
   String id;
   String name;
   String vicinity;
   Geometry geometry;
   List<Photo> photos;
 
-  Result({
+  Results({
     this.id,
     this.name,
     this.vicinity,
@@ -16,8 +16,8 @@ class Result {
     this.photos,
   });
 
-  factory Result.fromJson(Map<String, dynamic> json) {
-    return Result(
+  factory Results.fromJson(Map<String, dynamic> json) {
+    return Results(
       id: json['id'],
       name: json['name'],
       vicinity: json['vicinity'],
