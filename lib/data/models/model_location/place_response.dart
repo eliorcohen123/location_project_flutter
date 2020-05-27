@@ -1,7 +1,7 @@
 import 'package:locationprojectflutter/data/models/model_location/results.dart';
 
 class PlaceResponse {
-  final List<Results> results;
+  List<Results> results;
 
   PlaceResponse({this.results});
 
