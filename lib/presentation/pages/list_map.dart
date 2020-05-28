@@ -545,7 +545,7 @@ class _ListMapState extends State<ListMap> {
   }
 
   _searchNearbyTotal(bool search, String type, String text) {
-    _searchNearby(search, type, text).then((value) => _sortSearchNearby());
+    _searchNearby(search, type, text).then((value) => _sortSearchNearby(value));
   }
 
   Future _searchNearby(bool search, String type, String text) async {
@@ -557,9 +557,10 @@ class _ListMapState extends State<ListMap> {
         print(_searching);
       });
     }
+    return _places;
   }
 
-  _sortSearchNearby() {
+  _sortSearchNearby(List<Results> _places) {
     _places.sort((a, b) => sqrt(
             pow(a.geometry.location.lat - _userLocation.latitude, 2) +
                 pow(a.geometry.location.lng - _userLocation.longitude, 2))
