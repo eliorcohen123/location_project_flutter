@@ -90,8 +90,7 @@ class _ListMapState extends State<ListMap> {
                 color: Color(0xFFE9FFFF),
                 onPressed: () {
                   if (_formKeySearch.currentState.validate()) {
-                    _searchNearby(true, "", _controllerSearch.text)
-                        .then((value) => _afterSearchNearby());
+                    _searchNearbyTotal(true, "", _controllerSearch.text);
                   }
                 },
               ),
@@ -123,8 +122,7 @@ class _ListMapState extends State<ListMap> {
           IconButton(
             icon: Icon(Icons.navigation),
             color: Color(0xFFE9FFFF),
-            onPressed: () => _searchNearby(true, "", "")
-                .then((value) => _afterSearchNearby()),
+            onPressed: () => _searchNearbyTotal(true, "", ""),
           ),
         ],
       );
@@ -134,7 +132,7 @@ class _ListMapState extends State<ListMap> {
   @override
   Widget build(BuildContext context) {
     _userLocation = Provider.of<UserLocation>(context);
-    _searchNearby(_searching, "", "").then((value) => _afterSearchNearby());
+    _searchNearbyTotal(_searching, "", "");
     return Scaffold(
         appBar: _appBar(),
         body: Container(
@@ -502,8 +500,7 @@ class _ListMapState extends State<ListMap> {
           padding: EdgeInsets.all(0.0),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-          onPressed: () => _searchNearby(true, type, "")
-              .then((value) => _afterSearchNearby()),
+          onPressed: () => _searchNearbyTotal(true, type, ""),
           child: Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -547,6 +544,10 @@ class _ListMapState extends State<ListMap> {
     }
   }
 
+  _searchNearbyTotal(bool search, String type, String text) {
+    _searchNearby(search, type, text).then((value) => _sortSearchNearby());
+  }
+
   Future _searchNearby(bool search, String type, String text) async {
     if (search) {
       _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
@@ -558,7 +559,7 @@ class _ListMapState extends State<ListMap> {
     }
   }
 
-  _afterSearchNearby() {
+  _sortSearchNearby() {
     _places.sort((a, b) => sqrt(
             pow(a.geometry.location.lat - _userLocation.latitude, 2) +
                 pow(a.geometry.location.lng - _userLocation.longitude, 2))
