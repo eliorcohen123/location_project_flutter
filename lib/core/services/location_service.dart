@@ -3,7 +3,6 @@ import 'package:location/location.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 
 class LocationService {
-  UserLocation _currentLocation;
   Location _location = Location();
   StreamController<UserLocation> _locationController =
       StreamController<UserLocation>.broadcast();
@@ -24,17 +23,4 @@ class LocationService {
   }
 
   Stream<UserLocation> get locationStream => _locationController.stream;
-
-  Future<UserLocation> getLocation() async {
-    try {
-      var _userLocation = await _location.getLocation();
-      _currentLocation = UserLocation(
-        latitude: _userLocation.latitude,
-        longitude: _userLocation.longitude,
-      );
-    } catch (e) {
-      print('Could not get the location: $e');
-    }
-    return _currentLocation;
-  }
 }
