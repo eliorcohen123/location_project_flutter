@@ -6,8 +6,8 @@ class LocationRepoImpl implements LocationRepoApi {
       LocationRemoteDataSource();
 
   @override
-  Future getLocationJson(double latitude, double longitude, String open, String type,
-      int valueRadiusText, String text) {
+  Future getLocationJson(double latitude, double longitude, String open,
+      String type, int valueRadiusText, String text) {
     return locationRemoteDataSource.responseJsonLocation(
         latitude, longitude, open, type, valueRadiusText, text);
   }
