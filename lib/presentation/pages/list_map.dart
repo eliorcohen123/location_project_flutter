@@ -453,6 +453,9 @@ class _ListMapState extends State<ListMap> {
                     ? _places[index].photos[0].photoReference
                     : "",
               }).then((result) => {
+                        setState(() {
+                          _activeNav = false;
+                        }),
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -463,9 +466,6 @@ class _ListMapState extends State<ListMap> {
                                 lngList: _places[index].geometry.location.lng,
                               ),
                             )),
-                        setState(() {
-                          _activeNav = false;
-                        }),
                       })
             })
         .catchError((err) => print(err));
@@ -548,14 +548,14 @@ class _ListMapState extends State<ListMap> {
           _userLocation.longitude, _open, type, _valueRadius.round(), text);
       setState(() {
         _searching = false;
-        _places.sort((a, b) => sqrt(
-                pow(a.geometry.location.lat - _userLocation.latitude, 2) +
-                    pow(a.geometry.location.lng - _userLocation.longitude, 2))
-            .compareTo(sqrt(pow(
-                    b.geometry.location.lat - _userLocation.latitude, 2) +
-                pow(b.geometry.location.lng - _userLocation.longitude, 2))));
         print(_searching);
       });
+      _places.sort((a, b) => sqrt(
+              pow(a.geometry.location.lat - _userLocation.latitude, 2) +
+                  pow(a.geometry.location.lng - _userLocation.longitude, 2))
+          .compareTo(sqrt(
+              pow(b.geometry.location.lat - _userLocation.latitude, 2) +
+                  pow(b.geometry.location.lng - _userLocation.longitude, 2))));
     }
   }
 

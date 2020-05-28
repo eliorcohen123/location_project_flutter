@@ -7,13 +7,6 @@ import 'package:locationprojectflutter/data/models/model_location/results.dart';
 //import 'package:dio/dio.dart';
 
 class LocationRemoteDataSource {
-  static final LocationRemoteDataSource _singleton =
-      LocationRemoteDataSource._internal();
-
-  factory LocationRemoteDataSource() => _singleton;
-
-  LocationRemoteDataSource._internal();
-
   Error _error;
   List<Results> _places = List();
   String _baseUrl = Constants.baseUrl;
