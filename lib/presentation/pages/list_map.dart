@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'package:auto_animated/auto_animated.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -89,7 +90,8 @@ class _ListMapState extends State<ListMap> {
                 color: Color(0xFFE9FFFF),
                 onPressed: () {
                   if (_formKeySearch.currentState.validate()) {
-                    _searchNearby(true, "", _controllerSearch.text);
+                    _searchNearby(true, "", _controllerSearch.text)
+                        .then((value) => _afterSearchNearby());
                   }
                 },
               ),
@@ -121,7 +123,8 @@ class _ListMapState extends State<ListMap> {
           IconButton(
             icon: Icon(Icons.navigation),
             color: Color(0xFFE9FFFF),
-            onPressed: () => _searchNearby(true, "", ""),
+            onPressed: () => _searchNearby(true, "", "")
+                .then((value) => _afterSearchNearby()),
           ),
         ],
       );
@@ -131,7 +134,7 @@ class _ListMapState extends State<ListMap> {
   @override
   Widget build(BuildContext context) {
     _userLocation = Provider.of<UserLocation>(context);
-    _searchNearby(_searching, "", "");
+    _searchNearby(_searching, "", "").then((value) => _afterSearchNearby());
     return Scaffold(
         appBar: _appBar(),
         body: Container(
@@ -455,6 +458,7 @@ class _ListMapState extends State<ListMap> {
               }).then((result) => {
                         setState(() {
                           _activeNav = false;
+                          print(_activeNav);
                         }),
                         Navigator.push(
                             context,
@@ -498,7 +502,8 @@ class _ListMapState extends State<ListMap> {
           padding: EdgeInsets.all(0.0),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-          onPressed: () => _searchNearby(true, type, ""),
+          onPressed: () => _searchNearby(true, type, "")
+              .then((value) => _afterSearchNearby()),
           child: Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -550,13 +555,16 @@ class _ListMapState extends State<ListMap> {
         _searching = false;
         print(_searching);
       });
-      _places.sort((a, b) => sqrt(
-              pow(a.geometry.location.lat - _userLocation.latitude, 2) +
-                  pow(a.geometry.location.lng - _userLocation.longitude, 2))
-          .compareTo(sqrt(
-              pow(b.geometry.location.lat - _userLocation.latitude, 2) +
-                  pow(b.geometry.location.lng - _userLocation.longitude, 2))));
     }
+  }
+
+  _afterSearchNearby() {
+    _places.sort((a, b) => sqrt(
+            pow(a.geometry.location.lat - _userLocation.latitude, 2) +
+                pow(a.geometry.location.lng - _userLocation.longitude, 2))
+        .compareTo(sqrt(
+            pow(b.geometry.location.lat - _userLocation.latitude, 2) +
+                pow(b.geometry.location.lng - _userLocation.longitude, 2))));
   }
 
   _shareContent(

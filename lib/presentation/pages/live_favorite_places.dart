@@ -239,7 +239,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
     );
   }
 
-  Future _readFirebase() async {
+  _readFirebase() {
     _placeSub?.cancel();
     _placeSub = _snapshots.listen((QuerySnapshot snapshot) {
       final List<ResultSqfl> places = snapshot.documents
