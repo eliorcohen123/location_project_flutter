@@ -1,6 +1,6 @@
 //import 'package:flutter/material.dart';
 //import 'package:locationprojectflutter/data/databases/sqflite_helper.dart';
-//import 'package:locationprojectflutter/data/models/model_sqfl/result_sqfl.dart';
+//import 'package:locationprojectflutter/data/models/model_sqfl/results_sqfl.dart';
 //import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
 //import 'package:mobx/mobx.dart';
 //
@@ -12,17 +12,17 @@
 //  @observable
 //  SQFLiteHelper _db = SQFLiteHelper();
 //  @observable
-//  ObservableList<ResultSqfl> resultsSqfl = ObservableList.of([]);
+//  ObservableList<ResultsSqfl> _resultsSqfl = ObservableList.of([]);
 //
 //  @action
-//  initList(ObservableList<ResultSqfl> resultsSqfl) {
-//    this.resultsSqfl = resultsSqfl;
+//  initList(ObservableList<ResultsSqfl> resultsSqfl) {
+//    this._resultsSqfl = resultsSqfl;
 //  }
 //
 //  @action
 //  Future addItem(String name, String vicinity, double lat, double lng,
 //      String photo, BuildContext context) async {
-//    var add = ResultSqfl.sqfl(name, vicinity, lat, lng, photo);
+//    var add = ResultsSqfl.sqfl(name, vicinity, lat, lng, photo);
 //    _db.addResult(add).then((_) {
 //      Navigator.push(
 //          context,
@@ -36,7 +36,7 @@
 //  Future updateItem(int id, String name, String vicinity, double lat,
 //      double lng, String photo, BuildContext context) async {
 //    _db
-//        .updateResult(ResultSqfl.fromSqfl({
+//        .updateResult(ResultsSqfl.fromSqfl({
 //      'id': id,
 //      'name': name,
 //      'vicinity': vicinity,
@@ -54,9 +54,9 @@
 //  }
 //
 //  @action
-//  Future deleteItem(ResultSqfl result, int index) async {
+//  Future deleteItem(ResultsSqfl result, int index) async {
 //    _db.deleteResult(result.id).then((_) {
-//      resultsSqfl.removeAt(index);
+//      _resultsSqfl.removeAt(index);
 //    });
 //  }
 //
@@ -70,9 +70,9 @@
 //  @action
 //  Future getItems() async {
 //    _db.getAllResults().then((results) {
-//      resultsSqfl.clear();
+//      _resultsSqfl.clear();
 //      results.forEach((result) {
-//        resultsSqfl.add(ResultSqfl.fromSqfl(result));
+//        _resultsSqfl.add(ResultsSqfl.fromSqfl(result));
 //      });
 //    });
 //  }

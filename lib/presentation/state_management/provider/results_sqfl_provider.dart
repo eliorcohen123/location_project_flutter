@@ -6,10 +6,10 @@ import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
 
 class ResultsSqflProvider extends ChangeNotifier {
   SQFLiteHelper _db = SQFLiteHelper();
-  List<ResultsSqfl> resultsSqfl = List();
+  List<ResultsSqfl> _resultsSqfl = List();
 
   initList(List<ResultsSqfl> resultsSqfl) {
-    this.resultsSqfl = resultsSqfl;
+    this._resultsSqfl = resultsSqfl;
   }
 
   Future addItem(String name, String vicinity, double lat, double lng,
@@ -48,7 +48,7 @@ class ResultsSqflProvider extends ChangeNotifier {
 
   Future deleteItem(ResultsSqfl result, int index) async {
     _db.deleteResult(result.id).then((_) {
-      resultsSqfl.removeAt(index);
+      _resultsSqfl.removeAt(index);
       notifyListeners();
     });
   }
@@ -62,9 +62,9 @@ class ResultsSqflProvider extends ChangeNotifier {
 
   Future getItems() async {
     _db.getAllResults().then((results) {
-      resultsSqfl.clear();
+      _resultsSqfl.clear();
       results.forEach((result) {
-        resultsSqfl.add(ResultsSqfl.fromSqfl(result));
+        _resultsSqfl.add(ResultsSqfl.fromSqfl(result));
         notifyListeners();
       });
     });

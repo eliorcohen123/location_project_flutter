@@ -6,11 +6,7 @@ import 'package:provider/provider.dart';
 import 'add_or_edit_data_favorites.dart';
 
 class CustomMapList extends StatefulWidget {
-  final double latList, lngList;
-  final String nameList;
-
-  CustomMapList({Key key, this.nameList, this.latList, this.lngList})
-      : super(key: key);
+  CustomMapList({Key key}) : super(key: key);
 
   @override
   _CustomMapListState createState() => _CustomMapListState();

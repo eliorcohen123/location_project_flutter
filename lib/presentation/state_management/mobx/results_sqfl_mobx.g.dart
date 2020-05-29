@@ -24,18 +24,18 @@
 //    });
 //  }
 //
-//  final _$resultsSqflAtom = Atom(name: '_ResultsSqflBase.resultsSqfl');
+//  final _$_resultsSqflAtom = Atom(name: '_ResultsSqflBase._resultsSqfl');
 //
 //  @override
-//  ObservableList<ResultSqfl> get resultsSqfl {
-//    _$resultsSqflAtom.reportRead();
-//    return super.resultsSqfl;
+//  ObservableList<ResultsSqfl> get _resultsSqfl {
+//    _$_resultsSqflAtom.reportRead();
+//    return super._resultsSqfl;
 //  }
 //
 //  @override
-//  set resultsSqfl(ObservableList<ResultSqfl> value) {
-//    _$resultsSqflAtom.reportWrite(value, super.resultsSqfl, () {
-//      super.resultsSqfl = value;
+//  set _resultsSqfl(ObservableList<ResultsSqfl> value) {
+//    _$_resultsSqflAtom.reportWrite(value, super._resultsSqfl, () {
+//      super._resultsSqfl = value;
 //    });
 //  }
 //
@@ -60,7 +60,7 @@
 //  final _$deleteItemAsyncAction = AsyncAction('_ResultsSqflBase.deleteItem');
 //
 //  @override
-//  Future<dynamic> deleteItem(ResultSqfl result, int index) {
+//  Future<dynamic> deleteItem(ResultsSqfl result, int index) {
 //    return _$deleteItemAsyncAction.run(() => super.deleteItem(result, index));
 //  }
 //
@@ -82,7 +82,7 @@
 //      ActionController(name: '_ResultsSqflBase');
 //
 //  @override
-//  dynamic initList(ObservableList<ResultSqfl> resultsSqfl) {
+//  dynamic initList(ObservableList<ResultsSqfl> resultsSqfl) {
 //    final _$actionInfo = _$_ResultsSqflBaseActionController.startAction(
 //        name: '_ResultsSqflBase.initList');
 //    try {
@@ -95,7 +95,7 @@
 //  @override
 //  String toString() {
 //    return '''
-//resultsSqfl: ${resultsSqfl}
+//
 //    ''';
 //  }
 //}
