@@ -14,8 +14,8 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'map_list.dart';
 
-//import 'package:locationprojectflutter/presentation/state_management/mobx/results_sqfl_mobx.dart';
-//import 'package:mobx/mobx.dart';
+import 'package:locationprojectflutter/presentation/state_management/mobx/results_sqfl_mobx.dart';
+import 'package:mobx/mobx.dart';
 
 class FavoritesData extends StatefulWidget {
   const FavoritesData({Key key}) : super(key: key);
@@ -44,8 +44,8 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   var _userLocation, _sqflProv;
   String _API_KEY = Constants.API_KEY;
 
-//  ObservableList<ResultSqfl> _places = ObservableList.of([]); // MobX
-//  final ResultsSqflStore _sqflMobx = ResultsSqflStore(); // MobX
+//  ObservableList<ResultsSqfl> _places = ObservableList.of([]); // MobX
+//  ResultsSqflStore _sqflMobx = ResultsSqflStore(); // MobX
   List<ResultsSqfl> _places = List();
 
   @override
@@ -182,7 +182,8 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           color: Colors.red,
           icon: Icons.delete,
           onTap: () => {
-            _sqflProv.deleteItem(_places[index], index) // Provider
+            _sqflProv.deleteItem(_places[index], index)
+            // Provider
 //                            _sqflMobx.deleteItem(_places[index], index); // Mobx
           },
         ),
