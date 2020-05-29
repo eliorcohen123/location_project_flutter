@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:locationprojectflutter/core/constants/constants.dart';
-import 'package:locationprojectflutter/data/models/model_sqfl/results_sqfl.dart';
+import 'package:locationprojectflutter/data/models/model_firestore/results_firestore.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
@@ -42,7 +42,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   StreamSubscription<QuerySnapshot> _placeSub;
   Stream<QuerySnapshot> _snapshots =
       Firestore.instance.collection('places').snapshots();
-  List<ResultsSqfl> _places = List();
+  List<ResultsFirestore> _places = List();
 
   @override
   void initState() {
@@ -242,8 +242,9 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   _readFirebase() {
     _placeSub?.cancel();
     _placeSub = _snapshots.listen((QuerySnapshot snapshot) {
-      final List<ResultsSqfl> places = snapshot.documents
-          .map((documentSnapshot) => ResultsSqfl.fromSqfl(documentSnapshot.data))
+      final List<ResultsFirestore> places = snapshot.documents
+          .map((documentSnapshot) =>
+              ResultsFirestore.fromSqfl(documentSnapshot.data))
           .toList();
 
       setState(() {

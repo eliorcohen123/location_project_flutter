@@ -2,9 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ResultsSqfl {
   int id;
-  String idLive;
-  int count;
-  Timestamp date;
   String name;
   String vicinity;
   double lat;
@@ -28,9 +25,6 @@ class ResultsSqfl {
 
   ResultsSqfl.fromSqfl(Map<String, dynamic> map) {
     this.id = map['id'];
-    this.idLive = map['idLive'];
-    this.count = map['count'];
-    this.date = map['date'];
     this.name = map['name'];
     this.vicinity = map['vicinity'];
     this.lat = map['lat'];
