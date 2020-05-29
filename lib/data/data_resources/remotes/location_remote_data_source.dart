@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:locationprojectflutter/core/constants/constant.dart';
+import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/data/models/model_location/error.dart';
 import 'package:locationprojectflutter/data/models/model_location/place_response.dart';
 import 'package:locationprojectflutter/data/models/model_location/results.dart';

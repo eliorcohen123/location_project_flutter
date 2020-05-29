@@ -10,7 +10,7 @@ import 'package:flutter_instagram_stories/settings.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:location/location.dart' as loc;
 import 'package:latlong/latlong.dart' as dis;
-import 'package:locationprojectflutter/core/constants/constant.dart';
+import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/data/models/model_location/results.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
