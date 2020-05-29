@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ResultSqfl {
+class ResultsSqfl {
   int id;
   String idLive;
   int count;
@@ -11,7 +11,7 @@ class ResultSqfl {
   double lng;
   String photo;
 
-  ResultSqfl.sqfl(this.name, this.vicinity, this.lat, this.lng, this.photo);
+  ResultsSqfl.sqfl(this.name, this.vicinity, this.lat, this.lng, this.photo);
 
   Map<String, dynamic> toSqfl() {
     var map = Map<String, dynamic>();
@@ -26,7 +26,7 @@ class ResultSqfl {
     return map;
   }
 
-  ResultSqfl.fromSqfl(Map<String, dynamic> map) {
+  ResultsSqfl.fromSqfl(Map<String, dynamic> map) {
     this.id = map['id'];
     this.idLive = map['idLive'];
     this.count = map['count'];

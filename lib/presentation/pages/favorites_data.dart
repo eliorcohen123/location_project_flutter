@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:locationprojectflutter/core/constants/constants.dart';
-import 'package:locationprojectflutter/data/models/model_sqfl/result_sqfl.dart';
+import 'package:locationprojectflutter/data/models/model_sqfl/results_sqfl.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/pages/add_or_edit_data_favorites.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/results_sqfl_provider.dart';
@@ -46,7 +46,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
 
 //  ObservableList<ResultSqfl> _places = ObservableList.of([]); // MobX
 //  final ResultsSqflStore _sqflMobx = ResultsSqflStore(); // MobX
-  List<ResultSqfl> _places = List();
+  List<ResultsSqfl> _places = List();
 
   @override
   void initState() {
