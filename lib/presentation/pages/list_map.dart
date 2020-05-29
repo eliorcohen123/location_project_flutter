@@ -544,12 +544,13 @@ class _ListMapState extends State<ListMap> {
     }
   }
 
-  _searchNearbyTotal(bool search, String type, String text) {
-    _searchNearby(search, type, text).then((value) => _sortSearchNearby(value));
+  _searchNearbyTotal(bool isSearching, String type, String text) {
+    _searchNearby(isSearching, type, text)
+        .then((value) => _sortSearchNearby(value));
   }
 
-  Future _searchNearby(bool search, String type, String text) async {
-    if (search) {
+  Future _searchNearby(bool isSearching, String type, String text) async {
+    if (isSearching) {
       _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
           _userLocation.longitude, _open, type, _valueRadius.round(), text);
       setState(() {
