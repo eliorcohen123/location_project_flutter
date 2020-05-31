@@ -14,8 +14,8 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'map_list.dart';
 
-import 'package:locationprojectflutter/presentation/state_management/mobx/results_sqfl_mobx.dart';
-import 'package:mobx/mobx.dart';
+//import 'package:locationprojectflutter/presentation/state_management/mobx/results_sqfl_mobx.dart';
+//import 'package:mobx/mobx.dart';
 
 class FavoritesData extends StatefulWidget {
   const FavoritesData({Key key}) : super(key: key);
