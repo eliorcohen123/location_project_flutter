@@ -23,6 +23,9 @@ import 'dart:math';
 import 'add_or_edit_data_favorites.dart';
 import 'map_list.dart';
 
+//import 'package:flutter_mobx/flutter_mobx.dart';
+//import 'package:locationprojectflutter/presentation/state_management/mobx/results_data_mobx.dart';
+
 class ListMap extends StatefulWidget {
   ListMap({Key key}) : super(key: key);
 
@@ -42,6 +45,8 @@ class _ListMapState extends State<ListMap> {
   final _formKeySearch = GlobalKey<FormState>();
   final _controllerSearch = TextEditingController();
   final _databaseReference = Firestore.instance;
+
+//  ResultsDataMobXStore _dataMobx = ResultsDataMobXStore(); // MobX
 
   @override
   void initState() {
@@ -225,6 +230,7 @@ class _ListMapState extends State<ListMap> {
                     _searching
                         ? CircularProgressIndicator()
                         : Expanded(
+//                            child: Observer(builder: (_) {
                             child: LiveList(
                               showItemInterval: Duration(milliseconds: 50),
                               showItemDuration: Duration(milliseconds: 50),
@@ -233,6 +239,7 @@ class _ListMapState extends State<ListMap> {
                               itemCount: _places.length,
                               itemBuilder: buildAnimatedItem,
                             ),
+//                            }
                           ),
                   ],
                 ),
@@ -552,6 +559,8 @@ class _ListMapState extends State<ListMap> {
     if (isSearching) {
       _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
           _userLocation.longitude, _open, type, _valueRadius.round(), text);
+//      _places = await _dataMobx.getSearchNearby(_userLocation.latitude,
+//          _userLocation.longitude, _open, type, _valueRadius.round(), text);
       setState(() {
         _searching = false;
         print(_searching);

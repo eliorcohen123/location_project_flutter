@@ -1,18 +1,24 @@
 //import 'package:flutter/material.dart';
+//import 'package:locationprojectflutter/core/services/service_locator.dart';
 //import 'package:locationprojectflutter/data/databases/sqflite_helper.dart';
 //import 'package:locationprojectflutter/data/models/model_sqfl/results_sqfl.dart';
+//import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
 //import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
 //import 'package:mobx/mobx.dart';
 //
-//part 'results_sqfl_mobx.g.dart';
+//part 'results_data_mobx.g.dart';
 //
-//class ResultsSqflStore = _ResultsSqflBase with _$ResultsSqflStore;
+//class ResultsDataMobXStore = _ResultsDataBase with _$ResultsDataMobXStore;
 //
-//abstract class _ResultsSqflBase with Store {
+//abstract class _ResultsDataBase with Store {
 //  @observable
 //  SQFLiteHelper _db = SQFLiteHelper();
 //  @observable
 //  ObservableList<ResultsSqfl> _resultsSqfl = ObservableList.of([]);
+//  @observable
+//  LocationRepoImpl _locationRepoImpl;
+//
+//  _ResultsDataBase() : _locationRepoImpl = serviceLocator();
 //
 //  @action
 //  initList(ObservableList<ResultsSqfl> resultsSqfl) {
@@ -75,5 +81,12 @@
 //        _resultsSqfl.add(ResultsSqfl.fromSqfl(result));
 //      });
 //    });
+//  }
+//
+//  @action
+//  Future getSearchNearby(double latitude, double longitude, String open,
+//      String type, int valueRadiusText, String text) async {
+//    return await _locationRepoImpl.getLocationJson(
+//        latitude, longitude, open, type, valueRadiusText, text);
 //  }
 //}

@@ -14,8 +14,9 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'map_list.dart';
 
-//import 'package:locationprojectflutter/presentation/state_management/mobx/results_sqfl_mobx.dart';
+//import 'package:locationprojectflutter/presentation/state_management/mobx/results_data_mobx.dart';
 //import 'package:mobx/mobx.dart';
+//import 'package:flutter_mobx/flutter_mobx.dart';
 
 class FavoritesData extends StatefulWidget {
   const FavoritesData({Key key}) : super(key: key);
@@ -45,7 +46,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   String _API_KEY = Constants.API_KEY;
 
 //  ObservableList<ResultsSqfl> _places = ObservableList.of([]); // MobX
-//  ResultsSqflStore _sqflMobx = ResultsSqflStore(); // MobX
+//  ResultsDataMobXStore _dataMobx = ResultsDataMobXStore(); // MobX
   List<ResultsSqfl> _places = List();
 
   @override
@@ -57,8 +58,8 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
     _sqflProv.initList(_places); // Provider
     _sqflProv.getItems(); // Provider
 
-//    _sqflMobx.initList(_places); // MobX
-//    _sqflMobx.getItems(); // MobX
+//    _dataMobx.initList(_places); // MobX
+//    _dataMobx.getItems(); // MobX
   }
 
   @override
@@ -77,30 +78,35 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
               icon: Icon(Icons.delete_forever),
               color: Color(0xFFE9FFFF),
               onPressed: () => _sqflProv.deleteData(), // Provider
-//              onPressed: () => _sqflMobx.deleteData(), // MobX
+//              onPressed: () => _dataMobx.deleteData(), // MobX
             )
           ],
         ),
         body: Center(
-            child: Column(children: <Widget>[
-          Expanded(
-//              child: Observer(builder: (_) { // MobX
-            child: LiveList(
-              showItemInterval: Duration(milliseconds: 50),
-              showItemDuration: Duration(milliseconds: 50),
-              reAnimateOnVisibility: true,
-              scrollDirection: Axis.vertical,
-              itemCount: _places.length,
-              itemBuilder: buildAnimatedItem,
-              separatorBuilder: (BuildContext context, int index) {
-                return Container(
-                    height: ResponsiveScreen().heightMediaQuery(context, 10),
-                    decoration: BoxDecoration(color: Colors.grey));
-              },
-            ),
-//              }),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+//            child: Observer(builder: (_) {
+                // MobX
+                child: LiveList(
+                  showItemInterval: Duration(milliseconds: 50),
+                  showItemDuration: Duration(milliseconds: 50),
+                  reAnimateOnVisibility: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: _places.length,
+                  itemBuilder: buildAnimatedItem,
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Container(
+                        height:
+                            ResponsiveScreen().heightMediaQuery(context, 10),
+                        decoration: BoxDecoration(color: Colors.grey));
+                  },
+                ),
+//            }
+              ),
+            ],
           ),
-        ])),
+        ),
         drawer: DrawerTotal());
   }
 
@@ -182,9 +188,9 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           color: Colors.red,
           icon: Icons.delete,
           onTap: () => {
-            _sqflProv.deleteItem(_places[index], index)
+//            _sqflProv.deleteItem(_places[index], index)
             // Provider
-//                            _sqflMobx.deleteItem(_places[index], index); // Mobx
+//            _dataMobx.deleteItem(_places[index], index) // MobX
           },
         ),
       ],
@@ -195,7 +201,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
         },
         onDismissed: (actionType) {
           _sqflProv.deleteItem(_places[index], index); // Provider
-//                            _sqflMobx.deleteItem(_places[index], index); // Mobx
+//          _dataMobx.deleteItem(_places[index], index); // MobX
         },
       ),
       child: GestureDetector(

@@ -3,7 +3,7 @@ import 'package:locationprojectflutter/presentation/state_management/provider/re
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:provider/provider.dart';
-//import 'package:locationprojectflutter/presentation/state_management/mobx/results_sqfl_mobx.dart';
+//import 'package:locationprojectflutter/presentation/state_management/mobx/results_data_mobx.dart';
 
 class AddOrEditDataFavorites extends StatefulWidget {
   final double latList, lngList;
@@ -73,7 +73,7 @@ class _AddOrEditDataFavoritesProvState
   final _textPhoto = TextEditingController();
   var _sqflProv;
 
-//  final ResultsSqflStore _sqflMobx = ResultsSqflStore(); // MobX
+//  final ResultsDataMobXStore _dataMobx = ResultsDataMobXStore(); // MobX
 
   @override
   void initState() {
@@ -214,20 +214,20 @@ class _AddOrEditDataFavoritesProvState
                           double.parse(_textLng.text),
                           _textPhoto.text,
                           context), // Provider
-//                      ? _sqflMobx.updateItem(
+//                      ? _dataMobx.updateItem(
 //                          widget.id,
-//                          textName.text,
-//                          textAddress.text,
-//                          double.parse(textLat.text),
-//                          double.parse(textLng.text),
-//                          textPhoto.text,
+//                          _textName.text,
+//                          _textAddress.text,
+//                          double.parse(_textLat.text),
+//                          double.parse(_textLng.text),
+//                          _textPhoto.text,
 //                          context) // MobX
-//                      : _sqflMobx.addItem(
-//                          textName.text,
-//                          textAddress.text,
-//                          double.parse(textLat.text),
-//                          double.parse(textLng.text),
-//                          textPhoto.text,
+//                      : _dataMobx.addItem(
+//                          _textName.text,
+//                          _textAddress.text,
+//                          double.parse(_textLat.text),
+//                          double.parse(_textLng.text),
+//                          _textPhoto.text,
 //                          context), // MobX
                   child: Container(
                     decoration: const BoxDecoration(
