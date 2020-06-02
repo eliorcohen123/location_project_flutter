@@ -560,7 +560,7 @@ class _ListMapState extends State<ListMap> {
       _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
           _userLocation.longitude, _open, type, _valueRadius.round(), text);
 //      _places = await _dataMobx.getSearchNearby(_userLocation.latitude,
-//          _userLocation.longitude, _open, type, _valueRadius.round(), text);
+//          _userLocation.longitude, _open, type, _valueRadius.round(), text); // MobX
       setState(() {
         _searching = false;
         print(_searching);
