@@ -416,6 +416,8 @@ class _ListMapState extends State<ListMap> {
   }
 
   Future _addToFirebase(int index, int count) async {
+    DateTime now = DateTime.now();
+
     Map<String, dynamic> dataFile = new Map();
     dataFile["filetype"] = 'image';
     dataFile["url"] = {
@@ -428,8 +430,6 @@ class _ListMapState extends State<ListMap> {
 
     var listFile = new List<Map<String, dynamic>>();
     listFile.add(dataFile);
-
-    DateTime now = DateTime.now();
 
     await _databaseReference
         .collection("stories")
