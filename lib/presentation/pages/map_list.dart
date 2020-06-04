@@ -10,9 +10,6 @@ import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-//import 'package:flutter_mobx/flutter_mobx.dart';
-//import 'package:locationprojectflutter/presentation/state_management/mobx/results_data_mobx.dart';
-
 class MapList extends StatefulWidget {
   final double latList, lngList;
   final String nameList, vicinityList;
@@ -37,8 +34,6 @@ class _MapListState extends State<MapList> {
   var _userLocation;
   LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
   FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
-
-//  ResultsDataMobXStore _dataMobx = ResultsDataMobXStore(); // MobX
 
   @override
   void initState() {
@@ -126,7 +121,6 @@ class _MapListState extends State<MapList> {
                 " Meters");
       },
     );
-
     Geofence.startListening(
       GeolocationEvent.exit,
       (entry) {
@@ -191,8 +185,6 @@ class _MapListState extends State<MapList> {
     );
     _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
         _userLocation.longitude, _open, '', _valueRadius.round(), '');
-//      _places = await _dataMobx.getSearchNearby(_userLocation.latitude,
-//          _userLocation.longitude, _open, '', _valueRadius.round(), ''); // MobX
     setState(
       () {
         for (int i = 0; i < _places.length; i++) {

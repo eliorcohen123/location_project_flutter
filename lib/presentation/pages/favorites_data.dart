@@ -46,10 +46,10 @@ class FavoritesDataProv extends StatefulWidget {
 class _FavoritesDataProvState extends State<FavoritesDataProv> {
   var _userLocation, _sqflProv;
   String _API_KEY = Constants.API_KEY;
+  List<ResultsSqfl> _places = List();
 
 //  ObservableList<ResultsSqfl> _places = ObservableList.of([]); // MobX
 //  ResultsDataMobXStore _dataMobx = ResultsDataMobXStore(); // MobX
-  List<ResultsSqfl> _places = List();
 
   @override
   void initState() {
@@ -92,8 +92,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
         child: Column(
           children: <Widget>[
             Expanded(
-//            child: Observer(builder: (_) {
-              // MobX
+//            child: Observer(builder: (_) { // MobX
               child: LiveList(
                 showItemInterval: Duration(milliseconds: 50),
                 showItemDuration: Duration(milliseconds: 50),

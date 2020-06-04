@@ -243,7 +243,7 @@ class _ListMapState extends State<ListMap> {
                             itemCount: _places.length,
                             itemBuilder: buildAnimatedItem,
                           ),
-//                            }
+//                        },
                         ),
                 ],
               ),
