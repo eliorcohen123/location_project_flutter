@@ -86,6 +86,7 @@ class _AddOrEditDataFavoritesProvState
     _textLat.text = widget.latList.toString();
     _textLng.text = widget.lngList.toString();
     _textPhoto.text = widget.photoList;
+
     _sqflProv =
         Provider.of<ResultsSqflProvider>(context, listen: false); // Provider
   }

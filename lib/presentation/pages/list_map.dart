@@ -418,16 +418,16 @@ class _ListMapState extends State<ListMap> {
     int count;
 
     var document =
-        Firestore.instance.collection('places').document(_places[index].id);
+        _databaseReference.collection('places').document(_places[index].id);
     document.get().then(
       (document) {
-        setState(
-          () {
-            if (document.exists) {
+        if (document.exists) {
+          setState(
+            () {
               count = document['count'];
-            }
-          },
-        );
+            },
+          );
+        }
       },
     ).then(
       (value) => _addToFirebase(index, count),
