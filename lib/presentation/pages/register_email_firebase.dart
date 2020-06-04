@@ -153,7 +153,7 @@ class RegisterPageState extends State<RegisterPage> {
                   Container(
                     alignment: Alignment.center,
                     child: Text(
-                      _success == null ? '' : (_success ? '' : _textError),
+                      _success == null ? '' : _success ? '' : _textError,
                       style: TextStyle(color: Colors.redAccent),
                     ),
                   ),

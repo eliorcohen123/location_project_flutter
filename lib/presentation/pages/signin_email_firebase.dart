@@ -170,9 +170,7 @@ class LoginPageState extends State<LoginPage> {
                           alignment: Alignment.center,
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
-                            _success == null
-                                ? ''
-                                : (_success ? '' : _textError),
+                            _success == null ? '' : _success ? '' : _textError,
                             style: TextStyle(color: Colors.redAccent),
                           ),
                         ),
