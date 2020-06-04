@@ -16,19 +16,14 @@ class LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _success, _loading = false, isLoggedIn;
+  bool _success, _loading = false, _isLoggedIn = false;
   String _userEmail, _textError = "";
 
   @override
   void initState() {
     super.initState();
 
-    isLoggedIn = false;
-    FirebaseAuth.instance.currentUser().then((user) => user != null
-        ? setState(() {
-            isLoggedIn = true;
-          })
-        : null);
+    _checkUserLogin();
   }
 
   @override
@@ -41,7 +36,7 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoggedIn
+    return _isLoggedIn
         ? ListMap()
         : Scaffold(
             body: Form(
@@ -66,8 +61,9 @@ class LoginPageState extends State<LoginPage> {
                         ),
                         Padding(
                           padding: EdgeInsets.only(
-                              bottom: ResponsiveScreen()
-                                  .heightMediaQuery(context, 20)),
+                            bottom: ResponsiveScreen()
+                                .heightMediaQuery(context, 20),
+                          ),
                           child: TFFFirebase(
                               key: Key('emailLogin'),
                               icon: Icon(Icons.email),
@@ -77,8 +73,9 @@ class LoginPageState extends State<LoginPage> {
                         ),
                         Padding(
                           padding: EdgeInsets.only(
-                              bottom: ResponsiveScreen()
-                                  .heightMediaQuery(context, 20)),
+                            bottom: ResponsiveScreen()
+                                .heightMediaQuery(context, 20),
+                          ),
                           child: TFFFirebase(
                               key: Key('passwordLogin'),
                               icon: Icon(Icons.lock),
@@ -105,7 +102,8 @@ class LoginPageState extends State<LoginPage> {
                               elevation: 0.0,
                               color: Colors.greenAccent,
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30.0)),
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
                               child: Text(
                                 'Login',
                                 style: TextStyle(
@@ -119,33 +117,43 @@ class LoginPageState extends State<LoginPage> {
                                           _emailController.text) &&
                                       Validations().validatePassword(
                                           _passwordController.text)) {
-                                    setState(() {
-                                      _loading = true;
-                                      _textError = '';
-                                    });
+                                    setState(
+                                      () {
+                                        _loading = true;
+                                        _textError = '';
+                                      },
+                                    );
                                     Future.delayed(
-                                        const Duration(milliseconds: 5000), () {
-                                      setState(() {
-                                        _success = false;
-                                        _loading = false;
-                                        _textError =
-                                            'Something wrong with connection';
-                                      });
-                                    });
+                                      const Duration(milliseconds: 5000),
+                                      () {
+                                        setState(
+                                          () {
+                                            _success = false;
+                                            _loading = false;
+                                            _textError =
+                                                'Something wrong with connection';
+                                          },
+                                        );
+                                      },
+                                    );
                                     _loginFirebase();
                                   } else if (!Validations()
                                       .validateEmail(_emailController.text)) {
-                                    setState(() {
-                                      _success = false;
-                                      _textError = 'Invalid Email';
-                                    });
+                                    setState(
+                                      () {
+                                        _success = false;
+                                        _textError = 'Invalid Email';
+                                      },
+                                    );
                                   } else if (!Validations().validatePassword(
                                       _passwordController.text)) {
-                                    setState(() {
-                                      _success = false;
-                                      _textError =
-                                          'Password must be at least 8 characters';
-                                    });
+                                    setState(
+                                      () {
+                                        _success = false;
+                                        _textError =
+                                            'Password must be at least 8 characters';
+                                      },
+                                    );
                                   }
                                 }
                               },
@@ -171,10 +179,11 @@ class LoginPageState extends State<LoginPage> {
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => RegisterPage(),
-                                ));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RegisterPage(),
+                              ),
+                            );
                           },
                           child: Text(
                             'Don' +
@@ -199,29 +208,44 @@ class LoginPageState extends State<LoginPage> {
           );
   }
 
-  void _loginFirebase() async {
+  _loginFirebase() async {
     final FirebaseUser user = (await _auth.signInWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
     ))
         .user;
     if (user != null) {
-      setState(() {
-        _success = true;
-        _loading = false;
-        _userEmail = user.email;
-        print(_userEmail);
-        Navigator.push(
+      setState(
+        () {
+          _success = true;
+          _loading = false;
+          _userEmail = user.email;
+          print(_userEmail);
+          Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => ListMap(),
-            ));
-      });
+            ),
+          );
+        },
+      );
     } else {
-      setState(() {
-        _success = false;
-        _loading = false;
-      });
+      setState(
+        () {
+          _success = false;
+          _loading = false;
+        },
+      );
     }
+  }
+
+  _checkUserLogin() {
+    _auth.currentUser().then((user) => user != null
+        ? setState(
+            () {
+              _isLoggedIn = true;
+            },
+          )
+        : null);
   }
 }

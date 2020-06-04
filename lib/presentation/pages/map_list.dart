@@ -10,6 +10,9 @@ import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+//import 'package:flutter_mobx/flutter_mobx.dart';
+//import 'package:locationprojectflutter/presentation/state_management/mobx/results_data_mobx.dart';
+
 class MapList extends StatefulWidget {
   final double latList, lngList;
   final String nameList, vicinityList;
@@ -34,6 +37,8 @@ class _MapListState extends State<MapList> {
   var _userLocation;
   LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
   FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
+
+//  ResultsDataMobXStore _dataMobx = ResultsDataMobXStore(); // MobX
 
   @override
   void initState() {
@@ -74,17 +79,19 @@ class _MapListState extends State<MapList> {
         myLocationEnabled: true,
         myLocationButtonEnabled: true,
         zoomGesturesEnabled: _zoomGesturesEnabled,
-        circles: _circles = Set.from([
-          Circle(
-            circleId: CircleId(
-                LatLng(_userLocation.latitude, _userLocation.longitude)
-                    .toString()),
-            center: LatLng(_userLocation.latitude, _userLocation.longitude),
-            fillColor: Color(0x300000ff),
-            strokeColor: Color(0x300000ff),
-            radius: _valueRadius,
-          )
-        ]),
+        circles: _circles = Set.from(
+          [
+            Circle(
+              circleId: CircleId(
+                _currentLocation.toString(),
+              ),
+              center: _currentLocation,
+              fillColor: Color(0x300000ff),
+              strokeColor: Color(0x300000ff),
+              radius: _valueRadius,
+            )
+          ],
+        ),
         mapType: MapType.normal,
       ),
       drawer: DrawerTotal(),
@@ -102,14 +109,17 @@ class _MapListState extends State<MapList> {
   Future _initPlatformState() async {
     String namePlace = widget.nameList;
     Geofence.initialize();
-    Geofence.startListening(GeolocationEvent.entry, (entry) {
-      print("Entry to place");
-      _showNotification(
-          "Entry of a place",
-          "Welcome to: $namePlace + in " +
-              _valueGeofence.round().toString() +
-              " Meters");
-    });
+    Geofence.startListening(
+      GeolocationEvent.entry,
+      (entry) {
+        print("Entry to place");
+        _showNotification(
+            "Entry of a place",
+            "Welcome to: $namePlace + in " +
+                _valueGeofence.round().toString() +
+                " Meters");
+      },
+    );
 
     Geofence.startListening(GeolocationEvent.exit, (entry) {
       print("Exit from place");
@@ -142,68 +152,83 @@ class _MapListState extends State<MapList> {
         longitude: widget.lngList != null ? widget.lngList : 0.0,
         radius: _valueGeofence,
         id: widget.nameList != null ? widget.nameList : 'id');
-    Geofence.addGeolocation(location, GeolocationEvent.entry).then((onValue) {
-      print("great success");
-    }).catchError((onError) {
-      print("great failure");
-    });
+    Geofence.addGeolocation(location, GeolocationEvent.entry).then(
+      (onValue) {
+        print("great success");
+      },
+    ).catchError(
+      (onError) {
+        print("great failure");
+      },
+    );
   }
 
   _initGetSharedPref() {
-    SharedPreferences.getInstance().then((prefs) {
-      setState(() => _sharedPrefs = prefs);
-      _valueRadius = prefs.getDouble('rangeRadius') ?? 5000.0;
-      _valueGeofence = prefs.getDouble('rangeGeofence') ?? 500.0;
-      _open = prefs.getString('open') ?? '';
-    });
+    SharedPreferences.getInstance().then(
+      (prefs) {
+        setState(() => _sharedPrefs = prefs);
+        _valueRadius = prefs.getDouble('rangeRadius') ?? 5000.0;
+        _valueGeofence = prefs.getDouble('rangeGeofence') ?? 500.0;
+        _open = prefs.getString('open') ?? '';
+      },
+    );
   }
 
   Future _searchNearbyList() async {
-    setState(() {
-      _markers.clear();
-    });
+    setState(
+      () {
+        _markers.clear();
+      },
+    );
     _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
         _userLocation.longitude, _open, '', _valueRadius.round(), '');
-    setState(() {
-      for (int i = 0; i < _places.length; i++) {
-        _markers.add(
-          Marker(
-            icon: BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueViolet),
-            markerId: MarkerId(_places[i].name),
-            position: LatLng(_places[i].geometry.location.lat,
-                _places[i].geometry.location.lng),
-            onTap: () {
-              String namePlace = _places[i].name != null ? _places[i].name : "";
-              String vicinityPlace =
-                  _places[i].vicinity != null ? _places[i].vicinity : "";
-              _showDialog(
-                  namePlace,
-                  vicinityPlace,
-                  _places[i].geometry.location.lat,
-                  _places[i].geometry.location.lng);
-            },
-          ),
-        );
-      }
-      _searching = false;
-      print(_searching);
-    });
+//      _places = await _dataMobx.getSearchNearby(_userLocation.latitude,
+//          _userLocation.longitude, _open, '', _valueRadius.round(), ''); // MobX
+    setState(
+      () {
+        for (int i = 0; i < _places.length; i++) {
+          _markers.add(
+            Marker(
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueViolet),
+              markerId: MarkerId(_places[i].name),
+              position: LatLng(_places[i].geometry.location.lat,
+                  _places[i].geometry.location.lng),
+              onTap: () {
+                String namePlace =
+                    _places[i].name != null ? _places[i].name : "";
+                String vicinityPlace =
+                    _places[i].vicinity != null ? _places[i].vicinity : "";
+                _showDialog(
+                    namePlace,
+                    vicinityPlace,
+                    _places[i].geometry.location.lat,
+                    _places[i].geometry.location.lng);
+              },
+            ),
+          );
+        }
+        _searching = false;
+        print(_searching);
+      },
+    );
   }
 
   _initMarker() {
-    _markers.add(Marker(
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
-      markerId: MarkerId(widget.nameList != null ? widget.nameList : ""),
-      position: LatLng(widget.latList != null ? widget.latList : 0.0,
-          widget.lngList != null ? widget.lngList : 0.0),
-      onTap: () {
-        String namePlace = widget.nameList != null ? widget.nameList : "";
-        String vicinityPlace =
-            widget.vicinityList != null ? widget.vicinityList : "";
-        _showDialog(namePlace, vicinityPlace, widget.latList, widget.lngList);
-      },
-    ));
+    _markers.add(
+      Marker(
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
+        markerId: MarkerId(widget.nameList != null ? widget.nameList : ""),
+        position: LatLng(widget.latList != null ? widget.latList : 0.0,
+            widget.lngList != null ? widget.lngList : 0.0),
+        onTap: () {
+          String namePlace = widget.nameList != null ? widget.nameList : "";
+          String vicinityPlace =
+              widget.vicinityList != null ? widget.vicinityList : "";
+          _showDialog(namePlace, vicinityPlace, widget.latList, widget.lngList);
+        },
+      ),
+    );
   }
 
   Future _showDialog(

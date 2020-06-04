@@ -4,6 +4,7 @@
 //final serviceLocator = GetIt.instance;
 //
 //Future setupLocator() async {
-//  serviceLocator
-//      .registerLazySingleton<LocationRepoImpl>(() => LocationRepoImpl());
+//  serviceLocator.registerLazySingleton<LocationRepoImpl>(
+//    () => LocationRepoImpl(),
+//  );
 //}

@@ -7,7 +7,9 @@ class Geometry {
 
   factory Geometry.fromJson(Map<String, dynamic> json) {
     return Geometry(
-      location: Location.fromJson(json['location']),
+      location: Location.fromJson(
+        json['location'],
+      ),
     );
   }
 }

@@ -61,36 +61,42 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   @override
   Widget build(BuildContext context) {
     _userLocation = Provider.of<UserLocation>(context);
-    _places.sort((a, b) {
-      return b.count.compareTo(a.count);
-    });
+    _places.sort(
+      (a, b) {
+        return b.count.compareTo(a.count);
+      },
+    );
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          title: Text(
-            'Lovely Favorite Places',
-            style: TextStyle(color: Color(0xFFE9FFFF)),
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Text(
+          'Lovely Favorite Places',
+          style: TextStyle(
+            color: Color(0xFFE9FFFF),
           ),
         ),
-        body: Center(
-            child: Column(children: <Widget>[
-          Expanded(
-            child: LiveList(
-              showItemInterval: Duration(milliseconds: 50),
-              showItemDuration: Duration(milliseconds: 50),
-              reAnimateOnVisibility: true,
-              scrollDirection: Axis.vertical,
-              itemCount: _places.length,
-              itemBuilder: buildAnimatedItem,
-              separatorBuilder: (BuildContext context, int index) {
-                return Container(
-                    height: ResponsiveScreen().heightMediaQuery(context, 10),
-                    decoration: BoxDecoration(color: Colors.grey));
-              },
-            ),
+      ),
+      body: Center(
+          child: Column(children: <Widget>[
+        Expanded(
+          child: LiveList(
+            showItemInterval: Duration(milliseconds: 50),
+            showItemDuration: Duration(milliseconds: 50),
+            reAnimateOnVisibility: true,
+            scrollDirection: Axis.vertical,
+            itemCount: _places.length,
+            itemBuilder: buildAnimatedItem,
+            separatorBuilder: (BuildContext context, int index) {
+              return Container(
+                height: ResponsiveScreen().heightMediaQuery(context, 10),
+                decoration: BoxDecoration(color: Colors.grey),
+              );
+            },
           ),
-        ])),
-        drawer: DrawerTotal());
+        ),
+      ])),
+      drawer: DrawerTotal(),
+    );
   }
 
   Widget buildAnimatedItem(
@@ -115,8 +121,9 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   _childLiveList(int index) {
     final dis.Distance _distance = dis.Distance();
     final double _meter = _distance(
-        dis.LatLng(_userLocation.latitude, _userLocation.longitude),
-        dis.LatLng(_places[index].lat, _places[index].lng));
+      dis.LatLng(_userLocation.latitude, _userLocation.longitude),
+      dis.LatLng(_places[index].lat, _places[index].lng),
+    );
     return Slidable(
       key: UniqueKey(),
       actionPane: SlidableDrawerActionPane(),
@@ -127,19 +134,20 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           icon: Icons.add,
           onTap: () => {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddOrEditDataFavorites(
-                    nameList: _places[index].name,
-                    addressList: _places[index].vicinity,
-                    latList: _places[index].lat,
-                    lngList: _places[index].lng,
-                    photoList: _places[index].photo.isNotEmpty
-                        ? _places[index].photo
-                        : "",
-                    edit: false,
-                  ),
-                ))
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddOrEditDataFavorites(
+                  nameList: _places[index].name,
+                  addressList: _places[index].vicinity,
+                  latList: _places[index].lat,
+                  lngList: _places[index].lng,
+                  photoList: _places[index].photo.isNotEmpty
+                      ? _places[index].photo
+                      : "",
+                  edit: false,
+                ),
+              ),
+            ),
           },
         ),
         IconSlideAction(
@@ -147,15 +155,16 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           icon: Icons.directions,
           onTap: () => {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MapList(
-                    nameList: _places[index].name,
-                    vicinityList: _places[index].vicinity,
-                    latList: _places[index].lat,
-                    lngList: _places[index].lng,
-                  ),
-                ))
+              context,
+              MaterialPageRoute(
+                builder: (context) => MapList(
+                  nameList: _places[index].name,
+                  vicinityList: _places[index].vicinity,
+                  latList: _places[index].lat,
+                  lngList: _places[index].lng,
+                ),
+              ),
+            ),
           },
         ),
         IconSlideAction(
@@ -241,16 +250,20 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
 
   _readFirebase() {
     _placeSub?.cancel();
-    _placeSub = _snapshots.listen((QuerySnapshot snapshot) {
-      final List<ResultsFirestore> places = snapshot.documents
-          .map((documentSnapshot) =>
-              ResultsFirestore.fromSqfl(documentSnapshot.data))
-          .toList();
+    _placeSub = _snapshots.listen(
+      (QuerySnapshot snapshot) {
+        final List<ResultsFirestore> places = snapshot.documents
+            .map((documentSnapshot) =>
+                ResultsFirestore.fromSqfl(documentSnapshot.data))
+            .toList();
 
-      setState(() {
-        this._places = places;
-      });
-    });
+        setState(
+          () {
+            this._places = places;
+          },
+        );
+      },
+    );
   }
 
   _calculateDistance(double _meter) {
@@ -265,8 +278,10 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   }
 
   _textList(String text, double fontSize, int color) {
-    return Text(text,
-        style: TextStyle(shadows: <Shadow>[
+    return Text(
+      text,
+      style: TextStyle(
+        shadows: <Shadow>[
           Shadow(
             offset: Offset(1.0, 1.0),
             blurRadius: 1.0,
@@ -277,7 +292,11 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
             blurRadius: 1.0,
             color: Color(0xAA000000),
           ),
-        ], fontSize: fontSize, color: Color(color)));
+        ],
+        fontSize: fontSize,
+        color: Color(color),
+      ),
+    );
   }
 
   _shareContent(

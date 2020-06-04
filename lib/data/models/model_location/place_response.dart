@@ -6,10 +6,18 @@ class PlaceResponse {
   PlaceResponse({this.results});
 
   PlaceResponse fromJson(Map<String, dynamic> json) {
-    return PlaceResponse(results: parseResults(json['results']));
+    return PlaceResponse(
+      results: parseResults(
+        json['results'],
+      ),
+    );
   }
 
   static List<Results> parseResults(List<dynamic> list) {
-    return list.map((i) => Results.fromJson(i)).toList();
+    return list
+        .map(
+          (i) => Results.fromJson(i),
+        )
+        .toList();
   }
 }

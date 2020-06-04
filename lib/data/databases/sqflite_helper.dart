@@ -41,8 +41,10 @@ class SQFLiteHelper {
 
   Future<int> addResult(ResultsSqfl result) async {
     var dbClient = await db;
-    var resultAdd = await dbClient.insert(tableResult, result.toSqfl());
-    return resultAdd;
+    return await dbClient.insert(
+      tableResult,
+      result.toSqfl(),
+    );
   }
 
   Future<int> updateResult(ResultsSqfl result) async {
@@ -64,14 +66,17 @@ class SQFLiteHelper {
 
   Future<List> getAllResults() async {
     var dbClient = await db;
-    var result = await dbClient.query(tableResult, columns: [
-      columnId,
-      columnName,
-      columnVicinity,
-      columnLat,
-      columnLng,
-      columnPhoto
-    ]);
+    var result = await dbClient.query(
+      tableResult,
+      columns: [
+        columnId,
+        columnName,
+        columnVicinity,
+        columnLat,
+        columnLng,
+        columnPhoto
+      ],
+    );
     return result.toList();
   }
 }

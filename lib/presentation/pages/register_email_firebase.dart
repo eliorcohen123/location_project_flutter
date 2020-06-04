@@ -53,8 +53,8 @@ class RegisterPageState extends State<RegisterPage> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(
-                        bottom:
-                            ResponsiveScreen().heightMediaQuery(context, 20)),
+                      bottom: ResponsiveScreen().heightMediaQuery(context, 20),
+                    ),
                     child: TFFFirebase(
                         icon: Icon(Icons.email),
                         hint: "Email",
@@ -63,8 +63,8 @@ class RegisterPageState extends State<RegisterPage> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(
-                        bottom:
-                            ResponsiveScreen().heightMediaQuery(context, 20)),
+                      bottom: ResponsiveScreen().heightMediaQuery(context, 20),
+                    ),
                     child: TFFFirebase(
                         icon: Icon(Icons.lock),
                         hint: "Password",
@@ -87,7 +87,8 @@ class RegisterPageState extends State<RegisterPage> {
                         elevation: 0.0,
                         color: Colors.greenAccent,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0)),
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
                         child: Text(
                           'Register',
                           style: TextStyle(
@@ -101,33 +102,43 @@ class RegisterPageState extends State<RegisterPage> {
                                     .validateEmail(_emailController.text) &&
                                 Validations().validatePassword(
                                     _passwordController.text)) {
-                              setState(() {
-                                _loading = true;
-                                _textError = '';
-                              });
-                              Future.delayed(const Duration(milliseconds: 5000),
-                                  () {
-                                setState(() {
-                                  _success = false;
-                                  _loading = false;
-                                  _textError =
-                                      'Something wrong with connection';
-                                });
-                              });
+                              setState(
+                                () {
+                                  _loading = true;
+                                  _textError = '';
+                                },
+                              );
+                              Future.delayed(
+                                const Duration(milliseconds: 5000),
+                                () {
+                                  setState(
+                                    () {
+                                      _success = false;
+                                      _loading = false;
+                                      _textError =
+                                          'Something wrong with connection';
+                                    },
+                                  );
+                                },
+                              );
                               _registerFirebase();
                             } else if (!Validations()
                                 .validateEmail(_emailController.text)) {
-                              setState(() {
-                                _success = false;
-                                _textError = 'Invalid Email';
-                              });
+                              setState(
+                                () {
+                                  _success = false;
+                                  _textError = 'Invalid Email';
+                                },
+                              );
                             } else if (!Validations()
                                 .validatePassword(_passwordController.text)) {
-                              setState(() {
-                                _success = false;
-                                _textError =
-                                    'Password must be at least 8 characters';
-                              });
+                              setState(
+                                () {
+                                  _success = false;
+                                  _textError =
+                                      'Password must be at least 8 characters';
+                                },
+                              );
                             }
                           }
                         },
@@ -149,10 +160,11 @@ class RegisterPageState extends State<RegisterPage> {
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginPage(),
-                          ));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ),
+                      );
                     },
                     child: Text(
                       'Have an account? click here to login',
@@ -172,24 +184,27 @@ class RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void _registerFirebase() async {
+  _registerFirebase() async {
     final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
     ))
         .user;
     if (user != null) {
-      setState(() {
-        _success = true;
-        _loading = false;
-        _userEmail = user.email;
-        print(_userEmail);
-        Navigator.push(
+      setState(
+        () {
+          _success = true;
+          _loading = false;
+          _userEmail = user.email;
+          print(_userEmail);
+          Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => ListMap(),
-            ));
-      });
+            ),
+          );
+        },
+      );
     } else {
       _success = false;
       _loading = false;

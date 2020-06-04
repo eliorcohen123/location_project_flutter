@@ -7,23 +7,28 @@ class PushMessaging extends StatefulWidget {
 }
 
 class _PushMessagingState extends State<PushMessaging> {
-
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   @override
   void initState() {
     super.initState();
 
-    _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(sound: true, badge: true, alert: true));
-    _firebaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings settings) {
-      print("Settings registered: $settings");
-    });
+    _initNotificationPermissions;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold();
+  }
+
+  _initNotificationPermissions() {
+    _firebaseMessaging.requestNotificationPermissions(
+      const IosNotificationSettings(sound: true, badge: true, alert: true),
+    );
+    _firebaseMessaging.onIosSettingsRegistered.listen(
+      (IosNotificationSettings settings) {
+        print("Settings registered: $settings");
+      },
+    );
   }
 }

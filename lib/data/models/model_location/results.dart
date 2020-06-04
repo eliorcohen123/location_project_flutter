@@ -23,7 +23,11 @@ class Results {
       vicinity: json['vicinity'],
       geometry: Geometry.fromJson(json['geometry']),
       photos: json.containsKey("photos")
-          ? json['photos'].map<Photo>((i) => Photo.fromJson(i)).toList()
+          ? json['photos']
+              .map<Photo>(
+                (i) => Photo.fromJson(i),
+              )
+              .toList()
           : [],
     );
   }

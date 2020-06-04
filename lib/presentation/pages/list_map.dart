@@ -138,123 +138,124 @@ class _ListMapState extends State<ListMap> {
     _userLocation = Provider.of<UserLocation>(context);
     _searchNearbyTotal(_searching, "", "");
     return Scaffold(
-        appBar: _appBar(),
-        body: Container(
-          child: Stack(
-            children: [
-              Center(
-                child: Column(
-                  children: <Widget>[
-                    FlutterInstagramStories(
-                      collectionDbName: 'stories',
-                      showTitleOnIcon: true,
-                      iconTextStyle: TextStyle(
-                        shadows: <Shadow>[
-                          Shadow(
-                            offset: Offset(1.0, 1.0),
-                            blurRadius: 1.0,
-                            color: Color(0xAA000000),
+      appBar: _appBar(),
+      body: Container(
+        child: Stack(
+          children: [
+            Center(
+              child: Column(
+                children: <Widget>[
+                  FlutterInstagramStories(
+                    collectionDbName: 'stories',
+                    showTitleOnIcon: true,
+                    iconTextStyle: TextStyle(
+                      shadows: <Shadow>[
+                        Shadow(
+                          offset: Offset(1.0, 1.0),
+                          blurRadius: 1.0,
+                          color: Color(0xAA000000),
+                        ),
+                      ],
+                      fontSize: 6,
+                      color: Colors.white,
+                    ),
+                    iconImageBorderRadius: BorderRadius.circular(30),
+                    iconBoxDecoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(30),
+                      ),
+                      color: Color(0xFFffffff),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0xff333333),
+                          blurRadius: 10.0,
+                          offset: Offset(
+                            0.0,
+                            4.0,
                           ),
-                        ],
-                        fontSize: 6,
-                        color: Colors.white,
-                      ),
-                      iconImageBorderRadius: BorderRadius.circular(30),
-                      iconBoxDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(30)),
-                        color: Color(0xFFffffff),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(0xff333333),
-                            blurRadius: 10.0,
-                            offset: Offset(
-                              0.0,
-                              4.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                      iconWidth:
-                          ResponsiveScreen().widthMediaQuery(context, 50),
-                      iconHeight:
-                          ResponsiveScreen().heightMediaQuery(context, 50),
-                      imageStoryDuration: 7,
-                      progressPosition: ProgressPosition.top,
-                      repeat: true,
-                      inline: false,
-                      languageCode: 'en',
-                      backgroundColorBetweenStories: Colors.black,
-                      closeButtonIcon: Icon(
-                        Icons.close,
-                        color: Colors.white,
-                        size: 28.0,
-                      ),
-                      closeButtonBackgroundColor: Color(0x11000000),
-                      sortingOrderDesc: true,
-                      lastIconHighlight: true,
-                      lastIconHighlightColor: Colors.deepOrange,
-                      lastIconHighlightRadius: const Radius.circular(30),
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      height: ResponsiveScreen().heightMediaQuery(context, 1),
-                      width: double.infinity,
-                      child: const DecoratedBox(
-                        decoration: const BoxDecoration(color: Colors.grey),
-                      ),
+                    iconWidth: ResponsiveScreen().widthMediaQuery(context, 50),
+                    iconHeight:
+                        ResponsiveScreen().heightMediaQuery(context, 50),
+                    imageStoryDuration: 7,
+                    progressPosition: ProgressPosition.top,
+                    repeat: true,
+                    inline: false,
+                    languageCode: 'en',
+                    backgroundColorBetweenStories: Colors.black,
+                    closeButtonIcon: Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 28.0,
                     ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: <Widget>[
-                          _btnType('Banks', 'bank'),
-                          _btnType('Bars', 'bar|night_club'),
-                          _btnType('Beauty', 'beauty_salon|hair_care'),
-                          _btnType('Books', 'book_store|library'),
-                          _btnType('Bus stations', 'bus_station'),
-                          _btnType('Cars',
-                              'car_dealer|car_rental|car_repair|car_wash'),
-                          _btnType('Clothing', 'clothing_store'),
-                          _btnType('Doctors', 'doctor'),
-                          _btnType('Gas stations', 'gas_station'),
-                          _btnType('Gym', 'gym'),
-                          _btnType('Jewelries', 'jewelry_store'),
-                          _btnType(
-                              'Parks', 'park|amusement_park|parking|rv_park'),
-                          _btnType(
-                              'Restaurants', 'food|restaurant|cafe|bakery'),
-                          _btnType('School', 'school'),
-                          _btnType('Spa', 'spa'),
-                        ],
-                      ),
+                    closeButtonBackgroundColor: Color(0x11000000),
+                    sortingOrderDesc: true,
+                    lastIconHighlight: true,
+                    lastIconHighlightColor: Colors.deepOrange,
+                    lastIconHighlightRadius: const Radius.circular(30),
+                  ),
+                  SizedBox(
+                    height: ResponsiveScreen().heightMediaQuery(context, 1),
+                    width: double.infinity,
+                    child: const DecoratedBox(
+                      decoration: const BoxDecoration(color: Colors.grey),
                     ),
-                    _searching
-                        ? CircularProgressIndicator()
-                        : Expanded(
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: <Widget>[
+                        _btnType('Banks', 'bank'),
+                        _btnType('Bars', 'bar|night_club'),
+                        _btnType('Beauty', 'beauty_salon|hair_care'),
+                        _btnType('Books', 'book_store|library'),
+                        _btnType('Bus stations', 'bus_station'),
+                        _btnType('Cars',
+                            'car_dealer|car_rental|car_repair|car_wash'),
+                        _btnType('Clothing', 'clothing_store'),
+                        _btnType('Doctors', 'doctor'),
+                        _btnType('Gas stations', 'gas_station'),
+                        _btnType('Gym', 'gym'),
+                        _btnType('Jewelries', 'jewelry_store'),
+                        _btnType(
+                            'Parks', 'park|amusement_park|parking|rv_park'),
+                        _btnType('Restaurants', 'food|restaurant|cafe|bakery'),
+                        _btnType('School', 'school'),
+                        _btnType('Spa', 'spa'),
+                      ],
+                    ),
+                  ),
+                  _searching
+                      ? CircularProgressIndicator()
+                      : Expanded(
 //                            child: Observer(builder: (_) {
-                            child: LiveList(
-                              showItemInterval: Duration(milliseconds: 50),
-                              showItemDuration: Duration(milliseconds: 50),
-                              reAnimateOnVisibility: true,
-                              scrollDirection: Axis.vertical,
-                              itemCount: _places.length,
-                              itemBuilder: buildAnimatedItem,
-                            ),
-//                            }
+                          child: LiveList(
+                            showItemInterval: Duration(milliseconds: 50),
+                            showItemDuration: Duration(milliseconds: 50),
+                            reAnimateOnVisibility: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: _places.length,
+                            itemBuilder: buildAnimatedItem,
                           ),
-                  ],
+//                            }
+                        ),
+                ],
+              ),
+            ),
+            if (_activeNav)
+              Container(
+                decoration: new BoxDecoration(color: Color(0x80000000)),
+                child: Center(
+                  child: CircularProgressIndicator(),
                 ),
               ),
-              if (_activeNav)
-                Container(
-                  decoration: new BoxDecoration(color: Color(0x80000000)),
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-            ],
-          ),
+          ],
         ),
-        drawer: DrawerTotal());
+      ),
+      drawer: DrawerTotal(),
+    );
   }
 
   Widget buildAnimatedItem(
@@ -279,9 +280,10 @@ class _ListMapState extends State<ListMap> {
   _childLiveList(int index) {
     final dis.Distance _distance = dis.Distance();
     final double _meter = _distance(
-        dis.LatLng(_userLocation.latitude, _userLocation.longitude),
-        dis.LatLng(_places[index].geometry.location.lat,
-            _places[index].geometry.location.lng));
+      dis.LatLng(_userLocation.latitude, _userLocation.longitude),
+      dis.LatLng(_places[index].geometry.location.lat,
+          _places[index].geometry.location.lng),
+    );
     return Slidable(
       key: UniqueKey(),
       actionPane: SlidableDrawerActionPane(),
@@ -292,25 +294,28 @@ class _ListMapState extends State<ListMap> {
           icon: Icons.add,
           onTap: () => {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddOrEditDataFavorites(
-                    nameList: _places[index].name,
-                    addressList: _places[index].vicinity,
-                    latList: _places[index].geometry.location.lat,
-                    lngList: _places[index].geometry.location.lng,
-                    photoList: _places[index].photos.isNotEmpty
-                        ? _places[index].photos[0].photoReference
-                        : "",
-                    edit: false,
-                  ),
-                ))
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddOrEditDataFavorites(
+                  nameList: _places[index].name,
+                  addressList: _places[index].vicinity,
+                  latList: _places[index].geometry.location.lat,
+                  lngList: _places[index].geometry.location.lng,
+                  photoList: _places[index].photos.isNotEmpty
+                      ? _places[index].photos[0].photoReference
+                      : "",
+                  edit: false,
+                ),
+              ),
+            ),
           },
         ),
         IconSlideAction(
           color: Colors.greenAccent,
           icon: Icons.directions,
-          onTap: () => {_createNavPlace(index)},
+          onTap: () => {
+            _createNavPlace(index),
+          },
         ),
         IconSlideAction(
           color: Colors.blueGrey,
@@ -406,13 +411,19 @@ class _ListMapState extends State<ListMap> {
 
     var document =
         Firestore.instance.collection('places').document(_places[index].id);
-    document.get().then((document) {
-      setState(() {
-        if (document.exists) {
-          count = document['count'];
-        }
-      });
-    }).then((value) => _addToFirebase(index, count));
+    document.get().then(
+      (document) {
+        setState(
+          () {
+            if (document.exists) {
+              count = document['count'];
+            }
+          },
+        );
+      },
+    ).then(
+      (value) => _addToFirebase(index, count),
+    );
   }
 
   Future _addToFirebase(int index, int count) async {
@@ -434,21 +445,25 @@ class _ListMapState extends State<ListMap> {
     await _databaseReference
         .collection("stories")
         .document(_places[index].id)
-        .setData({
-          "date": now,
-          "file": listFile,
-          "previewImage": _places[index].photos.isNotEmpty
-              ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                  _places[index].photos[0].photoReference +
-                  "&key=$_API_KEY"
-              : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
-          "previewTitle": {'en': _places[index].name},
-        })
-        .then((result) async => {
-              await _databaseReference
-                  .collection("places")
-                  .document(_places[index].id)
-                  .setData({
+        .setData(
+          {
+            "date": now,
+            "file": listFile,
+            "previewImage": _places[index].photos.isNotEmpty
+                ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                    _places[index].photos[0].photoReference +
+                    "&key=$_API_KEY"
+                : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
+            "previewTitle": {'en': _places[index].name},
+          },
+        )
+        .then(
+          (result) async => {
+            await _databaseReference
+                .collection("places")
+                .document(_places[index].id)
+                .setData(
+              {
                 "date": now,
                 'idLive': _places[index].id,
                 'count': count != null ? count + 1 : 1,
@@ -459,32 +474,41 @@ class _ListMapState extends State<ListMap> {
                 "photo": _places[index].photos.isNotEmpty
                     ? _places[index].photos[0].photoReference
                     : "",
-              }).then((result) => {
-                        setState(() {
-                          _activeNav = false;
-                          print(_activeNav);
-                        }),
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MapList(
-                                nameList: _places[index].name,
-                                vicinityList: _places[index].vicinity,
-                                latList: _places[index].geometry.location.lat,
-                                lngList: _places[index].geometry.location.lng,
-                              ),
-                            )),
-                      })
-            })
-        .catchError((err) => print(err));
+              },
+            ).then(
+              (result) => {
+                setState(() {
+                  _activeNav = false;
+                  print(_activeNav);
+                }),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MapList(
+                      nameList: _places[index].name,
+                      vicinityList: _places[index].vicinity,
+                      latList: _places[index].geometry.location.lat,
+                      lngList: _places[index].geometry.location.lng,
+                    ),
+                  ),
+                ),
+              },
+            )
+          },
+        )
+        .catchError(
+          (err) => print(err),
+        );
   }
 
   _initGetSharedPref() {
-    SharedPreferences.getInstance().then((prefs) {
-      setState(() => _sharedPrefs = prefs);
-      _valueRadius = prefs.getDouble('rangeRadius') ?? 5000.0;
-      _open = prefs.getString('open') ?? '';
-    });
+    SharedPreferences.getInstance().then(
+      (prefs) {
+        setState(() => _sharedPrefs = prefs);
+        _valueRadius = prefs.getDouble('rangeRadius') ?? 5000.0;
+        _open = prefs.getString('open') ?? '';
+      },
+    );
   }
 
   _calculateDistance(double _meter) {
@@ -501,21 +525,27 @@ class _ListMapState extends State<ListMap> {
   _btnType(String name, String type) {
     return Row(
       children: <Widget>[
-        SizedBox(width: ResponsiveScreen().widthMediaQuery(context, 5)),
+        SizedBox(
+          width: ResponsiveScreen().widthMediaQuery(context, 5),
+        ),
         RaisedButton(
           padding: EdgeInsets.all(0.0),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(80.0),
+          ),
           onPressed: () => _searchNearbyTotal(true, type, ""),
           child: Container(
             decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: <Color>[
-                    Color(0xFF5e7974),
-                    Color(0xFF6494ED),
-                  ],
-                ),
-                borderRadius: BorderRadius.all(Radius.circular(80.0))),
+              gradient: LinearGradient(
+                colors: <Color>[
+                  Color(0xFF5e7974),
+                  Color(0xFF6494ED),
+                ],
+              ),
+              borderRadius: BorderRadius.all(
+                Radius.circular(80.0),
+              ),
+            ),
             padding: EdgeInsets.fromLTRB(30, 10, 30, 10),
             child: Text(
               name,
@@ -523,20 +553,28 @@ class _ListMapState extends State<ListMap> {
             ),
           ),
         ),
-        SizedBox(width: ResponsiveScreen().widthMediaQuery(context, 5)),
+        SizedBox(
+          width: ResponsiveScreen().widthMediaQuery(context, 5),
+        ),
       ],
     );
   }
 
   _textList(String text, double fontSize, int color) {
-    return Text(text,
-        style: TextStyle(shadows: <Shadow>[
+    return Text(
+      text,
+      style: TextStyle(
+        shadows: <Shadow>[
           Shadow(
             offset: Offset(1.0, 1.0),
             blurRadius: 1.0,
             color: Color(0xAA000000),
           ),
-        ], fontSize: fontSize, color: Color(color)));
+        ],
+        fontSize: fontSize,
+        color: Color(color),
+      ),
+    );
   }
 
   _getLocationPermission() async {
@@ -551,8 +589,9 @@ class _ListMapState extends State<ListMap> {
   }
 
   _searchNearbyTotal(bool isSearching, String type, String text) {
-    _searchNearby(isSearching, type, text)
-        .then((value) => _sortSearchNearby(value));
+    _searchNearby(isSearching, type, text).then(
+      (value) => _sortSearchNearby(value),
+    );
   }
 
   Future _searchNearby(bool isSearching, String type, String text) async {
@@ -561,21 +600,28 @@ class _ListMapState extends State<ListMap> {
           _userLocation.longitude, _open, type, _valueRadius.round(), text);
 //      _places = await _dataMobx.getSearchNearby(_userLocation.latitude,
 //          _userLocation.longitude, _open, type, _valueRadius.round(), text); // MobX
-      setState(() {
-        _searching = false;
-        print(_searching);
-      });
+      setState(
+        () {
+          _searching = false;
+          print(_searching);
+        },
+      );
     }
     return _places;
   }
 
   _sortSearchNearby(List<Results> _places) {
-    _places.sort((a, b) => sqrt(
-            pow(a.geometry.location.lat - _userLocation.latitude, 2) +
-                pow(a.geometry.location.lng - _userLocation.longitude, 2))
-        .compareTo(sqrt(
-            pow(b.geometry.location.lat - _userLocation.latitude, 2) +
-                pow(b.geometry.location.lng - _userLocation.longitude, 2))));
+    _places.sort(
+      (a, b) => sqrt(
+        pow(a.geometry.location.lat - _userLocation.latitude, 2) +
+            pow(a.geometry.location.lng - _userLocation.longitude, 2),
+      ).compareTo(
+        sqrt(
+          pow(b.geometry.location.lat - _userLocation.latitude, 2) +
+              pow(b.geometry.location.lng - _userLocation.longitude, 2),
+        ),
+      ),
+    );
   }
 
   _shareContent(

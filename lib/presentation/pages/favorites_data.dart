@@ -28,9 +28,11 @@ class FavoritesData extends StatefulWidget {
 class _FavoritesDataState extends State<FavoritesData> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ResultsSqflProvider>(builder: (context, results, child) {
-      return FavoritesDataProv();
-    });
+    return Consumer<ResultsSqflProvider>(
+      builder: (context, results, child) {
+        return FavoritesDataProv();
+      },
+    );
   }
 }
 
@@ -66,48 +68,53 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   Widget build(BuildContext context) {
     _userLocation = Provider.of<UserLocation>(context);
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          title: Text(
-            'Lovely Favorite Places',
-            style: TextStyle(color: Color(0xFFE9FFFF)),
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Text(
+          'Lovely Favorite Places',
+          style: TextStyle(
+            color: Color(0xFFE9FFFF),
           ),
-          iconTheme: IconThemeData(color: Color(0xFFE9FFFF)),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.delete_forever),
-              color: Color(0xFFE9FFFF),
-              onPressed: () => _sqflProv.deleteData(), // Provider
+        ),
+        iconTheme: IconThemeData(
+          color: Color(0xFFE9FFFF),
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.delete_forever),
+            color: Color(0xFFE9FFFF),
+            onPressed: () => _sqflProv.deleteData(), // Provider
 //              onPressed: () => _dataMobx.deleteData(), // MobX
-            )
+          ),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            Expanded(
+//            child: Observer(builder: (_) {
+              // MobX
+              child: LiveList(
+                showItemInterval: Duration(milliseconds: 50),
+                showItemDuration: Duration(milliseconds: 50),
+                reAnimateOnVisibility: true,
+                scrollDirection: Axis.vertical,
+                itemCount: _places.length,
+                itemBuilder: buildAnimatedItem,
+                separatorBuilder: (BuildContext context, int index) {
+                  return Container(
+                    height: ResponsiveScreen().heightMediaQuery(context, 10),
+                    decoration: BoxDecoration(color: Colors.grey),
+                  );
+                },
+              ),
+//            },
+            ),
           ],
         ),
-        body: Center(
-          child: Column(
-            children: <Widget>[
-              Expanded(
-//            child: Observer(builder: (_) {
-                // MobX
-                child: LiveList(
-                  showItemInterval: Duration(milliseconds: 50),
-                  showItemDuration: Duration(milliseconds: 50),
-                  reAnimateOnVisibility: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: _places.length,
-                  itemBuilder: buildAnimatedItem,
-                  separatorBuilder: (BuildContext context, int index) {
-                    return Container(
-                        height:
-                            ResponsiveScreen().heightMediaQuery(context, 10),
-                        decoration: BoxDecoration(color: Colors.grey));
-                  },
-                ),
-//            }
-              ),
-            ],
-          ),
-        ),
-        drawer: DrawerTotal());
+      ),
+      drawer: DrawerTotal(),
+    );
   }
 
   Widget buildAnimatedItem(
@@ -132,8 +139,9 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   _childLiveList(int index) {
     final dis.Distance _distance = dis.Distance();
     final double _meter = _distance(
-        dis.LatLng(_userLocation.latitude, _userLocation.longitude),
-        dis.LatLng(_places[index].lat, _places[index].lng));
+      dis.LatLng(_userLocation.latitude, _userLocation.longitude),
+      dis.LatLng(_places[index].lat, _places[index].lng),
+    );
     return Slidable(
       key: UniqueKey(),
       actionPane: SlidableDrawerActionPane(),
@@ -144,18 +152,19 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           icon: Icons.edit,
           onTap: () => {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddOrEditDataFavorites(
-                    id: _places[index].id,
-                    nameList: _places[index].name,
-                    addressList: _places[index].vicinity,
-                    latList: _places[index].lat,
-                    lngList: _places[index].lng,
-                    photoList: _places[index].photo,
-                    edit: true,
-                  ),
-                ))
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddOrEditDataFavorites(
+                  id: _places[index].id,
+                  nameList: _places[index].name,
+                  addressList: _places[index].vicinity,
+                  latList: _places[index].lat,
+                  lngList: _places[index].lng,
+                  photoList: _places[index].photo,
+                  edit: true,
+                ),
+              ),
+            ),
           },
         ),
         IconSlideAction(
@@ -163,15 +172,16 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           icon: Icons.directions,
           onTap: () => {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MapList(
-                    nameList: _places[index].name,
-                    vicinityList: _places[index].vicinity,
-                    latList: _places[index].lat,
-                    lngList: _places[index].lng,
-                  ),
-                ))
+              context,
+              MaterialPageRoute(
+                builder: (context) => MapList(
+                  nameList: _places[index].name,
+                  vicinityList: _places[index].vicinity,
+                  latList: _places[index].lat,
+                  lngList: _places[index].lng,
+                ),
+              ),
+            ),
           },
         ),
         IconSlideAction(
@@ -188,8 +198,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           color: Colors.red,
           icon: Icons.delete,
           onTap: () => {
-//            _sqflProv.deleteItem(_places[index], index)
-            // Provider
+//            _sqflProv.deleteItem(_places[index], index) // Provider
 //            _dataMobx.deleteItem(_places[index], index) // MobX
           },
         ),
@@ -288,8 +297,10 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   }
 
   _textList(String text, double fontSize, int color) {
-    return Text(text,
-        style: TextStyle(shadows: <Shadow>[
+    return Text(
+      text,
+      style: TextStyle(
+        shadows: <Shadow>[
           Shadow(
             offset: Offset(1.0, 1.0),
             blurRadius: 1.0,
@@ -300,7 +311,11 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
             blurRadius: 1.0,
             color: Color(0xAA000000),
           ),
-        ], fontSize: fontSize, color: Color(color)));
+        ],
+        fontSize: fontSize,
+        color: Color(color),
+      ),
+    );
   }
 
   _shareContent(

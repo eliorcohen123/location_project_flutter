@@ -14,13 +14,18 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(providers: [
-      StreamProvider<UserLocation>(
-        create: (context) => LocationService().locationStream,
+    return MultiProvider(
+      providers: [
+        StreamProvider<UserLocation>(
+          create: (context) => LocationService().locationStream,
+        ),
+        ChangeNotifierProvider<ResultsSqflProvider>(
+          create: (context) => ResultsSqflProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        home: LoginPage(),
       ),
-      ChangeNotifierProvider<ResultsSqflProvider>(
-        create: (context) => ResultsSqflProvider(),
-      )
-    ], child: MaterialApp(home: LoginPage()));
+    );
   }
 }

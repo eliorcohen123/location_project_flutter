@@ -29,16 +29,18 @@ class AddOrEditDataFavorites extends StatefulWidget {
 class _AddOrEditDataFavoritesState extends State<AddOrEditDataFavorites> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ResultsSqflProvider>(builder: (context, results, child) {
-      return AddOrEditDataFavoritesProv(
-          nameList: widget.nameList,
-          addressList: widget.addressList,
-          latList: widget.latList,
-          lngList: widget.lngList,
-          photoList: widget.photoList,
-          edit: widget.edit,
-          id: widget.id);
-    });
+    return Consumer<ResultsSqflProvider>(
+      builder: (context, results, child) {
+        return AddOrEditDataFavoritesProv(
+            nameList: widget.nameList,
+            addressList: widget.addressList,
+            latList: widget.latList,
+            lngList: widget.lngList,
+            photoList: widget.photoList,
+            edit: widget.edit,
+            id: widget.id);
+      },
+    );
   }
 }
 
@@ -102,19 +104,19 @@ class _AddOrEditDataFavoritesProvState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
-        backgroundColor: Colors.grey,
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          title: Text(
-            'Lovely Favorite Places',
-            style: TextStyle(color: Color(0xFFE9FFFF)),
-          ),
-          iconTheme: IconThemeData(color: Color(0xFFE9FFFF)),
+      resizeToAvoidBottomPadding: false,
+      backgroundColor: Colors.grey,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Text(
+          'Lovely Favorite Places',
+          style: TextStyle(color: Color(0xFFE9FFFF)),
         ),
-        body: SingleChildScrollView(
-          child: Center(
-              child: Container(
+        iconTheme: IconThemeData(color: Color(0xFFE9FFFF)),
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Container(
             width: ResponsiveScreen().widthMediaQuery(context, 300),
             child: Column(
               children: <Widget>[
@@ -197,7 +199,8 @@ class _AddOrEditDataFavoritesProvState
                 RaisedButton(
                   padding: const EdgeInsets.all(0.0),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(80.0)),
+                    borderRadius: BorderRadius.circular(80.0),
+                  ),
                   onPressed: () => widget.edit
                       ? _sqflProv.updateItem(
                           widget.id,
@@ -231,13 +234,16 @@ class _AddOrEditDataFavoritesProvState
 //                          context), // MobX
                   child: Container(
                     decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: <Color>[
-                            Color(0xFF5e7974),
-                            Color(0xFF6494ED),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(80.0))),
+                      gradient: LinearGradient(
+                        colors: <Color>[
+                          Color(0xFF5e7974),
+                          Color(0xFF6494ED),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(80.0),
+                      ),
+                    ),
                     padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: Text(
                       widget.edit ? 'Edit Your Place' : 'Add Your Place',
@@ -247,17 +253,20 @@ class _AddOrEditDataFavoritesProvState
                 ),
               ],
             ),
-          )),
+          ),
         ),
-        drawer: DrawerTotal());
+      ),
+      drawer: DrawerTotal(),
+    );
   }
 
   _editText(TextEditingController textEditingController) {
     return Container(
       decoration: BoxDecoration(
-          color: Color(0xff778899).withOpacity(0.9189918041229248),
-          border: Border.all(color: Color(0xff778899), width: 1),
-          borderRadius: BorderRadius.circular(24)),
+        color: Color(0xff778899).withOpacity(0.9189918041229248),
+        border: Border.all(color: Color(0xff778899), width: 1),
+        borderRadius: BorderRadius.circular(24),
+      ),
       child: TextField(
         decoration: InputDecoration(
           contentPadding: EdgeInsets.all(10.0),

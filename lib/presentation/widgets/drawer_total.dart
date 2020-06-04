@@ -62,10 +62,11 @@ class DrawerTotal extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ListMap(),
-                    ));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ListMap(),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -88,10 +89,11 @@ class DrawerTotal extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LiveFavoritePlaces(),
-                    ));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LiveFavoritePlaces(),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -114,10 +116,11 @@ class DrawerTotal extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FavoritesData(),
-                    ));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FavoritesData(),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -140,10 +143,11 @@ class DrawerTotal extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CustomMapList(),
-                    ));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CustomMapList(),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -166,10 +170,11 @@ class DrawerTotal extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SettingsApp(),
-                    ));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SettingsApp(),
+                  ),
+                );
               },
             ),
             ListTile(

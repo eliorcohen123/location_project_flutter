@@ -23,51 +23,65 @@ class _CustomMapListState extends State<CustomMapList> {
     var _currentLocation =
         LatLng(_userLocation.latitude, _userLocation.longitude);
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          title: Text(
-            'Lovely Favorite Places',
-            style: TextStyle(color: Color(0xFFE9FFFF)),
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Text(
+          'Lovely Favorite Places',
+          style: TextStyle(
+            color: Color(0xFFE9FFFF),
           ),
-          iconTheme: IconThemeData(color: Color(0xFFE9FFFF)),
         ),
-        body: GoogleMap(
-          onMapCreated: (controller) {
-            setState(() {
+        iconTheme: IconThemeData(
+          color: Color(0xFFE9FFFF),
+        ),
+      ),
+      body: GoogleMap(
+        onMapCreated: (controller) {
+          setState(
+            () {
               _myMapController = controller;
-            });
-          },
-          initialCameraPosition: CameraPosition(
-            target: _currentLocation,
-            zoom: 10.0,
-          ),
-          markers: Set<Marker>.of(_markers),
-          myLocationEnabled: true,
-          myLocationButtonEnabled: true,
-          zoomGesturesEnabled: _zoomGesturesEnabled,
-          mapType: MapType.normal,
-          onTap: _handleTap,
+            },
+          );
+        },
+        initialCameraPosition: CameraPosition(
+          target: _currentLocation,
+          zoom: 10.0,
         ),
-        drawer: DrawerTotal());
+        markers: Set<Marker>.of(_markers),
+        myLocationEnabled: true,
+        myLocationButtonEnabled: true,
+        zoomGesturesEnabled: _zoomGesturesEnabled,
+        mapType: MapType.normal,
+        onTap: _handleTap,
+      ),
+      drawer: DrawerTotal(),
+    );
   }
 
   _handleTap(LatLng point) {
-    setState(() {
-      _markers.add(Marker(
-        markerId: MarkerId(point.toString()),
-        position: point,
-        onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddOrEditDataFavorites(
-                latList: point.latitude,
-                lngList: point.longitude,
-                edit: false,
+    setState(
+      () {
+        _markers.add(
+          Marker(
+            markerId: MarkerId(
+              point.toString(),
+            ),
+            position: point,
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddOrEditDataFavorites(
+                  latList: point.latitude,
+                  lngList: point.longitude,
+                  edit: false,
+                ),
               ),
-            )),
-        icon:
-            BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueMagenta),
-      ));
-    });
+            ),
+            icon: BitmapDescriptor.defaultMarkerWithHue(
+                BitmapDescriptor.hueMagenta),
+          ),
+        );
+      },
+    );
   }
 }
