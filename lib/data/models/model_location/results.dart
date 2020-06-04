@@ -2,11 +2,11 @@ import 'package:locationprojectflutter/data/models/model_location/photo.dart';
 import 'geometry.dart';
 
 class Results {
-  String id;
-  String name;
-  String vicinity;
-  Geometry geometry;
-  List<Photo> photos;
+  final String id;
+  final String name;
+  final String vicinity;
+  final Geometry geometry;
+  final List<Photo> photos;
 
   Results({
     this.id,

@@ -110,9 +110,13 @@ class _AddOrEditDataFavoritesProvState
         backgroundColor: Colors.black,
         title: Text(
           'Lovely Favorite Places',
-          style: TextStyle(color: Color(0xFFE9FFFF)),
+          style: TextStyle(
+            color: Color(0xFFE9FFFF),
+          ),
         ),
-        iconTheme: IconThemeData(color: Color(0xFFE9FFFF)),
+        iconTheme: IconThemeData(
+          color: Color(0xFFE9FFFF),
+        ),
       ),
       body: SingleChildScrollView(
         child: Center(

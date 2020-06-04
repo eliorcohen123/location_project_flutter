@@ -114,9 +114,13 @@ class _ListMapState extends State<ListMap> {
         backgroundColor: Colors.black,
         title: Text(
           'Lovely Favorite Places',
-          style: TextStyle(color: Color(0xFFE9FFFF)),
+          style: TextStyle(
+            color: Color(0xFFE9FFFF),
+          ),
         ),
-        iconTheme: IconThemeData(color: Color(0xFFE9FFFF)),
+        iconTheme: IconThemeData(
+          color: Color(0xFFE9FFFF),
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
@@ -246,7 +250,9 @@ class _ListMapState extends State<ListMap> {
             ),
             if (_activeNav)
               Container(
-                decoration: new BoxDecoration(color: Color(0x80000000)),
+                decoration: new BoxDecoration(
+                  color: Color(0x80000000),
+                ),
                 child: Center(
                   child: CircularProgressIndicator(),
                 ),
@@ -403,9 +409,11 @@ class _ListMapState extends State<ListMap> {
   }
 
   Future _createNavPlace(int index) async {
-    setState(() {
-      _activeNav = true;
-    });
+    setState(
+      () {
+        _activeNav = true;
+      },
+    );
 
     int count;
 
@@ -477,10 +485,12 @@ class _ListMapState extends State<ListMap> {
               },
             ).then(
               (result) => {
-                setState(() {
-                  _activeNav = false;
-                  print(_activeNav);
-                }),
+                setState(
+                  () {
+                    _activeNav = false;
+                    print(_activeNav);
+                  },
+                ),
                 Navigator.push(
                   context,
                   MaterialPageRoute(

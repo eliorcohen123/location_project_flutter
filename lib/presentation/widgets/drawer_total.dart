@@ -198,7 +198,9 @@ class DrawerTotal extends StatelessWidget {
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    MaterialPageRoute(
+                      builder: (context) => LoginPage(),
+                    ),
                     (Route<dynamic> route) => false);
               },
             ),

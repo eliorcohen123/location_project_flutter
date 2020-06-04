@@ -1,5 +1,5 @@
 class Photo {
-  String photoReference;
+  final String photoReference;
 
   Photo({this.photoReference});
 

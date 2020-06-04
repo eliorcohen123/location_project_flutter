@@ -77,24 +77,27 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
         ),
       ),
       body: Center(
-          child: Column(children: <Widget>[
-        Expanded(
-          child: LiveList(
-            showItemInterval: Duration(milliseconds: 50),
-            showItemDuration: Duration(milliseconds: 50),
-            reAnimateOnVisibility: true,
-            scrollDirection: Axis.vertical,
-            itemCount: _places.length,
-            itemBuilder: buildAnimatedItem,
-            separatorBuilder: (BuildContext context, int index) {
-              return Container(
-                height: ResponsiveScreen().heightMediaQuery(context, 10),
-                decoration: BoxDecoration(color: Colors.grey),
-              );
-            },
-          ),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: LiveList(
+                showItemInterval: Duration(milliseconds: 50),
+                showItemDuration: Duration(milliseconds: 50),
+                reAnimateOnVisibility: true,
+                scrollDirection: Axis.vertical,
+                itemCount: _places.length,
+                itemBuilder: buildAnimatedItem,
+                separatorBuilder: (BuildContext context, int index) {
+                  return Container(
+                    height: ResponsiveScreen().heightMediaQuery(context, 10),
+                    decoration: BoxDecoration(color: Colors.grey),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
-      ])),
+      ),
       drawer: DrawerTotal(),
     );
   }
@@ -253,8 +256,10 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
     _placeSub = _snapshots.listen(
       (QuerySnapshot snapshot) {
         final List<ResultsFirestore> places = snapshot.documents
-            .map((documentSnapshot) =>
-                ResultsFirestore.fromSqfl(documentSnapshot.data))
+            .map(
+              (documentSnapshot) =>
+                  ResultsFirestore.fromSqfl(documentSnapshot.data),
+            )
             .toList();
 
         setState(

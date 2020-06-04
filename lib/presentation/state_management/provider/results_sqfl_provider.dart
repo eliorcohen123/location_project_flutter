@@ -46,10 +46,11 @@ class ResultsSqflProvider extends ChangeNotifier {
         .then(
       (_) {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => FavoritesData(),
-            ));
+          context,
+          MaterialPageRoute(
+            builder: (context) => FavoritesData(),
+          ),
+        );
         notifyListeners();
       },
     );

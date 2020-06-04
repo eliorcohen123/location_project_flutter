@@ -61,15 +61,21 @@ class _MapListState extends State<MapList> {
         backgroundColor: Colors.black,
         title: Text(
           'Lovely Favorite Places',
-          style: TextStyle(color: Color(0xFFE9FFFF)),
+          style: TextStyle(
+            color: Color(0xFFE9FFFF),
+          ),
         ),
-        iconTheme: IconThemeData(color: Color(0xFFE9FFFF)),
+        iconTheme: IconThemeData(
+          color: Color(0xFFE9FFFF),
+        ),
       ),
       body: GoogleMap(
         onMapCreated: (controller) {
-          setState(() {
-            _myMapController = controller;
-          });
+          setState(
+            () {
+              _myMapController = controller;
+            },
+          );
         },
         initialCameraPosition: CameraPosition(
           target: _currentLocation,
@@ -121,10 +127,13 @@ class _MapListState extends State<MapList> {
       },
     );
 
-    Geofence.startListening(GeolocationEvent.exit, (entry) {
-      print("Exit from place");
-      _showNotification("Exit of a place", "Goodbye to: $namePlace");
-    });
+    Geofence.startListening(
+      GeolocationEvent.exit,
+      (entry) {
+        print("Exit from place");
+        _showNotification("Exit of a place", "Goodbye to: $namePlace");
+      },
+    );
   }
 
   _initNotifications() {
