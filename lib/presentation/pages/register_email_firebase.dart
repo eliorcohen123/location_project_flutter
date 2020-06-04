@@ -7,10 +7,8 @@ import 'package:locationprojectflutter/presentation/widgets/tff_firebase.dart';
 import 'list_map.dart';
 
 class RegisterPage extends StatefulWidget {
-  final String title = 'Registration';
-
   @override
-  State<StatefulWidget> createState() => RegisterPageState();
+  RegisterPageState createState() => RegisterPageState();
 }
 
 class RegisterPageState extends State<RegisterPage> {
