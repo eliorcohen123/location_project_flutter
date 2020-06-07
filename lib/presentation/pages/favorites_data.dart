@@ -197,7 +197,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           color: Colors.red,
           icon: Icons.delete,
           onTap: () => {
-//            _sqflProv.deleteItem(_places[index], index) // Provider
+            _sqflProv.deleteItem(_places[index], index) // Provider
 //            _dataMobx.deleteItem(_places[index], index) // MobX
           },
         ),
