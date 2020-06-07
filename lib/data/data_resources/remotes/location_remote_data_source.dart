@@ -41,7 +41,7 @@ class LocationRemoteDataSource {
   _handleResponse(data) {
     if (data['status'] == "REQUEST_DENIED") {
       _error = Error.fromJson(data);
-      print(_error);
+      print(_error.errorMessage);
     } else if (data['status'] == "OK") {
       _places = PlaceResponse.parseResults(data['results']);
     } else {

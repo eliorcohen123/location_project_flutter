@@ -117,43 +117,35 @@ class LoginPageState extends State<LoginPage> {
                                           _emailController.text) &&
                                       Validations().validatePassword(
                                           _passwordController.text)) {
-                                    setState(
-                                      () {
-                                        _loading = true;
-                                        _textError = '';
-                                      },
-                                    );
+                                    setState(() {
+                                      _loading = true;
+                                      _textError = '';
+                                    });
                                     Future.delayed(
                                       const Duration(milliseconds: 5000),
                                       () {
-                                        setState(
-                                          () {
-                                            _success = false;
-                                            _loading = false;
-                                            _textError =
-                                                'Something wrong with connection';
-                                          },
-                                        );
+                                        setState(() {
+                                          _success = false;
+                                          _loading = false;
+                                          _textError =
+                                              'Something wrong with connection';
+                                        });
                                       },
                                     );
                                     _loginFirebase();
                                   } else if (!Validations()
                                       .validateEmail(_emailController.text)) {
-                                    setState(
-                                      () {
-                                        _success = false;
-                                        _textError = 'Invalid Email';
-                                      },
-                                    );
+                                    setState(() {
+                                      _success = false;
+                                      _textError = 'Invalid Email';
+                                    });
                                   } else if (!Validations().validatePassword(
                                       _passwordController.text)) {
-                                    setState(
-                                      () {
-                                        _success = false;
-                                        _textError =
-                                            'Password must be at least 8 characters';
-                                      },
-                                    );
+                                    setState(() {
+                                      _success = false;
+                                      _textError =
+                                          'Password must be at least 8 characters';
+                                    });
                                   }
                                 }
                               },
@@ -213,37 +205,31 @@ class LoginPageState extends State<LoginPage> {
     ))
         .user;
     if (user != null) {
-      setState(
-        () {
-          _success = true;
-          _loading = false;
-          _userEmail = user.email;
-          print(_userEmail);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ListMap(),
-            ),
-          );
-        },
-      );
+      setState(() {
+        _success = true;
+        _loading = false;
+        _userEmail = user.email;
+        print(_userEmail);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ListMap(),
+          ),
+        );
+      });
     } else {
-      setState(
-        () {
-          _success = false;
-          _loading = false;
-        },
-      );
+      setState(() {
+        _success = false;
+        _loading = false;
+      });
     }
   }
 
   _checkUserLogin() {
     _auth.currentUser().then((user) => user != null
-        ? setState(
-            () {
-              _isLoggedIn = true;
-            },
-          )
+        ? setState(() {
+            _isLoggedIn = true;
+          })
         : null);
   }
 }

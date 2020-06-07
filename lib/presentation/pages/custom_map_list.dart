@@ -37,11 +37,9 @@ class _CustomMapListState extends State<CustomMapList> {
       ),
       body: GoogleMap(
         onMapCreated: (controller) {
-          setState(
-            () {
-              _myMapController = controller;
-            },
-          );
+          setState(() {
+            _myMapController = controller;
+          });
         },
         initialCameraPosition: CameraPosition(
           target: _currentLocation,
@@ -59,29 +57,27 @@ class _CustomMapListState extends State<CustomMapList> {
   }
 
   _handleTap(LatLng point) {
-    setState(
-      () {
-        _markers.add(
-          Marker(
-            markerId: MarkerId(
-              point.toString(),
-            ),
-            position: point,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AddOrEditDataFavorites(
-                  latList: point.latitude,
-                  lngList: point.longitude,
-                  edit: false,
-                ),
+    setState(() {
+      _markers.add(
+        Marker(
+          markerId: MarkerId(
+            point.toString(),
+          ),
+          position: point,
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddOrEditDataFavorites(
+                latList: point.latitude,
+                lngList: point.longitude,
+                edit: false,
               ),
             ),
-            icon: BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueMagenta),
           ),
-        );
-      },
-    );
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+              BitmapDescriptor.hueMagenta),
+        ),
+      );
+    });
   }
 }

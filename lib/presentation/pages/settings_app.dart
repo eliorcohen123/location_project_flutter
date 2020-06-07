@@ -107,12 +107,10 @@ class _SettingsAppState extends State<SettingsApp> {
                 inactiveColor: Colors.grey,
                 label: _valueRadius.round().toString(),
                 onChanged: (double newValue) {
-                  setState(
-                    () {
-                      _valueRadius = newValue;
-                      _addRadiusSearchToSF(_valueRadius);
-                    },
-                  );
+                  setState(() {
+                    _valueRadius = newValue;
+                    _addRadiusSearchToSF(_valueRadius);
+                  });
                 },
                 semanticFormatterCallback: (double newValue) {
                   return '${newValue.round()}';
@@ -147,12 +145,10 @@ class _SettingsAppState extends State<SettingsApp> {
                 inactiveColor: Colors.grey,
                 label: _valueGeofence.round().toString(),
                 onChanged: (double newValue) {
-                  setState(
-                    () {
-                      _valueGeofence = newValue;
-                      _addGeofenceToSF(_valueGeofence);
-                    },
-                  );
+                  setState(() {
+                    _valueGeofence = newValue;
+                    _addGeofenceToSF(_valueGeofence);
+                  });
                 },
                 semanticFormatterCallback: (double newValue) {
                   return '${newValue.round()}';

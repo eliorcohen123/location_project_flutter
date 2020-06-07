@@ -100,43 +100,35 @@ class RegisterPageState extends State<RegisterPage> {
                                     .validateEmail(_emailController.text) &&
                                 Validations().validatePassword(
                                     _passwordController.text)) {
-                              setState(
-                                () {
-                                  _loading = true;
-                                  _textError = '';
-                                },
-                              );
+                              setState(() {
+                                _loading = true;
+                                _textError = '';
+                              });
                               Future.delayed(
                                 const Duration(milliseconds: 5000),
                                 () {
-                                  setState(
-                                    () {
-                                      _success = false;
-                                      _loading = false;
-                                      _textError =
-                                          'Something wrong with connection';
-                                    },
-                                  );
+                                  setState(() {
+                                    _success = false;
+                                    _loading = false;
+                                    _textError =
+                                        'Something wrong with connection';
+                                  });
                                 },
                               );
                               _registerFirebase();
                             } else if (!Validations()
                                 .validateEmail(_emailController.text)) {
-                              setState(
-                                () {
-                                  _success = false;
-                                  _textError = 'Invalid Email';
-                                },
-                              );
+                              setState(() {
+                                _success = false;
+                                _textError = 'Invalid Email';
+                              });
                             } else if (!Validations()
                                 .validatePassword(_passwordController.text)) {
-                              setState(
-                                () {
-                                  _success = false;
-                                  _textError =
-                                      'Password must be at least 8 characters';
-                                },
-                              );
+                              setState(() {
+                                _success = false;
+                                _textError =
+                                    'Password must be at least 8 characters';
+                              });
                             }
                           }
                         },
@@ -189,20 +181,18 @@ class RegisterPageState extends State<RegisterPage> {
     ))
         .user;
     if (user != null) {
-      setState(
-        () {
-          _success = true;
-          _loading = false;
-          _userEmail = user.email;
-          print(_userEmail);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ListMap(),
-            ),
-          );
-        },
-      );
+      setState(() {
+        _success = true;
+        _loading = false;
+        _userEmail = user.email;
+        print(_userEmail);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ListMap(),
+          ),
+        );
+      });
     } else {
       _success = false;
       _loading = false;

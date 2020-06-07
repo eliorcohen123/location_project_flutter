@@ -12,9 +12,7 @@ class ResultsSqfl {
 
   Map<String, dynamic> toSqfl() {
     var map = Map<String, dynamic>();
-    if (id != null) {
-      map['id'] = id;
-    }
+    map['id'] = id;
     map['name'] = name;
     map['vicinity'] = vicinity;
     map['lat'] = lat;

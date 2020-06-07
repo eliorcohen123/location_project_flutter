@@ -409,11 +409,9 @@ class _ListMapState extends State<ListMap> {
   }
 
   Future _createNavPlace(int index) async {
-    setState(
-      () {
-        _activeNav = true;
-      },
-    );
+    setState(() {
+      _activeNav = true;
+    });
 
     int count;
 
@@ -422,11 +420,9 @@ class _ListMapState extends State<ListMap> {
     document.get().then(
       (document) {
         if (document.exists) {
-          setState(
-            () {
-              count = document['count'];
-            },
-          );
+          setState(() {
+            count = document['count'];
+          });
         }
       },
     ).then(
@@ -485,12 +481,10 @@ class _ListMapState extends State<ListMap> {
               },
             ).then(
               (result) => {
-                setState(
-                  () {
-                    _activeNav = false;
-                    print(_activeNav);
-                  },
-                ),
+                setState(() {
+                  _activeNav = false;
+                  print(_activeNav);
+                }),
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -610,12 +604,10 @@ class _ListMapState extends State<ListMap> {
           _userLocation.longitude, _open, type, _valueRadius.round(), text);
 //      _places = await _dataMobx.getSearchNearby(_userLocation.latitude,
 //          _userLocation.longitude, _open, type, _valueRadius.round(), text); // MobX
-      setState(
-        () {
-          _searching = false;
-          print(_searching);
-        },
-      );
+      setState(() {
+        _searching = false;
+        print(_searching);
+      });
     }
     return _places;
   }

@@ -66,11 +66,9 @@ class _MapListState extends State<MapList> {
       ),
       body: GoogleMap(
         onMapCreated: (controller) {
-          setState(
-            () {
-              _myMapController = controller;
-            },
-          );
+          setState(() {
+            _myMapController = controller;
+          });
         },
         initialCameraPosition: CameraPosition(
           target: _currentLocation,
@@ -178,41 +176,36 @@ class _MapListState extends State<MapList> {
   }
 
   Future _searchNearbyList() async {
-    setState(
-      () {
-        _markers.clear();
-      },
-    );
+    setState(() {
+      _markers.clear();
+    });
     _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
         _userLocation.longitude, _open, '', _valueRadius.round(), '');
-    setState(
-      () {
-        for (int i = 0; i < _places.length; i++) {
-          _markers.add(
-            Marker(
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueViolet),
-              markerId: MarkerId(_places[i].name),
-              position: LatLng(_places[i].geometry.location.lat,
-                  _places[i].geometry.location.lng),
-              onTap: () {
-                String namePlace =
-                    _places[i].name != null ? _places[i].name : "";
-                String vicinityPlace =
-                    _places[i].vicinity != null ? _places[i].vicinity : "";
-                _showDialog(
-                    namePlace,
-                    vicinityPlace,
-                    _places[i].geometry.location.lat,
-                    _places[i].geometry.location.lng);
-              },
-            ),
-          );
-        }
-        _searching = false;
-        print(_searching);
-      },
-    );
+    setState(() {
+      for (int i = 0; i < _places.length; i++) {
+        _markers.add(
+          Marker(
+            icon: BitmapDescriptor.defaultMarkerWithHue(
+                BitmapDescriptor.hueViolet),
+            markerId: MarkerId(_places[i].name),
+            position: LatLng(_places[i].geometry.location.lat,
+                _places[i].geometry.location.lng),
+            onTap: () {
+              String namePlace = _places[i].name != null ? _places[i].name : "";
+              String vicinityPlace =
+                  _places[i].vicinity != null ? _places[i].vicinity : "";
+              _showDialog(
+                  namePlace,
+                  vicinityPlace,
+                  _places[i].geometry.location.lat,
+                  _places[i].geometry.location.lng);
+            },
+          ),
+        );
+      }
+      _searching = false;
+      print(_searching);
+    });
   }
 
   _initMarker() {

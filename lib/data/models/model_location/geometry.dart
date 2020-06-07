@@ -1,15 +1,11 @@
 import 'location.dart';
 
 class Geometry {
-  final Location location;
+  Location location;
 
-  Geometry({this.location});
-
-  factory Geometry.fromJson(Map<String, dynamic> json) {
-    return Geometry(
-      location: Location.fromJson(
-        json['location'],
-      ),
+  Geometry.fromJson(Map<String, dynamic> json) {
+    this.location = Location.fromJson(
+      json['location'],
     );
   }
 }

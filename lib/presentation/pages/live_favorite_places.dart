@@ -262,11 +262,9 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
             )
             .toList();
 
-        setState(
-          () {
-            this._places = places;
-          },
-        );
+        setState(() {
+          this._places = places;
+        });
       },
     );
   }

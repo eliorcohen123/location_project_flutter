@@ -1,11 +1,7 @@
 class Photo {
-  final String photoReference;
+  String photoReference;
 
-  Photo({this.photoReference});
-
-  factory Photo.fromJson(Map<String, dynamic> json) {
-    return Photo(
-      photoReference: json['photo_reference'],
-    );
+  Photo.fromJson(Map<String, dynamic> json) {
+    this.photoReference = json['photo_reference'];
   }
 }
