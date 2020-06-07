@@ -283,7 +283,7 @@ class _ListMapState extends State<ListMap> {
         ),
       );
 
-  _childLiveList(int index) {
+  Widget _childLiveList(int index) {
     final dis.Distance _distance = dis.Distance();
     final double _meter = _distance(
       dis.LatLng(_userLocation.latitude, _userLocation.longitude),
@@ -505,7 +505,7 @@ class _ListMapState extends State<ListMap> {
         );
   }
 
-  _initGetSharedPref() {
+  void _initGetSharedPref() {
     SharedPreferences.getInstance().then(
       (prefs) {
         setState(() => _sharedPrefs = prefs);
@@ -515,7 +515,7 @@ class _ListMapState extends State<ListMap> {
     );
   }
 
-  _calculateDistance(double _meter) {
+  String _calculateDistance(double _meter) {
     String _myMeters;
     if (_meter < 1000.0) {
       _myMeters = 'Meters: ' + (_meter.round()).toString();
@@ -526,7 +526,7 @@ class _ListMapState extends State<ListMap> {
     return _myMeters;
   }
 
-  _btnType(String name, String type) {
+  Widget _btnType(String name, String type) {
     return Row(
       children: <Widget>[
         SizedBox(
@@ -564,7 +564,7 @@ class _ListMapState extends State<ListMap> {
     );
   }
 
-  _textList(String text, double fontSize, int color) {
+  Widget _textList(String text, double fontSize, int color) {
     return Text(
       text,
       style: TextStyle(
@@ -581,7 +581,7 @@ class _ListMapState extends State<ListMap> {
     );
   }
 
-  _getLocationPermission() async {
+  Future _getLocationPermission() async {
     var location = loc.Location();
     try {
       location.requestPermission();
@@ -592,7 +592,7 @@ class _ListMapState extends State<ListMap> {
     }
   }
 
-  _searchNearbyTotal(bool isSearching, String type, String text) {
+  void _searchNearbyTotal(bool isSearching, String type, String text) {
     _searchNearby(isSearching, type, text).then(
       (value) => _sortSearchNearby(value),
     );
@@ -612,7 +612,7 @@ class _ListMapState extends State<ListMap> {
     return _places;
   }
 
-  _sortSearchNearby(List<Results> _places) {
+  void _sortSearchNearby(List<Results> _places) {
     _places.sort(
       (a, b) => sqrt(
         pow(a.geometry.location.lat - _userLocation.latitude, 2) +
@@ -626,7 +626,7 @@ class _ListMapState extends State<ListMap> {
     );
   }
 
-  _shareContent(
+  void _shareContent(
       String name, String vicinity, double lat, double lng, String photo) {
     final RenderBox box = context.findRenderObject();
     Share.share(

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:map_launcher/map_launcher.dart';
 
 class MapUtils {
-  openMaps(BuildContext context, String name, String vicinity, double lat,
-      double lng) async {
+  Future openMaps(BuildContext context, String name, String vicinity,
+      double lat, double lng) async {
     try {
       final availableMaps = await MapLauncher.installedMaps;
 

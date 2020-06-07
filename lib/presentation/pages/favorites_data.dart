@@ -135,7 +135,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
         ),
       );
 
-  _childLiveList(int index) {
+  Widget _childLiveList(int index) {
     final dis.Distance _distance = dis.Distance();
     final double _meter = _distance(
       dis.LatLng(_userLocation.latitude, _userLocation.longitude),
@@ -284,7 +284,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
     );
   }
 
-  _calculateDistance(double _meter) {
+  String _calculateDistance(double _meter) {
     String _myMeters;
     if (_meter < 1000.0) {
       _myMeters = 'Meters: ' + (_meter.round()).toString();
@@ -295,7 +295,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
     return _myMeters;
   }
 
-  _textList(String text, double fontSize, int color) {
+  Widget _textList(String text, double fontSize, int color) {
     return Text(
       text,
       style: TextStyle(
@@ -317,7 +317,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
     );
   }
 
-  _shareContent(
+  void _shareContent(
       String name, String vicinity, double lat, double lng, String photo) {
     final RenderBox box = context.findRenderObject();
     Share.share(

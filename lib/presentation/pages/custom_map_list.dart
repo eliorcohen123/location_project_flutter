@@ -56,7 +56,7 @@ class _CustomMapListState extends State<CustomMapList> {
     );
   }
 
-  _handleTap(LatLng point) {
+  void _handleTap(LatLng point) {
     setState(() {
       _markers.add(
         Marker(

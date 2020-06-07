@@ -175,7 +175,7 @@ class _SettingsAppState extends State<SettingsApp> {
     );
   }
 
-  _initGetSharedPref() {
+  void _initGetSharedPref() {
     SharedPreferences.getInstance().then(
       (prefs) {
         setState(() => _sharedPrefs = prefs);
@@ -185,15 +185,15 @@ class _SettingsAppState extends State<SettingsApp> {
     );
   }
 
-  _addRadiusSearchToSF(double value) async {
+  Future _addRadiusSearchToSF(double value) async {
     _sharedPrefs.setDouble('rangeRadius', value);
   }
 
-  _addGeofenceToSF(double value) async {
+  Future _addGeofenceToSF(double value) async {
     _sharedPrefs.setDouble('rangeGeofence', value);
   }
 
-  _addOpenToSF(String value) async {
+  Future _addOpenToSF(String value) async {
     if (value == 'Open') {
       _sharedPrefs.setString('open', '&opennow=true');
     } else if (value == 'All(Open + Close)') {

@@ -8,12 +8,12 @@ class ResultsSqflProvider extends ChangeNotifier {
   SQFLiteHelper _db = SQFLiteHelper();
   List<ResultsSqfl> _resultsSqfl = List();
 
-  initList(List<ResultsSqfl> resultsSqfl) {
+  void initList(List<ResultsSqfl> resultsSqfl) {
     this._resultsSqfl = resultsSqfl;
   }
 
-  Future addItem(String name, String vicinity, double lat, double lng,
-      String photo, BuildContext context) async {
+  void addItem(String name, String vicinity, double lat, double lng,
+      String photo, BuildContext context) {
     var add = ResultsSqfl.sqfl(name, vicinity, lat, lng, photo);
     _db.addResult(add).then(
       (_) {
@@ -28,8 +28,8 @@ class ResultsSqflProvider extends ChangeNotifier {
     );
   }
 
-  Future updateItem(int id, String name, String vicinity, double lat,
-      double lng, String photo, BuildContext context) async {
+  void updateItem(int id, String name, String vicinity, double lat, double lng,
+      String photo, BuildContext context) {
     _db
         .updateResult(
       ResultsSqfl.fromSqfl(
@@ -56,7 +56,7 @@ class ResultsSqflProvider extends ChangeNotifier {
     );
   }
 
-  Future deleteItem(ResultsSqfl result, int index) async {
+  void deleteItem(ResultsSqfl result, int index) {
     _db.deleteResult(result.id).then(
       (_) {
         _resultsSqfl.removeAt(index);
@@ -65,7 +65,7 @@ class ResultsSqflProvider extends ChangeNotifier {
     );
   }
 
-  Future deleteData() async {
+  void deleteData() {
     _db.deleteData().then(
       (_) {
         getItems();

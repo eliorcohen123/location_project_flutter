@@ -128,7 +128,7 @@ class _MapListState extends State<MapList> {
     );
   }
 
-  _initNotifications() {
+  void _initNotifications() {
     _flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
     var android = new AndroidInitializationSettings('assets/icon.png');
     var iOS = new IOSInitializationSettings();
@@ -136,7 +136,7 @@ class _MapListState extends State<MapList> {
     _flutterLocalNotificationsPlugin.initialize(initSettings);
   }
 
-  _showNotification(String title, String subtitle) async {
+  Future _showNotification(String title, String subtitle) async {
     var android = new AndroidNotificationDetails(
         'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
         priority: Priority.High, importance: Importance.Max);
@@ -146,7 +146,7 @@ class _MapListState extends State<MapList> {
         payload: subtitle);
   }
 
-  _initGeofence() {
+  void _initGeofence() {
     Geofence.requestPermissions();
     Geolocation location = Geolocation(
         latitude: widget.latList != null ? widget.latList : 0.0,
@@ -164,7 +164,7 @@ class _MapListState extends State<MapList> {
     );
   }
 
-  _initGetSharedPref() {
+  void _initGetSharedPref() {
     SharedPreferences.getInstance().then(
       (prefs) {
         setState(() => _sharedPrefs = prefs);
@@ -208,7 +208,7 @@ class _MapListState extends State<MapList> {
     });
   }
 
-  _initMarker() {
+  void _initMarker() {
     _markers.add(
       Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
@@ -226,7 +226,7 @@ class _MapListState extends State<MapList> {
   }
 
   Future _showDialog(
-      String namePlace, String vicinity, double lat, double lng) async {
+      String namePlace, String vicinity, double lat, double lng) {
     return showDialog(
       context: context,
       builder: (_) => AlertDialog(

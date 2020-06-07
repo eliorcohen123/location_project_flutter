@@ -24,11 +24,11 @@ class SQFLiteHelper {
     if (_db != null) {
       return _db;
     }
-    _db = await initDb();
+    _db = await _initDb();
     return _db;
   }
 
-  initDb() async {
+  Future _initDb() async {
     String path = join(await getDatabasesPath(), 'results.db');
     var db = await openDatabase(path, version: 1, onCreate: onCreate);
     return db;

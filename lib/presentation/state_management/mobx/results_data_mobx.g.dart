@@ -55,45 +55,6 @@
 //    });
 //  }
 //
-//  final _$addItemAsyncAction = AsyncAction('_ResultsDataBase.addItem');
-//
-//  @override
-//  Future<dynamic> addItem(String name, String vicinity, double lat, double lng,
-//      String photo, BuildContext context) {
-//    return _$addItemAsyncAction
-//        .run(() => super.addItem(name, vicinity, lat, lng, photo, context));
-//  }
-//
-//  final _$updateItemAsyncAction = AsyncAction('_ResultsDataBase.updateItem');
-//
-//  @override
-//  Future<dynamic> updateItem(int id, String name, String vicinity, double lat,
-//      double lng, String photo, BuildContext context) {
-//    return _$updateItemAsyncAction.run(
-//        () => super.updateItem(id, name, vicinity, lat, lng, photo, context));
-//  }
-//
-//  final _$deleteItemAsyncAction = AsyncAction('_ResultsDataBase.deleteItem');
-//
-//  @override
-//  Future<dynamic> deleteItem(ResultsSqfl result, int index) {
-//    return _$deleteItemAsyncAction.run(() => super.deleteItem(result, index));
-//  }
-//
-//  final _$deleteDataAsyncAction = AsyncAction('_ResultsDataBase.deleteData');
-//
-//  @override
-//  Future<dynamic> deleteData() {
-//    return _$deleteDataAsyncAction.run(() => super.deleteData());
-//  }
-//
-//  final _$getItemsAsyncAction = AsyncAction('_ResultsDataBase.getItems');
-//
-//  @override
-//  Future<dynamic> getItems() {
-//    return _$getItemsAsyncAction.run(() => super.getItems());
-//  }
-//
 //  final _$getSearchNearbyAsyncAction =
 //      AsyncAction('_ResultsDataBase.getSearchNearby');
 //
@@ -108,11 +69,68 @@
 //      ActionController(name: '_ResultsDataBase');
 //
 //  @override
-//  dynamic initList(ObservableList<ResultsSqfl> resultsSqfl) {
+//  void initList(ObservableList<ResultsSqfl> resultsSqfl) {
 //    final _$actionInfo = _$_ResultsDataBaseActionController.startAction(
 //        name: '_ResultsDataBase.initList');
 //    try {
 //      return super.initList(resultsSqfl);
+//    } finally {
+//      _$_ResultsDataBaseActionController.endAction(_$actionInfo);
+//    }
+//  }
+//
+//  @override
+//  void addItem(String name, String vicinity, double lat, double lng,
+//      String photo, BuildContext context) {
+//    final _$actionInfo = _$_ResultsDataBaseActionController.startAction(
+//        name: '_ResultsDataBase.addItem');
+//    try {
+//      return super.addItem(name, vicinity, lat, lng, photo, context);
+//    } finally {
+//      _$_ResultsDataBaseActionController.endAction(_$actionInfo);
+//    }
+//  }
+//
+//  @override
+//  void updateItem(int id, String name, String vicinity, double lat, double lng,
+//      String photo, BuildContext context) {
+//    final _$actionInfo = _$_ResultsDataBaseActionController.startAction(
+//        name: '_ResultsDataBase.updateItem');
+//    try {
+//      return super.updateItem(id, name, vicinity, lat, lng, photo, context);
+//    } finally {
+//      _$_ResultsDataBaseActionController.endAction(_$actionInfo);
+//    }
+//  }
+//
+//  @override
+//  void deleteItem(ResultsSqfl result, int index) {
+//    final _$actionInfo = _$_ResultsDataBaseActionController.startAction(
+//        name: '_ResultsDataBase.deleteItem');
+//    try {
+//      return super.deleteItem(result, index);
+//    } finally {
+//      _$_ResultsDataBaseActionController.endAction(_$actionInfo);
+//    }
+//  }
+//
+//  @override
+//  void deleteData() {
+//    final _$actionInfo = _$_ResultsDataBaseActionController.startAction(
+//        name: '_ResultsDataBase.deleteData');
+//    try {
+//      return super.deleteData();
+//    } finally {
+//      _$_ResultsDataBaseActionController.endAction(_$actionInfo);
+//    }
+//  }
+//
+//  @override
+//  void getItems() {
+//    final _$actionInfo = _$_ResultsDataBaseActionController.startAction(
+//        name: '_ResultsDataBase.getItems');
+//    try {
+//      return super.getItems();
 //    } finally {
 //      _$_ResultsDataBaseActionController.endAction(_$actionInfo);
 //    }

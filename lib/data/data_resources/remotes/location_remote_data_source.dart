@@ -8,7 +8,7 @@ import 'package:locationprojectflutter/data/models/model_location/results.dart';
 
 class LocationRemoteDataSource {
   static final LocationRemoteDataSource _instance =
-      LocationRemoteDataSource.internal();
+  LocationRemoteDataSource.internal();
 
   factory LocationRemoteDataSource() => _instance;
 
@@ -38,7 +38,7 @@ class LocationRemoteDataSource {
     return _places;
   }
 
-  _handleResponse(data) {
+  void _handleResponse(data) {
     if (data['status'] == "REQUEST_DENIED") {
       _error = Error.fromJson(data);
       print(_error.errorMessage);

@@ -21,13 +21,13 @@
 //  _ResultsDataBase() : _locationRepoImpl = serviceLocator();
 //
 //  @action
-//  initList(ObservableList<ResultsSqfl> resultsSqfl) {
+//  void initList(ObservableList<ResultsSqfl> resultsSqfl) {
 //    this._resultsSqfl = resultsSqfl;
 //  }
 //
 //  @action
-//  Future addItem(String name, String vicinity, double lat, double lng,
-//      String photo, BuildContext context) async {
+//  void addItem(String name, String vicinity, double lat, double lng,
+//      String photo, BuildContext context) {
 //    var add = ResultsSqfl.sqfl(name, vicinity, lat, lng, photo);
 //    _db.addResult(add).then(
 //      (_) {
@@ -42,8 +42,8 @@
 //  }
 //
 //  @action
-//  Future updateItem(int id, String name, String vicinity, double lat,
-//      double lng, String photo, BuildContext context) async {
+//  void updateItem(int id, String name, String vicinity, double lat,
+//      double lng, String photo, BuildContext context) {
 //    _db
 //        .updateResult(
 //      ResultsSqfl.fromSqfl(
@@ -70,7 +70,7 @@
 //  }
 //
 //  @action
-//  Future deleteItem(ResultsSqfl result, int index) async {
+//  void deleteItem(ResultsSqfl result, int index) {
 //    _db.deleteResult(result.id).then(
 //      (_) {
 //        _resultsSqfl.removeAt(index);
@@ -79,7 +79,7 @@
 //  }
 //
 //  @action
-//  Future deleteData() async {
+//  void deleteData() {
 //    _db.deleteData().then(
 //      (_) {
 //        getItems();
@@ -88,7 +88,7 @@
 //  }
 //
 //  @action
-//  Future getItems() async {
+//  void getItems() {
 //    _db.getAllResults().then(
 //      (results) {
 //        _resultsSqfl.clear();

@@ -160,7 +160,7 @@ class _AddOrEditDataFavoritesProvState
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 2),
                 ),
-                _editText(_textName),
+                _innerTextField(_textName),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 10),
                 ),
@@ -171,7 +171,7 @@ class _AddOrEditDataFavoritesProvState
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 2),
                 ),
-                _editText(_textAddress),
+                _innerTextField(_textAddress),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 10),
                 ),
@@ -182,11 +182,11 @@ class _AddOrEditDataFavoritesProvState
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 2),
                 ),
-                _editText(_textLat),
+                _innerTextField(_textLat),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 2),
                 ),
-                _editText(_textLng),
+                _innerTextField(_textLng),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 10),
                 ),
@@ -197,7 +197,7 @@ class _AddOrEditDataFavoritesProvState
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 2),
                 ),
-                _editText(_textPhoto),
+                _innerTextField(_textPhoto),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 20),
                 ),
@@ -265,7 +265,7 @@ class _AddOrEditDataFavoritesProvState
     );
   }
 
-  _editText(TextEditingController textEditingController) {
+  Widget _innerTextField(TextEditingController textEditingController) {
     return Container(
       decoration: BoxDecoration(
         color: Color(0xff778899).withOpacity(0.9189918041229248),

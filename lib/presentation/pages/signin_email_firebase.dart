@@ -198,7 +198,7 @@ class LoginPageState extends State<LoginPage> {
           );
   }
 
-  _loginFirebase() async {
+  Future _loginFirebase() async {
     final FirebaseUser user = (await _auth.signInWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
@@ -225,7 +225,7 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
-  _checkUserLogin() {
+  void _checkUserLogin() {
     _auth.currentUser().then((user) => user != null
         ? setState(() {
             _isLoggedIn = true;

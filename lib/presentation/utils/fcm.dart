@@ -21,7 +21,7 @@ class _PushMessagingState extends State<PushMessaging> {
     return Scaffold();
   }
 
-  _initNotificationPermissions() {
+  void _initNotificationPermissions() {
     _firebaseMessaging.requestNotificationPermissions(
       const IosNotificationSettings(sound: true, badge: true, alert: true),
     );

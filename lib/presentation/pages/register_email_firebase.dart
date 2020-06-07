@@ -174,7 +174,7 @@ class RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  _registerFirebase() async {
+  Future _registerFirebase() async {
     final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
