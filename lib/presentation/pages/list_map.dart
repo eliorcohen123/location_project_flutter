@@ -53,7 +53,7 @@ class _ListMapState extends State<ListMap> {
     super.initState();
 
     _getLocationPermission();
-    _initGetSharedPref();
+    _initGetSharedPrefs();
   }
 
   PreferredSizeWidget _appBar() {
@@ -395,9 +395,9 @@ class _ListMapState extends State<ListMap> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    _textList(_places[index].name, 17.0, 0xffE9FFFF),
-                    _textList(_places[index].vicinity, 15.0, 0xFFFFFFFF),
-                    _textList(_calculateDistance(_meter), 15.0, 0xFFFFFFFF),
+                    _textListView(_places[index].name, 17.0, 0xffE9FFFF),
+                    _textListView(_places[index].vicinity, 15.0, 0xFFFFFFFF),
+                    _textListView(_calculateDistance(_meter), 15.0, 0xFFFFFFFF),
                   ],
                 ),
               ),
@@ -505,16 +505,6 @@ class _ListMapState extends State<ListMap> {
         );
   }
 
-  void _initGetSharedPref() {
-    SharedPreferences.getInstance().then(
-      (prefs) {
-        setState(() => _sharedPrefs = prefs);
-        _valueRadius = prefs.getDouble('rangeRadius') ?? 5000.0;
-        _open = prefs.getString('open') ?? '';
-      },
-    );
-  }
-
   String _calculateDistance(double _meter) {
     String _myMeters;
     if (_meter < 1000.0) {
@@ -524,6 +514,27 @@ class _ListMapState extends State<ListMap> {
           'KM: ' + (_meter.round() / 1000.0).toStringAsFixed(2).toString();
     }
     return _myMeters;
+  }
+
+  Future _getLocationPermission() async {
+    var location = loc.Location();
+    try {
+      location.requestPermission();
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {
+        print('Permission denied');
+      }
+    }
+  }
+
+  void _initGetSharedPrefs() {
+    SharedPreferences.getInstance().then(
+      (prefs) {
+        setState(() => _sharedPrefs = prefs);
+        _valueRadius = prefs.getDouble('rangeRadius') ?? 5000.0;
+        _open = prefs.getString('open') ?? '';
+      },
+    );
   }
 
   Widget _btnType(String name, String type) {
@@ -564,7 +575,7 @@ class _ListMapState extends State<ListMap> {
     );
   }
 
-  Widget _textList(String text, double fontSize, int color) {
+  Widget _textListView(String text, double fontSize, int color) {
     return Text(
       text,
       style: TextStyle(
@@ -579,17 +590,6 @@ class _ListMapState extends State<ListMap> {
         color: Color(color),
       ),
     );
-  }
-
-  Future _getLocationPermission() async {
-    var location = loc.Location();
-    try {
-      location.requestPermission();
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        print('Permission denied');
-      }
-    }
   }
 
   void _searchNearbyTotal(bool isSearching, String type, String text) {

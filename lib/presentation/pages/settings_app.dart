@@ -20,7 +20,7 @@ class _SettingsAppState extends State<SettingsApp> {
   void initState() {
     super.initState();
 
-    _initGetSharedPref();
+    _initGetSharedPrefs();
   }
 
   @override
@@ -175,7 +175,7 @@ class _SettingsAppState extends State<SettingsApp> {
     );
   }
 
-  void _initGetSharedPref() {
+  void _initGetSharedPrefs() {
     SharedPreferences.getInstance().then(
       (prefs) {
         setState(() => _sharedPrefs = prefs);

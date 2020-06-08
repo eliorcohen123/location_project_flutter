@@ -39,11 +39,11 @@ class _MapListState extends State<MapList> {
   void initState() {
     super.initState();
 
-    _initGetSharedPref();
-    _initMarker();
+    _initGetSharedPrefs();
     _initGeofence();
     _initPlatformState();
     _initNotifications();
+    _initMarker();
   }
 
   @override
@@ -105,6 +105,35 @@ class _MapListState extends State<MapList> {
     );
   }
 
+  void _initGetSharedPrefs() {
+    SharedPreferences.getInstance().then(
+          (prefs) {
+        setState(() => _sharedPrefs = prefs);
+        _valueRadius = prefs.getDouble('rangeRadius') ?? 5000.0;
+        _valueGeofence = prefs.getDouble('rangeGeofence') ?? 500.0;
+        _open = prefs.getString('open') ?? '';
+      },
+    );
+  }
+
+  void _initGeofence() {
+    Geofence.requestPermissions();
+    Geolocation location = Geolocation(
+        latitude: widget.latList != null ? widget.latList : 0.0,
+        longitude: widget.lngList != null ? widget.lngList : 0.0,
+        radius: _valueGeofence,
+        id: widget.nameList != null ? widget.nameList : 'id');
+    Geofence.addGeolocation(location, GeolocationEvent.entry).then(
+          (onValue) {
+        print("great success");
+      },
+    ).catchError(
+          (onError) {
+        print("great failure");
+      },
+    );
+  }
+
   Future _initPlatformState() async {
     String namePlace = widget.nameList;
     Geofence.initialize();
@@ -146,32 +175,20 @@ class _MapListState extends State<MapList> {
         payload: subtitle);
   }
 
-  void _initGeofence() {
-    Geofence.requestPermissions();
-    Geolocation location = Geolocation(
-        latitude: widget.latList != null ? widget.latList : 0.0,
-        longitude: widget.lngList != null ? widget.lngList : 0.0,
-        radius: _valueGeofence,
-        id: widget.nameList != null ? widget.nameList : 'id');
-    Geofence.addGeolocation(location, GeolocationEvent.entry).then(
-      (onValue) {
-        print("great success");
-      },
-    ).catchError(
-      (onError) {
-        print("great failure");
-      },
-    );
-  }
-
-  void _initGetSharedPref() {
-    SharedPreferences.getInstance().then(
-      (prefs) {
-        setState(() => _sharedPrefs = prefs);
-        _valueRadius = prefs.getDouble('rangeRadius') ?? 5000.0;
-        _valueGeofence = prefs.getDouble('rangeGeofence') ?? 500.0;
-        _open = prefs.getString('open') ?? '';
-      },
+  void _initMarker() {
+    _markers.add(
+      Marker(
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
+        markerId: MarkerId(widget.nameList != null ? widget.nameList : ""),
+        position: LatLng(widget.latList != null ? widget.latList : 0.0,
+            widget.lngList != null ? widget.lngList : 0.0),
+        onTap: () {
+          String namePlace = widget.nameList != null ? widget.nameList : "";
+          String vicinityPlace =
+              widget.vicinityList != null ? widget.vicinityList : "";
+          _showDialog(namePlace, vicinityPlace, widget.latList, widget.lngList);
+        },
+      ),
     );
   }
 
@@ -193,7 +210,7 @@ class _MapListState extends State<MapList> {
             onTap: () {
               String namePlace = _places[i].name != null ? _places[i].name : "";
               String vicinityPlace =
-                  _places[i].vicinity != null ? _places[i].vicinity : "";
+              _places[i].vicinity != null ? _places[i].vicinity : "";
               _showDialog(
                   namePlace,
                   vicinityPlace,
@@ -206,23 +223,6 @@ class _MapListState extends State<MapList> {
       _searching = false;
       print(_searching);
     });
-  }
-
-  void _initMarker() {
-    _markers.add(
-      Marker(
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
-        markerId: MarkerId(widget.nameList != null ? widget.nameList : ""),
-        position: LatLng(widget.latList != null ? widget.latList : 0.0,
-            widget.lngList != null ? widget.lngList : 0.0),
-        onTap: () {
-          String namePlace = widget.nameList != null ? widget.nameList : "";
-          String vicinityPlace =
-              widget.vicinityList != null ? widget.vicinityList : "";
-          _showDialog(namePlace, vicinityPlace, widget.latList, widget.lngList);
-        },
-      ),
-    );
   }
 
   Future _showDialog(

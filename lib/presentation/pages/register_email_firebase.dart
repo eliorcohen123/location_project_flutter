@@ -184,8 +184,10 @@ class RegisterPageState extends State<RegisterPage> {
       setState(() {
         _success = true;
         _loading = false;
+
         _userEmail = user.email;
         print(_userEmail);
+
         Navigator.push(
           context,
           MaterialPageRoute(

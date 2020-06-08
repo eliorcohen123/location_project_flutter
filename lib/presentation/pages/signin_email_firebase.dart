@@ -198,6 +198,14 @@ class LoginPageState extends State<LoginPage> {
           );
   }
 
+  void _checkUserLogin() {
+    _auth.currentUser().then((user) => user != null
+        ? setState(() {
+            _isLoggedIn = true;
+          })
+        : null);
+  }
+
   Future _loginFirebase() async {
     final FirebaseUser user = (await _auth.signInWithEmailAndPassword(
       email: _emailController.text,
@@ -208,8 +216,10 @@ class LoginPageState extends State<LoginPage> {
       setState(() {
         _success = true;
         _loading = false;
+
         _userEmail = user.email;
         print(_userEmail);
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -223,13 +233,5 @@ class LoginPageState extends State<LoginPage> {
         _loading = false;
       });
     }
-  }
-
-  void _checkUserLogin() {
-    _auth.currentUser().then((user) => user != null
-        ? setState(() {
-            _isLoggedIn = true;
-          })
-        : null);
   }
 }
