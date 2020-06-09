@@ -2,13 +2,12 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/data/models/model_location/error.dart';
-import 'package:locationprojectflutter/data/models/model_location/place_response.dart';
 import 'package:locationprojectflutter/data/models/model_location/results.dart';
 //import 'package:dio/dio.dart';
 
 class LocationRemoteDataSource {
   static final LocationRemoteDataSource _instance =
-  LocationRemoteDataSource.internal();
+      LocationRemoteDataSource.internal();
 
   factory LocationRemoteDataSource() => _instance;
 
@@ -43,7 +42,11 @@ class LocationRemoteDataSource {
       _error = Error.fromJson(data);
       print(_error.errorMessage);
     } else if (data['status'] == "OK") {
-      _places = PlaceResponse.parseResults(data['results']);
+      _places = List<Results>.from(
+        data['results'].map(
+          (i) => Results.fromJson(i),
+        ),
+      );
     } else {
       print(data);
     }
