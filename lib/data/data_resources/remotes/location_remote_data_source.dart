@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/data/models/model_location/error.dart';
 import 'package:locationprojectflutter/data/models/model_location/results.dart';
-import 'package:locationprojectflutter/data/models/model_location/results_location.dart';
 //import 'package:dio/dio.dart';
 
 class LocationRemoteDataSource {
@@ -15,7 +14,7 @@ class LocationRemoteDataSource {
   LocationRemoteDataSource.internal();
 
   Error _error;
-  ResultsLocation _places;
+  List<Results> _places = List();
   String _baseUrl = Constants.baseUrl;
   String _API_KEY = Constants.API_KEY;
 
@@ -43,7 +42,13 @@ class LocationRemoteDataSource {
       _error = Error.fromJson(data);
       print(_error.errorMessage);
     } else if (data['status'] == "OK") {
-      _places = ResultsLocation.fromJson(data);
+      _places = List<Results>.from(
+        data['results']
+            .map(
+              (i) => Results.fromJson(i),
+            )
+            .toList(),
+      );
     } else {
       print(data);
     }
