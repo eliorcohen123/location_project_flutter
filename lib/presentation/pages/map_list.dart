@@ -3,6 +3,7 @@ import 'package:flutter_geofence/geofence.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:locationprojectflutter/data/models/model_location/results.dart';
+import 'package:locationprojectflutter/data/models/model_location/results_location.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
 import 'package:locationprojectflutter/presentation/utils/map_utils.dart';
@@ -30,7 +31,7 @@ class _MapListState extends State<MapList> {
   String _open;
   bool _zoomGesturesEnabled = true, _searching = true;
   List<Marker> _markers = <Marker>[];
-  List<Results> _places = List();
+  ResultsLocation _places;
   var _userLocation;
   LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
   FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
@@ -199,23 +200,23 @@ class _MapListState extends State<MapList> {
     _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
         _userLocation.longitude, _open, '', _valueRadius.round(), '');
     setState(() {
-      for (int i = 0; i < _places.length; i++) {
+      for (int i = 0; i < _places.results.length; i++) {
         _markers.add(
           Marker(
             icon: BitmapDescriptor.defaultMarkerWithHue(
                 BitmapDescriptor.hueViolet),
-            markerId: MarkerId(_places[i].name),
-            position: LatLng(_places[i].geometry.location.lat,
-                _places[i].geometry.location.lng),
+            markerId: MarkerId(_places.results[i].name),
+            position: LatLng(_places.results[i].geometry.location.lat,
+                _places.results[i].geometry.location.lng),
             onTap: () {
-              String namePlace = _places[i].name != null ? _places[i].name : "";
+              String namePlace = _places.results[i].name != null ? _places.results[i].name : "";
               String vicinityPlace =
-              _places[i].vicinity != null ? _places[i].vicinity : "";
+              _places.results[i].vicinity != null ? _places.results[i].vicinity : "";
               _showDialog(
                   namePlace,
                   vicinityPlace,
-                  _places[i].geometry.location.lat,
-                  _places[i].geometry.location.lng);
+                  _places.results[i].geometry.location.lat,
+                  _places.results[i].geometry.location.lng);
             },
           ),
         );

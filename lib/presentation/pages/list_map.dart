@@ -10,7 +10,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:location/location.dart' as loc;
 import 'package:latlong/latlong.dart' as dis;
 import 'package:locationprojectflutter/core/constants/constants.dart';
-import 'package:locationprojectflutter/data/models/model_location/results.dart';
+import 'package:locationprojectflutter/data/models/model_location/results_location.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
@@ -34,7 +34,7 @@ class ListMap extends StatefulWidget {
 }
 
 class _ListMapState extends State<ListMap> {
-  List<Results> _places = List();
+  ResultsLocation _places;
   bool _searching = true, _activeSearch = false, _activeNav = false;
   double _valueRadius;
   String _open;
@@ -240,7 +240,7 @@ class _ListMapState extends State<ListMap> {
                             showItemDuration: Duration(milliseconds: 50),
                             reAnimateOnVisibility: true,
                             scrollDirection: Axis.vertical,
-                            itemCount: _places.length,
+                            itemCount: _places.results.length,
                             itemBuilder: buildAnimatedItem,
                           ),
 //                        },
@@ -287,8 +287,8 @@ class _ListMapState extends State<ListMap> {
     final dis.Distance _distance = dis.Distance();
     final double _meter = _distance(
       dis.LatLng(_userLocation.latitude, _userLocation.longitude),
-      dis.LatLng(_places[index].geometry.location.lat,
-          _places[index].geometry.location.lng),
+      dis.LatLng(_places.results[index].geometry.location.lat,
+          _places.results[index].geometry.location.lng),
     );
     return Slidable(
       key: UniqueKey(),
@@ -303,12 +303,12 @@ class _ListMapState extends State<ListMap> {
               context,
               MaterialPageRoute(
                 builder: (context) => AddOrEditDataFavorites(
-                  nameList: _places[index].name,
-                  addressList: _places[index].vicinity,
-                  latList: _places[index].geometry.location.lat,
-                  lngList: _places[index].geometry.location.lng,
-                  photoList: _places[index].photos.isNotEmpty
-                      ? _places[index].photos[0].photoReference
+                  nameList: _places.results[index].name,
+                  addressList: _places.results[index].vicinity,
+                  latList: _places.results[index].geometry.location.lat,
+                  lngList: _places.results[index].geometry.location.lng,
+                  photoList: _places.results[index].photos.isNotEmpty
+                      ? _places.results[index].photos[0].photoReference
                       : "",
                   edit: false,
                 ),
@@ -328,11 +328,11 @@ class _ListMapState extends State<ListMap> {
           icon: Icons.share,
           onTap: () => {
             _shareContent(
-                _places[index].name,
-                _places[index].vicinity,
-                _places[index].geometry.location.lat,
-                _places[index].geometry.location.lng,
-                _places[index].photos[0].photoReference)
+                _places.results[index].name,
+                _places.results[index].vicinity,
+                _places.results[index].geometry.location.lat,
+                _places.results[index].geometry.location.lng,
+                _places.results[index].photos[0].photoReference)
           },
         ),
       ],
@@ -354,9 +354,9 @@ class _ListMapState extends State<ListMap> {
                     fit: BoxFit.fill,
                     height: ResponsiveScreen().heightMediaQuery(context, 150),
                     width: double.infinity,
-                    imageUrl: _places[index].photos.isNotEmpty
+                    imageUrl: _places.results[index].photos.isNotEmpty
                         ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                            _places[index].photos[0].photoReference +
+                            _places.results[index].photos[0].photoReference +
                             "&key=$_API_KEY"
                         : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
                     placeholder: (context, url) =>
@@ -395,8 +395,8 @@ class _ListMapState extends State<ListMap> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    _textListView(_places[index].name, 17.0, 0xffE9FFFF),
-                    _textListView(_places[index].vicinity, 15.0, 0xFFFFFFFF),
+                    _textListView(_places.results[index].name, 17.0, 0xffE9FFFF),
+                    _textListView(_places.results[index].vicinity, 15.0, 0xFFFFFFFF),
                     _textListView(_calculateDistance(_meter), 15.0, 0xFFFFFFFF),
                   ],
                 ),
@@ -416,7 +416,7 @@ class _ListMapState extends State<ListMap> {
     int count;
 
     var document =
-        _databaseReference.collection('places').document(_places[index].id);
+        _databaseReference.collection('places').document(_places.results[index].id);
     document.get().then(
       (document) {
         if (document.exists) {
@@ -436,9 +436,9 @@ class _ListMapState extends State<ListMap> {
     Map<String, dynamic> dataFile = new Map();
     dataFile["filetype"] = 'image';
     dataFile["url"] = {
-      'en': _places[index].photos.isNotEmpty
+      'en': _places.results[index].photos.isNotEmpty
           ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-              _places[index].photos[0].photoReference +
+              _places.results[index].photos[0].photoReference +
               "&key=$_API_KEY"
           : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
     };
@@ -448,35 +448,35 @@ class _ListMapState extends State<ListMap> {
 
     await _databaseReference
         .collection("stories")
-        .document(_places[index].id)
+        .document(_places.results[index].id)
         .setData(
           {
             "date": now,
             "file": listFile,
-            "previewImage": _places[index].photos.isNotEmpty
+            "previewImage": _places.results[index].photos.isNotEmpty
                 ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                    _places[index].photos[0].photoReference +
+                    _places.results[index].photos[0].photoReference +
                     "&key=$_API_KEY"
                 : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
-            "previewTitle": {'en': _places[index].name},
+            "previewTitle": {'en': _places.results[index].name},
           },
         )
         .then(
           (result) async => {
             await _databaseReference
                 .collection("places")
-                .document(_places[index].id)
+                .document(_places.results[index].id)
                 .setData(
               {
                 "date": now,
-                'idLive': _places[index].id,
+                'idLive': _places.results[index].id,
                 'count': count != null ? count + 1 : 1,
-                "name": _places[index].name,
-                "vicinity": _places[index].vicinity,
-                "lat": _places[index].geometry.location.lat,
-                "lng": _places[index].geometry.location.lng,
-                "photo": _places[index].photos.isNotEmpty
-                    ? _places[index].photos[0].photoReference
+                "name": _places.results[index].name,
+                "vicinity": _places.results[index].vicinity,
+                "lat": _places.results[index].geometry.location.lat,
+                "lng": _places.results[index].geometry.location.lng,
+                "photo": _places.results[index].photos.isNotEmpty
+                    ? _places.results[index].photos[0].photoReference
                     : "",
               },
             ).then(
@@ -489,10 +489,10 @@ class _ListMapState extends State<ListMap> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => MapList(
-                      nameList: _places[index].name,
-                      vicinityList: _places[index].vicinity,
-                      latList: _places[index].geometry.location.lat,
-                      lngList: _places[index].geometry.location.lng,
+                      nameList: _places.results[index].name,
+                      vicinityList: _places.results[index].vicinity,
+                      latList: _places.results[index].geometry.location.lat,
+                      lngList: _places.results[index].geometry.location.lng,
                     ),
                   ),
                 ),
@@ -612,8 +612,8 @@ class _ListMapState extends State<ListMap> {
     return _places;
   }
 
-  void _sortSearchNearby(List<Results> _places) {
-    _places.sort(
+  void _sortSearchNearby(ResultsLocation _places) {
+    _places.results.sort(
       (a, b) => sqrt(
         pow(a.geometry.location.lat - _userLocation.latitude, 2) +
             pow(a.geometry.location.lng - _userLocation.longitude, 2),
