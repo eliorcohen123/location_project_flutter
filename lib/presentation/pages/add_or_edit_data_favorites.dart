@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/results_sqfl_provider.dart';
+import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:provider/provider.dart';
@@ -107,18 +108,7 @@ class _AddOrEditDataFavoritesProvState
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.grey,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Text(
-          'Lovely Favorite Places',
-          style: TextStyle(
-            color: Color(0xFFE9FFFF),
-          ),
-        ),
-        iconTheme: IconThemeData(
-          color: Color(0xFFE9FFFF),
-        ),
-      ),
+      appBar: AppBarTotal(),
       body: SingleChildScrollView(
         child: Center(
           child: Container(

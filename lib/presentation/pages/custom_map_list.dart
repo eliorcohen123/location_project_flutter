@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
+import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
 import 'add_or_edit_data_favorites.dart';
@@ -23,18 +24,7 @@ class _CustomMapListState extends State<CustomMapList> {
     var _currentLocation =
         LatLng(_userLocation.latitude, _userLocation.longitude);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Text(
-          'Lovely Favorite Places',
-          style: TextStyle(
-            color: Color(0xFFE9FFFF),
-          ),
-        ),
-        iconTheme: IconThemeData(
-          color: Color(0xFFE9FFFF),
-        ),
-      ),
+      appBar: AppBarTotal(),
       body: GoogleMap(
         onMapCreated: (controller) {
           setState(() {

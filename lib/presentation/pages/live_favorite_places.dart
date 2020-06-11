@@ -7,6 +7,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/data/models/model_firestore/results_firestore.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
+import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:latlong/latlong.dart' as dis;
@@ -67,36 +68,26 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
       },
     );
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Text(
-          'Lovely Favorite Places',
-          style: TextStyle(
-            color: Color(0xFFE9FFFF),
-          ),
-        ),
-      ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: LiveList(
-                showItemInterval: Duration(milliseconds: 50),
-                showItemDuration: Duration(milliseconds: 50),
-                reAnimateOnVisibility: true,
-                scrollDirection: Axis.vertical,
-                itemCount: _places.length,
-                itemBuilder: buildAnimatedItem,
-                separatorBuilder: (BuildContext context, int index) {
-                  return Container(
-                    height: ResponsiveScreen().heightMediaQuery(context, 10),
-                    decoration: BoxDecoration(color: Colors.grey),
-                  );
-                },
-              ),
+      appBar: AppBarTotal(),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: LiveList(
+              showItemInterval: Duration(milliseconds: 50),
+              showItemDuration: Duration(milliseconds: 50),
+              reAnimateOnVisibility: true,
+              scrollDirection: Axis.vertical,
+              itemCount: _places.length,
+              itemBuilder: buildAnimatedItem,
+              separatorBuilder: (BuildContext context, int index) {
+                return Container(
+                  height: ResponsiveScreen().heightMediaQuery(context, 10),
+                  decoration: BoxDecoration(color: Colors.grey),
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       drawer: DrawerTotal(),
     );

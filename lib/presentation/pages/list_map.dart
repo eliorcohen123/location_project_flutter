@@ -408,7 +408,7 @@ class _ListMapState extends State<ListMap> {
     );
   }
 
-  Future _createNavPlace(int index) async {
+  Future<void> _createNavPlace(int index) async {
     setState(() {
       _activeNav = true;
     });
@@ -430,7 +430,7 @@ class _ListMapState extends State<ListMap> {
     );
   }
 
-  Future _addToFirebase(int index, int count) async {
+  Future<void> _addToFirebase(int index, int count) async {
     DateTime now = DateTime.now();
 
     Map<String, dynamic> dataFile = new Map();

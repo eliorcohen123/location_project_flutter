@@ -6,6 +6,7 @@ import 'package:locationprojectflutter/data/models/model_location/results.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
 import 'package:locationprojectflutter/presentation/utils/map_utils.dart';
+import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,18 +53,7 @@ class _MapListState extends State<MapList> {
     var _currentLocation =
         LatLng(_userLocation.latitude, _userLocation.longitude);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Text(
-          'Lovely Favorite Places',
-          style: TextStyle(
-            color: Color(0xFFE9FFFF),
-          ),
-        ),
-        iconTheme: IconThemeData(
-          color: Color(0xFFE9FFFF),
-        ),
-      ),
+      appBar: AppBarTotal(),
       body: GoogleMap(
         onMapCreated: (controller) {
           setState(() {

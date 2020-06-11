@@ -4,6 +4,7 @@ import 'package:locationprojectflutter/presentation/utils/validations.dart';
 import 'package:locationprojectflutter/presentation/pages/register_email_firebase.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/tff_firebase.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'list_map.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,11 +19,13 @@ class LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _success, _loading = false, _isLoggedIn = false;
   String _userEmail, _textError = "";
+  SharedPreferences _sharedPrefs;
 
   @override
   void initState() {
     super.initState();
 
+    _initGetSharedPrefs();
     _checkUserLogin();
   }
 
@@ -39,10 +42,11 @@ class LoginPageState extends State<LoginPage> {
     return _isLoggedIn
         ? ListMap()
         : Scaffold(
+            resizeToAvoidBottomPadding: false,
+            backgroundColor: Colors.blueGrey,
             body: Form(
               key: _formKey,
               child: Container(
-                color: Colors.blueGrey,
                 child: Center(
                   child: SingleChildScrollView(
                     child: Column(
@@ -219,11 +223,12 @@ class LoginPageState extends State<LoginPage> {
 
         _userEmail = user.email;
         print(_userEmail);
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ListMap(),
+        _addUserEmail(_userEmail).then(
+          (value) => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ListMap(),
+            ),
           ),
         );
       });
@@ -233,5 +238,17 @@ class LoginPageState extends State<LoginPage> {
         _loading = false;
       });
     }
+  }
+
+  void _initGetSharedPrefs() {
+    SharedPreferences.getInstance().then(
+      (prefs) {
+        setState(() => _sharedPrefs = prefs);
+      },
+    );
+  }
+
+  Future _addUserEmail(String value) async {
+    _sharedPrefs.setString('userEmail', value);
   }
 }

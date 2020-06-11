@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
+import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,21 +27,9 @@ class _SettingsAppState extends State<SettingsApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Text(
-          'Lovely Favorite Places',
-          style: TextStyle(
-            color: Color(0xFFE9FFFF),
-          ),
-        ),
-        iconTheme: IconThemeData(
-          color: Color(0xFFE9FFFF),
-        ),
-      ),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.blueGrey,
+      appBar: AppBarTotal(),
       body: Container(
-        color: Colors.blueGrey,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

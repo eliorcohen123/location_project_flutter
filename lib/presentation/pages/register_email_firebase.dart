@@ -4,6 +4,7 @@ import 'package:locationprojectflutter/presentation/utils/validations.dart';
 import 'package:locationprojectflutter/presentation/pages/signin_email_firebase.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/tff_firebase.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'list_map.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -18,6 +19,14 @@ class RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _success, _loading = false;
   String _userEmail, _textError = '';
+  SharedPreferences _sharedPrefs;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initGetSharedPrefs();
+  }
 
   @override
   void dispose() {
@@ -30,6 +39,7 @@ class RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       body: Form(
         key: _formKey,
         child: Container(
@@ -187,11 +197,12 @@ class RegisterPageState extends State<RegisterPage> {
 
         _userEmail = user.email;
         print(_userEmail);
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ListMap(),
+        _addUserEmail(_userEmail).then(
+          (value) => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ListMap(),
+            ),
           ),
         );
       });
@@ -199,5 +210,17 @@ class RegisterPageState extends State<RegisterPage> {
       _success = false;
       _loading = false;
     }
+  }
+
+  void _initGetSharedPrefs() {
+    SharedPreferences.getInstance().then(
+          (prefs) {
+        setState(() => _sharedPrefs = prefs);
+      },
+    );
+  }
+
+  Future _addUserEmail(String value) async {
+    _sharedPrefs.setString('userEmail', value);
   }
 }
