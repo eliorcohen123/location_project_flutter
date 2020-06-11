@@ -77,7 +77,7 @@ class RegisterPageState extends State<RegisterPage> {
                         icon: Icon(Icons.lock),
                         hint: "Password",
                         controller: _passwordController,
-                        obSecure: false),
+                        obSecure: true),
                   ),
                   SizedBox(
                     height: ResponsiveScreen().heightMediaQuery(context, 20),

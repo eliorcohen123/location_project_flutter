@@ -1,7 +1,7 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
+import 'package:locationprojectflutter/data/models/model_live_chat/results_live_chat.dart';
 import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,9 +14,13 @@ class LiveChat extends StatefulWidget {
 }
 
 class _LiveChatState extends State<LiveChat> {
-  Firestore _firestore = Firestore.instance;
+  StreamSubscription<QuerySnapshot> _placeSub;
+  Stream<QuerySnapshot> _snapshots =
+      Firestore.instance.collection('liveMessages').orderBy('date').snapshots();
+  List<ResultsLiveChat> _places = List();
   SharedPreferences _sharedPrefs;
   TextEditingController _messageController = TextEditingController();
+  final _databaseReference = Firestore.instance;
   String _valueUserEmail;
 
   @override
@@ -24,6 +28,14 @@ class _LiveChatState extends State<LiveChat> {
     super.initState();
 
     _initGetSharedPrefs();
+    _readFirebase();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _placeSub?.cancel();
   }
 
   @override
@@ -36,36 +48,15 @@ class _LiveChatState extends State<LiveChat> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: _firestore
-                    .collection('liveMessages')
-                    .orderBy('date')
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData)
-                    return Center(
-                      child: CircularProgressIndicator(),
+              child: ListView.builder(
+                  itemCount: _places.length,
+                  itemBuilder: (BuildContext ctx, int index) {
+                    return _message(
+                      _places[index].from,
+                      _places[index].text,
+                      _valueUserEmail == _places[index].from,
                     );
-
-                  List<DocumentSnapshot> docs = snapshot.data.documents;
-
-                  List<Widget> liveMessages = docs
-                      .map(
-                        (doc) => _message(
-                          doc.data['from'],
-                          doc.data['text'],
-                          _valueUserEmail == doc.data['from'],
-                        ),
-                      )
-                      .toList();
-
-                  return ListView(
-                    children: <Widget>[
-                      ...liveMessages,
-                    ],
-                  );
-                },
-              ),
+                  }),
             ),
             Container(
               child: Row(
@@ -125,13 +116,36 @@ class _LiveChatState extends State<LiveChat> {
 
   Future<void> callback() async {
     if (_messageController.text.length > 0) {
-      await _firestore.collection('liveMessages').add({
-        'text': _messageController.text,
-        'from': _valueUserEmail,
-        'date': DateTime.now().toIso8601String().toString(),
-      });
-      _messageController.clear();
+      DateTime now = DateTime.now();
+
+      await _databaseReference.collection("liveMessages").add(
+        {
+          'text': _messageController.text,
+          'from': _valueUserEmail,
+          'date': now,
+        },
+      ).then(
+        (value) => _messageController.text = '',
+      );
     }
+  }
+
+  void _readFirebase() {
+    _placeSub?.cancel();
+    _placeSub = _snapshots.listen(
+      (QuerySnapshot snapshot) {
+        final List<ResultsLiveChat> places = snapshot.documents
+            .map(
+              (documentSnapshot) =>
+                  ResultsLiveChat.fromSqfl(documentSnapshot.data),
+            )
+            .toList();
+
+        setState(() {
+          this._places = places;
+        });
+      },
+    );
   }
 
   Widget _sendButton(String text, VoidCallback callback) {
