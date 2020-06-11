@@ -16,7 +16,7 @@ class LiveChat extends StatefulWidget {
 class _LiveChatState extends State<LiveChat> {
   StreamSubscription<QuerySnapshot> _placeSub;
   Stream<QuerySnapshot> _snapshots =
-      Firestore.instance.collection('liveMessages').orderBy('date').snapshots();
+      Firestore.instance.collection('liveMessages').snapshots();
   List<ResultsLiveChat> _places = List();
   SharedPreferences _sharedPrefs;
   TextEditingController _messageController = TextEditingController();
@@ -40,6 +40,11 @@ class _LiveChatState extends State<LiveChat> {
 
   @override
   Widget build(BuildContext context) {
+    _places.sort(
+      (a, b) {
+        return b.date.compareTo(a.date);
+      },
+    );
     return Scaffold(
       backgroundColor: Colors.blueGrey,
       appBar: AppBarTotal(),
@@ -49,6 +54,7 @@ class _LiveChatState extends State<LiveChat> {
           children: <Widget>[
             Expanded(
               child: ListView.builder(
+                  reverse: true,
                   itemCount: _places.length,
                   itemBuilder: (BuildContext ctx, int index) {
                     return _message(
