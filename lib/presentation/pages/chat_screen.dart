@@ -32,23 +32,19 @@ class ChatScreenState extends State<ChatScreen> {
   var _listMessage;
   SharedPreferences _sharedPrefs;
   File _imageFile;
-  bool _isLoading, _isShowSticker;
+  bool _isLoading;
   final TextEditingController _textEditingController = TextEditingController();
   final ScrollController _listScrollController = ScrollController();
-  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
 
-    _focusNode.addListener(onFocusChange);
     _groupChatId = '';
     _imageUrl = '';
     _isLoading = false;
-    _isShowSticker = false;
 
     _initGetSharedPrefs();
-    _readLocal();
   }
 
   @override
@@ -59,7 +55,7 @@ class ChatScreenState extends State<ChatScreen> {
         children: <Widget>[
           Column(
             children: <Widget>[
-              _buildListMessage(),
+              _buildMessagesList(),
               _buildInput(),
             ],
           ),
@@ -98,7 +94,6 @@ class ChatScreenState extends State<ChatScreen> {
                     color: Color(0xffaeaeae),
                   ),
                 ),
-                focusNode: _focusNode,
               ),
             ),
           ),
@@ -125,7 +120,7 @@ class ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _buildListMessage() {
+  Widget _buildMessagesList() {
     return Flexible(
       child: _groupChatId == ''
           ? Center(
@@ -273,12 +268,14 @@ class ChatScreenState extends State<ChatScreen> {
                     ? Material(
                         child: CachedNetworkImage(
                           placeholder: (context, url) => Container(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 1.0,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Color(0xfff5a623),
-                              ),
-                            ),
+                            child: peerAvatar != null
+                                ? CircularProgressIndicator(
+                                    strokeWidth: 1.0,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Color(0xfff5a623),
+                                    ),
+                                  )
+                                : Container(),
                             width: 35.0,
                             height: 35.0,
                             padding: EdgeInsets.all(10.0),
@@ -419,23 +416,15 @@ class ChatScreenState extends State<ChatScreen> {
           _groupChatId = '$peerId-$_id';
         }
       },
-    );
+    ).then((value) => _readLocal());
   }
 
-  void onFocusChange() {
-    if (_focusNode.hasFocus) {
-      setState(() {
-        _isShowSticker = false;
-      });
-    }
-  }
-
-  _readLocal() async {
-    _firestore.collection('users').document(_id).updateData(
+  Future<void> _readLocal() async {
+    await _firestore.collection('users').document(_id).updateData(
       {
         'chattingWith': peerId,
       },
-    );
+    ).then((value) => print(peerId));
   }
 
   Future _getImage() async {
@@ -447,13 +436,6 @@ class ChatScreenState extends State<ChatScreen> {
       });
       _uploadFile();
     }
-  }
-
-  void _getSticker() {
-    _focusNode.unfocus();
-    setState(() {
-      _isShowSticker = !_isShowSticker;
-    });
   }
 
   Future _uploadFile() async {
@@ -499,7 +481,7 @@ class ChatScreenState extends State<ChatScreen> {
               'idTo': peerId,
               'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
               'content': content,
-              'type': type
+              'type': type,
             },
           );
         },

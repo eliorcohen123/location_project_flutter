@@ -34,14 +34,6 @@ class SettingsChatState extends State<SettingsChat> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-
-    _controllerNickname.dispose();
-    _controllerAboutMe.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarTotal(),
@@ -59,13 +51,16 @@ class SettingsChatState extends State<SettingsChat> {
                                 ? Material(
                                     child: CachedNetworkImage(
                                       placeholder: (context, url) => Container(
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2.0,
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                            Color(0xfff5a623),
-                                          ),
-                                        ),
+                                        child: _photoUrl != null
+                                            ? CircularProgressIndicator(
+                                                strokeWidth: 2.0,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(
+                                                  Color(0xfff5a623),
+                                                ),
+                                              )
+                                            : Container(),
                                         width: 90.0,
                                         height: 90.0,
                                         padding: EdgeInsets.all(20.0),
