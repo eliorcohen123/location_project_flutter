@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:locationprojectflutter/presentation/utils/validations.dart';
@@ -14,6 +15,7 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final Firestore _firestore = Firestore.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -220,18 +222,42 @@ class LoginPageState extends State<LoginPage> {
       setState(() {
         _success = true;
         _loading = false;
-
-        _userEmail = user.email;
-        print(_userEmail);
-        _addUserEmail(_userEmail).then(
-          (value) => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ListMap(),
-            ),
-          ),
-        );
       });
+
+      final QuerySnapshot result = await _firestore
+          .collection('users')
+          .where('id', isEqualTo: user.uid)
+          .getDocuments();
+      final List<DocumentSnapshot> documents = result.documents;
+      if (documents.length == 0) {
+        _firestore.collection('users').document(user.uid).setData({
+          'nickname': user.displayName,
+          'photoUrl': user.photoUrl,
+          'id': user.uid,
+          'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
+          'chattingWith': null
+        });
+
+        await _sharedPrefs.setString('id', user.uid);
+        await _sharedPrefs.setString('nickname', user.displayName);
+        await _sharedPrefs.setString('photoUrl', user.photoUrl);
+      } else {
+        await _sharedPrefs.setString('id', documents[0]['id']);
+        await _sharedPrefs.setString('nickname', documents[0]['nickname']);
+        await _sharedPrefs.setString('photoUrl', documents[0]['photoUrl']);
+        await _sharedPrefs.setString('aboutMe', documents[0]['aboutMe']);
+      }
+
+      _userEmail = user.email;
+      print(_userEmail);
+      _addUserEmail(_userEmail);
+      _addIdEmail(user.uid);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginPage(),
+        ),
+      );
     } else {
       setState(() {
         _success = false;
@@ -250,5 +276,9 @@ class LoginPageState extends State<LoginPage> {
 
   Future _addUserEmail(String value) async {
     _sharedPrefs.setString('userEmail', value);
+  }
+
+  Future _addIdEmail(String value) async {
+    _sharedPrefs.setString('userIdEmail', value);
   }
 }

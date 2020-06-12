@@ -531,8 +531,8 @@ class _ListMapState extends State<ListMap> {
     SharedPreferences.getInstance().then(
       (prefs) {
         setState(() => _sharedPrefs = prefs);
-        _valueRadius = prefs.getDouble('rangeRadius') ?? 5000.0;
-        _open = prefs.getString('open') ?? '';
+        _valueRadius = _sharedPrefs.getDouble('rangeRadius') ?? 5000.0;
+        _open = _sharedPrefs.getString('open') ?? '';
       },
     );
   }

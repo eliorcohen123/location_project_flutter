@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/presentation/pages/custom_map_list.dart';
 import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
+import 'package:locationprojectflutter/presentation/pages/home_chat.dart';
 import 'package:locationprojectflutter/presentation/pages/list_map.dart';
 import 'package:locationprojectflutter/presentation/pages/live_chat.dart';
 import 'package:locationprojectflutter/presentation/pages/live_favorite_places.dart';
@@ -174,6 +175,33 @@ class DrawerTotal extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => CustomMapList(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.settings,
+                    color: Color(0xFFcd4312),
+                  ),
+                  SizedBox(
+                    width: ResponsiveScreen().widthMediaQuery(context, 10),
+                  ),
+                  Text(
+                    'Private Chat',
+                    style: TextStyle(
+                      color: Color(0xFF9FA31C),
+                    ),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomeChat(),
                   ),
                 );
               },

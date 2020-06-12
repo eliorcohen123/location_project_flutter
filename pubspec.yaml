@@ -22,9 +22,14 @@ dependencies:
   flutter_slidable: ^0.5.4
   share: ^0.5.3
   grouped_buttons: ^1.0.4
+  fluttertoast: ^3.1.3
+  image_picker: ^0.6.1+8
+  photo_view: ^0.5.0
+  intl: ^0.16.1
   firebase_auth: ^0.16.0
   cloud_firestore: ^0.13.5
   firebase_messaging: ^6.0.15
+  firebase_storage: ^3.0.6
   auto_animated: ^2.1.0
   map_launcher: ^0.4.5
   flutter_geofence: ^0.2.0

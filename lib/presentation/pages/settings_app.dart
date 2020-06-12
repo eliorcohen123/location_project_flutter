@@ -168,8 +168,8 @@ class _SettingsAppState extends State<SettingsApp> {
     SharedPreferences.getInstance().then(
       (prefs) {
         setState(() => _sharedPrefs = prefs);
-        _valueRadius = prefs.getDouble('rangeRadius') ?? 5000.0;
-        _valueGeofence = prefs.getDouble('rangeGeofence') ?? 500.0;
+        _valueRadius = _sharedPrefs.getDouble('rangeRadius') ?? 5000.0;
+        _valueGeofence = _sharedPrefs.getDouble('rangeGeofence') ?? 500.0;
       },
     );
   }

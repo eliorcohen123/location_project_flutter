@@ -115,7 +115,7 @@ class _LiveChatState extends State<LiveChat> {
     SharedPreferences.getInstance().then(
       (prefs) {
         setState(() => _sharedPrefs = prefs);
-        _valueUserEmail = prefs.getString('userEmail') ?? 'guest@gmail.com';
+        _valueUserEmail = _sharedPrefs.getString('userEmail') ?? 'guest@gmail.com';
       },
     );
   }
