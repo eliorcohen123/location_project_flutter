@@ -21,8 +21,7 @@ class HomeChat extends StatefulWidget {
 class HomeChatState extends State<HomeChat> {
   final Firestore _firestore = Firestore.instance;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
   bool _isLoading = false;
   SharedPreferences _sharedPrefs;
   String _valueIdUser;
@@ -33,7 +32,6 @@ class HomeChatState extends State<HomeChat> {
 
     _initGetSharedPrefs();
     _initNotifications();
-    _getNotifications();
   }
 
   @override
@@ -193,6 +191,10 @@ class HomeChatState extends State<HomeChat> {
         setState(() => _sharedPrefs = prefs);
         _valueIdUser = _sharedPrefs.getString('userIdEmail');
       },
+    ).then(
+      (value) => {
+        _getNotifications(),
+      },
     );
   }
 
@@ -205,6 +207,14 @@ class HomeChatState extends State<HomeChat> {
         Platform.isAndroid
             ? _showNotifications(message['notification'])
             : _showNotifications(message['aps']['alert']);
+        return;
+      },
+      onResume: (Map<String, dynamic> message) {
+        print('onResume: $message');
+        return;
+      },
+      onLaunch: (Map<String, dynamic> message) {
+        print('onLaunch: $message');
         return;
       },
     );
@@ -228,8 +238,9 @@ class HomeChatState extends State<HomeChat> {
   }
 
   void _initNotifications() {
+    _flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
     var initializationSettingsAndroid =
-        new AndroidInitializationSettings('app_icon');
+        new AndroidInitializationSettings('assets/icon.png');
     var initializationSettingsIOS = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
