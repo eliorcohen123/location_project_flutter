@@ -2,18 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:locationprojectflutter/presentation/utils/validations.dart';
-import 'package:locationprojectflutter/presentation/pages/signin_email_firebase.dart';
+import 'package:locationprojectflutter/presentation/pages/signin_firebase.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/tff_firebase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'list_map.dart';
 
-class RegisterPage extends StatefulWidget {
+class RegisterEmailFirebase extends StatefulWidget {
   @override
-  RegisterPageState createState() => RegisterPageState();
+  RegisterEmailFirebaseState createState() => RegisterEmailFirebaseState();
 }
 
-class RegisterPageState extends State<RegisterPage> {
+class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -127,7 +126,7 @@ class RegisterPageState extends State<RegisterPage> {
                                   });
                                 },
                               );
-                              _registerFirebase();
+                              _registerEmailFirebase();
                             } else if (!Validations()
                                 .validateEmail(_emailController.text)) {
                               setState(() {
@@ -164,7 +163,7 @@ class RegisterPageState extends State<RegisterPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => LoginPage(),
+                          builder: (context) => SigninFirebase(),
                         ),
                       );
                     },
@@ -186,7 +185,7 @@ class RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Future _registerFirebase() async {
+  Future _registerEmailFirebase() async {
     final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
@@ -229,7 +228,7 @@ class RegisterPageState extends State<RegisterPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => LoginPage(),
+          builder: (context) => SigninFirebase(),
         ),
       );
     } else {

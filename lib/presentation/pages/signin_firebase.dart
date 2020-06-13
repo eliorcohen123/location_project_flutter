@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:locationprojectflutter/presentation/utils/validations.dart';
 import 'package:locationprojectflutter/presentation/pages/register_email_firebase.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
@@ -8,14 +10,15 @@ import 'package:locationprojectflutter/presentation/widgets/tff_firebase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'list_map.dart';
 
-class LoginPage extends StatefulWidget {
+class SigninFirebase extends StatefulWidget {
   @override
-  LoginPageState createState() => LoginPageState();
+  SigninFirebaseState createState() => SigninFirebaseState();
 }
 
-class LoginPageState extends State<LoginPage> {
+class SigninFirebaseState extends State<SigninFirebase> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -138,7 +141,7 @@ class LoginPageState extends State<LoginPage> {
                                         });
                                       },
                                     );
-                                    _loginFirebase();
+                                    _loginEmailFirebase();
                                   } else if (!Validations()
                                       .validateEmail(_emailController.text)) {
                                     setState(() {
@@ -177,7 +180,7 @@ class LoginPageState extends State<LoginPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => RegisterPage(),
+                                builder: (context) => RegisterEmailFirebase(),
                               ),
                             );
                           },
@@ -186,6 +189,37 @@ class LoginPageState extends State<LoginPage> {
                                 "'" +
                                 't Have an account? click here to register',
                             style: TextStyle(color: Colors.white, fontSize: 15),
+                          ),
+                        ),
+                        SizedBox(
+                          height:
+                              ResponsiveScreen().heightMediaQuery(context, 20),
+                        ),
+                        Container(
+                          width: 60,
+                          height: 60,
+                          child: MaterialButton(
+                            shape: CircleBorder(),
+                            child: Image.asset('assets/google-logo.png'),
+                            color: Colors.white,
+                            onPressed: () {
+                              _signInWithGoogle();
+                              setState(() {
+                                _loading = true;
+                                _textError = '';
+                              });
+                              Future.delayed(
+                                const Duration(milliseconds: 10000),
+                                () {
+                                  setState(() {
+                                    _success = false;
+                                    _loading = false;
+                                    _textError =
+                                        'Something wrong with connection';
+                                  });
+                                },
+                              );
+                            },
                           ),
                         ),
                         SizedBox(
@@ -212,12 +246,38 @@ class LoginPageState extends State<LoginPage> {
         : null);
   }
 
-  Future _loginFirebase() async {
+  Future _loginEmailFirebase() async {
     final FirebaseUser user = (await _auth.signInWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
     ))
         .user;
+
+    _addToFirebase(user);
+  }
+
+  void _signInWithGoogle() async {
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    final FirebaseUser user =
+        (await _auth.signInWithCredential(credential)).user;
+    assert(user.email != null);
+    assert(user.displayName != null);
+    assert(!user.isAnonymous);
+    assert(await user.getIdToken() != null);
+
+    final FirebaseUser currentUser = await _auth.currentUser();
+    assert(user.uid == currentUser.uid);
+
+    _addToFirebase(user);
+  }
+
+  Future<void> _addToFirebase(FirebaseUser user) async {
     if (user != null) {
       setState(() {
         _success = true;
@@ -255,7 +315,7 @@ class LoginPageState extends State<LoginPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => LoginPage(),
+          builder: (context) => SigninFirebase(),
         ),
       );
     } else {

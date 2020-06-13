@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/core/services/location_service.dart';
-import 'package:locationprojectflutter/presentation/pages/signin_email_firebase.dart';
+import 'package:locationprojectflutter/presentation/pages/signin_firebase.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/results_sqfl_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        home: LoginPage(),
+        home: SigninFirebase(),
       ),
     );
   }

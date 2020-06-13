@@ -6,7 +6,7 @@ import 'package:locationprojectflutter/presentation/pages/home_chat.dart';
 import 'package:locationprojectflutter/presentation/pages/list_map.dart';
 import 'package:locationprojectflutter/presentation/pages/live_chat.dart';
 import 'package:locationprojectflutter/presentation/pages/live_favorite_places.dart';
-import 'package:locationprojectflutter/presentation/pages/signin_email_firebase.dart';
+import 'package:locationprojectflutter/presentation/pages/signin_firebase.dart';
 import 'package:locationprojectflutter/presentation/pages/settings_app.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 
@@ -255,7 +255,7 @@ class DrawerTotal extends StatelessWidget {
                 await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
-                      builder: (context) => LoginPage(),
+                      builder: (context) => SigninFirebase(),
                     ),
                     (Route<dynamic> route) => false);
               },
