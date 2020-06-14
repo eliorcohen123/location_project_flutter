@@ -136,7 +136,7 @@ class ChatScreenState extends State<ChatScreen> {
                   .document(_groupChatId)
                   .collection(_groupChatId)
                   .orderBy('timestamp', descending: true)
-                  .limit(20)
+                  .limit(30)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {

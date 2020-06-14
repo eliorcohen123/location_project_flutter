@@ -16,7 +16,7 @@ class LiveChat extends StatefulWidget {
 class _LiveChatState extends State<LiveChat> {
   StreamSubscription<QuerySnapshot> _placeSub;
   Stream<QuerySnapshot> _snapshots =
-      Firestore.instance.collection('liveMessages').snapshots();
+      Firestore.instance.collection('liveMessages').limit(50).snapshots();
   List<ResultsLiveChat> _places = List();
   SharedPreferences _sharedPrefs;
   TextEditingController _messageController = TextEditingController();
@@ -115,7 +115,8 @@ class _LiveChatState extends State<LiveChat> {
     SharedPreferences.getInstance().then(
       (prefs) {
         setState(() => _sharedPrefs = prefs);
-        _valueUserEmail = _sharedPrefs.getString('userEmail') ?? 'guest@gmail.com';
+        _valueUserEmail =
+            _sharedPrefs.getString('userEmail') ?? 'guest@gmail.com';
       },
     );
   }
