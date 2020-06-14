@@ -6,6 +6,7 @@ import 'package:locationprojectflutter/presentation/pages/signin_firebase.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/tff_firebase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'list_map.dart';
 
 class RegisterEmailFirebase extends StatefulWidget {
   @override
@@ -228,7 +229,7 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SigninFirebase(),
+          builder: (context) => ListMap(),
         ),
       );
     } else {
