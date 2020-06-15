@@ -77,7 +77,7 @@ class _LiveChatState extends State<LiveChat> {
                         style: TextStyle(color: Colors.blueGrey),
                         onSaved: (value) => callback(),
                         decoration: InputDecoration(
-                          hintText: 'Enter a message',
+                          hintText: 'Type your message...',
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                             borderSide: BorderSide(
