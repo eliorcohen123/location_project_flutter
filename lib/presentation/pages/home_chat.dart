@@ -25,6 +25,7 @@ class HomeChatState extends State<HomeChat> {
   bool _isLoading = false;
   SharedPreferences _sharedPrefs;
   String _valueIdUser;
+  var _listMessage;
 
   @override
   void initState() {
@@ -76,11 +77,12 @@ class HomeChatState extends State<HomeChat> {
                     ),
                   );
                 } else {
+                  _listMessage = snapshot.data.documents;
                   return ListView.builder(
                     padding: EdgeInsets.all(10.0),
                     itemBuilder: (context, index) =>
-                        _buildItem(context, snapshot.data.documents[index]),
-                    itemCount: snapshot.data.documents.length,
+                        _buildItem(context, _listMessage[index]),
+                    itemCount: _listMessage.length,
                   );
                 }
               },
