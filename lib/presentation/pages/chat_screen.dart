@@ -32,17 +32,20 @@ class ChatScreenState extends State<ChatScreen> {
   var _listMessage;
   SharedPreferences _sharedPrefs;
   File _imageFile;
-  bool _isLoading;
+  bool _isLoading, _isShowSticker;
   final TextEditingController _textEditingController = TextEditingController();
   final ScrollController _listScrollController = ScrollController();
+  final FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
 
+    focusNode.addListener(_onFocusChange);
     _groupChatId = '';
     _imageUrl = '';
     _isLoading = false;
+    _isShowSticker = false;
 
     _initGetSharedPrefs();
   }
@@ -56,15 +59,147 @@ class ChatScreenState extends State<ChatScreen> {
           Column(
             children: <Widget>[
               _buildMessagesList(),
+              (_isShowSticker ? _buildSticker() : Container()),
               _buildInput(),
             ],
           ),
           Center(
-            child: _isLoading ? const CircularProgressIndicator() : Container(),
+            child: _isLoading
+                ? Container(
+                    decoration: new BoxDecoration(
+                      color: Color(0x80000000),
+                    ),
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : Container(),
           )
         ],
       ),
       drawer: DrawerTotal(),
+    );
+  }
+
+  void _onFocusChange() {
+    if (focusNode.hasFocus) {
+      // Hide sticker when keyboard appear
+      setState(() {
+        _isShowSticker = false;
+      });
+    }
+  }
+
+  Widget _buildSticker() {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              FlatButton(
+                onPressed: () => _onSendMessage('mimi1', 2),
+                child: Image.asset(
+                  'assets/mimi1.gif',
+                  width: 50.0,
+                  height: 50.0,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              FlatButton(
+                onPressed: () => _onSendMessage('mimi2', 2),
+                child: Image.asset(
+                  'assets/mimi2.gif',
+                  width: 50.0,
+                  height: 50.0,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              FlatButton(
+                onPressed: () => _onSendMessage('mimi3', 2),
+                child: Image.asset(
+                  'assets/mimi3.gif',
+                  width: 50.0,
+                  height: 50.0,
+                  fit: BoxFit.cover,
+                ),
+              )
+            ],
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          ),
+          Row(
+            children: <Widget>[
+              FlatButton(
+                onPressed: () => _onSendMessage('mimi4', 2),
+                child: Image.asset(
+                  'assets/mimi4.gif',
+                  width: 50.0,
+                  height: 50.0,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              FlatButton(
+                onPressed: () => _onSendMessage('mimi5', 2),
+                child: Image.asset(
+                  'assets/mimi5.gif',
+                  width: 50.0,
+                  height: 50.0,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              FlatButton(
+                onPressed: () => _onSendMessage('mimi6', 2),
+                child: Image.asset(
+                  'assets/mimi6.gif',
+                  width: 50.0,
+                  height: 50.0,
+                  fit: BoxFit.cover,
+                ),
+              )
+            ],
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          ),
+          Row(
+            children: <Widget>[
+              FlatButton(
+                onPressed: () => _onSendMessage('mimi7', 2),
+                child: Image.asset(
+                  'assets/mimi7.gif',
+                  width: 50.0,
+                  height: 50.0,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              FlatButton(
+                onPressed: () => _onSendMessage('mimi8', 2),
+                child: Image.asset(
+                  'assets/mimi8.gif',
+                  width: 50.0,
+                  height: 50.0,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              FlatButton(
+                onPressed: () => _onSendMessage('mimi9', 2),
+                child: Image.asset(
+                  'assets/mimi9.gif',
+                  width: 50.0,
+                  height: 50.0,
+                  fit: BoxFit.cover,
+                ),
+              )
+            ],
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          )
+        ],
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      ),
+      decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: Color(0xffE8E8E8), width: 0.5),
+          ),
+          color: Colors.white),
+      padding: EdgeInsets.all(5.0),
+      height: 180.0,
     );
   }
 
@@ -83,6 +218,17 @@ class ChatScreenState extends State<ChatScreen> {
             ),
             color: Colors.white,
           ),
+          Material(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 1.0),
+              child: IconButton(
+                icon: Icon(Icons.face),
+                onPressed: _getSticker,
+                color: Color(0xff203152),
+              ),
+            ),
+            color: Colors.white,
+          ),
           Flexible(
             child: Container(
               child: TextField(
@@ -94,6 +240,7 @@ class ChatScreenState extends State<ChatScreen> {
                     color: Color(0xffaeaeae),
                   ),
                 ),
+                focusNode: focusNode,
               ),
             ),
           ),
@@ -208,7 +355,7 @@ class ChatScreenState extends State<ChatScreen> {
                             ),
                             errorWidget: (context, url, error) => Material(
                               child: Image.asset(
-                                'images/img_not_available.jpeg',
+                                'assets/img_not_available.jpeg',
                                 width: 200.0,
                                 height: 200.0,
                                 fit: BoxFit.cover,
@@ -246,7 +393,7 @@ class ChatScreenState extends State<ChatScreen> {
                     )
                   : Container(
                       child: Image.asset(
-                        'images/${document['content']}.gif',
+                        'assets/${document['content']}.gif',
                         width: 100.0,
                         height: 100.0,
                         fit: BoxFit.cover,
@@ -329,7 +476,7 @@ class ChatScreenState extends State<ChatScreen> {
                                   errorWidget: (context, url, error) =>
                                       Material(
                                     child: Image.asset(
-                                      'images/img_not_available.jpeg',
+                                      'assets/img_not_available.jpeg',
                                       width: 200.0,
                                       height: 200.0,
                                       fit: BoxFit.cover,
@@ -367,7 +514,7 @@ class ChatScreenState extends State<ChatScreen> {
                           )
                         : Container(
                             child: Image.asset(
-                              'images/${document['content']}.gif',
+                              'assets/${document['content']}.gif',
                               width: 100.0,
                               height: 100.0,
                               fit: BoxFit.cover,
@@ -416,7 +563,9 @@ class ChatScreenState extends State<ChatScreen> {
           _groupChatId = '$peerId-$_id';
         }
       },
-    ).then((value) => _readLocal());
+    ).then(
+      (value) => _readLocal(),
+    );
   }
 
   Future<void> _readLocal() async {
@@ -424,7 +573,9 @@ class ChatScreenState extends State<ChatScreen> {
       {
         'chattingWith': peerId,
       },
-    ).then((value) => print(peerId));
+    ).then(
+      (value) => print(peerId),
+    );
   }
 
   Future _getImage() async {
@@ -436,6 +587,14 @@ class ChatScreenState extends State<ChatScreen> {
       });
       _uploadFile();
     }
+  }
+
+  void _getSticker() {
+    // Hide keyboard when sticker appear
+    focusNode.unfocus();
+    setState(() {
+      _isShowSticker = !_isShowSticker;
+    });
   }
 
   Future _uploadFile() async {
