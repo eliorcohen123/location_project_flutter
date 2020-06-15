@@ -294,6 +294,7 @@ class SettingsChatState extends State<SettingsChat> {
                   setState(() {
                     _isLoading = false;
                   });
+
                   Fluttertoast.showToast(
                     msg: err.toString(),
                   );
@@ -304,14 +305,19 @@ class SettingsChatState extends State<SettingsChat> {
               setState(() {
                 _isLoading = false;
               });
-              Fluttertoast.showToast(msg: 'This file is not an image');
+
+              Fluttertoast.showToast(
+                msg: 'This file is not an image',
+              );
             },
           );
         } else {
           setState(() {
             _isLoading = false;
           });
-          Fluttertoast.showToast(msg: 'This file is not an image');
+          Fluttertoast.showToast(
+            msg: 'This file is not an image',
+          );
         }
       },
       onError: (err) {

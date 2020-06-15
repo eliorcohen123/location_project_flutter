@@ -608,7 +608,10 @@ class ChatScreenState extends State<ChatScreen> {
         setState(
           () {
             _isLoading = false;
-            _onSendMessage(_imageUrl, 1);
+            _onSendMessage(
+              _imageUrl,
+              1,
+            );
           },
         );
       },
@@ -616,7 +619,9 @@ class ChatScreenState extends State<ChatScreen> {
         setState(() {
           _isLoading = false;
         });
-        Fluttertoast.showToast(msg: 'This file is not an image');
+        Fluttertoast.showToast(
+          msg: 'This file is not an image',
+        );
       },
     );
   }
@@ -648,7 +653,9 @@ class ChatScreenState extends State<ChatScreen> {
       _listScrollController.animateTo(0.0,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
-      Fluttertoast.showToast(msg: 'Nothing to send');
+      Fluttertoast.showToast(
+        msg: 'Nothing to send',
+      );
     }
   }
 
