@@ -608,10 +608,7 @@ class ChatScreenState extends State<ChatScreen> {
         setState(
           () {
             _isLoading = false;
-            _onSendMessage(
-              _imageUrl,
-              1,
-            );
+            _onSendMessage(_imageUrl, 1);
           },
         );
       },
