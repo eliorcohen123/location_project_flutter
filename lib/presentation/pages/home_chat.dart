@@ -8,6 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:locationprojectflutter/presentation/pages/chat_screen.dart';
 import 'package:locationprojectflutter/presentation/pages/settings_chat.dart';
+import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -115,13 +116,13 @@ class HomeChatState extends State<HomeChat> {
                               Color(0xfff5a623),
                             ),
                           ),
-                          width: 50.0,
-                          height: 50.0,
+                          width: ResponsiveScreen().widthMediaQuery(context, 50),
+                          height: ResponsiveScreen().heightMediaQuery(context, 50),
                           padding: EdgeInsets.all(15.0),
                         ),
                         imageUrl: document['photoUrl'],
-                        width: 50.0,
-                        height: 50.0,
+                        width: ResponsiveScreen().widthMediaQuery(context, 50),
+                        height: ResponsiveScreen().heightMediaQuery(context, 50),
                         fit: BoxFit.cover,
                       )
                     : Icon(

@@ -1,16 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chewie/chewie.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/full_photo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:video_player/video_player.dart';
 
 class ChatScreen extends StatefulWidget {
   final String peerId;
@@ -28,22 +31,22 @@ class ChatScreenState extends State<ChatScreen> {
   ChatScreenState({Key key, @required this.peerId, @required this.peerAvatar});
 
   final Firestore _firestore = Firestore.instance;
-  String peerId, peerAvatar, _groupChatId, _imageUrl, _id;
+  String peerId, peerAvatar, _groupChatId, _imageVideoUrl, _id;
   var _listMessage;
   SharedPreferences _sharedPrefs;
-  File _imageFile;
+  File _imageVideoFile;
   bool _isLoading, _isShowSticker;
   final TextEditingController _textEditingController = TextEditingController();
   final ScrollController _listScrollController = ScrollController();
-  final FocusNode focusNode = FocusNode();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
 
-    focusNode.addListener(_onFocusChange);
+    _focusNode.addListener(_onFocusChange);
     _groupChatId = '';
-    _imageUrl = '';
+    _imageVideoUrl = '';
     _isLoading = false;
     _isShowSticker = false;
 
@@ -82,7 +85,7 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   void _onFocusChange() {
-    if (focusNode.hasFocus) {
+    if (_focusNode.hasFocus) {
       // Hide sticker when keyboard appear
       setState(() {
         _isShowSticker = false;
@@ -100,7 +103,7 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => _onSendMessage('mimi1', 2),
                 child: Image.asset(
                   'assets/mimi1.gif',
-                  width: 50.0,
+                  width: ResponsiveScreen().widthMediaQuery(context, 50),
                   height: 50.0,
                   fit: BoxFit.cover,
                 ),
@@ -109,7 +112,7 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => _onSendMessage('mimi2', 2),
                 child: Image.asset(
                   'assets/mimi2.gif',
-                  width: 50.0,
+                  width: ResponsiveScreen().widthMediaQuery(context, 50),
                   height: 50.0,
                   fit: BoxFit.cover,
                 ),
@@ -118,7 +121,7 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => _onSendMessage('mimi3', 2),
                 child: Image.asset(
                   'assets/mimi3.gif',
-                  width: 50.0,
+                  width: ResponsiveScreen().widthMediaQuery(context, 50),
                   height: 50.0,
                   fit: BoxFit.cover,
                 ),
@@ -132,8 +135,8 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => _onSendMessage('mimi4', 2),
                 child: Image.asset(
                   'assets/mimi4.gif',
-                  width: 50.0,
-                  height: 50.0,
+                  width: ResponsiveScreen().widthMediaQuery(context, 50),
+                  height: ResponsiveScreen().heightMediaQuery(context, 50),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -141,8 +144,8 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => _onSendMessage('mimi5', 2),
                 child: Image.asset(
                   'assets/mimi5.gif',
-                  width: 50.0,
-                  height: 50.0,
+                  width: ResponsiveScreen().widthMediaQuery(context, 50),
+                  height: ResponsiveScreen().heightMediaQuery(context, 50),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -150,8 +153,8 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => _onSendMessage('mimi6', 2),
                 child: Image.asset(
                   'assets/mimi6.gif',
-                  width: 50.0,
-                  height: 50.0,
+                  width: ResponsiveScreen().widthMediaQuery(context, 50),
+                  height: ResponsiveScreen().heightMediaQuery(context, 50),
                   fit: BoxFit.cover,
                 ),
               )
@@ -164,8 +167,8 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => _onSendMessage('mimi7', 2),
                 child: Image.asset(
                   'assets/mimi7.gif',
-                  width: 50.0,
-                  height: 50.0,
+                  width: ResponsiveScreen().widthMediaQuery(context, 50),
+                  height: ResponsiveScreen().heightMediaQuery(context, 50),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -173,8 +176,8 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => _onSendMessage('mimi8', 2),
                 child: Image.asset(
                   'assets/mimi8.gif',
-                  width: 50.0,
-                  height: 50.0,
+                  width: ResponsiveScreen().widthMediaQuery(context, 50),
+                  height: ResponsiveScreen().heightMediaQuery(context, 50),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -182,8 +185,8 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () => _onSendMessage('mimi9', 2),
                 child: Image.asset(
                   'assets/mimi9.gif',
-                  width: 50.0,
-                  height: 50.0,
+                  width: ResponsiveScreen().widthMediaQuery(context, 50),
+                  height: ResponsiveScreen().heightMediaQuery(context, 50),
                   fit: BoxFit.cover,
                 ),
               )
@@ -195,11 +198,14 @@ class ChatScreenState extends State<ChatScreen> {
       ),
       decoration: BoxDecoration(
           border: Border(
-            top: BorderSide(color: Color(0xffE8E8E8), width: 0.5),
+            top: BorderSide(
+              color: Color(0xffE8E8E8),
+              width: 0.5,
+            ),
           ),
           color: Colors.white),
       padding: EdgeInsets.all(5.0),
-      height: 180.0,
+      height: ResponsiveScreen().heightMediaQuery(context, 180),
     );
   }
 
@@ -209,10 +215,23 @@ class ChatScreenState extends State<ChatScreen> {
         children: <Widget>[
           Material(
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 1.0),
+              margin: EdgeInsets.symmetric(
+                horizontal: 1.0,
+              ),
               child: IconButton(
                 icon: Icon(Icons.image),
-                onPressed: _getImage,
+                onPressed: () => _getImageVideo(1),
+                color: Color(0xff203152),
+              ),
+            ),
+            color: Colors.white,
+          ),
+          Material(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 1.0),
+              child: IconButton(
+                icon: Icon(Icons.video_library),
+                onPressed: () => _getImageVideo(3),
                 color: Color(0xff203152),
               ),
             ),
@@ -240,7 +259,7 @@ class ChatScreenState extends State<ChatScreen> {
                     color: Color(0xffaeaeae),
                   ),
                 ),
-                focusNode: focusNode,
+                focusNode: _focusNode,
               ),
             ),
           ),
@@ -258,10 +277,13 @@ class ChatScreenState extends State<ChatScreen> {
         ],
       ),
       width: double.infinity,
-      height: 50.0,
+      height: ResponsiveScreen().heightMediaQuery(context, 50),
       decoration: BoxDecoration(
           border: Border(
-            top: BorderSide(color: Color(0xffE8E8E8), width: 0.5),
+            top: BorderSide(
+              color: Color(0xffE8E8E8),
+              width: 0.5,
+            ),
           ),
           color: Colors.white),
     );
@@ -323,7 +345,7 @@ class ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                  width: 200.0,
+                  width: ResponsiveScreen().widthMediaQuery(context, 200),
                   decoration: BoxDecoration(
                     color: Color(0xffE8E8E8),
                     borderRadius: BorderRadius.circular(8.0),
@@ -343,8 +365,10 @@ class ChatScreenState extends State<ChatScreen> {
                                   Color(0xfff5a623),
                                 ),
                               ),
-                              width: 200.0,
-                              height: 200.0,
+                              width: ResponsiveScreen()
+                                  .widthMediaQuery(context, 200),
+                              height: ResponsiveScreen()
+                                  .heightMediaQuery(context, 200),
                               padding: EdgeInsets.all(70.0),
                               decoration: BoxDecoration(
                                 color: Color(0xffE8E8E8),
@@ -356,8 +380,10 @@ class ChatScreenState extends State<ChatScreen> {
                             errorWidget: (context, url, error) => Material(
                               child: Image.asset(
                                 'assets/img_not_available.jpeg',
-                                width: 200.0,
-                                height: 200.0,
+                                width: ResponsiveScreen()
+                                    .widthMediaQuery(context, 200),
+                                height: ResponsiveScreen()
+                                    .heightMediaQuery(context, 200),
                                 fit: BoxFit.cover,
                               ),
                               borderRadius: BorderRadius.all(
@@ -366,8 +392,10 @@ class ChatScreenState extends State<ChatScreen> {
                               clipBehavior: Clip.hardEdge,
                             ),
                             imageUrl: document['content'],
-                            width: 200.0,
-                            height: 200.0,
+                            width: ResponsiveScreen()
+                                .widthMediaQuery(context, 200),
+                            height: ResponsiveScreen()
+                                .heightMediaQuery(context, 200),
                             fit: BoxFit.cover,
                           ),
                           borderRadius: BorderRadius.all(
@@ -391,17 +419,40 @@ class ChatScreenState extends State<ChatScreen> {
                           bottom: _isLastMessageRight(index) ? 20.0 : 10.0,
                           right: 10.0),
                     )
-                  : Container(
-                      child: Image.asset(
-                        'assets/${document['content']}.gif',
-                        width: 100.0,
-                        height: 100.0,
-                        fit: BoxFit.cover,
-                      ),
-                      margin: EdgeInsets.only(
-                          bottom: _isLastMessageRight(index) ? 20.0 : 10.0,
-                          right: 10.0),
-                    ),
+                  : document['type'] == 3
+                      ? Container(
+                          child: Container(
+                            width: ResponsiveScreen()
+                                .widthMediaQuery(context, 300),
+                            height: ResponsiveScreen()
+                                .heightMediaQuery(context, 310),
+                            child: Container(
+                              key: new PageStorageKey(
+                                "keydata$index",
+                              ),
+                              child: VideoWidget(
+                                play: true,
+                                url: document['content'],
+                              ),
+                            ),
+                          ),
+                          margin: EdgeInsets.only(
+                              bottom: _isLastMessageRight(index) ? 20.0 : 10.0,
+                              right: 10.0),
+                        )
+                      : Container(
+                          child: Image.asset(
+                            'assets/${document['content']}.gif',
+                            width: ResponsiveScreen()
+                                .widthMediaQuery(context, 100),
+                            height: ResponsiveScreen()
+                                .heightMediaQuery(context, 100),
+                            fit: BoxFit.cover,
+                          ),
+                          margin: EdgeInsets.only(
+                              bottom: _isLastMessageRight(index) ? 20.0 : 10.0,
+                              right: 10.0),
+                        ),
         ],
         mainAxisAlignment: MainAxisAlignment.end,
       );
@@ -423,13 +474,17 @@ class ChatScreenState extends State<ChatScreen> {
                                     ),
                                   )
                                 : Container(),
-                            width: 35.0,
-                            height: 35.0,
+                            width:
+                                ResponsiveScreen().widthMediaQuery(context, 35),
+                            height: ResponsiveScreen()
+                                .heightMediaQuery(context, 35),
                             padding: EdgeInsets.all(10.0),
                           ),
                           imageUrl: peerAvatar != null ? peerAvatar : '',
-                          width: 35.0,
-                          height: 35.0,
+                          width:
+                              ResponsiveScreen().widthMediaQuery(context, 35),
+                          height:
+                              ResponsiveScreen().heightMediaQuery(context, 35),
                           fit: BoxFit.cover,
                         ),
                         borderRadius: BorderRadius.all(
@@ -437,7 +492,9 @@ class ChatScreenState extends State<ChatScreen> {
                         ),
                         clipBehavior: Clip.hardEdge,
                       )
-                    : Container(width: 35.0),
+                    : Container(
+                        width: ResponsiveScreen().widthMediaQuery(context, 35),
+                      ),
                 document['type'] == 0
                     ? Container(
                         child: Text(
@@ -445,7 +502,7 @@ class ChatScreenState extends State<ChatScreen> {
                           style: TextStyle(color: Colors.white),
                         ),
                         padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                        width: 200.0,
+                        width: ResponsiveScreen().widthMediaQuery(context, 200),
                         decoration: BoxDecoration(
                           color: Color(0xff203152),
                           borderRadius: BorderRadius.circular(8.0),
@@ -463,8 +520,10 @@ class ChatScreenState extends State<ChatScreen> {
                                         Color(0xfff5a623),
                                       ),
                                     ),
-                                    width: 200.0,
-                                    height: 200.0,
+                                    width: ResponsiveScreen()
+                                        .widthMediaQuery(context, 200),
+                                    height: ResponsiveScreen()
+                                        .heightMediaQuery(context, 200),
                                     padding: EdgeInsets.all(70.0),
                                     decoration: BoxDecoration(
                                       color: Color(0xffE8E8E8),
@@ -477,8 +536,10 @@ class ChatScreenState extends State<ChatScreen> {
                                       Material(
                                     child: Image.asset(
                                       'assets/img_not_available.jpeg',
-                                      width: 200.0,
-                                      height: 200.0,
+                                      width: ResponsiveScreen()
+                                          .widthMediaQuery(context, 200),
+                                      height: ResponsiveScreen()
+                                          .heightMediaQuery(context, 200),
                                       fit: BoxFit.cover,
                                     ),
                                     borderRadius: BorderRadius.all(
@@ -489,8 +550,10 @@ class ChatScreenState extends State<ChatScreen> {
                                   imageUrl: document['content'] != null
                                       ? document['content']
                                       : '',
-                                  width: 200.0,
-                                  height: 200.0,
+                                  width: ResponsiveScreen()
+                                      .widthMediaQuery(context, 200),
+                                  height: ResponsiveScreen()
+                                      .heightMediaQuery(context, 200),
                                   fit: BoxFit.cover,
                                 ),
                                 borderRadius: BorderRadius.all(
@@ -512,18 +575,44 @@ class ChatScreenState extends State<ChatScreen> {
                             ),
                             margin: EdgeInsets.only(left: 10.0),
                           )
-                        : Container(
-                            child: Image.asset(
-                              'assets/${document['content']}.gif',
-                              width: 100.0,
-                              height: 100.0,
-                              fit: BoxFit.cover,
-                            ),
-                            margin: EdgeInsets.only(
-                                bottom:
-                                    _isLastMessageRight(index) ? 20.0 : 10.0,
-                                right: 10.0),
-                          ),
+                        : document['type'] == 3
+                            ? Container(
+                                child: Container(
+                                  width: ResponsiveScreen()
+                                      .widthMediaQuery(context, 200),
+                                  height: ResponsiveScreen()
+                                      .heightMediaQuery(context, 200),
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                      key: new PageStorageKey(
+                                        "keydata$index",
+                                      ),
+                                      child: VideoWidget(
+                                        play: true,
+                                        url: document['content'],
+                                      )),
+                                ),
+                                margin: EdgeInsets.only(
+                                    bottom: _isLastMessageRight(index)
+                                        ? 20.0
+                                        : 10.0,
+                                    right: 10.0),
+                              )
+                            : Container(
+                                child: Image.asset(
+                                  'assets/${document['content']}.gif',
+                                  width: ResponsiveScreen()
+                                      .widthMediaQuery(context, 100),
+                                  height: ResponsiveScreen()
+                                      .heightMediaQuery(context, 100),
+                                  fit: BoxFit.cover,
+                                ),
+                                margin: EdgeInsets.only(
+                                    bottom: _isLastMessageRight(index)
+                                        ? 20.0
+                                        : 10.0,
+                                    right: 10.0),
+                              ),
               ],
             ),
             _isLastMessageLeft(index)
@@ -578,37 +667,53 @@ class ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Future _getImage() async {
-    _imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+  Future _getImageVideo(int type) async {
+    if (type == 1) {
+      _imageVideoFile =
+          await ImagePicker.pickImage(source: ImageSource.gallery);
+    } else if (type == 3) {
+      _imageVideoFile =
+          await ImagePicker.pickVideo(source: ImageSource.gallery);
+    }
 
-    if (_imageFile != null) {
+    if (_imageVideoFile != null) {
       setState(() {
         _isLoading = true;
       });
-      _uploadFile();
+      _uploadFile(type);
     }
   }
 
   void _getSticker() {
     // Hide keyboard when sticker appear
-    focusNode.unfocus();
+    _focusNode.unfocus();
     setState(() {
       _isShowSticker = !_isShowSticker;
     });
   }
 
-  Future _uploadFile() async {
+  Future _uploadFile(int type) async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
-    StorageUploadTask uploadTask = reference.putFile(_imageFile);
+    StorageUploadTask uploadTask;
+    if (type == 3) {
+      uploadTask = reference.putFile(
+        _imageVideoFile,
+        StorageMetadata(contentType: 'video/mp4'),
+      );
+    } else if (type == 1) {
+      uploadTask = reference.putFile(
+        _imageVideoFile,
+      );
+    }
     StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
     storageTaskSnapshot.ref.getDownloadURL().then(
       (downloadUrl) {
-        _imageUrl = downloadUrl;
+        _imageVideoUrl = downloadUrl;
         setState(
           () {
             _isLoading = false;
-            _onSendMessage(_imageUrl, 1);
+            _onSendMessage(_imageVideoUrl, type);
           },
         );
       },
@@ -617,7 +722,7 @@ class ChatScreenState extends State<ChatScreen> {
           _isLoading = false;
         });
         Fluttertoast.showToast(
-          msg: 'This file is not an image',
+          msg: err.toString(),
         );
       },
     );
@@ -676,5 +781,88 @@ class ChatScreenState extends State<ChatScreen> {
     } else {
       return false;
     }
+  }
+}
+
+class VideoWidget extends StatefulWidget {
+  final bool play;
+  final String url;
+
+  const VideoWidget({Key key, @required this.url, @required this.play})
+      : super(key: key);
+
+  @override
+  _VideoWidgetState createState() => _VideoWidgetState();
+}
+
+class _VideoWidgetState extends State<VideoWidget> {
+  VideoPlayerController _videoPlayerController;
+  Future<void> _initializeVideoPlayerFuture;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _videoPlayerController = new VideoPlayerController.network(widget.url);
+    _initializeVideoPlayerFuture =
+        _videoPlayerController.initialize().then((_) {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _videoPlayerController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _initializeVideoPlayerFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Container(
+            child: Card(
+              key: PageStorageKey(widget.url),
+              elevation: 5.0,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Chewie(
+                      key: new PageStorageKey(widget.url),
+                      controller: ChewieController(
+                        videoPlayerController: _videoPlayerController,
+                        aspectRatio: 1,
+                        // Prepare the video to be played and display the first frame
+                        autoInitialize: true,
+                        looping: false,
+                        autoPlay: false,
+                        // Errors can occur for example when trying to play a video
+                        // from a non-existent URL
+                        errorBuilder: (context, errorMessage) {
+                          return Center(
+                            child: Text(
+                              errorMessage,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
   }
 }

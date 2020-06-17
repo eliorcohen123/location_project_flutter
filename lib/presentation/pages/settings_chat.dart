@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,14 +62,14 @@ class SettingsChatState extends State<SettingsChat> {
                                                 ),
                                               )
                                             : Container(),
-                                        width: 90.0,
-                                        height: 90.0,
+                                        width: ResponsiveScreen().widthMediaQuery(context, 90),
+                                        height: ResponsiveScreen().heightMediaQuery(context, 50),
                                         padding: EdgeInsets.all(20.0),
                                       ),
                                       imageUrl:
                                           _photoUrl != null ? _photoUrl : '',
-                                      width: 90.0,
-                                      height: 90.0,
+                                      width: ResponsiveScreen().widthMediaQuery(context, 50),
+                                      height: ResponsiveScreen().heightMediaQuery(context, 50),
                                       fit: BoxFit.cover,
                                     ),
                                     borderRadius: BorderRadius.all(
