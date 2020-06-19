@@ -6,10 +6,10 @@ import 'package:locationprojectflutter/data/models/model_location/results.dart';
 //import 'package:dio/dio.dart';
 
 class LocationRemoteDataSource {
-  static final LocationRemoteDataSource _instance =
+  static final LocationRemoteDataSource _singleton =
       LocationRemoteDataSource.internal();
 
-  factory LocationRemoteDataSource() => _instance;
+  factory LocationRemoteDataSource() => _singleton;
 
   LocationRemoteDataSource.internal();
 

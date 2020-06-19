@@ -11,9 +11,9 @@ import 'package:locationprojectflutter/presentation/pages/settings_app.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 
 class DrawerTotal extends StatelessWidget {
-  static final DrawerTotal _instance = DrawerTotal.internal();
+  static final DrawerTotal _singleton = DrawerTotal.internal();
 
-  factory DrawerTotal() => _instance;
+  factory DrawerTotal() => _singleton;
 
   DrawerTotal.internal();
 
