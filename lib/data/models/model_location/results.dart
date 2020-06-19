@@ -16,11 +16,13 @@ class Results {
       json['geometry'],
     );
     this.photos = json.containsKey("photos")
-        ? json['photos']
-            .map<Photo>(
-              (i) => Photo.fromJson(i),
-            )
-            .toList()
+        ? List<Photo>.from(
+            json['photos']
+                .map<Photo>(
+                  (i) => Photo.fromJson(i),
+                )
+                .toList(),
+          )
         : [];
   }
 }
