@@ -336,73 +336,70 @@ class _ListMapState extends State<ListMap> {
           },
         ),
       ],
-      child: GestureDetector(
-        child: Container(
-          color: Colors.grey,
-          child: Stack(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: ResponsiveScreen().heightMediaQuery(context, 5),
-                    width: double.infinity,
-                    child: const DecoratedBox(
-                      decoration: const BoxDecoration(color: Colors.white),
-                    ),
-                  ),
-                  CachedNetworkImage(
-                    fit: BoxFit.fill,
-                    height: ResponsiveScreen().heightMediaQuery(context, 150),
-                    width: double.infinity,
-                    imageUrl: _places[index].photos.isNotEmpty
-                        ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                            _places[index].photos[0].photoReference +
-                            "&key=$_API_KEY"
-                        : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                  ),
-                  SizedBox(
-                    height: ResponsiveScreen().heightMediaQuery(context, 5),
-                    width: double.infinity,
-                    child: const DecoratedBox(
-                      decoration: const BoxDecoration(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                height: ResponsiveScreen().heightMediaQuery(context, 160),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      const Color(0xAA000000),
-                      const Color(0x00000000),
-                      const Color(0x00000000),
-                      const Color(0xAA000000),
-                    ],
+      child: Container(
+        color: Colors.grey,
+        child: Stack(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                SizedBox(
+                  height: ResponsiveScreen().heightMediaQuery(context, 5),
+                  width: double.infinity,
+                  child: const DecoratedBox(
+                    decoration: const BoxDecoration(color: Colors.white),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    _textListView(_places[index].name, 17.0, 0xffE9FFFF),
-                    _textListView(_places[index].vicinity, 15.0, 0xFFFFFFFF),
-                    _textListView(_calculateDistance(_meter), 15.0, 0xFFFFFFFF),
+                CachedNetworkImage(
+                  fit: BoxFit.fill,
+                  height: ResponsiveScreen().heightMediaQuery(context, 150),
+                  width: double.infinity,
+                  imageUrl: _places[index].photos.isNotEmpty
+                      ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                          _places[index].photos[0].photoReference +
+                          "&key=$_API_KEY"
+                      : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
+                SizedBox(
+                  height: ResponsiveScreen().heightMediaQuery(context, 5),
+                  width: double.infinity,
+                  child: const DecoratedBox(
+                    decoration: const BoxDecoration(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              height: ResponsiveScreen().heightMediaQuery(context, 160),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    const Color(0xAA000000),
+                    const Color(0x00000000),
+                    const Color(0x00000000),
+                    const Color(0xAA000000),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  _textListView(_places[index].name, 17.0, 0xffE9FFFF),
+                  _textListView(_places[index].vicinity, 15.0, 0xFFFFFFFF),
+                  _textListView(_calculateDistance(_meter), 15.0, 0xFFFFFFFF),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
