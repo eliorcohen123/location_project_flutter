@@ -516,7 +516,7 @@ class _ListMapState extends State<ListMap> {
     return _myMeters;
   }
 
-  Future _getLocationPermission() async {
+  Future<void> _getLocationPermission() async {
     var location = loc.Location();
     try {
       location.requestPermission();
