@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_instagram_stories/flutter_instagram_stories.dart';
 import 'package:flutter_instagram_stories/settings.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:location/location.dart' as loc;
 import 'package:latlong/latlong.dart' as dis;
 import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/data/models/model_location/results.dart';
@@ -18,7 +17,6 @@ import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/services.dart';
 import 'dart:math';
 import 'add_or_edit_data_favorites.dart';
 import 'map_list.dart';
@@ -52,7 +50,6 @@ class _ListMapState extends State<ListMap> {
   void initState() {
     super.initState();
 
-    _getLocationPermission();
     _initGetSharedPrefs();
   }
 
@@ -503,17 +500,6 @@ class _ListMapState extends State<ListMap> {
           'KM: ' + (_meter.round() / 1000.0).toStringAsFixed(2).toString();
     }
     return _myMeters;
-  }
-
-  Future<void> _getLocationPermission() async {
-    var location = loc.Location();
-    try {
-      location.requestPermission();
-    } on PlatformException catch (e) {
-      if (e.code == 'PERMISSION_DENIED') {
-        print('Permission denied');
-      }
-    }
   }
 
   void _initGetSharedPrefs() {
