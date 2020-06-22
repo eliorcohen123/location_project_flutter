@@ -68,8 +68,8 @@ class SettingsChatState extends State<SettingsChat> {
                                       ),
                                       imageUrl:
                                           _photoUrl != null ? _photoUrl : '',
-                                      width: ResponsiveScreen().widthMediaQuery(context, 50),
-                                      height: ResponsiveScreen().heightMediaQuery(context, 50),
+                                      width: ResponsiveScreen().widthMediaQuery(context, 90),
+                                      height: ResponsiveScreen().heightMediaQuery(context, 90),
                                       fit: BoxFit.cover,
                                     ),
                                     borderRadius: BorderRadius.all(

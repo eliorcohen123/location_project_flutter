@@ -63,7 +63,7 @@ flutter:
 
   assets:
     - assets/icon.png
-    - assets/google-logo.png
+    - assets/google_icon.png
     - assets/img_not_available.jpeg
     - assets/mimi1.gif
     - assets/mimi2.gif
@@ -72,3 +72,4 @@ flutter:
     - assets/mimi8.gif
     - assets/mimi9.gif
     - assets/facebook_icon.jpg
+    - assets/phone_icon.jpg

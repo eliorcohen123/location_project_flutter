@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:locationprojectflutter/presentation/pages/phone_auth.dart';
 import 'package:locationprojectflutter/presentation/utils/validations.dart';
 import 'package:locationprojectflutter/presentation/pages/register_email_firebase.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
@@ -237,7 +237,7 @@ class SigninFirebaseState extends State<SigninFirebase> {
                               height: 60,
                               child: MaterialButton(
                                 shape: CircleBorder(),
-                                child: Image.asset('assets/google-logo.png'),
+                                child: Image.asset('assets/google_icon.png'),
                                 color: Colors.white,
                                 onPressed: () {
                                   _signInWithGoogle();
@@ -255,6 +255,27 @@ class SigninFirebaseState extends State<SigninFirebase> {
                                             'Something wrong with connection';
                                       });
                                     },
+                                  );
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: ResponsiveScreen()
+                                  .widthMediaQuery(context, 20),
+                            ),
+                            Container(
+                              width: 60,
+                              height: 60,
+                              child: MaterialButton(
+                                shape: CircleBorder(),
+                                child: Image.asset('assets/phone_icon.jpg'),
+                                color: Colors.white,
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PhoneAuth(),
+                                    ),
                                   );
                                 },
                               ),

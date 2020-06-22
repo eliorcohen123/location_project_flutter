@@ -12,4 +12,9 @@ class Validations {
       return true;
     }
   }
+
+  bool validatePhone(String value) {
+    RegExp regex = RegExp(r"^[0-9]{10}$");
+    return regex.hasMatch(value);
+  }
 }
