@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>800911410598-g2h4foe5i4h55psttvo33bsn5oq0ou09.apps.googleusercontent.com</string>
+	<string>API_KEY</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.800911410598-g2h4foe5i4h55psttvo33bsn5oq0ou09</string>
+	<string>API_KEY</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBik9g4ltp7icRt0I5BtOsZK39avWvDPw4</string>
 	<key>GCM_SENDER_ID</key>
@@ -32,5 +32,16 @@
 	<string>1:800911410598:ios:61f6bbd1e32bed61cffb67</string>
 	<key>DATABASE_URL</key>
 	<string>https://locationprojectflutter.firebaseio.com</string>
+	<key>CFBundleURLTypes</key>
+    <array>
+    	<dict>
+    		<key>CFBundleTypeRole</key>
+    		<string>Editor</string>
+    		<key>CFBundleURLSchemes</key>
+    		<array>
+    			<string>API_KEY</string>
+    		</array>
+    	</dict>
+    </array>
 </dict>
 </plist>
