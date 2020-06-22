@@ -121,7 +121,7 @@ class _LiveChatState extends State<LiveChat> {
     );
   }
 
-  Future<void> callback() async {
+  void callback() async {
     if (_messageController.text.length > 0) {
       DateTime now = DateTime.now();
 

@@ -97,7 +97,7 @@ class _MapListState extends State<MapList> {
 
   void _initGetSharedPrefs() {
     SharedPreferences.getInstance().then(
-          (prefs) {
+      (prefs) {
         setState(() => _sharedPrefs = prefs);
         _valueRadius = _sharedPrefs.getDouble('rangeRadius') ?? 5000.0;
         _valueGeofence = _sharedPrefs.getDouble('rangeGeofence') ?? 500.0;
@@ -114,17 +114,17 @@ class _MapListState extends State<MapList> {
         radius: _valueGeofence,
         id: widget.nameList != null ? widget.nameList : 'id');
     Geofence.addGeolocation(location, GeolocationEvent.entry).then(
-          (onValue) {
+      (onValue) {
         print("great success");
       },
     ).catchError(
-          (onError) {
+      (onError) {
         print("great failure");
       },
     );
   }
 
-  Future _initPlatformState() async {
+  void _initPlatformState() async {
     String namePlace = widget.nameList;
     Geofence.initialize();
     Geofence.startListening(
@@ -155,7 +155,7 @@ class _MapListState extends State<MapList> {
     _flutterLocalNotificationsPlugin.initialize(initSettings);
   }
 
-  Future _showNotification(String title, String subtitle) async {
+  void _showNotification(String title, String subtitle) async {
     var android = new AndroidNotificationDetails(
         'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
         priority: Priority.High, importance: Importance.Max);
@@ -182,7 +182,7 @@ class _MapListState extends State<MapList> {
     );
   }
 
-  Future _searchNearbyList() async {
+  void _searchNearbyList() async {
     setState(() {
       _markers.clear();
     });
@@ -200,7 +200,7 @@ class _MapListState extends State<MapList> {
             onTap: () {
               String namePlace = _places[i].name != null ? _places[i].name : "";
               String vicinityPlace =
-              _places[i].vicinity != null ? _places[i].vicinity : "";
+                  _places[i].vicinity != null ? _places[i].vicinity : "";
               _showDialog(
                   namePlace,
                   vicinityPlace,

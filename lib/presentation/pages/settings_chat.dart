@@ -62,14 +62,18 @@ class SettingsChatState extends State<SettingsChat> {
                                                 ),
                                               )
                                             : Container(),
-                                        width: ResponsiveScreen().widthMediaQuery(context, 90),
-                                        height: ResponsiveScreen().heightMediaQuery(context, 50),
+                                        width: ResponsiveScreen()
+                                            .widthMediaQuery(context, 90),
+                                        height: ResponsiveScreen()
+                                            .heightMediaQuery(context, 50),
                                         padding: EdgeInsets.all(20.0),
                                       ),
                                       imageUrl:
                                           _photoUrl != null ? _photoUrl : '',
-                                      width: ResponsiveScreen().widthMediaQuery(context, 90),
-                                      height: ResponsiveScreen().heightMediaQuery(context, 90),
+                                      width: ResponsiveScreen()
+                                          .widthMediaQuery(context, 90),
+                                      height: ResponsiveScreen()
+                                          .heightMediaQuery(context, 90),
                                       fit: BoxFit.cover,
                                     ),
                                     borderRadius: BorderRadius.all(
@@ -223,7 +227,7 @@ class SettingsChatState extends State<SettingsChat> {
     );
   }
 
-  Future<void> _initControllerTextEditing() async {
+  void _initControllerTextEditing() async {
     SharedPreferences.getInstance().then(
       (prefs) {
         setState(() => _sharedPrefs = prefs);
@@ -250,7 +254,7 @@ class SettingsChatState extends State<SettingsChat> {
         });
   }
 
-  Future _getImage() async {
+  void _getImage() async {
     File image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
@@ -262,7 +266,7 @@ class SettingsChatState extends State<SettingsChat> {
     _uploadFile();
   }
 
-  Future _uploadFile() async {
+  void _uploadFile() async {
     String fileName = _id;
     StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = reference.putFile(_avatarImageFile);

@@ -320,11 +320,11 @@ class _PhoneAuthState extends State<PhoneAuth> {
     );
   }
 
-  Future _addUserEmail(String value) async {
+  void _addUserEmail(String value) async {
     _sharedPrefs.setString('userEmail', value);
   }
 
-  Future _addIdEmail(String value) async {
+  void _addIdEmail(String value) async {
     _sharedPrefs.setString('userIdEmail', value);
   }
 }

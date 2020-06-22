@@ -174,15 +174,15 @@ class _SettingsAppState extends State<SettingsApp> {
     );
   }
 
-  Future _addRadiusSearchToSF(double value) async {
+  void _addRadiusSearchToSF(double value) async {
     _sharedPrefs.setDouble('rangeRadius', value);
   }
 
-  Future _addGeofenceToSF(double value) async {
+  void _addGeofenceToSF(double value) async {
     _sharedPrefs.setDouble('rangeGeofence', value);
   }
 
-  Future _addOpenToSF(String value) async {
+  void _addOpenToSF(String value) async {
     if (value == 'Open') {
       _sharedPrefs.setString('open', '&opennow=true');
     } else if (value == 'All(Open + Close)') {

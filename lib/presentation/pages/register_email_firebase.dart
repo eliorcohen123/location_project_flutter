@@ -186,7 +186,7 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
     );
   }
 
-  Future _registerEmailFirebase() async {
+  void _registerEmailFirebase() async {
     final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
@@ -248,11 +248,11 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
     );
   }
 
-  Future _addUserEmail(String value) async {
+  void _addUserEmail(String value) async {
     _sharedPrefs.setString('userEmail', value);
   }
 
-  Future _addIdEmail(String value) async {
+  void _addIdEmail(String value) async {
     _sharedPrefs.setString('userIdEmail', value);
   }
 }

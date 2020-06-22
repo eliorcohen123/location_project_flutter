@@ -657,7 +657,7 @@ class ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Future<void> _readLocal() async {
+  void _readLocal() async {
     await _firestore.collection('users').document(_id).updateData(
       {
         'chattingWith': peerId,
@@ -667,7 +667,7 @@ class ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Future _getImageVideo(int type) async {
+  void _getImageVideo(int type) async {
     if (type == 1) {
       _imageVideoFile =
           await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -692,7 +692,7 @@ class ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  Future _uploadFile(int type) async {
+  void _uploadFile(int type) async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask;
