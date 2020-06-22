@@ -100,6 +100,15 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                 scrollDirection: Axis.vertical,
                 itemCount: _places.length,
                 itemBuilder: buildAnimatedItem,
+                separatorBuilder: (context, i) {
+                  return SizedBox(
+                    height: ResponsiveScreen().heightMediaQuery(context, 5),
+                    width: double.infinity,
+                    child: const DecoratedBox(
+                      decoration: const BoxDecoration(color: Colors.white),
+                    ),
+                  );
+                },
               ),
 //            },
             ),
@@ -224,13 +233,6 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                   placeholder: (context, url) =>
                       const CircularProgressIndicator(),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
-                ),
-                SizedBox(
-                  height: ResponsiveScreen().heightMediaQuery(context, 5),
-                  width: double.infinity,
-                  child: const DecoratedBox(
-                    decoration: const BoxDecoration(color: Colors.white),
-                  ),
                 ),
               ],
             ),

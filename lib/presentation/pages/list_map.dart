@@ -242,6 +242,17 @@ class _ListMapState extends State<ListMap> {
                             scrollDirection: Axis.vertical,
                             itemCount: _places.length,
                             itemBuilder: buildAnimatedItem,
+                            separatorBuilder: (context, i) {
+                              return SizedBox(
+                                height: ResponsiveScreen()
+                                    .heightMediaQuery(context, 5),
+                                width: double.infinity,
+                                child: const DecoratedBox(
+                                  decoration:
+                                      const BoxDecoration(color: Colors.white),
+                                ),
+                              );
+                            },
                           ),
 //                        },
                         ),
@@ -340,29 +351,17 @@ class _ListMapState extends State<ListMap> {
         color: Colors.grey,
         child: Stack(
           children: <Widget>[
-            Column(
-              children: <Widget>[
-                CachedNetworkImage(
-                  fit: BoxFit.fill,
-                  height: ResponsiveScreen().heightMediaQuery(context, 150),
-                  width: double.infinity,
-                  imageUrl: _places[index].photos.isNotEmpty
-                      ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                          _places[index].photos[0].photoReference +
-                          "&key=$_API_KEY"
-                      : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                ),
-                SizedBox(
-                  height: ResponsiveScreen().heightMediaQuery(context, 5),
-                  width: double.infinity,
-                  child: const DecoratedBox(
-                    decoration: const BoxDecoration(color: Colors.white),
-                  ),
-                ),
-              ],
+            CachedNetworkImage(
+              fit: BoxFit.fill,
+              height: ResponsiveScreen().heightMediaQuery(context, 150),
+              width: double.infinity,
+              imageUrl: _places[index].photos.isNotEmpty
+                  ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                      _places[index].photos[0].photoReference +
+                      "&key=$_API_KEY"
+                  : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
+              placeholder: (context, url) => const CircularProgressIndicator(),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
             Container(
               height: ResponsiveScreen().heightMediaQuery(context, 150),
