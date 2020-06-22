@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:locationprojectflutter/presentation/pages/custom_map_list.dart';
 import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
 import 'package:locationprojectflutter/presentation/pages/home_chat.dart';
@@ -253,6 +254,8 @@ class DrawerTotal extends StatelessWidget {
               ),
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
+                final FacebookLogin _fbLogin = FacebookLogin();
+                await _fbLogin.logOut();
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
                       builder: (context) => SigninFirebase(),

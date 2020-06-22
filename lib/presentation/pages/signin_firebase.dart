@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:locationprojectflutter/presentation/utils/validations.dart';
 import 'package:locationprojectflutter/presentation/pages/register_email_firebase.dart';
@@ -19,6 +20,7 @@ class SigninFirebaseState extends State<SigninFirebase> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FacebookLogin _fbLogin = FacebookLogin();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -195,32 +197,69 @@ class SigninFirebaseState extends State<SigninFirebase> {
                           height:
                               ResponsiveScreen().heightMediaQuery(context, 20),
                         ),
-                        Container(
-                          width: 60,
-                          height: 60,
-                          child: MaterialButton(
-                            shape: CircleBorder(),
-                            child: Image.asset('assets/google-logo.png'),
-                            color: Colors.white,
-                            onPressed: () {
-                              _signInWithGoogle();
-                              setState(() {
-                                _loading = true;
-                                _textError = '';
-                              });
-                              Future.delayed(
-                                const Duration(milliseconds: 10000),
-                                () {
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 60,
+                              height: 60,
+                              child: MaterialButton(
+                                shape: CircleBorder(),
+                                child: Image.asset('assets/facebook_icon.jpg'),
+                                color: Colors.white,
+                                onPressed: () {
+                                  _facebookLogin();
                                   setState(() {
-                                    _success = false;
-                                    _loading = false;
-                                    _textError =
-                                        'Something wrong with connection';
+                                    _loading = true;
+                                    _textError = '';
                                   });
+                                  Future.delayed(
+                                    const Duration(milliseconds: 10000),
+                                    () {
+                                      setState(() {
+                                        _success = false;
+                                        _loading = false;
+                                        _textError =
+                                            'Something wrong with connection';
+                                      });
+                                    },
+                                  );
                                 },
-                              );
-                            },
-                          ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: ResponsiveScreen()
+                                  .widthMediaQuery(context, 20),
+                            ),
+                            Container(
+                              width: 60,
+                              height: 60,
+                              child: MaterialButton(
+                                shape: CircleBorder(),
+                                child: Image.asset('assets/google-logo.png'),
+                                color: Colors.white,
+                                onPressed: () {
+                                  _signInWithGoogle();
+                                  setState(() {
+                                    _loading = true;
+                                    _textError = '';
+                                  });
+                                  Future.delayed(
+                                    const Duration(milliseconds: 10000),
+                                    () {
+                                      setState(() {
+                                        _success = false;
+                                        _loading = false;
+                                        _textError =
+                                            'Something wrong with connection';
+                                      });
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(
                           height:
@@ -246,7 +285,7 @@ class SigninFirebaseState extends State<SigninFirebase> {
         : null);
   }
 
-  Future _loginEmailFirebase() async {
+  void _loginEmailFirebase() async {
     final FirebaseUser user = (await _auth.signInWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
@@ -277,7 +316,27 @@ class SigninFirebaseState extends State<SigninFirebase> {
     _addToFirebase(user);
   }
 
-  Future<void> _addToFirebase(FirebaseUser user) async {
+  void _facebookLogin() async {
+    final FacebookLoginResult facebookLoginResult =
+        await _fbLogin.logIn(['email', 'public_profile']);
+    FacebookAccessToken facebookAccessToken = facebookLoginResult.accessToken;
+    final AuthCredential credential = FacebookAuthProvider.getCredential(
+      accessToken: facebookAccessToken.token,
+    );
+    final FirebaseUser user =
+        (await _auth.signInWithCredential(credential)).user;
+    assert(user.email != null);
+    assert(user.displayName != null);
+    assert(!user.isAnonymous);
+    assert(await user.getIdToken() != null);
+
+    final FirebaseUser currentUser = await _auth.currentUser();
+    assert(user.uid == currentUser.uid);
+
+    _addToFirebase(user);
+  }
+
+  void _addToFirebase(FirebaseUser user) async {
     if (user != null) {
       setState(() {
         _success = true;

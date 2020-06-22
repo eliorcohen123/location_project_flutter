@@ -342,13 +342,6 @@ class _ListMapState extends State<ListMap> {
           children: <Widget>[
             Column(
               children: <Widget>[
-                SizedBox(
-                  height: ResponsiveScreen().heightMediaQuery(context, 5),
-                  width: double.infinity,
-                  child: const DecoratedBox(
-                    decoration: const BoxDecoration(color: Colors.white),
-                  ),
-                ),
                 CachedNetworkImage(
                   fit: BoxFit.fill,
                   height: ResponsiveScreen().heightMediaQuery(context, 150),
@@ -372,7 +365,7 @@ class _ListMapState extends State<ListMap> {
               ],
             ),
             Container(
-              height: ResponsiveScreen().heightMediaQuery(context, 160),
+              height: ResponsiveScreen().heightMediaQuery(context, 150),
               width: double.infinity,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
