@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/utils/validations.dart';
 import 'package:locationprojectflutter/presentation/widgets/tff_firebase.dart';
@@ -15,19 +17,40 @@ class PhoneAuth extends StatefulWidget {
 class _PhoneAuthState extends State<PhoneAuth> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _smsController = TextEditingController();
   final GlobalKey<FormState> _formKeyPhone = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKeySMS = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeySms = GlobalKey<FormState>();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _smsController1 = TextEditingController();
+  final TextEditingController _smsController2 = TextEditingController();
+  final TextEditingController _smsController3 = TextEditingController();
+  final TextEditingController _smsController4 = TextEditingController();
+  final TextEditingController _smsController5 = TextEditingController();
+  final TextEditingController _smsController6 = TextEditingController();
   bool _success, _loading = false;
   String _userEmail, _textError = '', _verificationId;
   SharedPreferences _sharedPrefs;
+  FocusNode _focus2 = FocusNode();
+  FocusNode _focus3 = FocusNode();
+  FocusNode _focus4 = FocusNode();
+  FocusNode _focus5 = FocusNode();
+  FocusNode _focus6 = FocusNode();
 
   @override
   void initState() {
     super.initState();
 
     _initGetSharedPrefs();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _focus2.dispose();
+    _focus3.dispose();
+    _focus4.dispose();
+    _focus5.dispose();
+    _focus6.dispose();
   }
 
   @override
@@ -51,96 +74,128 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 70),
                 ),
-                Form(
-                  key: _formKeyPhone,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Form(
+                      key: _formKeyPhone,
+                      child: Padding(
                         padding: EdgeInsets.only(
                           bottom:
                               ResponsiveScreen().heightMediaQuery(context, 20),
                         ),
                         child: TFFFirebase(
-                            icon: Icon(Icons.phone),
-                            hint: "Phone",
-                            controller: _phoneController,
-                            obSecure: false),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left:
-                                ResponsiveScreen().widthMediaQuery(context, 20),
-                            right:
-                                ResponsiveScreen().widthMediaQuery(context, 20),
-                            bottom: MediaQuery.of(context).viewInsets.bottom),
-                        child: Container(
-                          child: RaisedButton(
-                            highlightElevation: 0.0,
-                            splashColor: Colors.greenAccent,
-                            highlightColor: Colors.lightGreenAccent,
-                            elevation: 0.0,
-                            color: Colors.greenAccent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                            child: Text(
-                              'Send SMS',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 20),
-                            ),
-                            onPressed: () async {
-                              if (_formKeyPhone.currentState.validate()) {
-                                if (Validations()
-                                    .validatePhone(_phoneController.text)) {
-                                  setState(() {
-                                    _loading = true;
-                                    _textError = '';
-                                  });
-                                  Future.delayed(
-                                    const Duration(milliseconds: 5000),
-                                    () {
-                                      setState(() {
-                                        _success = false;
-                                        _loading = false;
-                                      });
-                                    },
-                                  );
-                                  _verifyPhoneNumber();
-                                } else if (!Validations()
-                                    .validatePhone(_phoneController.text)) {
-                                  setState(() {
-                                    _success = false;
-                                    _textError = 'Invalid Phone';
-                                  });
-                                }
-                              }
-                            },
-                          ),
-                          height: 50,
-                          width: MediaQuery.of(context).size.width,
+                          icon: Icon(Icons.phone),
+                          hint: "Phone",
+                          controller: _phoneController,
+                          textInputType: TextInputType.phone,
+                          obSecure: false,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    Form(
+                      key: _formKeySms,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          bottom:
+                              ResponsiveScreen().heightMediaQuery(context, 20),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _tffSms(_smsController1, null, _focus2),
+                            SizedBox(
+                              width: ResponsiveScreen()
+                                  .widthMediaQuery(context, 5),
+                            ),
+                            _tffSms(_smsController2, _focus2, _focus3),
+                            SizedBox(
+                              width: ResponsiveScreen()
+                                  .widthMediaQuery(context, 5),
+                            ),
+                            _tffSms(_smsController3, _focus3, _focus4),
+                            SizedBox(
+                              width: ResponsiveScreen()
+                                  .widthMediaQuery(context, 5),
+                            ),
+                            _tffSms(_smsController4, _focus4, _focus5),
+                            SizedBox(
+                              width: ResponsiveScreen()
+                                  .widthMediaQuery(context, 5),
+                            ),
+                            _tffSms(_smsController5, _focus5, _focus6),
+                            SizedBox(
+                              width: ResponsiveScreen()
+                                  .widthMediaQuery(context, 5),
+                            ),
+                            _tffSms(_smsController6, _focus6, null),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 40),
                 ),
-                Form(
-                  key: _formKeySMS,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      bottom: ResponsiveScreen().heightMediaQuery(context, 20),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: ResponsiveScreen().widthMediaQuery(context, 20),
+                      right: ResponsiveScreen().widthMediaQuery(context, 20),
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: Container(
+                    child: RaisedButton(
+                      highlightElevation: 0.0,
+                      splashColor: Colors.greenAccent,
+                      highlightColor: Colors.lightGreenAccent,
+                      elevation: 0.0,
+                      color: Colors.greenAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: Text(
+                        'Send SMS',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20),
+                      ),
+                      onPressed: () async {
+                        if (_formKeyPhone.currentState.validate()) {
+                          if (_phoneController.text.isNotEmpty) {
+                            if (Validations()
+                                .validatePhone(_phoneController.text)) {
+                              setState(() {
+                                _loading = true;
+                                _textError = '';
+                              });
+                              Future.delayed(
+                                const Duration(milliseconds: 5000),
+                                () {
+                                  setState(() {
+                                    _success = false;
+                                    _loading = false;
+                                  });
+                                },
+                              );
+                              _verifyPhoneNumber();
+                            } else if (!Validations()
+                                .validatePhone(_phoneController.text)) {
+                              setState(() {
+                                _success = false;
+                                _textError = 'Invalid Phone';
+                              });
+                            }
+                          }
+                        }
+                      },
                     ),
-                    child: TFFFirebase(
-                        icon: Icon(Icons.sms),
-                        hint: "SMS",
-                        controller: _smsController,
-                        obSecure: false),
+                    height: ResponsiveScreen().heightMediaQuery(context, 50),
+                    width: MediaQuery.of(context).size.width,
                   ),
+                ),
+                SizedBox(
+                  height: ResponsiveScreen().heightMediaQuery(context, 20),
                 ),
                 Padding(
                   padding: EdgeInsets.only(
@@ -165,25 +220,32 @@ class _PhoneAuthState extends State<PhoneAuth> {
                             fontSize: 20),
                       ),
                       onPressed: () async {
-                        if (_formKeySMS.currentState.validate()) {
-                          setState(() {
-                            _loading = true;
-                            _textError = '';
-                          });
-                          Future.delayed(
-                            const Duration(milliseconds: 5000),
-                            () {
-                              setState(() {
-                                _success = false;
-                                _loading = false;
-                              });
-                            },
-                          );
-                          _signInWithPhoneNumber();
+                        if (_formKeySms.currentState.validate()) {
+                          if (_smsController1.text.isNotEmpty &&
+                              _smsController2.text.isNotEmpty &&
+                              _smsController3.text.isNotEmpty &&
+                              _smsController4.text.isNotEmpty &&
+                              _smsController5.text.isNotEmpty &&
+                              _smsController6.text.isNotEmpty) {
+                            setState(() {
+                              _loading = true;
+                              _textError = '';
+                            });
+                            Future.delayed(
+                              const Duration(milliseconds: 5000),
+                              () {
+                                setState(() {
+                                  _success = false;
+                                  _loading = false;
+                                });
+                              },
+                            );
+                            _signInWithPhoneNumber();
+                          }
                         }
                       },
                     ),
-                    height: 50,
+                    height: ResponsiveScreen().heightMediaQuery(context, 50),
                     width: MediaQuery.of(context).size.width,
                   ),
                 ),
@@ -252,7 +314,12 @@ class _PhoneAuthState extends State<PhoneAuth> {
   void _signInWithPhoneNumber() async {
     final AuthCredential credential = PhoneAuthProvider.getCredential(
       verificationId: _verificationId,
-      smsCode: _smsController.text,
+      smsCode: _smsController1.text +
+          _smsController2.text +
+          _smsController3.text +
+          _smsController4.text +
+          _smsController5.text +
+          _smsController6.text,
     );
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;
@@ -325,5 +392,67 @@ class _PhoneAuthState extends State<PhoneAuth> {
 
   void _addIdEmail(String value) async {
     _sharedPrefs.setString('userIdEmail', value);
+  }
+
+  Widget _tffSms(TextEditingController num, FocusNode myFocusNode,
+      FocusNode otherFocusNode) {
+    return Container(
+      width: 48,
+      height: 48,
+      alignment: Alignment.center,
+      child: TextFormField(
+        autofocus: true,
+        focusNode: myFocusNode,
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(1),
+        ],
+        keyboardType: TextInputType.number,
+        onChanged: (v) {
+          FocusScope.of(context).requestFocus(otherFocusNode);
+        },
+        decoration: InputDecoration(
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(
+              color: Colors.green,
+              width: 2,
+            ),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(
+              color: Colors.green,
+              width: 3,
+            ),
+          ),
+        ),
+        textAlign: TextAlign.center,
+        controller: num,
+        validator: (String value) {
+          if (value.isEmpty) {
+            return '';
+          }
+          return null;
+        },
+        style: TextStyle(
+          fontFamily: 'Avenir',
+          color: Colors.greenAccent,
+          fontSize: 17,
+          fontWeight: FontWeight.w500,
+          fontStyle: FontStyle.normal,
+        ),
+      ),
+    );
+  }
+
+  _toastMessage(String message) {
+    Fluttertoast.showToast(
+        msg: message,
+        backgroundColor: Color(0x672cbbba),
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        timeInSecForIos: 1,
+        fontSize: 16.0);
   }
 }

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -232,8 +231,9 @@ class SettingsChatState extends State<SettingsChat> {
       (prefs) {
         setState(() => _sharedPrefs = prefs);
         _id = _sharedPrefs.getString('id') ?? '';
-        _aboutMe = prefs.getString('aboutMe') ?? '';
-        _photoUrl = prefs.getString('photoUrl') ?? '';
+        _nickname = _sharedPrefs.getString('nickname') ?? '';
+        _aboutMe = _sharedPrefs.getString('aboutMe') ?? '';
+        _photoUrl = _sharedPrefs.getString('photoUrl') ?? '';
       },
     ).then((value) => {
           document = _firestore.collection('users').document(_id),

@@ -76,11 +76,13 @@ class SigninFirebaseState extends State<SigninFirebase> {
                                 .heightMediaQuery(context, 20),
                           ),
                           child: TFFFirebase(
-                              key: Key('emailLogin'),
-                              icon: Icon(Icons.email),
-                              hint: "Email",
-                              controller: _emailController,
-                              obSecure: false),
+                            key: Key('emailLogin'),
+                            icon: Icon(Icons.email),
+                            hint: "Email",
+                            controller: _emailController,
+                            textInputType: TextInputType.emailAddress,
+                            obSecure: false,
+                          ),
                         ),
                         Padding(
                           padding: EdgeInsets.only(
@@ -88,11 +90,13 @@ class SigninFirebaseState extends State<SigninFirebase> {
                                 .heightMediaQuery(context, 20),
                           ),
                           child: TFFFirebase(
-                              key: Key('passwordLogin'),
-                              icon: Icon(Icons.lock),
-                              hint: "Password",
-                              controller: _passwordController,
-                              obSecure: true),
+                            key: Key('passwordLogin'),
+                            icon: Icon(Icons.lock),
+                            hint: "Password",
+                            controller: _passwordController,
+                            textInputType: TextInputType.text,
+                            obSecure: true,
+                          ),
                         ),
                         SizedBox(
                           height:
@@ -161,7 +165,8 @@ class SigninFirebaseState extends State<SigninFirebase> {
                                 }
                               },
                             ),
-                            height: 50,
+                            height: ResponsiveScreen()
+                                .heightMediaQuery(context, 50),
                             width: MediaQuery.of(context).size.width,
                           ),
                         ),
@@ -384,8 +389,8 @@ class SigninFirebaseState extends State<SigninFirebase> {
       } else {
         await _sharedPrefs.setString('id', documents[0]['id']);
         await _sharedPrefs.setString('nickname', documents[0]['nickname']);
-        await _sharedPrefs.setString('photoUrl', documents[0]['photoUrl']);
         await _sharedPrefs.setString('aboutMe', documents[0]['aboutMe']);
+        await _sharedPrefs.setString('photoUrl', documents[0]['photoUrl']);
       }
 
       _userEmail = user.email;

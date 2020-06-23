@@ -34,7 +34,10 @@ class DrawerTotal extends StatelessWidget {
                 child: Center(
                   child: Text(
                     'Hello user!',
-                    style: TextStyle(color: Color(0xFFF5FA55), fontSize: 40),
+                    style: TextStyle(
+                      color: Colors.greenAccent,
+                      fontSize: 40,
+                    ),
                   ),
                 ),
                 decoration: BoxDecoration(
