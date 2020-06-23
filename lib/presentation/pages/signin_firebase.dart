@@ -126,7 +126,7 @@ class SigninFirebaseState extends State<SigninFirebase> {
                                     color: Colors.white,
                                     fontSize: 20),
                               ),
-                              onPressed: () async {
+                              onPressed: () {
                                 if (_formKey.currentState.validate()) {
                                   if (Validations().validateEmail(
                                           _emailController.text) &&

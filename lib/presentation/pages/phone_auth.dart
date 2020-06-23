@@ -160,7 +160,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                             color: Colors.white,
                             fontSize: 20),
                       ),
-                      onPressed: () async {
+                      onPressed: () {
                         if (_formKeyPhone.currentState.validate()) {
                           if (_phoneController.text.isNotEmpty) {
                             if (Validations()
@@ -219,7 +219,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                             color: Colors.white,
                             fontSize: 20),
                       ),
-                      onPressed: () async {
+                      onPressed: () {
                         if (_formKeySms.currentState.validate()) {
                           if (_smsController1.text.isNotEmpty &&
                               _smsController2.text.isNotEmpty &&
