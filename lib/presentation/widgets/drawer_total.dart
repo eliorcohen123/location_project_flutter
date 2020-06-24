@@ -18,6 +18,8 @@ class DrawerTotal extends StatelessWidget {
 
   DrawerTotal.internal();
 
+  final FacebookLogin _fbLogin = FacebookLogin();
+
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -187,7 +189,7 @@ class DrawerTotal extends StatelessWidget {
               title: Row(
                 children: <Widget>[
                   Icon(
-                    Icons.settings,
+                    Icons.chat_bubble_outline,
                     color: Color(0xFFcd4312),
                   ),
                   SizedBox(
@@ -241,7 +243,7 @@ class DrawerTotal extends StatelessWidget {
               title: Row(
                 children: <Widget>[
                   Icon(
-                    Icons.settings,
+                    Icons.exit_to_app,
                     color: Color(0xFFcd4312),
                   ),
                   SizedBox(
@@ -257,7 +259,6 @@ class DrawerTotal extends StatelessWidget {
               ),
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
-                final FacebookLogin _fbLogin = FacebookLogin();
                 await _fbLogin.logOut();
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
