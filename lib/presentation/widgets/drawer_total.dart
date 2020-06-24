@@ -18,8 +18,6 @@ class DrawerTotal extends StatelessWidget {
 
   DrawerTotal.internal();
 
-  final FacebookLogin _fbLogin = FacebookLogin();
-
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -258,13 +256,19 @@ class DrawerTotal extends StatelessWidget {
                 ],
               ),
               onTap: () async {
-                await FirebaseAuth.instance.signOut();
-                await _fbLogin.logOut();
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => SigninFirebase(),
-                    ),
-                    (Route<dynamic> route) => false);
+                FacebookLogin _fbLogin = FacebookLogin();
+                await FirebaseAuth.instance.signOut().then(
+                      (value) async => {
+                        await _fbLogin.logOut().then(
+                              (value) =>
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                        builder: (context) => SigninFirebase(),
+                                      ),
+                                      (Route<dynamic> route) => false),
+                            ),
+                      },
+                    );
               },
             ),
           ],
