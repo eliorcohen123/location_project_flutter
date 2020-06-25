@@ -62,7 +62,7 @@ class ChatScreenState extends State<ChatScreen> {
           Column(
             children: <Widget>[
               _buildMessagesList(),
-              (_isShowSticker ? _buildSticker() : Container()),
+              _isShowSticker ? _buildSticker() : Container(),
               _buildInput(),
             ],
           ),
@@ -86,7 +86,6 @@ class ChatScreenState extends State<ChatScreen> {
 
   void _onFocusChange() {
     if (_focusNode.hasFocus) {
-      // Hide sticker when keyboard appear
       setState(() {
         _isShowSticker = false;
       });
@@ -197,13 +196,14 @@ class ChatScreenState extends State<ChatScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       ),
       decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: Color(0xffE8E8E8),
-              width: 0.5,
-            ),
+        border: Border(
+          top: BorderSide(
+            color: Color(0xffE8E8E8),
+            width: 0.5,
           ),
-          color: Colors.white),
+        ),
+        color: Colors.white,
+      ),
       padding: EdgeInsets.all(5.0),
       height: ResponsiveScreen().heightMediaQuery(context, 180),
     );
@@ -251,13 +251,14 @@ class ChatScreenState extends State<ChatScreen> {
           Flexible(
             child: Container(
               child: TextField(
-                style: TextStyle(color: Color(0xff203152), fontSize: 15.0),
+                style: TextStyle(
+                  color: Color(0xff203152),
+                  fontSize: 15.0,
+                ),
                 controller: _textEditingController,
                 decoration: InputDecoration.collapsed(
                   hintText: 'Type your message...',
-                  hintStyle: TextStyle(
-                    color: Color(0xffaeaeae),
-                  ),
+                  hintStyle: TextStyle(color: Color(0xffaeaeae)),
                 ),
                 focusNode: _focusNode,
               ),
@@ -340,9 +341,7 @@ class ChatScreenState extends State<ChatScreen> {
               ? Container(
                   child: Text(
                     document['content'],
-                    style: TextStyle(
-                      color: Color(0xff203152),
-                    ),
+                    style: TextStyle(color: Color(0xff203152)),
                   ),
                   padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                   width: ResponsiveScreen().widthMediaQuery(context, 200),
@@ -351,8 +350,9 @@ class ChatScreenState extends State<ChatScreen> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   margin: EdgeInsets.only(
-                      bottom: _isLastMessageRight(index) ? 20.0 : 10.0,
-                      right: 10.0),
+                    bottom: _isLastMessageRight(index) ? 20.0 : 10.0,
+                    right: 10.0,
+                  ),
                 )
               : document['type'] == 1
                   ? Container(
@@ -416,8 +416,9 @@ class ChatScreenState extends State<ChatScreen> {
                         padding: EdgeInsets.all(0),
                       ),
                       margin: EdgeInsets.only(
-                          bottom: _isLastMessageRight(index) ? 20.0 : 10.0,
-                          right: 10.0),
+                        bottom: _isLastMessageRight(index) ? 20.0 : 10.0,
+                        right: 10.0,
+                      ),
                     )
                   : document['type'] == 3
                       ? Container(
@@ -435,8 +436,9 @@ class ChatScreenState extends State<ChatScreen> {
                             ),
                           ),
                           margin: EdgeInsets.only(
-                              bottom: _isLastMessageRight(index) ? 20.0 : 10.0,
-                              right: 10.0),
+                            bottom: _isLastMessageRight(index) ? 20.0 : 10.0,
+                            right: 10.0,
+                          ),
                         )
                       : Container(
                           child: Image.asset(
@@ -448,8 +450,9 @@ class ChatScreenState extends State<ChatScreen> {
                             fit: BoxFit.cover,
                           ),
                           margin: EdgeInsets.only(
-                              bottom: _isLastMessageRight(index) ? 20.0 : 10.0,
-                              right: 10.0),
+                            bottom: _isLastMessageRight(index) ? 20.0 : 10.0,
+                            right: 10.0,
+                          ),
                         ),
         ],
         mainAxisAlignment: MainAxisAlignment.end,
@@ -678,7 +681,6 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   void _getSticker() {
-    // Hide keyboard when sticker appear
     _focusNode.unfocus();
     setState(() {
       _isShowSticker = !_isShowSticker;
@@ -745,8 +747,11 @@ class ChatScreenState extends State<ChatScreen> {
           );
         },
       );
-      _listScrollController.animateTo(0.0,
-          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+      _listScrollController.animateTo(
+        0.0,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
     } else {
       Fluttertoast.showToast(
         msg: 'Nothing to send',
@@ -826,12 +831,9 @@ class _VideoWidgetState extends State<VideoWidget> {
                       controller: ChewieController(
                         videoPlayerController: _videoPlayerController,
                         aspectRatio: 1,
-                        // Prepare the video to be played and display the first frame
                         autoInitialize: true,
                         looping: false,
                         autoPlay: false,
-                        // Errors can occur for example when trying to play a video
-                        // from a non-existent URL
                         errorBuilder: (context, errorMessage) {
                           return Center(
                             child: Text(

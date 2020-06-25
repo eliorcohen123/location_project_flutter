@@ -54,9 +54,10 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
                   Text(
                     'Register',
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.greenAccent,
-                        fontSize: 40),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.greenAccent,
+                      fontSize: 40,
+                    ),
                   ),
                   SizedBox(
                     height: ResponsiveScreen().heightMediaQuery(context, 70),
@@ -106,9 +107,10 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
                         child: Text(
                           'Register',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 20),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
                         ),
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
@@ -167,7 +169,10 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
                     },
                     child: Text(
                       'Have an account? click here to login',
-                      style: TextStyle(color: Colors.white, fontSize: 15),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -191,11 +196,10 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
     )
             .catchError(
       (error) {
-        var errorMessage = error.message;
         setState(() {
           _success = false;
           _loading = false;
-          _textError = errorMessage;
+          _textError = error.message;
         });
       },
     ))
@@ -213,13 +217,15 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
           .getDocuments();
       final List<DocumentSnapshot> documents = result.documents;
       if (documents.length == 0) {
-        _firestore.collection('users').document(user.uid).setData({
-          'nickname': user.displayName,
-          'photoUrl': user.photoUrl,
-          'id': user.uid,
-          'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
-          'chattingWith': null
-        });
+        _firestore.collection('users').document(user.uid).setData(
+          {
+            'nickname': user.displayName,
+            'photoUrl': user.photoUrl,
+            'id': user.uid,
+            'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
+            'chattingWith': null
+          },
+        );
 
         await _sharedPrefs.setString('id', user.uid);
         await _sharedPrefs.setString('nickname', user.displayName);

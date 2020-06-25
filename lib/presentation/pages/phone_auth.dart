@@ -67,9 +67,10 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 Text(
                   'Phone Auth',
                   style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.greenAccent,
-                      fontSize: 40),
+                    fontWeight: FontWeight.bold,
+                    color: Colors.greenAccent,
+                    fontSize: 40,
+                  ),
                 ),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 70),
@@ -156,9 +157,10 @@ class _PhoneAuthState extends State<PhoneAuth> {
                       child: Text(
                         'Send SMS',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 20),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
                       ),
                       onPressed: () {
                         if (_formKeyPhone.currentState.validate()) {
@@ -215,9 +217,10 @@ class _PhoneAuthState extends State<PhoneAuth> {
                       child: Text(
                         'Login after SMS',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 20),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
                       ),
                       onPressed: () {
                         if (_formKeySms.currentState.validate()) {
@@ -256,7 +259,11 @@ class _PhoneAuthState extends State<PhoneAuth> {
                   alignment: Alignment.center,
                   child: Text(
                     _success == null ? '' : _success ? '' : _textError,
-                    style: TextStyle(color: Colors.redAccent),
+                    style: TextStyle(
+                      color: Colors.redAccent,
+                      fontSize: 15,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 SizedBox(
@@ -272,12 +279,17 @@ class _PhoneAuthState extends State<PhoneAuth> {
   }
 
   void _verifyPhoneNumber() async {
-    setState(() {
-      _textError = '';
-    });
     final PhoneVerificationCompleted verificationCompleted =
         (AuthCredential phoneAuthCredential) {
-      _auth.signInWithCredential(phoneAuthCredential);
+      _auth.signInWithCredential(phoneAuthCredential).catchError(
+        (error) {
+          setState(() {
+            _success = false;
+            _loading = false;
+            _textError = error.message;
+          });
+        },
+      );
       setState(() {
         _textError = 'Received phone auth credential: $phoneAuthCredential';
       });
@@ -302,13 +314,24 @@ class _PhoneAuthState extends State<PhoneAuth> {
       _verificationId = verificationId;
     };
 
-    await _auth.verifyPhoneNumber(
-        phoneNumber: '+972' + _phoneController.text,
-        timeout: const Duration(seconds: 5),
-        verificationCompleted: verificationCompleted,
-        verificationFailed: verificationFailed,
-        codeSent: codeSent,
-        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
+    await _auth
+        .verifyPhoneNumber(
+      phoneNumber: '+972' + _phoneController.text,
+      timeout: const Duration(seconds: 5),
+      verificationCompleted: verificationCompleted,
+      verificationFailed: verificationFailed,
+      codeSent: codeSent,
+      codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+    )
+        .catchError(
+      (error) {
+        setState(() {
+          _success = false;
+          _loading = false;
+          _textError = error.message;
+        });
+      },
+    );
   }
 
   void _signInWithPhoneNumber() async {
@@ -322,7 +345,16 @@ class _PhoneAuthState extends State<PhoneAuth> {
           _smsController6.text,
     );
     final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
+        (await _auth.signInWithCredential(credential).catchError(
+      (error) {
+        setState(() {
+          _success = false;
+          _loading = false;
+          _textError = error.message;
+        });
+      },
+    ))
+            .user;
     final FirebaseUser currentUser = await _auth.currentUser();
     assert(user.uid == currentUser.uid);
 
@@ -334,6 +366,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
       setState(() {
         _success = true;
         _loading = false;
+        _textError = '';
       });
 
       final QuerySnapshot result = await _firestore

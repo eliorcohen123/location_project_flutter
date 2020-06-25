@@ -41,9 +41,7 @@ class _SettingsAppState extends State<SettingsApp> {
                 children: <Widget>[
                   Text(
                     "Open Places",
-                    style: TextStyle(
-                      color: Colors.greenAccent,
-                    ),
+                    style: TextStyle(color: Colors.greenAccent),
                   ),
                   SizedBox(
                     width: ResponsiveScreen().widthMediaQuery(context, 5),
@@ -73,9 +71,7 @@ class _SettingsAppState extends State<SettingsApp> {
                 children: <Widget>[
                   Text(
                     "Radius Search",
-                    style: TextStyle(
-                      color: Colors.greenAccent,
-                    ),
+                    style: TextStyle(color: Colors.greenAccent),
                   ),
                   SizedBox(
                     width: ResponsiveScreen().widthMediaQuery(context, 5),
@@ -111,9 +107,7 @@ class _SettingsAppState extends State<SettingsApp> {
                 children: <Widget>[
                   Text(
                     "Radius Geofence",
-                    style: TextStyle(
-                      color: Colors.greenAccent,
-                    ),
+                    style: TextStyle(color: Colors.greenAccent),
                   ),
                   SizedBox(
                     width: ResponsiveScreen().widthMediaQuery(context, 5),

@@ -43,9 +43,7 @@ class HomeChatState extends State<HomeChat> {
         backgroundColor: Colors.black,
         title: Text(
           'Lovely Favorite Places',
-          style: TextStyle(
-            color: Color(0xFFE9FFFF),
-          ),
+          style: TextStyle(color: Color(0xFFE9FFFF)),
         ),
         iconTheme: IconThemeData(
           color: Color(0xFFE9FFFF),
@@ -116,13 +114,16 @@ class HomeChatState extends State<HomeChat> {
                               Color(0xfff5a623),
                             ),
                           ),
-                          width: ResponsiveScreen().widthMediaQuery(context, 50),
-                          height: ResponsiveScreen().heightMediaQuery(context, 50),
+                          width:
+                              ResponsiveScreen().widthMediaQuery(context, 50),
+                          height:
+                              ResponsiveScreen().heightMediaQuery(context, 50),
                           padding: EdgeInsets.all(15.0),
                         ),
                         imageUrl: document['photoUrl'],
                         width: ResponsiveScreen().widthMediaQuery(context, 50),
-                        height: ResponsiveScreen().heightMediaQuery(context, 50),
+                        height:
+                            ResponsiveScreen().heightMediaQuery(context, 50),
                         fit: BoxFit.cover,
                       )
                     : Icon(
@@ -142,9 +143,7 @@ class HomeChatState extends State<HomeChat> {
                       Container(
                         child: Text(
                           'Nickname: ${document['nickname']}',
-                          style: TextStyle(
-                            color: Color(0xff203152),
-                          ),
+                          style: TextStyle(color: Color(0xff203152)),
                         ),
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
@@ -152,9 +151,7 @@ class HomeChatState extends State<HomeChat> {
                       Container(
                         child: Text(
                           'About me: ${document['aboutMe'] ?? 'Not available'}',
-                          style: TextStyle(
-                            color: Color(0xff203152),
-                          ),
+                          style: TextStyle(color: Color(0xff203152)),
                         ),
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),

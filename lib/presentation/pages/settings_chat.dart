@@ -137,9 +137,7 @@ class SettingsChatState extends State<SettingsChat> {
                           decoration: InputDecoration(
                             hintText: 'Cool Man',
                             contentPadding: EdgeInsets.all(5.0),
-                            hintStyle: TextStyle(
-                              color: Color(0xffaeaeae),
-                            ),
+                            hintStyle: TextStyle(color: Color(0xffaeaeae)),
                           ),
                           controller: _controllerNickname,
                           onChanged: (value) {
@@ -171,9 +169,7 @@ class SettingsChatState extends State<SettingsChat> {
                           decoration: InputDecoration(
                             hintText: 'Fun, like travel and play PES...',
                             contentPadding: EdgeInsets.all(5.0),
-                            hintStyle: TextStyle(
-                              color: Color(0xffaeaeae),
-                            ),
+                            hintStyle: TextStyle(color: Color(0xffaeaeae)),
                           ),
                           controller: _controllerAboutMe,
                           onChanged: (value) {

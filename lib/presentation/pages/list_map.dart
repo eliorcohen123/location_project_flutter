@@ -74,9 +74,7 @@ class _ListMapState extends State<ListMap> {
                     ),
                   ),
                   controller: _controllerSearch,
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(color: Colors.white),
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please enter some text';
@@ -111,9 +109,7 @@ class _ListMapState extends State<ListMap> {
         backgroundColor: Colors.black,
         title: Text(
           'Lovely Favorite Places',
-          style: TextStyle(
-            color: Color(0xFFE9FFFF),
-          ),
+          style: TextStyle(color: Color(0xFFE9FFFF)),
         ),
         iconTheme: IconThemeData(
           color: Color(0xFFE9FFFF),

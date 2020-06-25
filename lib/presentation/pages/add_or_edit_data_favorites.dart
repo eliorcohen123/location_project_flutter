@@ -33,13 +33,14 @@ class _AddOrEditDataFavoritesState extends State<AddOrEditDataFavorites> {
     return Consumer<ResultsSqflProvider>(
       builder: (context, results, child) {
         return AddOrEditDataFavoritesProv(
-            nameList: widget.nameList,
-            addressList: widget.addressList,
-            latList: widget.latList,
-            lngList: widget.lngList,
-            photoList: widget.photoList,
-            edit: widget.edit,
-            id: widget.id);
+          nameList: widget.nameList,
+          addressList: widget.addressList,
+          latList: widget.latList,
+          lngList: widget.lngList,
+          photoList: widget.photoList,
+          edit: widget.edit,
+          id: widget.id,
+        );
       },
     );
   }
@@ -138,7 +139,10 @@ class _AddOrEditDataFavoritesProvState
                 ),
                 Text(
                   widget.edit ? 'Edit Place' : 'Add Place',
-                  style: TextStyle(color: Colors.white, fontSize: 25),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                  ),
                 ),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 20),
@@ -204,14 +208,16 @@ class _AddOrEditDataFavoritesProvState
                           double.parse(_textLat.text),
                           double.parse(_textLng.text),
                           _textPhoto.text,
-                          context) // Provider
+                          context,
+                        ) // Provider
                       : _sqflProv.addItem(
                           _textName.text,
                           _textAddress.text,
                           double.parse(_textLat.text),
                           double.parse(_textLng.text),
                           _textPhoto.text,
-                          context), // Provider
+                          context,
+                        ), // Provider
 //                      ? _dataMobx.updateItem(
 //                          widget.id,
 //                          _textName.text,
@@ -219,14 +225,16 @@ class _AddOrEditDataFavoritesProvState
 //                          double.parse(_textLat.text),
 //                          double.parse(_textLng.text),
 //                          _textPhoto.text,
-//                          context) // MobX
+//                          context,
+//                          ) // MobX
 //                      : _dataMobx.addItem(
 //                          _textName.text,
 //                          _textAddress.text,
 //                          double.parse(_textLat.text),
 //                          double.parse(_textLng.text),
 //                          _textPhoto.text,
-//                          context), // MobX
+//                          context,
+//                          ), // MobX
                   child: Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
@@ -259,7 +267,10 @@ class _AddOrEditDataFavoritesProvState
     return Container(
       decoration: BoxDecoration(
         color: Color(0xff778899).withOpacity(0.9189918041229248),
-        border: Border.all(color: Color(0xff778899), width: 1),
+        border: Border.all(
+          color: Color(0xff778899),
+          width: 1,
+        ),
         borderRadius: BorderRadius.circular(24),
       ),
       child: TextField(

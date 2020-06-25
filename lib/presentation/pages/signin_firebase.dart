@@ -62,9 +62,10 @@ class SigninFirebaseState extends State<SigninFirebase> {
                         Text(
                           'Login',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.greenAccent,
-                              fontSize: 40),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.greenAccent,
+                            fontSize: 40,
+                          ),
                         ),
                         SizedBox(
                           height:
@@ -122,9 +123,10 @@ class SigninFirebaseState extends State<SigninFirebase> {
                               child: Text(
                                 'Login',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    fontSize: 20),
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
                               ),
                               onPressed: () {
                                 if (_formKey.currentState.validate()) {
@@ -187,7 +189,10 @@ class SigninFirebaseState extends State<SigninFirebase> {
                             'Don' +
                                 "'" +
                                 't Have an account? click here to register',
-                            style: TextStyle(color: Colors.white, fontSize: 15),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -289,11 +294,10 @@ class SigninFirebaseState extends State<SigninFirebase> {
     )
             .catchError(
       (error) {
-        var errorMessage = error.message;
         setState(() {
           _success = false;
           _loading = false;
-          _textError = errorMessage;
+          _textError = error.message;
         });
       },
     ))
@@ -311,7 +315,16 @@ class SigninFirebaseState extends State<SigninFirebase> {
       idToken: googleAuth.idToken,
     );
     final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
+        (await _auth.signInWithCredential(credential).catchError(
+      (error) {
+        setState(() {
+          _success = false;
+          _loading = false;
+          _textError = error.message;
+        });
+      },
+    ))
+            .user;
     assert(user.email != null);
     assert(user.displayName != null);
     assert(!user.isAnonymous);
@@ -331,7 +344,16 @@ class SigninFirebaseState extends State<SigninFirebase> {
       accessToken: facebookAccessToken.token,
     );
     final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
+        (await _auth.signInWithCredential(credential).catchError(
+      (error) {
+        setState(() {
+          _success = false;
+          _loading = false;
+          _textError = error.message;
+        });
+      },
+    ))
+            .user;
     assert(user.email != null);
     assert(user.displayName != null);
     assert(!user.isAnonymous);
@@ -348,6 +370,7 @@ class SigninFirebaseState extends State<SigninFirebase> {
       setState(() {
         _success = true;
         _loading = false;
+        _textError = '';
       });
 
       final QuerySnapshot result = await _firestore
@@ -356,13 +379,15 @@ class SigninFirebaseState extends State<SigninFirebase> {
           .getDocuments();
       final List<DocumentSnapshot> documents = result.documents;
       if (documents.length == 0) {
-        _firestore.collection('users').document(user.uid).setData({
-          'nickname': user.displayName,
-          'photoUrl': user.photoUrl,
-          'id': user.uid,
-          'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
-          'chattingWith': null
-        });
+        _firestore.collection('users').document(user.uid).setData(
+          {
+            'nickname': user.displayName,
+            'photoUrl': user.photoUrl,
+            'id': user.uid,
+            'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
+            'chattingWith': null
+          },
+        );
 
         await _sharedPrefs.setString('id', user.uid);
         await _sharedPrefs.setString('nickname', user.displayName);

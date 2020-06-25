@@ -72,9 +72,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
         backgroundColor: Colors.black,
         title: Text(
           'Lovely Favorite Places',
-          style: TextStyle(
-            color: Color(0xFFE9FFFF),
-          ),
+          style: TextStyle(color: Color(0xFFE9FFFF)),
         ),
         iconTheme: IconThemeData(
           color: Color(0xFFE9FFFF),
