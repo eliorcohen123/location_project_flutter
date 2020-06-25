@@ -120,17 +120,6 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
                                 _loading = true;
                                 _textError = '';
                               });
-                              Future.delayed(
-                                const Duration(milliseconds: 5000),
-                                () {
-                                  setState(() {
-                                    _success = false;
-                                    _loading = false;
-                                    _textError =
-                                        'Something wrong with connection';
-                                  });
-                                },
-                              );
                               _registerEmailFirebase();
                             } else if (!Validations()
                                 .validateEmail(_emailController.text)) {
@@ -160,7 +149,11 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
                     alignment: Alignment.center,
                     child: Text(
                       _success == null ? '' : _success ? '' : _textError,
-                      style: TextStyle(color: Colors.redAccent),
+                      style: TextStyle(
+                        color: Colors.redAccent,
+                        fontSize: 15,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   GestureDetector(
@@ -191,15 +184,27 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
   }
 
   void _registerEmailFirebase() async {
-    final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
+    final FirebaseUser user = (await _auth
+            .createUserWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
+    )
+            .catchError(
+      (error) {
+        var errorMessage = error.message;
+        setState(() {
+          _success = false;
+          _loading = false;
+          _textError = errorMessage;
+        });
+      },
     ))
         .user;
     if (user != null) {
       setState(() {
         _success = true;
         _loading = false;
+        _textError = '';
       });
 
       final QuerySnapshot result = await _firestore

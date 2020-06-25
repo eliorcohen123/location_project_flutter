@@ -1,4 +1,5 @@
-import 'package:locationprojectflutter/data/models/model_location/photo.dart';
+import 'package:locationprojectflutter/data/models/model_location/opening_hours.dart';
+import 'package:locationprojectflutter/data/models/model_location/photos.dart';
 import 'geometry.dart';
 
 class Results {
@@ -6,7 +7,8 @@ class Results {
   String name;
   String vicinity;
   Geometry geometry;
-  List<Photo> photos;
+  List<Photos> photos;
+  OpeningHours opening_hours;
 
   Results.fromJson(Map<String, dynamic> json) {
     this.id = json['id'];
@@ -16,13 +18,18 @@ class Results {
       json['geometry'],
     );
     this.photos = json.containsKey("photos")
-        ? List<Photo>.from(
+        ? List<Photos>.from(
             json['photos']
-                .map<Photo>(
-                  (i) => Photo.fromJson(i),
+                .map<Photos>(
+                  (i) => Photos.fromJson(i),
                 )
                 .toList(),
           )
         : [];
+    this.opening_hours = json.containsKey("opening_hours")
+        ? OpeningHours.fromJson(
+            json['opening_hours'],
+          )
+        : null;
   }
 }

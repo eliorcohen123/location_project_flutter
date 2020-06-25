@@ -423,17 +423,15 @@ class ChatScreenState extends State<ChatScreen> {
                       ? Container(
                           child: Container(
                             width: ResponsiveScreen()
-                                .widthMediaQuery(context, 300),
+                                .widthMediaQuery(context, 200),
                             height: ResponsiveScreen()
-                                .heightMediaQuery(context, 310),
-                            child: Container(
-                              key: new PageStorageKey(
-                                "keydata$index",
-                              ),
-                              child: VideoWidget(
-                                play: true,
-                                url: document['content'],
-                              ),
+                                .heightMediaQuery(context, 200),
+                            key: PageStorageKey(
+                              "keydata$index",
+                            ),
+                            child: VideoWidget(
+                              play: true,
+                              url: document['content'],
                             ),
                           ),
                           margin: EdgeInsets.only(
@@ -582,21 +580,15 @@ class ChatScreenState extends State<ChatScreen> {
                                       .widthMediaQuery(context, 200),
                                   height: ResponsiveScreen()
                                       .heightMediaQuery(context, 200),
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                      key: new PageStorageKey(
-                                        "keydata$index",
-                                      ),
-                                      child: VideoWidget(
-                                        play: true,
-                                        url: document['content'],
-                                      )),
+                                  key: PageStorageKey(
+                                    "keydata$index",
+                                  ),
+                                  child: VideoWidget(
+                                    play: true,
+                                    url: document['content'],
+                                  ),
                                 ),
-                                margin: EdgeInsets.only(
-                                    bottom: _isLastMessageRight(index)
-                                        ? 20.0
-                                        : 10.0,
-                                    right: 10.0),
+                                margin: EdgeInsets.only(left: 10.0),
                               )
                             : Container(
                                 child: Image.asset(
@@ -607,11 +599,7 @@ class ChatScreenState extends State<ChatScreen> {
                                       .heightMediaQuery(context, 100),
                                   fit: BoxFit.cover,
                                 ),
-                                margin: EdgeInsets.only(
-                                    bottom: _isLastMessageRight(index)
-                                        ? 20.0
-                                        : 10.0,
-                                    right: 10.0),
+                                margin: EdgeInsets.only(left: 10.0),
                               ),
               ],
             ),
@@ -626,11 +614,16 @@ class ChatScreenState extends State<ChatScreen> {
                         ),
                       ),
                       style: TextStyle(
-                          color: Color(0xffaeaeae),
-                          fontSize: 12.0,
-                          fontStyle: FontStyle.italic),
+                        color: Color(0xffaeaeae),
+                        fontSize: 12.0,
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
-                    margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
+                    margin: EdgeInsets.only(
+                      left: 50.0,
+                      top: 5.0,
+                      bottom: 5.0,
+                    ),
                   )
                 : Container()
           ],
@@ -804,10 +797,7 @@ class _VideoWidgetState extends State<VideoWidget> {
     super.initState();
 
     _videoPlayerController = new VideoPlayerController.network(widget.url);
-    _initializeVideoPlayerFuture =
-        _videoPlayerController.initialize().then((_) {
-      setState(() {});
-    });
+    _initializeVideoPlayerFuture = _videoPlayerController.initialize();
   }
 
   @override

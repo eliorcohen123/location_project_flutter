@@ -136,17 +136,6 @@ class SigninFirebaseState extends State<SigninFirebase> {
                                       _loading = true;
                                       _textError = '';
                                     });
-                                    Future.delayed(
-                                      const Duration(milliseconds: 5000),
-                                      () {
-                                        setState(() {
-                                          _success = false;
-                                          _loading = false;
-                                          _textError =
-                                              'Something wrong with connection';
-                                        });
-                                      },
-                                    );
                                     _loginEmailFirebase();
                                   } else if (!Validations()
                                       .validateEmail(_emailController.text)) {
@@ -176,10 +165,13 @@ class SigninFirebaseState extends State<SigninFirebase> {
                         ),
                         Container(
                           alignment: Alignment.center,
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
                             _success == null ? '' : _success ? '' : _textError,
-                            style: TextStyle(color: Colors.redAccent),
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                              fontSize: 15,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
                         GestureDetector(
@@ -219,17 +211,6 @@ class SigninFirebaseState extends State<SigninFirebase> {
                                     _loading = true;
                                     _textError = '';
                                   });
-                                  Future.delayed(
-                                    const Duration(milliseconds: 10000),
-                                    () {
-                                      setState(() {
-                                        _success = false;
-                                        _loading = false;
-                                        _textError =
-                                            'Something wrong with connection';
-                                      });
-                                    },
-                                  );
                                 },
                               ),
                             ),
@@ -250,17 +231,6 @@ class SigninFirebaseState extends State<SigninFirebase> {
                                     _loading = true;
                                     _textError = '';
                                   });
-                                  Future.delayed(
-                                    const Duration(milliseconds: 10000),
-                                    () {
-                                      setState(() {
-                                        _success = false;
-                                        _loading = false;
-                                        _textError =
-                                            'Something wrong with connection';
-                                      });
-                                    },
-                                  );
                                 },
                               ),
                             ),
@@ -312,9 +282,20 @@ class SigninFirebaseState extends State<SigninFirebase> {
   }
 
   void _loginEmailFirebase() async {
-    final FirebaseUser user = (await _auth.signInWithEmailAndPassword(
+    final FirebaseUser user = (await _auth
+            .signInWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
+    )
+            .catchError(
+      (error) {
+        var errorMessage = error.message;
+        setState(() {
+          _success = false;
+          _loading = false;
+          _textError = errorMessage;
+        });
+      },
     ))
         .user;
 

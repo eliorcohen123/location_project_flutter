@@ -316,7 +316,7 @@ class _ListMapState extends State<ListMap> {
                   latList: _places[index].geometry.location.lat,
                   lngList: _places[index].geometry.location.lng,
                   photoList: _places[index].photos.isNotEmpty
-                      ? _places[index].photos[0].photoReference
+                      ? _places[index].photos[0].photo_reference
                       : "",
                   edit: false,
                 ),
@@ -340,7 +340,7 @@ class _ListMapState extends State<ListMap> {
                 _places[index].vicinity,
                 _places[index].geometry.location.lat,
                 _places[index].geometry.location.lng,
-                _places[index].photos[0].photoReference)
+                _places[index].photos[0].photo_reference)
           },
         ),
       ],
@@ -354,7 +354,7 @@ class _ListMapState extends State<ListMap> {
               width: double.infinity,
               imageUrl: _places[index].photos.isNotEmpty
                   ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                      _places[index].photos[0].photoReference +
+                      _places[index].photos[0].photo_reference +
                       "&key=$_API_KEY"
                   : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
               placeholder: (context, url) => const CircularProgressIndicator(),
@@ -384,7 +384,26 @@ class _ListMapState extends State<ListMap> {
                 children: <Widget>[
                   _textListView(_places[index].name, 17.0, 0xffE9FFFF),
                   _textListView(_places[index].vicinity, 15.0, 0xFFFFFFFF),
-                  _textListView(_calculateDistance(_meter), 15.0, 0xFFFFFFFF),
+                  Row(
+                    children: [
+                      _textListView(
+                          _calculateDistance(_meter), 15.0, 0xFFFFFFFF),
+                      SizedBox(
+                        width: ResponsiveScreen().widthMediaQuery(context, 20),
+                      ),
+                      _textListView(
+                          _places[index].opening_hours != null
+                              ? _places[index].opening_hours.open_now == true
+                                  ? 'Open'
+                                  : _places[index].opening_hours.open_now ==
+                                          false
+                                      ? 'Close'
+                                      : 'No info'
+                              : "No info",
+                          15.0,
+                          0xFFFFEA54),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -424,7 +443,7 @@ class _ListMapState extends State<ListMap> {
     dataFile["url"] = {
       'en': _places[index].photos.isNotEmpty
           ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-              _places[index].photos[0].photoReference +
+              _places[index].photos[0].photo_reference +
               "&key=$_API_KEY"
           : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
     };
@@ -441,7 +460,7 @@ class _ListMapState extends State<ListMap> {
             "file": listFile,
             "previewImage": _places[index].photos.isNotEmpty
                 ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                    _places[index].photos[0].photoReference +
+                    _places[index].photos[0].photo_reference +
                     "&key=$_API_KEY"
                 : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
             "previewTitle": {'en': _places[index].name},
@@ -462,7 +481,7 @@ class _ListMapState extends State<ListMap> {
                 "lat": _places[index].geometry.location.lat,
                 "lng": _places[index].geometry.location.lng,
                 "photo": _places[index].photos.isNotEmpty
-                    ? _places[index].photos[0].photoReference
+                    ? _places[index].photos[0].photo_reference
                     : "",
               },
             ).then(

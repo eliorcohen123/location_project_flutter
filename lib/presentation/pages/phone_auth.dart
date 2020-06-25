@@ -401,7 +401,6 @@ class _PhoneAuthState extends State<PhoneAuth> {
       height: 48,
       alignment: Alignment.center,
       child: TextFormField(
-        autofocus: true,
         focusNode: myFocusNode,
         inputFormatters: [
           LengthLimitingTextInputFormatter(1),
