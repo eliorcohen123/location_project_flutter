@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/utils/validations.dart';
 import 'package:locationprojectflutter/presentation/widgets/tff_firebase.dart';
@@ -475,16 +474,5 @@ class _PhoneAuthState extends State<PhoneAuth> {
         ),
       ),
     );
-  }
-
-  _toastMessage(String message) {
-    Fluttertoast.showToast(
-        msg: message,
-        backgroundColor: Color(0x672cbbba),
-        textColor: Colors.white,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.TOP,
-        timeInSecForIos: 1,
-        fontSize: 16.0);
   }
 }
