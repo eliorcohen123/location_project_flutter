@@ -26,8 +26,9 @@ class _PhoneAuthState extends State<PhoneAuth> {
   final TextEditingController _smsController5 = TextEditingController();
   final TextEditingController _smsController6 = TextEditingController();
   bool _success, _loading = false;
-  String _userEmail, _textError = '', _verificationId;
+  String _userEmail, _textNotice = '', _verificationId;
   SharedPreferences _sharedPrefs;
+  FocusNode _focus1 = FocusNode();
   FocusNode _focus2 = FocusNode();
   FocusNode _focus3 = FocusNode();
   FocusNode _focus4 = FocusNode();
@@ -103,32 +104,32 @@ class _PhoneAuthState extends State<PhoneAuth> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            _tffSms(_smsController1, null, _focus2),
+                            _tffSms(_smsController1, _focus1, _focus2, null),
                             SizedBox(
                               width: ResponsiveScreen()
                                   .widthMediaQuery(context, 5),
                             ),
-                            _tffSms(_smsController2, _focus2, _focus3),
+                            _tffSms(_smsController2, _focus2, _focus3, _focus1),
                             SizedBox(
                               width: ResponsiveScreen()
                                   .widthMediaQuery(context, 5),
                             ),
-                            _tffSms(_smsController3, _focus3, _focus4),
+                            _tffSms(_smsController3, _focus3, _focus4, _focus2),
                             SizedBox(
                               width: ResponsiveScreen()
                                   .widthMediaQuery(context, 5),
                             ),
-                            _tffSms(_smsController4, _focus4, _focus5),
+                            _tffSms(_smsController4, _focus4, _focus5, _focus3),
                             SizedBox(
                               width: ResponsiveScreen()
                                   .widthMediaQuery(context, 5),
                             ),
-                            _tffSms(_smsController5, _focus5, _focus6),
+                            _tffSms(_smsController5, _focus5, _focus6, _focus4),
                             SizedBox(
                               width: ResponsiveScreen()
                                   .widthMediaQuery(context, 5),
                             ),
-                            _tffSms(_smsController6, _focus6, null),
+                            _tffSms(_smsController6, _focus6, null, _focus5),
                           ],
                         ),
                       ),
@@ -140,9 +141,10 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                      left: ResponsiveScreen().widthMediaQuery(context, 20),
-                      right: ResponsiveScreen().widthMediaQuery(context, 20),
-                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                    left: ResponsiveScreen().widthMediaQuery(context, 20),
+                    right: ResponsiveScreen().widthMediaQuery(context, 20),
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  ),
                   child: Container(
                     child: RaisedButton(
                       highlightElevation: 0.0,
@@ -168,23 +170,14 @@ class _PhoneAuthState extends State<PhoneAuth> {
                                 .validatePhone(_phoneController.text)) {
                               setState(() {
                                 _loading = true;
-                                _textError = '';
+                                _textNotice = '';
                               });
-                              Future.delayed(
-                                const Duration(milliseconds: 5000),
-                                () {
-                                  setState(() {
-                                    _success = false;
-                                    _loading = false;
-                                  });
-                                },
-                              );
                               _verifyPhoneNumber();
                             } else if (!Validations()
                                 .validatePhone(_phoneController.text)) {
                               setState(() {
                                 _success = false;
-                                _textError = 'Invalid Phone';
+                                _textNotice = 'Invalid Phone';
                               });
                             }
                           }
@@ -200,9 +193,10 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                      left: ResponsiveScreen().widthMediaQuery(context, 20),
-                      right: ResponsiveScreen().widthMediaQuery(context, 20),
-                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                    left: ResponsiveScreen().widthMediaQuery(context, 20),
+                    right: ResponsiveScreen().widthMediaQuery(context, 20),
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  ),
                   child: Container(
                     child: RaisedButton(
                       highlightElevation: 0.0,
@@ -231,17 +225,8 @@ class _PhoneAuthState extends State<PhoneAuth> {
                               _smsController6.text.isNotEmpty) {
                             setState(() {
                               _loading = true;
-                              _textError = '';
+                              _textNotice = '';
                             });
-                            Future.delayed(
-                              const Duration(milliseconds: 5000),
-                              () {
-                                setState(() {
-                                  _success = false;
-                                  _loading = false;
-                                });
-                              },
-                            );
                             _signInWithPhoneNumber();
                           }
                         }
@@ -257,7 +242,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 Container(
                   alignment: Alignment.center,
                   child: Text(
-                    _success == null ? '' : _success ? '' : _textError,
+                    _success == null ? '' : _success ? '' : _textNotice,
                     style: TextStyle(
                       color: Colors.redAccent,
                       fontSize: 15,
@@ -285,38 +270,50 @@ class _PhoneAuthState extends State<PhoneAuth> {
           setState(() {
             _success = false;
             _loading = false;
-            _textError = error.message;
+            _textNotice = error.message;
           });
         },
       );
       setState(() {
-        _textError = 'Received phone auth credential: $phoneAuthCredential';
+        _textNotice = 'Received phone auth credential: $phoneAuthCredential';
+        _success = false;
+        _loading = false;
       });
     };
 
     final PhoneVerificationFailed verificationFailed =
         (AuthException authException) {
       setState(() {
-        _textError =
+        _textNotice =
             'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}';
+        _success = false;
+        _loading = false;
       });
     };
 
     final PhoneCodeSent codeSent =
         (String verificationId, [int forceResendingToken]) async {
-      _textError = 'Please check your phone for the verification code.';
-      _verificationId = verificationId;
+      setState(() {
+        _textNotice = 'Please check your phone for the verification code.';
+        _verificationId = verificationId;
+        _success = false;
+        _loading = false;
+      });
     };
 
     final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
         (String verificationId) {
-      _verificationId = verificationId;
+      setState(() {
+        _verificationId = verificationId;
+        _success = false;
+        _loading = false;
+      });
     };
 
     await _auth
         .verifyPhoneNumber(
       phoneNumber: '+972' + _phoneController.text,
-      timeout: const Duration(seconds: 5),
+      timeout: const Duration(seconds: 120),
       verificationCompleted: verificationCompleted,
       verificationFailed: verificationFailed,
       codeSent: codeSent,
@@ -327,7 +324,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
         setState(() {
           _success = false;
           _loading = false;
-          _textError = error.message;
+          _textNotice = error.message;
         });
       },
     );
@@ -349,7 +346,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
         setState(() {
           _success = false;
           _loading = false;
-          _textError = error.message;
+          _textNotice = error.message;
         });
       },
     ))
@@ -365,7 +362,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
       setState(() {
         _success = true;
         _loading = false;
-        _textError = '';
+        _textNotice = '';
       });
 
       final QuerySnapshot result = await _firestore
@@ -426,20 +423,24 @@ class _PhoneAuthState extends State<PhoneAuth> {
     _sharedPrefs.setString('userIdEmail', value);
   }
 
-  Widget _tffSms(TextEditingController num, FocusNode myFocusNode,
-      FocusNode otherFocusNode) {
+  Widget _tffSms(TextEditingController num, FocusNode thisFocusNode,
+      FocusNode nextFocusNode, FocusNode previousFocusNode) {
     return Container(
       width: 48,
       height: 48,
       alignment: Alignment.center,
       child: TextFormField(
-        focusNode: myFocusNode,
+        focusNode: thisFocusNode,
         inputFormatters: [
           LengthLimitingTextInputFormatter(1),
         ],
         keyboardType: TextInputType.number,
         onChanged: (v) {
-          FocusScope.of(context).requestFocus(otherFocusNode);
+          if (num.text.length == 1) {
+            FocusScope.of(context).requestFocus(nextFocusNode);
+          } else if (num.text.length == 0) {
+            FocusScope.of(context).requestFocus(previousFocusNode);
+          }
         },
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
