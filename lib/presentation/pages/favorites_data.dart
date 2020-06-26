@@ -89,27 +89,37 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
       body: Center(
         child: Column(
           children: <Widget>[
-            Expanded(
-//            child: Observer(builder: (_) { // MobX
-              child: LiveList(
-                showItemInterval: Duration(milliseconds: 50),
-                showItemDuration: Duration(milliseconds: 50),
-                reAnimateOnVisibility: true,
-                scrollDirection: Axis.vertical,
-                itemCount: _places.length,
-                itemBuilder: buildAnimatedItem,
-                separatorBuilder: (context, i) {
-                  return SizedBox(
-                    height: ResponsiveScreen().heightMediaQuery(context, 5),
-                    width: double.infinity,
-                    child: const DecoratedBox(
-                      decoration: const BoxDecoration(color: Colors.white),
+            _places.length == 0
+                ? Text(
+                    'No favorite places',
+                    style: TextStyle(
+                      color: Colors.deepPurpleAccent,
+                      fontSize: 30,
                     ),
-                  );
-                },
-              ),
+                  )
+                : Expanded(
+//            child: Observer(builder: (_) { // MobX
+                    child: LiveList(
+                      showItemInterval: Duration(milliseconds: 50),
+                      showItemDuration: Duration(milliseconds: 50),
+                      reAnimateOnVisibility: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: _places.length,
+                      itemBuilder: buildAnimatedItem,
+                      separatorBuilder: (context, i) {
+                        return SizedBox(
+                          height:
+                              ResponsiveScreen().heightMediaQuery(context, 5),
+                          width: double.infinity,
+                          child: const DecoratedBox(
+                            decoration:
+                                const BoxDecoration(color: Colors.white),
+                          ),
+                        );
+                      },
+                    ),
 //            },
-            ),
+                  ),
           ],
         ),
       ),

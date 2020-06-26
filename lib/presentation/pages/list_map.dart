@@ -139,118 +139,122 @@ class _ListMapState extends State<ListMap> {
       body: Container(
         child: Stack(
           children: [
-            Center(
-              child: Column(
-                children: <Widget>[
-                  FlutterInstagramStories(
-                    collectionDbName: 'stories',
-                    showTitleOnIcon: true,
-                    iconTextStyle: TextStyle(
-                      shadows: <Shadow>[
-                        Shadow(
-                          offset: Offset(1.0, 1.0),
-                          blurRadius: 1.0,
-                          color: Color(0xAA000000),
-                        ),
-                      ],
-                      fontSize: 6,
-                      color: Colors.white,
-                    ),
-                    iconImageBorderRadius: BorderRadius.circular(30),
-                    iconBoxDecoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(30),
+            Column(
+              children: <Widget>[
+                FlutterInstagramStories(
+                  collectionDbName: 'stories',
+                  showTitleOnIcon: true,
+                  iconTextStyle: TextStyle(
+                    shadows: <Shadow>[
+                      Shadow(
+                        offset: Offset(1.0, 1.0),
+                        blurRadius: 1.0,
+                        color: Color(0xAA000000),
                       ),
-                      color: Color(0xFFffffff),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(0xff333333),
-                          blurRadius: 10.0,
-                          offset: Offset(
-                            0.0,
-                            4.0,
-                          ),
+                    ],
+                    fontSize: 6,
+                    color: Colors.white,
+                  ),
+                  iconImageBorderRadius: BorderRadius.circular(30),
+                  iconBoxDecoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(30),
+                    ),
+                    color: Color(0xFFffffff),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0xff333333),
+                        blurRadius: 10.0,
+                        offset: Offset(
+                          0.0,
+                          4.0,
                         ),
-                      ],
-                    ),
-                    iconWidth: ResponsiveScreen().widthMediaQuery(context, 50),
-                    iconHeight:
-                        ResponsiveScreen().heightMediaQuery(context, 50),
-                    imageStoryDuration: 7,
-                    progressPosition: ProgressPosition.top,
-                    repeat: true,
-                    inline: false,
-                    languageCode: 'en',
-                    backgroundColorBetweenStories: Colors.black,
-                    closeButtonIcon: Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 28.0,
-                    ),
-                    closeButtonBackgroundColor: Color(0x11000000),
-                    sortingOrderDesc: true,
-                    lastIconHighlight: true,
-                    lastIconHighlightColor: Colors.deepOrange,
-                    lastIconHighlightRadius: const Radius.circular(30),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    height: ResponsiveScreen().heightMediaQuery(context, 1),
-                    width: double.infinity,
-                    child: const DecoratedBox(
-                      decoration: const BoxDecoration(color: Colors.grey),
-                    ),
+                  iconWidth: ResponsiveScreen().widthMediaQuery(context, 50),
+                  iconHeight: ResponsiveScreen().heightMediaQuery(context, 50),
+                  imageStoryDuration: 7,
+                  progressPosition: ProgressPosition.top,
+                  repeat: true,
+                  inline: false,
+                  languageCode: 'en',
+                  backgroundColorBetweenStories: Colors.black,
+                  closeButtonIcon: Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: 28.0,
                   ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: <Widget>[
-                        _btnType('Banks', 'bank'),
-                        _btnType('Bars', 'bar|night_club'),
-                        _btnType('Beauty', 'beauty_salon|hair_care'),
-                        _btnType('Books', 'book_store|library'),
-                        _btnType('Bus stations', 'bus_station'),
-                        _btnType('Cars',
-                            'car_dealer|car_rental|car_repair|car_wash'),
-                        _btnType('Clothing', 'clothing_store'),
-                        _btnType('Doctors', 'doctor'),
-                        _btnType('Gas stations', 'gas_station'),
-                        _btnType('Gym', 'gym'),
-                        _btnType('Jewelries', 'jewelry_store'),
-                        _btnType(
-                            'Parks', 'park|amusement_park|parking|rv_park'),
-                        _btnType('Restaurants', 'food|restaurant|cafe|bakery'),
-                        _btnType('School', 'school'),
-                        _btnType('Spa', 'spa'),
-                      ],
-                    ),
+                  closeButtonBackgroundColor: Color(0x11000000),
+                  sortingOrderDesc: true,
+                  lastIconHighlight: true,
+                  lastIconHighlightColor: Colors.deepOrange,
+                  lastIconHighlightRadius: const Radius.circular(30),
+                ),
+                SizedBox(
+                  height: ResponsiveScreen().heightMediaQuery(context, 1),
+                  width: double.infinity,
+                  child: const DecoratedBox(
+                    decoration: const BoxDecoration(color: Colors.grey),
                   ),
-                  _searching
-                      ? CircularProgressIndicator()
-                      : Expanded(
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: <Widget>[
+                      _btnType('Banks', 'bank'),
+                      _btnType('Bars', 'bar|night_club'),
+                      _btnType('Beauty', 'beauty_salon|hair_care'),
+                      _btnType('Books', 'book_store|library'),
+                      _btnType('Bus stations', 'bus_station'),
+                      _btnType(
+                          'Cars', 'car_dealer|car_rental|car_repair|car_wash'),
+                      _btnType('Clothing', 'clothing_store'),
+                      _btnType('Doctors', 'doctor'),
+                      _btnType('Gas stations', 'gas_station'),
+                      _btnType('Gym', 'gym'),
+                      _btnType('Jewelries', 'jewelry_store'),
+                      _btnType('Parks', 'park|amusement_park|parking|rv_park'),
+                      _btnType('Restaurants', 'food|restaurant|cafe|bakery'),
+                      _btnType('School', 'school'),
+                      _btnType('Spa', 'spa'),
+                    ],
+                  ),
+                ),
+                _searching
+                    ? CircularProgressIndicator()
+                    : _places.length == 0
+                        ? Text(
+                            'No Places',
+                            style: TextStyle(
+                              color: Colors.deepPurpleAccent,
+                              fontSize: 30,
+                            ),
+                          )
+                        : Expanded(
 //                            child: Observer(builder: (_) {
-                          child: LiveList(
-                            showItemInterval: Duration(milliseconds: 50),
-                            showItemDuration: Duration(milliseconds: 50),
-                            reAnimateOnVisibility: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: _places.length,
-                            itemBuilder: buildAnimatedItem,
-                            separatorBuilder: (context, i) {
-                              return SizedBox(
-                                height: ResponsiveScreen()
-                                    .heightMediaQuery(context, 5),
-                                width: double.infinity,
-                                child: const DecoratedBox(
-                                  decoration:
-                                      const BoxDecoration(color: Colors.white),
-                                ),
-                              );
-                            },
-                          ),
+                            child: LiveList(
+                              showItemInterval: Duration(milliseconds: 50),
+                              showItemDuration: Duration(milliseconds: 50),
+                              reAnimateOnVisibility: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: _places.length,
+                              itemBuilder: buildAnimatedItem,
+                              separatorBuilder: (context, i) {
+                                return SizedBox(
+                                  height: ResponsiveScreen()
+                                      .heightMediaQuery(context, 5),
+                                  width: double.infinity,
+                                  child: const DecoratedBox(
+                                    decoration: const BoxDecoration(
+                                        color: Colors.white),
+                                  ),
+                                );
+                              },
+                            ),
 //                        },
-                        ),
-                ],
-              ),
+                          ),
+              ],
             ),
             if (_activeNav)
               Container(

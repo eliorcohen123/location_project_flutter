@@ -26,7 +26,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
   final TextEditingController _smsController5 = TextEditingController();
   final TextEditingController _smsController6 = TextEditingController();
   bool _success, _loading = false;
-  String _userEmail, _textNotice = '', _verificationId;
+  String _userEmail, _textError = '', _textOk = '', _verificationId;
   SharedPreferences _sharedPrefs;
   FocusNode _focus1 = FocusNode();
   FocusNode _focus2 = FocusNode();
@@ -137,7 +137,38 @@ class _PhoneAuthState extends State<PhoneAuth> {
                   ],
                 ),
                 SizedBox(
-                  height: ResponsiveScreen().heightMediaQuery(context, 40),
+                  height: ResponsiveScreen().heightMediaQuery(context, 20),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  child: _success == null
+                      ? null
+                      : _textError != ''
+                          ? Text(
+                              _textError,
+                              style: TextStyle(
+                                color: Colors.redAccent,
+                                fontSize: 15,
+                              ),
+                              textAlign: TextAlign.center,
+                            )
+                          : _textOk != ''
+                              ? Text(
+                                  _textOk,
+                                  style: TextStyle(
+                                    color: Colors.lightGreenAccent,
+                                    fontSize: 15,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                )
+                              : null,
+                ),
+                SizedBox(
+                  height: ResponsiveScreen().heightMediaQuery(context, 20),
+                ),
+                _loading == true ? CircularProgressIndicator() : Container(),
+                SizedBox(
+                  height: ResponsiveScreen().heightMediaQuery(context, 20),
                 ),
                 Padding(
                   padding: EdgeInsets.only(
@@ -170,14 +201,15 @@ class _PhoneAuthState extends State<PhoneAuth> {
                                 .validatePhone(_phoneController.text)) {
                               setState(() {
                                 _loading = true;
-                                _textNotice = '';
+                                _textError = '';
+                                _textOk = '';
                               });
                               _verifyPhoneNumber();
                             } else if (!Validations()
                                 .validatePhone(_phoneController.text)) {
                               setState(() {
                                 _success = false;
-                                _textNotice = 'Invalid Phone';
+                                _textError = 'Invalid Phone';
                               });
                             }
                           }
@@ -225,7 +257,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                               _smsController6.text.isNotEmpty) {
                             setState(() {
                               _loading = true;
-                              _textNotice = '';
+                              _textError = '';
                             });
                             _signInWithPhoneNumber();
                           }
@@ -239,21 +271,6 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 5),
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    _success == null ? '' : _success ? '' : _textNotice,
-                    style: TextStyle(
-                      color: Colors.redAccent,
-                      fontSize: 15,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                SizedBox(
-                  height: ResponsiveScreen().heightMediaQuery(context, 20),
-                ),
-                _loading == true ? CircularProgressIndicator() : Container(),
               ],
             ),
           ),
@@ -270,12 +287,12 @@ class _PhoneAuthState extends State<PhoneAuth> {
           setState(() {
             _success = false;
             _loading = false;
-            _textNotice = error.message;
+            _textError = error.message;
           });
         },
       );
       setState(() {
-        _textNotice = 'Received phone auth credential: $phoneAuthCredential';
+        _textOk = 'Received phone auth credential: $phoneAuthCredential';
         _success = false;
         _loading = false;
       });
@@ -284,7 +301,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
     final PhoneVerificationFailed verificationFailed =
         (AuthException authException) {
       setState(() {
-        _textNotice =
+        _textError =
             'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}';
         _success = false;
         _loading = false;
@@ -294,7 +311,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
     final PhoneCodeSent codeSent =
         (String verificationId, [int forceResendingToken]) async {
       setState(() {
-        _textNotice = 'Please check your phone for the verification code.';
+        _textOk = 'Please check your phone for the verification code.';
         _verificationId = verificationId;
         _success = false;
         _loading = false;
@@ -324,7 +341,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
         setState(() {
           _success = false;
           _loading = false;
-          _textNotice = error.message;
+          _textError = error.message;
         });
       },
     );
@@ -346,7 +363,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
         setState(() {
           _success = false;
           _loading = false;
-          _textNotice = error.message;
+          _textError = error.message;
         });
       },
     ))
@@ -362,7 +379,8 @@ class _PhoneAuthState extends State<PhoneAuth> {
       setState(() {
         _success = true;
         _loading = false;
-        _textNotice = '';
+        _textError = '';
+        _textOk = '';
       });
 
       final QuerySnapshot result = await _firestore

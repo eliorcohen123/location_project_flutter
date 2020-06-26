@@ -64,27 +64,37 @@ class HomeChatState extends State<HomeChat> {
       body: Stack(
         children: <Widget>[
           Container(
-            child: StreamBuilder(
-              stream: _firestore.collection('users').snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Color(0xfff5a623),
+            child: Center(
+              child: StreamBuilder(
+                stream: _firestore.collection('users').snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Color(0xfff5a623),
+                        ),
                       ),
-                    ),
-                  );
-                } else {
-                  _listMessage = snapshot.data.documents;
-                  return ListView.builder(
-                    padding: EdgeInsets.all(10.0),
-                    itemBuilder: (context, index) =>
-                        _buildItem(context, _listMessage[index]),
-                    itemCount: _listMessage.length,
-                  );
-                }
-              },
+                    );
+                  } else {
+                    _listMessage = snapshot.data.documents;
+                    return _listMessage.length == 0
+                        ? Text(
+                      'No Uers',
+                      style: TextStyle(
+                        color: Colors.deepPurpleAccent,
+                        fontSize: 30,
+                      ),
+                    )
+                        : ListView.builder(
+                      padding: EdgeInsets.all(10.0),
+                      itemBuilder: (context, index) =>
+                          _buildItem(context, _listMessage[index]),
+                      itemCount: _listMessage.length,
+                    );
+                  }
+                },
+              ),
             ),
           ),
           Positioned(
@@ -107,30 +117,30 @@ class HomeChatState extends State<HomeChat> {
               Material(
                 child: document['photoUrl'] != null
                     ? CachedNetworkImage(
-                        placeholder: (context, url) => Container(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 1.0,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Color(0xfff5a623),
-                            ),
-                          ),
-                          width:
-                              ResponsiveScreen().widthMediaQuery(context, 50),
-                          height:
-                              ResponsiveScreen().heightMediaQuery(context, 50),
-                          padding: EdgeInsets.all(15.0),
-                        ),
-                        imageUrl: document['photoUrl'],
-                        width: ResponsiveScreen().widthMediaQuery(context, 50),
-                        height:
-                            ResponsiveScreen().heightMediaQuery(context, 50),
-                        fit: BoxFit.cover,
-                      )
-                    : Icon(
-                        Icons.account_circle,
-                        size: 50.0,
-                        color: Color(0xffaeaeae),
+                  placeholder: (context, url) => Container(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 1.0,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Color(0xfff5a623),
                       ),
+                    ),
+                    width:
+                    ResponsiveScreen().widthMediaQuery(context, 50),
+                    height:
+                    ResponsiveScreen().heightMediaQuery(context, 50),
+                    padding: EdgeInsets.all(15.0),
+                  ),
+                  imageUrl: document['photoUrl'],
+                  width: ResponsiveScreen().widthMediaQuery(context, 50),
+                  height:
+                  ResponsiveScreen().heightMediaQuery(context, 50),
+                  fit: BoxFit.cover,
+                )
+                    : Icon(
+                  Icons.account_circle,
+                  size: 50.0,
+                  color: Color(0xffaeaeae),
+                ),
                 borderRadius: BorderRadius.all(
                   Radius.circular(25.0),
                 ),
@@ -187,12 +197,12 @@ class HomeChatState extends State<HomeChat> {
 
   void _initGetSharedPrefs() {
     SharedPreferences.getInstance().then(
-      (prefs) {
+          (prefs) {
         setState(() => _sharedPrefs = prefs);
         _valueIdUser = _sharedPrefs.getString('userIdEmail');
       },
     ).then(
-      (value) => {
+          (value) => {
         _getNotifications(),
       },
     );
@@ -220,7 +230,7 @@ class HomeChatState extends State<HomeChat> {
     );
 
     _firebaseMessaging.getToken().then(
-      (token) {
+          (token) {
         print('token: $token');
         _firestore.collection('users').document(_valueIdUser).updateData(
           {
@@ -229,7 +239,7 @@ class HomeChatState extends State<HomeChat> {
         );
       },
     ).catchError(
-      (err) {
+          (err) {
         Fluttertoast.showToast(
           msg: err.message.toString(),
         );
@@ -240,7 +250,7 @@ class HomeChatState extends State<HomeChat> {
   void _initNotifications() {
     _flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
     var initializationSettingsAndroid =
-        new AndroidInitializationSettings('assets/icon.png');
+    new AndroidInitializationSettings('assets/icon.png');
     var initializationSettingsIOS = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);

@@ -69,28 +69,40 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
     );
     return Scaffold(
       appBar: AppBarTotal(),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: LiveList(
-              showItemInterval: Duration(milliseconds: 50),
-              showItemDuration: Duration(milliseconds: 50),
-              reAnimateOnVisibility: true,
-              scrollDirection: Axis.vertical,
-              itemCount: _places.length,
-              itemBuilder: buildAnimatedItem,
-              separatorBuilder: (context, i) {
-                return SizedBox(
-                  height: ResponsiveScreen().heightMediaQuery(context, 5),
-                  width: double.infinity,
-                  child: const DecoratedBox(
-                    decoration: const BoxDecoration(color: Colors.white),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            _places.length == 0
+                ? Text(
+                    'No Favorite Places',
+                    style: TextStyle(
+                      color: Colors.deepPurpleAccent,
+                      fontSize: 30,
+                    ),
+                  )
+                : Expanded(
+                    child: LiveList(
+                      showItemInterval: Duration(milliseconds: 50),
+                      showItemDuration: Duration(milliseconds: 50),
+                      reAnimateOnVisibility: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: _places.length,
+                      itemBuilder: buildAnimatedItem,
+                      separatorBuilder: (context, i) {
+                        return SizedBox(
+                          height:
+                              ResponsiveScreen().heightMediaQuery(context, 5),
+                          width: double.infinity,
+                          child: const DecoratedBox(
+                            decoration:
+                                const BoxDecoration(color: Colors.white),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                );
-              },
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
       drawer: DrawerTotal(),
     );
