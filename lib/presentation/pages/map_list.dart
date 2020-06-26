@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_geofence/geofence.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -6,6 +7,7 @@ import 'package:locationprojectflutter/data/models/model_googleapis/results.dart
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
 import 'package:locationprojectflutter/presentation/utils/map_utils.dart';
+import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
@@ -219,24 +221,95 @@ class _MapListState extends State<MapList> {
       String namePlace, String vicinity, double lat, double lng) {
     return showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text(namePlace),
-        content: Text("Would you want to navigate $namePlace?"),
-        actions: <Widget>[
-          FlatButton(
-            child: Text("לא"),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
           ),
-          FlatButton(
-            child: Text("כן"),
-            onPressed: () {
-              MapUtils().openMaps(context, namePlace, vicinity, lat, lng);
-            },
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Center(
+                child: Text(
+                  '$namePlace',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(
+                height: ResponsiveScreen().heightMediaQuery(context, 20),
+              ),
+              Text(
+                "Would you want to navigate $namePlace?",
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                height: ResponsiveScreen().heightMediaQuery(context, 20),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    height: ResponsiveScreen().heightMediaQuery(context, 40),
+                    width: ResponsiveScreen().widthMediaQuery(context, 100),
+                    child: RaisedButton(
+                      highlightElevation: 0.0,
+                      splashColor: Colors.deepPurpleAccent,
+                      highlightColor: Colors.deepPurpleAccent,
+                      elevation: 0.0,
+                      color: Colors.deepPurpleAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: Text(
+                        'No',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 15,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: ResponsiveScreen().widthMediaQuery(context, 20),
+                  ),
+                  Container(
+                    height: ResponsiveScreen().heightMediaQuery(context, 40),
+                    width: ResponsiveScreen().widthMediaQuery(context, 100),
+                    child: RaisedButton(
+                      highlightElevation: 0.0,
+                      splashColor: Colors.deepPurpleAccent,
+                      highlightColor: Colors.deepPurpleAccent,
+                      elevation: 0.0,
+                      color: Colors.deepPurpleAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: Text(
+                        'Yes',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 15,
+                        ),
+                      ),
+                      onPressed: () {
+                        MapUtils()
+                            .openMaps(context, namePlace, vicinity, lat, lng);
+                      },
+                    ),
+                  ),
+                ],
+              )
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

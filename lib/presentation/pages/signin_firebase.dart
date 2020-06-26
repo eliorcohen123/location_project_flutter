@@ -111,6 +111,9 @@ class SigninFirebaseState extends State<SigninFirebase> {
                                   .widthMediaQuery(context, 20),
                               bottom: MediaQuery.of(context).viewInsets.bottom),
                           child: Container(
+                            height: ResponsiveScreen()
+                                .heightMediaQuery(context, 50),
+                            width: MediaQuery.of(context).size.width,
                             child: RaisedButton(
                               highlightElevation: 0.0,
                               splashColor: Colors.greenAccent,
@@ -156,9 +159,6 @@ class SigninFirebaseState extends State<SigninFirebase> {
                                 }
                               },
                             ),
-                            height: ResponsiveScreen()
-                                .heightMediaQuery(context, 50),
-                            width: MediaQuery.of(context).size.width,
                           ),
                         ),
                         SizedBox(

@@ -676,7 +676,8 @@ class ChatScreenState extends State<ChatScreen> {
       setState(() {
         _isLoading = true;
       });
-      _uploadFile(type);
+
+      _showDialog(type);
     }
   }
 
@@ -779,6 +780,96 @@ class ChatScreenState extends State<ChatScreen> {
     } else {
       return false;
     }
+  }
+
+  Future _showDialog(int type) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                type == 1
+                    ? "Would you want to send this image?"
+                    : type == 3 ? "Would you want to send this video?" : '',
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                height: ResponsiveScreen().heightMediaQuery(context, 20),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    height: ResponsiveScreen().heightMediaQuery(context, 40),
+                    width: ResponsiveScreen().widthMediaQuery(context, 100),
+                    child: RaisedButton(
+                      highlightElevation: 0.0,
+                      splashColor: Colors.deepPurpleAccent,
+                      highlightColor: Colors.deepPurpleAccent,
+                      elevation: 0.0,
+                      color: Colors.deepPurpleAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: Text(
+                        'No',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 15,
+                        ),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isLoading = false;
+                        });
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: ResponsiveScreen().widthMediaQuery(context, 20),
+                  ),
+                  Container(
+                    height: ResponsiveScreen().heightMediaQuery(context, 40),
+                    width: ResponsiveScreen().widthMediaQuery(context, 100),
+                    child: RaisedButton(
+                      highlightElevation: 0.0,
+                      splashColor: Colors.deepPurpleAccent,
+                      highlightColor: Colors.deepPurpleAccent,
+                      elevation: 0.0,
+                      color: Colors.deepPurpleAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: Text(
+                        'Yes',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 15,
+                        ),
+                      ),
+                      onPressed: () {
+                        _uploadFile(type);
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 

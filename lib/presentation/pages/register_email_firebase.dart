@@ -95,6 +95,8 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
                         right: ResponsiveScreen().widthMediaQuery(context, 20),
                         bottom: MediaQuery.of(context).viewInsets.bottom),
                     child: Container(
+                      height: ResponsiveScreen().heightMediaQuery(context, 50),
+                      width: MediaQuery.of(context).size.width,
                       child: RaisedButton(
                         highlightElevation: 0.0,
                         splashColor: Colors.greenAccent,
@@ -140,8 +142,6 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
                           }
                         },
                       ),
-                      height: ResponsiveScreen().heightMediaQuery(context, 50),
-                      width: MediaQuery.of(context).size.width,
                     ),
                   ),
                   SizedBox(

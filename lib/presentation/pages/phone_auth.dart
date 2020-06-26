@@ -177,6 +177,8 @@ class _PhoneAuthState extends State<PhoneAuth> {
                     bottom: MediaQuery.of(context).viewInsets.bottom,
                   ),
                   child: Container(
+                    height: ResponsiveScreen().heightMediaQuery(context, 50),
+                    width: MediaQuery.of(context).size.width,
                     child: RaisedButton(
                       highlightElevation: 0.0,
                       splashColor: Colors.greenAccent,
@@ -216,8 +218,6 @@ class _PhoneAuthState extends State<PhoneAuth> {
                         }
                       },
                     ),
-                    height: ResponsiveScreen().heightMediaQuery(context, 50),
-                    width: MediaQuery.of(context).size.width,
                   ),
                 ),
                 SizedBox(
@@ -230,6 +230,8 @@ class _PhoneAuthState extends State<PhoneAuth> {
                     bottom: MediaQuery.of(context).viewInsets.bottom,
                   ),
                   child: Container(
+                    height: ResponsiveScreen().heightMediaQuery(context, 50),
+                    width: MediaQuery.of(context).size.width,
                     child: RaisedButton(
                       highlightElevation: 0.0,
                       splashColor: Colors.greenAccent,
@@ -264,8 +266,6 @@ class _PhoneAuthState extends State<PhoneAuth> {
                         }
                       },
                     ),
-                    height: ResponsiveScreen().heightMediaQuery(context, 50),
-                    width: MediaQuery.of(context).size.width,
                   ),
                 ),
                 SizedBox(
