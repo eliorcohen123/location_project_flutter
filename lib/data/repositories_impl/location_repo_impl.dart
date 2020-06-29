@@ -2,13 +2,13 @@ import 'package:locationprojectflutter/data/data_resources/remotes/location_remo
 import 'package:locationprojectflutter/domain/repositories_api/location_repo_api.dart';
 
 class LocationRepoImpl implements LocationRepoApi {
-  LocationRemoteDataSource locationRemoteDataSource =
+  LocationRemoteDataSource _locationRemoteDataSource =
       LocationRemoteDataSource();
 
   @override
   Future getLocationJson(double latitude, double longitude, String open,
       String type, int valueRadiusText, String text) {
-    return locationRemoteDataSource.responseJsonLocation(
+    return _locationRemoteDataSource.responseJsonLocation(
       latitude,
       longitude,
       open,
