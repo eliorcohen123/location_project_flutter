@@ -448,7 +448,7 @@ class _ListMapState extends State<ListMap> {
           : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
     };
 
-    var listFile = new List<Map<String, dynamic>>();
+    var listFile = List<Map<String, dynamic>>();
     listFile.add(dataFile);
 
     await _databaseReference
