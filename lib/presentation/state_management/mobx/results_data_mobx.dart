@@ -1,6 +1,6 @@
 //import 'package:flutter/material.dart';
 //import 'package:locationprojectflutter/core/services/service_locator.dart';
-//import 'package:locationprojectflutter/data/databases/sqflite_helper.dart';
+//import 'package:locationprojectflutter/data/data_resources/locals/sqflite_helper.dart';
 //import 'package:locationprojectflutter/data/models/model_sqfl/results_sqfl.dart';
 //import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
 //import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
