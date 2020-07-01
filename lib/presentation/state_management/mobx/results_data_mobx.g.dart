@@ -55,16 +55,6 @@
 //    });
 //  }
 //
-//  final _$getSearchNearbyAsyncAction =
-//      AsyncAction('_ResultsDataBase.getSearchNearby');
-//
-//  @override
-//  Future<dynamic> getSearchNearby(double latitude, double longitude,
-//      String open, String type, int valueRadiusText, String text) {
-//    return _$getSearchNearbyAsyncAction.run(() => super.getSearchNearby(
-//        latitude, longitude, open, type, valueRadiusText, text));
-//  }
-//
 //  final _$_ResultsDataBaseActionController =
 //      ActionController(name: '_ResultsDataBase');
 //

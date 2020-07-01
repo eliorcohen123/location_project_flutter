@@ -42,8 +42,8 @@
 //  }
 //
 //  @action
-//  void updateItem(int id, String name, String vicinity, double lat,
-//      double lng, String photo, BuildContext context) {
+//  void updateItem(int id, String name, String vicinity, double lat, double lng,
+//      String photo, BuildContext context) {
 //    _db
 //        .updateResult(
 //      ResultsSqfl.fromSqfl(
@@ -101,12 +101,5 @@
 //        );
 //      },
 //    );
-//  }
-//
-//  @action
-//  Future getSearchNearby(double latitude, double longitude, String open,
-//      String type, int valueRadiusText, String text) async {
-//    return await _locationRepoImpl.getLocationJson(
-//        latitude, longitude, open, type, valueRadiusText, text);
 //  }
 //}
