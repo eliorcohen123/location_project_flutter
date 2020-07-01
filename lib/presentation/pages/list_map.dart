@@ -488,8 +488,8 @@ class _ListMapState extends State<ListMap> {
               (result) => {
                 setState(() {
                   _activeNav = false;
-                  print(_activeNav);
                 }),
+                print(_activeNav),
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -600,8 +600,8 @@ class _ListMapState extends State<ListMap> {
 //          _userLocation.longitude, _open, type, _valueRadius.round(), text); // MobX
       setState(() {
         _searching = false;
-        print(_searching);
       });
+      print(_searching);
     }
     return _places;
   }

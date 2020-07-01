@@ -26,7 +26,7 @@ class MapList extends StatefulWidget {
 }
 
 class _MapListState extends State<MapList> {
-  GoogleMapController _myMapController;
+  MapCreatedCallback _onMapCreated;
   Set<Circle> _circles;
   SharedPreferences _sharedPrefs;
   double _valueRadius, _valueGeofence;
@@ -58,9 +58,7 @@ class _MapListState extends State<MapList> {
     return Scaffold(
       appBar: AppBarTotal(),
       body: GoogleMap(
-        onMapCreated: (controller) {
-          _myMapController = controller;
-        },
+        onMapCreated: _onMapCreated,
         initialCameraPosition: CameraPosition(
           target: _currentLocation,
           zoom: 10.0,

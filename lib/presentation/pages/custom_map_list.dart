@@ -14,7 +14,7 @@ class CustomMapList extends StatefulWidget {
 }
 
 class _CustomMapListState extends State<CustomMapList> {
-  GoogleMapController _myMapController;
+  MapCreatedCallback _onMapCreated;
   bool _zoomGesturesEnabled = true;
   List<Marker> _markers = <Marker>[];
 
@@ -26,9 +26,7 @@ class _CustomMapListState extends State<CustomMapList> {
     return Scaffold(
       appBar: AppBarTotal(),
       body: GoogleMap(
-        onMapCreated: (controller) {
-          _myMapController = controller;
-        },
+        onMapCreated: _onMapCreated,
         initialCameraPosition: CameraPosition(
           target: _currentLocation,
           zoom: 10.0,
