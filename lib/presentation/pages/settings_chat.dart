@@ -231,23 +231,25 @@ class SettingsChatState extends State<SettingsChat> {
         _aboutMe = _sharedPrefs.getString('aboutMe') ?? '';
         _photoUrl = _sharedPrefs.getString('photoUrl') ?? '';
       },
-    ).then((value) => {
-          document = _firestore.collection('users').document(_id),
-          document.get().then(
-            (document) {
-              if (document.exists) {
-                setState(() {
-                  _nickname = document['nickname'];
-                  _aboutMe = document['aboutMe'];
-                  _photoUrl = document['photoUrl'];
-                });
-              }
-            },
-          ).then((value) => {
-                _controllerNickname = TextEditingController(text: _nickname),
-                _controllerAboutMe = TextEditingController(text: _aboutMe),
-              }),
-        });
+    ).then(
+      (value) => {
+        document = _firestore.collection('users').document(_id),
+        document.get().then(
+          (document) {
+            if (document.exists) {
+              setState(() {
+                _nickname = document['nickname'];
+                _aboutMe = document['aboutMe'];
+                _photoUrl = document['photoUrl'];
+              });
+            }
+          },
+        ).then((value) => {
+              _controllerNickname = TextEditingController(text: _nickname),
+              _controllerAboutMe = TextEditingController(text: _aboutMe),
+            }),
+      },
+    );
   }
 
   void _getImage() async {

@@ -69,7 +69,7 @@ class ChatScreenState extends State<ChatScreen> {
           Center(
             child: _isLoading
                 ? Container(
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                       color: Color(0x80000000),
                     ),
                     child: Center(
@@ -892,7 +892,7 @@ class _VideoWidgetState extends State<VideoWidget> {
   void initState() {
     super.initState();
 
-    _videoPlayerController = new VideoPlayerController.network(widget.url);
+    _videoPlayerController = VideoPlayerController.network(widget.url);
     _initializeVideoPlayerFuture = _videoPlayerController.initialize();
   }
 
@@ -918,7 +918,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Chewie(
-                      key: new PageStorageKey(widget.url),
+                      key: PageStorageKey(widget.url),
                       controller: ChewieController(
                         videoPlayerController: _videoPlayerController,
                         aspectRatio: 1,

@@ -258,7 +258,7 @@ class _ListMapState extends State<ListMap> {
             ),
             if (_activeNav)
               Container(
-                decoration: new BoxDecoration(
+                decoration: BoxDecoration(
                   color: Color(0x80000000),
                 ),
                 child: Center(
@@ -438,7 +438,7 @@ class _ListMapState extends State<ListMap> {
   void _addToFirebase(int index, int count) async {
     DateTime now = DateTime.now();
 
-    Map<String, dynamic> dataFile = new Map();
+    Map<String, dynamic> dataFile = Map();
     dataFile["filetype"] = 'image';
     dataFile["url"] = {
       'en': _places[index].photos.isNotEmpty

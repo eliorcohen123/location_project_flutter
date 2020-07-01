@@ -22,7 +22,8 @@ class HomeChat extends StatefulWidget {
 class HomeChatState extends State<HomeChat> {
   final Firestore _firestore = Firestore.instance;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
+  FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   bool _isLoading = false;
   SharedPreferences _sharedPrefs;
   String _valueIdUser;
@@ -80,18 +81,18 @@ class HomeChatState extends State<HomeChat> {
                     _listMessage = snapshot.data.documents;
                     return _listMessage.length == 0
                         ? Text(
-                      'No Uers',
-                      style: TextStyle(
-                        color: Colors.deepPurpleAccent,
-                        fontSize: 30,
-                      ),
-                    )
+                            'No Uers',
+                            style: TextStyle(
+                              color: Colors.deepPurpleAccent,
+                              fontSize: 30,
+                            ),
+                          )
                         : ListView.builder(
-                      padding: EdgeInsets.all(10.0),
-                      itemBuilder: (context, index) =>
-                          _buildItem(context, _listMessage[index]),
-                      itemCount: _listMessage.length,
-                    );
+                            padding: EdgeInsets.all(10.0),
+                            itemBuilder: (context, index) =>
+                                _buildItem(context, _listMessage[index]),
+                            itemCount: _listMessage.length,
+                          );
                   }
                 },
               ),
@@ -117,30 +118,30 @@ class HomeChatState extends State<HomeChat> {
               Material(
                 child: document['photoUrl'] != null
                     ? CachedNetworkImage(
-                  placeholder: (context, url) => Container(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 1.0,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Color(0xfff5a623),
-                      ),
-                    ),
-                    width:
-                    ResponsiveScreen().widthMediaQuery(context, 50),
-                    height:
-                    ResponsiveScreen().heightMediaQuery(context, 50),
-                    padding: EdgeInsets.all(15.0),
-                  ),
-                  imageUrl: document['photoUrl'],
-                  width: ResponsiveScreen().widthMediaQuery(context, 50),
-                  height:
-                  ResponsiveScreen().heightMediaQuery(context, 50),
-                  fit: BoxFit.cover,
-                )
+                        placeholder: (context, url) => Container(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 1.0,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Color(0xfff5a623),
+                            ),
+                          ),
+                          width:
+                              ResponsiveScreen().widthMediaQuery(context, 50),
+                          height:
+                              ResponsiveScreen().heightMediaQuery(context, 50),
+                          padding: EdgeInsets.all(15.0),
+                        ),
+                        imageUrl: document['photoUrl'],
+                        width: ResponsiveScreen().widthMediaQuery(context, 50),
+                        height:
+                            ResponsiveScreen().heightMediaQuery(context, 50),
+                        fit: BoxFit.cover,
+                      )
                     : Icon(
-                  Icons.account_circle,
-                  size: 50.0,
-                  color: Color(0xffaeaeae),
-                ),
+                        Icons.account_circle,
+                        size: 50.0,
+                        color: Color(0xffaeaeae),
+                      ),
                 borderRadius: BorderRadius.all(
                   Radius.circular(25.0),
                 ),
@@ -197,12 +198,12 @@ class HomeChatState extends State<HomeChat> {
 
   void _initGetSharedPrefs() {
     SharedPreferences.getInstance().then(
-          (prefs) {
+      (prefs) {
         setState(() => _sharedPrefs = prefs);
         _valueIdUser = _sharedPrefs.getString('userIdEmail');
       },
     ).then(
-          (value) => {
+      (value) => {
         _getNotifications(),
       },
     );
@@ -230,7 +231,7 @@ class HomeChatState extends State<HomeChat> {
     );
 
     _firebaseMessaging.getToken().then(
-          (token) {
+      (token) {
         print('token: $token');
         _firestore.collection('users').document(_valueIdUser).updateData(
           {
@@ -239,7 +240,7 @@ class HomeChatState extends State<HomeChat> {
         );
       },
     ).catchError(
-          (err) {
+      (err) {
         Fluttertoast.showToast(
           msg: err.message.toString(),
         );
@@ -248,17 +249,16 @@ class HomeChatState extends State<HomeChat> {
   }
 
   void _initNotifications() {
-    _flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
     var initializationSettingsAndroid =
-    new AndroidInitializationSettings('assets/icon.png');
-    var initializationSettingsIOS = new IOSInitializationSettings();
-    var initializationSettings = new InitializationSettings(
+        AndroidInitializationSettings('assets/icon.png');
+    var initializationSettingsIOS = IOSInitializationSettings();
+    var initializationSettings = InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
     _flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
   void _showNotifications(message) async {
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       Platform.isAndroid
           ? 'com.eliorcohen.locationprojectflutter'
           : 'com.eliorcohen.locationprojectflutter',
@@ -269,8 +269,8 @@ class HomeChatState extends State<HomeChat> {
       importance: Importance.Max,
       priority: Priority.High,
     );
-    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    var platformChannelSpecifics = new NotificationDetails(
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
     print(message);

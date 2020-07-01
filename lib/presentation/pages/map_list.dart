@@ -31,12 +31,13 @@ class _MapListState extends State<MapList> {
   SharedPreferences _sharedPrefs;
   double _valueRadius, _valueGeofence;
   String _open;
-  bool _zoomGesturesEnabled = true, _searching = true;
+  bool _zoomGesturesEnabled = true;
   List<Marker> _markers = <Marker>[];
   List<Results> _places = List();
   var _userLocation;
   LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
-  FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
+  FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
@@ -58,9 +59,7 @@ class _MapListState extends State<MapList> {
       appBar: AppBarTotal(),
       body: GoogleMap(
         onMapCreated: (controller) {
-          setState(() {
-            _myMapController = controller;
-          });
+          _myMapController = controller;
         },
         initialCameraPosition: CameraPosition(
           target: _currentLocation,
@@ -150,19 +149,18 @@ class _MapListState extends State<MapList> {
   }
 
   void _initNotifications() {
-    _flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-    var android = new AndroidInitializationSettings('assets/icon.png');
-    var iOS = new IOSInitializationSettings();
-    var initSettings = new InitializationSettings(android, iOS);
+    var android = AndroidInitializationSettings('assets/icon.png');
+    var iOS = IOSInitializationSettings();
+    var initSettings = InitializationSettings(android, iOS);
     _flutterLocalNotificationsPlugin.initialize(initSettings);
   }
 
   void _showNotification(String title, String subtitle) async {
-    var android = new AndroidNotificationDetails(
+    var android = AndroidNotificationDetails(
         'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
         priority: Priority.High, importance: Importance.Max);
-    var iOS = new IOSNotificationDetails();
-    var platform = new NotificationDetails(android, iOS);
+    var iOS = IOSNotificationDetails();
+    var platform = NotificationDetails(android, iOS);
     await _flutterLocalNotificationsPlugin.show(0, title, subtitle, platform,
         payload: subtitle);
   }
@@ -212,8 +210,6 @@ class _MapListState extends State<MapList> {
           ),
         );
       }
-      _searching = false;
-      print(_searching);
     });
   }
 

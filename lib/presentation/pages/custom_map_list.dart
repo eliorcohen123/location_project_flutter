@@ -27,9 +27,7 @@ class _CustomMapListState extends State<CustomMapList> {
       appBar: AppBarTotal(),
       body: GoogleMap(
         onMapCreated: (controller) {
-          setState(() {
-            _myMapController = controller;
-          });
+          _myMapController = controller;
         },
         initialCameraPosition: CameraPosition(
           target: _currentLocation,

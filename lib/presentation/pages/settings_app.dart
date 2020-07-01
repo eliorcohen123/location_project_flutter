@@ -94,8 +94,8 @@ class _SettingsAppState extends State<SettingsApp> {
                 onChanged: (double newValue) {
                   setState(() {
                     _valueRadius = newValue;
-                    _addRadiusSearchToSF(_valueRadius);
                   });
+                  _addRadiusSearchToSF(_valueRadius);
                 },
                 semanticFormatterCallback: (double newValue) {
                   return '${newValue.round()}';
@@ -130,8 +130,8 @@ class _SettingsAppState extends State<SettingsApp> {
                 onChanged: (double newValue) {
                   setState(() {
                     _valueGeofence = newValue;
-                    _addGeofenceToSF(_valueGeofence);
                   });
+                  _addGeofenceToSF(_valueGeofence);
                 },
                 semanticFormatterCallback: (double newValue) {
                   return '${newValue.round()}';
