@@ -18,14 +18,7 @@ import 'map_list.dart';
 //import 'package:mobx/mobx.dart';
 //import 'package:flutter_mobx/flutter_mobx.dart';
 
-class FavoritesData extends StatefulWidget {
-  const FavoritesData({Key key}) : super(key: key);
-
-  @override
-  _FavoritesDataState createState() => _FavoritesDataState();
-}
-
-class _FavoritesDataState extends State<FavoritesData> {
+class FavoritesData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<ResultsSqflProvider>(

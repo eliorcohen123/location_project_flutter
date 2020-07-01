@@ -6,7 +6,7 @@ import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart
 import 'package:provider/provider.dart';
 //import 'package:locationprojectflutter/presentation/state_management/mobx/results_data_mobx.dart';
 
-class AddOrEditDataFavorites extends StatefulWidget {
+class AddOrEditDataFavorites extends StatelessWidget {
   final double latList, lngList;
   final String nameList, addressList, photoList;
   final bool edit;
@@ -24,22 +24,17 @@ class AddOrEditDataFavorites extends StatefulWidget {
       : super(key: key);
 
   @override
-  _AddOrEditDataFavoritesState createState() => _AddOrEditDataFavoritesState();
-}
-
-class _AddOrEditDataFavoritesState extends State<AddOrEditDataFavorites> {
-  @override
   Widget build(BuildContext context) {
     return Consumer<ResultsSqflProvider>(
       builder: (context, results, child) {
         return AddOrEditDataFavoritesProv(
-          nameList: widget.nameList,
-          addressList: widget.addressList,
-          latList: widget.latList,
-          lngList: widget.lngList,
-          photoList: widget.photoList,
-          edit: widget.edit,
-          id: widget.id,
+          nameList: nameList,
+          addressList: addressList,
+          latList: latList,
+          lngList: lngList,
+          photoList: photoList,
+          edit: edit,
+          id: id,
         );
       },
     );

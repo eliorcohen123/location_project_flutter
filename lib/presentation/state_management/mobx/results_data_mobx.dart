@@ -82,7 +82,7 @@
 //  void deleteData() {
 //    _db.deleteData().then(
 //      (_) {
-//        getItems();
+//        _resultsSqfl.clear();
 //      },
 //    );
 //  }
