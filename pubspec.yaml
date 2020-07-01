@@ -41,8 +41,8 @@ dependencies:
   provider: ^4.0.5+1
 #  flutter_mobx: ^1.1.0
 #  mobx: ^1.1.1
-#  dio: ^3.0.9
 #  get_it: ^3.1.0
+#  dio: ^3.0.9
 
 dev_dependencies:
   flutter_test:

@@ -20,6 +20,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
 import 'add_or_edit_data_favorites.dart';
 import 'map_list.dart';
+//import 'package:locationprojectflutter/core/services/service_locator.dart';
 
 class ListMap extends StatefulWidget {
   ListMap({Key key}) : super(key: key);
@@ -36,10 +37,13 @@ class _ListMapState extends State<ListMap> {
   SharedPreferences _sharedPrefs;
   var _userLocation;
   String _API_KEY = Constants.API_KEY;
-  LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
   final _formKeySearch = GlobalKey<FormState>();
   final _controllerSearch = TextEditingController();
   final _databaseReference = Firestore.instance;
+  LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
+
+//  LocationRepoImpl _locationRepoImpl;
+//  _ListMapState() : _locationRepoImpl = serviceLocator();
 
   @override
   void initState() {

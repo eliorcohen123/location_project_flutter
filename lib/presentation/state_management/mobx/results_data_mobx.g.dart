@@ -42,19 +42,6 @@
 //  final _$_locationRepoImplAtom =
 //      Atom(name: '_ResultsDataBase._locationRepoImpl');
 //
-//  @override
-//  LocationRepoImpl get _locationRepoImpl {
-//    _$_locationRepoImplAtom.reportRead();
-//    return super._locationRepoImpl;
-//  }
-//
-//  @override
-//  set _locationRepoImpl(LocationRepoImpl value) {
-//    _$_locationRepoImplAtom.reportWrite(value, super._locationRepoImpl, () {
-//      super._locationRepoImpl = value;
-//    });
-//  }
-//
 //  final _$_ResultsDataBaseActionController =
 //      ActionController(name: '_ResultsDataBase');
 //
