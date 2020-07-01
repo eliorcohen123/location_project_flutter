@@ -23,7 +23,6 @@ class ResultsSqflProvider extends ChangeNotifier {
             builder: (context) => FavoritesData(),
           ),
         );
-        notifyListeners();
       },
     );
   }
@@ -51,7 +50,6 @@ class ResultsSqflProvider extends ChangeNotifier {
             builder: (context) => FavoritesData(),
           ),
         );
-        notifyListeners();
       },
     );
   }
