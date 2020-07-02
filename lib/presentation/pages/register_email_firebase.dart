@@ -1,31 +1,50 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/register_email_firebase_provider.dart';
 import 'package:locationprojectflutter/presentation/utils/validations.dart';
 import 'package:locationprojectflutter/presentation/pages/sign_in_firebase.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/tff_firebase.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'list_map.dart';
 
-class RegisterEmailFirebase extends StatefulWidget {
+class RegisterEmailFirebase extends StatelessWidget {
   @override
-  RegisterEmailFirebaseState createState() => RegisterEmailFirebaseState();
+  Widget build(BuildContext context) {
+    return Consumer<RegisterEmailFirebaseProvider>(
+      builder: (context, results, child) {
+        return RegisterEmailFirebaseProv();
+      },
+    );
+  }
 }
 
-class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
+class RegisterEmailFirebaseProv extends StatefulWidget {
+  @override
+  _RegisterEmailFirebaseProvState createState() =>
+      _RegisterEmailFirebaseProvState();
+}
+
+class _RegisterEmailFirebaseProvState extends State<RegisterEmailFirebaseProv> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _success, _loading = false;
-  String _userEmail, _textError = '';
-  SharedPreferences _sharedPrefs;
+  String _userEmail;
+  var _provider;
 
   @override
   void initState() {
     super.initState();
+
+    _provider =
+        Provider.of<RegisterEmailFirebaseProvider>(context, listen: false);
+    _provider.success(null);
+    _provider.loading(false);
+    _provider.textError('');
 
     _initGetSharedPrefs();
   }
@@ -120,24 +139,19 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
                                     .validateEmail(_emailController.text) &&
                                 Validations().validatePassword(
                                     _passwordController.text)) {
-                              setState(() {
-                                _loading = true;
-                                _textError = '';
-                              });
+                              _provider.loading(true);
+                              _provider.textError('');
+
                               _registerEmailFirebase();
                             } else if (!Validations()
                                 .validateEmail(_emailController.text)) {
-                              setState(() {
-                                _success = false;
-                                _textError = 'Invalid Email';
-                              });
+                              _provider.success(false);
+                              _provider.textError('Invalid Email');
                             } else if (!Validations()
                                 .validatePassword(_passwordController.text)) {
-                              setState(() {
-                                _success = false;
-                                _textError =
-                                    'Password must be at least 8 characters';
-                              });
+                              _provider.success(false);
+                              _provider.textError(
+                                  'Password must be at least 8 characters');
                             }
                           }
                         },
@@ -150,7 +164,9 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
                   Container(
                     alignment: Alignment.center,
                     child: Text(
-                      _success == null ? '' : _success ? '' : _textError,
+                      _provider.successGet == null
+                          ? ''
+                          : _provider.successGet ? '' : _provider.textErrorGet,
                       style: TextStyle(
                         color: Colors.redAccent,
                         fontSize: 15,
@@ -163,7 +179,7 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SigninFirebase(),
+                          builder: (context) => SignInFirebase(),
                         ),
                       );
                     },
@@ -178,7 +194,9 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
                   SizedBox(
                     height: ResponsiveScreen().heightMediaQuery(context, 20),
                   ),
-                  _loading == true ? CircularProgressIndicator() : Container(),
+                  _provider.loadingGet == true
+                      ? CircularProgressIndicator()
+                      : Container(),
                 ],
               ),
             ),
@@ -196,20 +214,16 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
     )
             .catchError(
       (error) {
-        setState(() {
-          _success = false;
-          _loading = false;
-          _textError = error.message;
-        });
+        _provider.success(false);
+        _provider.loading(false);
+        _provider.textError(error.message);
       },
     ))
         .user;
     if (user != null) {
-      setState(() {
-        _success = true;
-        _loading = false;
-        _textError = '';
-      });
+      _provider.success(true);
+      _provider.loading(false);
+      _provider.textError('');
 
       final QuerySnapshot result = await _firestore
           .collection('users')
@@ -227,14 +241,16 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
           },
         );
 
-        await _sharedPrefs.setString('id', user.uid);
-        await _sharedPrefs.setString('nickname', user.displayName);
-        await _sharedPrefs.setString('photoUrl', user.photoUrl);
+        await _provider.sharedGet.setString('id', user.uid);
+        await _provider.sharedGet.setString('nickname', user.displayName);
+        await _provider.sharedGet.setString('photoUrl', user.photoUrl);
       } else {
-        await _sharedPrefs.setString('id', documents[0]['id']);
-        await _sharedPrefs.setString('nickname', documents[0]['nickname']);
-        await _sharedPrefs.setString('aboutMe', documents[0]['aboutMe']);
-        await _sharedPrefs.setString('photoUrl', documents[0]['photoUrl']);
+        await _provider.sharedGet.setString('id', documents[0]['id']);
+        await _provider.sharedGet
+            .setString('nickname', documents[0]['nickname']);
+        await _provider.sharedGet.setString('aboutMe', documents[0]['aboutMe']);
+        await _provider.sharedGet
+            .setString('photoUrl', documents[0]['photoUrl']);
       }
 
       _userEmail = user.email;
@@ -248,26 +264,24 @@ class RegisterEmailFirebaseState extends State<RegisterEmailFirebase> {
         ),
       );
     } else {
-      setState(() {
-        _success = false;
-        _loading = false;
-      });
+      _provider.success(false);
+      _provider.loading(false);
     }
   }
 
   void _initGetSharedPrefs() {
     SharedPreferences.getInstance().then(
       (prefs) {
-        setState(() => _sharedPrefs = prefs);
+        _provider.sharedPref(prefs);
       },
     );
   }
 
   void _addUserEmail(String value) async {
-    _sharedPrefs.setString('userEmail', value);
+    _provider.sharedGet.setString('userEmail', value);
   }
 
   void _addIdEmail(String value) async {
-    _sharedPrefs.setString('userIdEmail', value);
+    _provider.sharedGet.setString('userIdEmail', value);
   }
 }

@@ -12,6 +12,7 @@ import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/data/models/model_googleapis/results.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/list_map_provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:provider/provider.dart';
@@ -22,20 +23,30 @@ import 'add_or_edit_data_favorites.dart';
 import 'map_list.dart';
 //import 'package:locationprojectflutter/core/services/service_locator.dart';
 
-class ListMap extends StatefulWidget {
-  ListMap({Key key}) : super(key: key);
-
+class ListMap extends StatelessWidget {
   @override
-  _ListMapState createState() => _ListMapState();
+  Widget build(BuildContext context) {
+    return Consumer<ListMapProvider>(
+      builder: (context, results, child) {
+        return ListMapProv();
+      },
+    );
+  }
 }
 
-class _ListMapState extends State<ListMap> {
+class ListMapProv extends StatefulWidget {
+  ListMapProv({Key key}) : super(key: key);
+
+  @override
+  _ListMapProvState createState() => _ListMapProvState();
+}
+
+class _ListMapProvState extends State<ListMapProv> {
   List<Results> _places = List();
-  bool _searching = true, _activeSearch = false, _activeNav = false;
+  bool _searching = true;
   double _valueRadius;
   String _open;
-  SharedPreferences _sharedPrefs;
-  var _userLocation;
+  var _userLocation, _provider;
   String _API_KEY = Constants.API_KEY;
   final _formKeySearch = GlobalKey<FormState>();
   final _controllerSearch = TextEditingController();
@@ -49,11 +60,13 @@ class _ListMapState extends State<ListMap> {
   void initState() {
     super.initState();
 
+    _provider = Provider.of<ListMapProvider>(context, listen: false);
+
     _initGetSharedPrefs();
   }
 
   PreferredSizeWidget _appBar() {
-    if (_activeSearch) {
+    if (_provider.isActiveSearchGet) {
       return AppBar(
         backgroundColor: Color(0xFF1E2538),
         title: Form(
@@ -99,7 +112,7 @@ class _ListMapState extends State<ListMap> {
           IconButton(
             icon: Icon(Icons.close),
             color: Color(0xFFE9FFFF),
-            onPressed: () => setState(() => _activeSearch = false),
+            onPressed: () => _provider.isActiveSearch(false),
           )
         ],
       );
@@ -117,7 +130,7 @@ class _ListMapState extends State<ListMap> {
           IconButton(
             icon: Icon(Icons.search),
             color: Color(0xFFE9FFFF),
-            onPressed: () => setState(() => _activeSearch = true),
+            onPressed: () => _provider.isActiveSearch(true),
           ),
           IconButton(
             icon: Icon(Icons.navigation),
@@ -253,7 +266,7 @@ class _ListMapState extends State<ListMap> {
                           ),
               ],
             ),
-            if (_activeNav)
+            if (_provider.isActiveNavGet)
               Container(
                 decoration: BoxDecoration(
                   color: Color(0x80000000),
@@ -411,24 +424,18 @@ class _ListMapState extends State<ListMap> {
   }
 
   void _createNavPlace(int index) async {
-    setState(() {
-      _activeNav = true;
-    });
-
-    int count;
+    _provider.isActiveNav(true);
 
     var document =
         _databaseReference.collection('places').document(_places[index].id);
     document.get().then(
       (document) {
         if (document.exists) {
-          setState(() {
-            count = document['count'];
-          });
+          _provider.count(document['count']);
         }
       },
     ).then(
-      (value) => _addToFirebase(index, count),
+      (value) => _addToFirebase(index, _provider.countGet),
     );
   }
 
@@ -483,10 +490,8 @@ class _ListMapState extends State<ListMap> {
               },
             ).then(
               (result) => {
-                setState(() {
-                  _activeNav = false;
-                }),
-                print(_activeNav),
+                _provider.isActiveNav(false),
+                print(_provider.isActiveNavGet),
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -521,9 +526,9 @@ class _ListMapState extends State<ListMap> {
   void _initGetSharedPrefs() {
     SharedPreferences.getInstance().then(
       (prefs) {
-        setState(() => _sharedPrefs = prefs);
-        _valueRadius = _sharedPrefs.getDouble('rangeRadius') ?? 5000.0;
-        _open = _sharedPrefs.getString('open') ?? '';
+        _provider.sharedPref(prefs);
+        _valueRadius = _provider.sharedGet.getDouble('rangeRadius') ?? 5000.0;
+        _open = _provider.sharedGet.getString('open') ?? '';
       },
     );
   }
@@ -585,7 +590,9 @@ class _ListMapState extends State<ListMap> {
 
   void _searchNearbyTotal(bool isSearching, String type, String text) {
     _searchNearby(isSearching, type, text).then(
-      (value) => _sortSearchNearby(value),
+      (value) => {
+        _sortSearchNearby(value),
+      },
     );
   }
 

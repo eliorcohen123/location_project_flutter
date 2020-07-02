@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:locationprojectflutter/data/models/model_googleapis/results.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/map_list_provider.dart';
 import 'package:locationprojectflutter/presentation/utils/map_utils.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
@@ -13,28 +14,53 @@ import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MapList extends StatefulWidget {
+class MapList extends StatelessWidget {
   final double latList, lngList;
   final String nameList, vicinityList;
 
-  MapList(
+  MapList({
+    Key key,
+    this.latList,
+    this.lngList,
+    this.nameList,
+    this.vicinityList,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<MapListProvider>(
+      builder: (context, results, child) {
+        return MapListProv(
+          latList: latList,
+          lngList: lngList,
+          nameList: nameList,
+          vicinityList: vicinityList,
+        );
+      },
+    );
+  }
+}
+
+class MapListProv extends StatefulWidget {
+  final double latList, lngList;
+  final String nameList, vicinityList;
+
+  MapListProv(
       {Key key, this.nameList, this.vicinityList, this.latList, this.lngList})
       : super(key: key);
 
   @override
-  _MapListState createState() => _MapListState();
+  _MapListProvState createState() => _MapListProvState();
 }
 
-class _MapListState extends State<MapList> {
+class _MapListProvState extends State<MapListProv> {
   MapCreatedCallback _onMapCreated;
-  Set<Circle> _circles;
-  SharedPreferences _sharedPrefs;
   double _valueRadius, _valueGeofence;
+  bool _searching = false;
   String _open;
   bool _zoomGesturesEnabled = true;
-  List<Marker> _markers = <Marker>[];
   List<Results> _places = List();
-  var _userLocation;
+  var _userLocation, _provider;
   LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
   FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -42,6 +68,8 @@ class _MapListState extends State<MapList> {
   @override
   void initState() {
     super.initState();
+
+    _provider = Provider.of<MapListProvider>(context, listen: false);
 
     _initGetSharedPrefs();
     _initGeofence();
@@ -57,30 +85,45 @@ class _MapListState extends State<MapList> {
         LatLng(_userLocation.latitude, _userLocation.longitude);
     return Scaffold(
       appBar: AppBarTotal(),
-      body: GoogleMap(
-        onMapCreated: _onMapCreated,
-        initialCameraPosition: CameraPosition(
-          target: _currentLocation,
-          zoom: 10.0,
-        ),
-        markers: Set<Marker>.of(_markers),
-        myLocationEnabled: true,
-        myLocationButtonEnabled: true,
-        zoomGesturesEnabled: _zoomGesturesEnabled,
-        circles: _circles = Set.from(
-          [
-            Circle(
-              circleId: CircleId(
-                _currentLocation.toString(),
+      body: Container(
+        child: Center(
+          child: Stack(
+            children: [
+              GoogleMap(
+                onMapCreated: _onMapCreated,
+                initialCameraPosition: CameraPosition(
+                  target: _currentLocation,
+                  zoom: 10.0,
+                ),
+                markers: Set<Marker>.of(_provider.markersGet),
+                myLocationEnabled: true,
+                myLocationButtonEnabled: true,
+                zoomGesturesEnabled: _zoomGesturesEnabled,
+                circles: Set.from([
+                  Circle(
+                    circleId: CircleId(
+                      _currentLocation.toString(),
+                    ),
+                    center: _currentLocation,
+                    fillColor: Color(0x300000ff),
+                    strokeColor: Color(0x300000ff),
+                    radius: _valueRadius,
+                  ),
+                ]),
+                mapType: MapType.normal,
               ),
-              center: _currentLocation,
-              fillColor: Color(0x300000ff),
-              strokeColor: Color(0x300000ff),
-              radius: _valueRadius,
-            )
-          ],
+              if (_searching)
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color(0x80000000),
+                  ),
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+            ],
+          ),
         ),
-        mapType: MapType.normal,
       ),
       drawer: DrawerTotal(),
       floatingActionButton: FloatingActionButton.extended(
@@ -97,10 +140,11 @@ class _MapListState extends State<MapList> {
   void _initGetSharedPrefs() {
     SharedPreferences.getInstance().then(
       (prefs) {
-        setState(() => _sharedPrefs = prefs);
-        _valueRadius = _sharedPrefs.getDouble('rangeRadius') ?? 5000.0;
-        _valueGeofence = _sharedPrefs.getDouble('rangeGeofence') ?? 500.0;
-        _open = _sharedPrefs.getString('open') ?? '';
+        _provider.sharedPref(prefs);
+        _valueRadius = _provider.sharedGet.getDouble('rangeRadius') ?? 5000.0;
+        _valueGeofence =
+            _provider.sharedGet.getDouble('rangeGeofence') ?? 500.0;
+        _open = _provider.sharedGet.getString('open') ?? '';
       },
     );
   }
@@ -164,7 +208,8 @@ class _MapListState extends State<MapList> {
   }
 
   void _initMarker() {
-    _markers.add(
+    _provider.clearMarkers();
+    _provider.markersGet.add(
       Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
         markerId: MarkerId(widget.nameList != null ? widget.nameList : ""),
@@ -182,32 +227,34 @@ class _MapListState extends State<MapList> {
 
   void _searchNearbyList() async {
     setState(() {
-      _markers.clear();
+      _searching = true;
     });
+    _provider.clearMarkers();
     _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
         _userLocation.longitude, _open, '', _valueRadius.round(), '');
+    for (int i = 0; i < _places.length; i++) {
+      _provider.markersGet.add(
+        Marker(
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
+          markerId: MarkerId(_places[i].name),
+          position: LatLng(_places[i].geometry.location.lat,
+              _places[i].geometry.location.lng),
+          onTap: () {
+            String namePlace = _places[i].name != null ? _places[i].name : "";
+            String vicinityPlace =
+                _places[i].vicinity != null ? _places[i].vicinity : "";
+            _showDialog(
+                namePlace,
+                vicinityPlace,
+                _places[i].geometry.location.lat,
+                _places[i].geometry.location.lng);
+          },
+        ),
+      );
+    }
     setState(() {
-      for (int i = 0; i < _places.length; i++) {
-        _markers.add(
-          Marker(
-            icon: BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueViolet),
-            markerId: MarkerId(_places[i].name),
-            position: LatLng(_places[i].geometry.location.lat,
-                _places[i].geometry.location.lng),
-            onTap: () {
-              String namePlace = _places[i].name != null ? _places[i].name : "";
-              String vicinityPlace =
-                  _places[i].vicinity != null ? _places[i].vicinity : "";
-              _showDialog(
-                  namePlace,
-                  vicinityPlace,
-                  _places[i].geometry.location.lat,
-                  _places[i].geometry.location.lng);
-            },
-          ),
-        );
-      }
+      _searching = false;
     });
   }
 

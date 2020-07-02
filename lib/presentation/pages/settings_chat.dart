@@ -5,30 +5,42 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/settings_chat_provider.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SettingsChat extends StatefulWidget {
+class SettingsChat extends StatelessWidget {
   @override
-  State createState() => SettingsChatState();
+  Widget build(BuildContext context) {
+    return Consumer<SettingsChatProvider>(
+      builder: (context, results, child) {
+        return SettingsChatProv();
+      },
+    );
+  }
 }
 
-class SettingsChatState extends State<SettingsChat> {
+class SettingsChatProv extends StatefulWidget {
+  @override
+  _SettingsChatProvState createState() => _SettingsChatProvState();
+}
+
+class _SettingsChatProvState extends State<SettingsChatProv> {
   final Firestore _firestore = Firestore.instance;
   TextEditingController _controllerNickname, _controllerAboutMe;
-  SharedPreferences _sharedPrefs;
-  String _id = '', _nickname = '', _aboutMe = '', _photoUrl = '';
-  bool _isLoading = false;
-  File _avatarImageFile;
+  String _id = '';
   final FocusNode _focusNodeNickname = FocusNode();
   final FocusNode _focusNodeAboutMe = FocusNode();
-  var document;
+  var document, _provider;
 
   @override
   void initState() {
     super.initState();
+
+    _provider = Provider.of<SettingsChatProvider>(context, listen: false);
 
     _initControllerTextEditing();
   }
@@ -46,12 +58,12 @@ class SettingsChatState extends State<SettingsChat> {
                   child: Center(
                     child: Stack(
                       children: <Widget>[
-                        (_avatarImageFile == null)
-                            ? (_photoUrl != ''
+                        (_provider.avatarImageFileGet == null)
+                            ? (_provider.photoUrlGet != ''
                                 ? Material(
                                     child: CachedNetworkImage(
                                       placeholder: (context, url) => Container(
-                                        child: _photoUrl != null
+                                        child: _provider.photoUrlGet != null
                                             ? CircularProgressIndicator(
                                                 strokeWidth: 2.0,
                                                 valueColor:
@@ -67,8 +79,9 @@ class SettingsChatState extends State<SettingsChat> {
                                             .heightMediaQuery(context, 50),
                                         padding: EdgeInsets.all(20.0),
                                       ),
-                                      imageUrl:
-                                          _photoUrl != null ? _photoUrl : '',
+                                      imageUrl: _provider.photoUrlGet != null
+                                          ? _provider.photoUrlGet
+                                          : '',
                                       width: ResponsiveScreen()
                                           .widthMediaQuery(context, 90),
                                       height: ResponsiveScreen()
@@ -87,7 +100,7 @@ class SettingsChatState extends State<SettingsChat> {
                                   ))
                             : Material(
                                 child: Image.file(
-                                  _avatarImageFile,
+                                  _provider.avatarImageFileGet,
                                   width: 90.0,
                                   height: 90.0,
                                   fit: BoxFit.cover,
@@ -141,7 +154,7 @@ class SettingsChatState extends State<SettingsChat> {
                           ),
                           controller: _controllerNickname,
                           onChanged: (value) {
-                            _nickname = value;
+                            _provider.nickname(value);
                           },
                           focusNode: _focusNodeNickname,
                         ),
@@ -173,7 +186,7 @@ class SettingsChatState extends State<SettingsChat> {
                           ),
                           controller: _controllerAboutMe,
                           onChanged: (value) {
-                            _aboutMe = value;
+                            _provider.aboutMe(value);
                           },
                           focusNode: _focusNodeAboutMe,
                         ),
@@ -203,7 +216,7 @@ class SettingsChatState extends State<SettingsChat> {
             padding: EdgeInsets.only(left: 15.0, right: 15.0),
           ),
           Positioned(
-            child: _isLoading
+            child: _provider.loadingGet
                 ? Container(
                     child: Center(
                       child: CircularProgressIndicator(
@@ -225,11 +238,11 @@ class SettingsChatState extends State<SettingsChat> {
   void _initControllerTextEditing() async {
     SharedPreferences.getInstance().then(
       (prefs) {
-        setState(() => _sharedPrefs = prefs);
-        _id = _sharedPrefs.getString('id') ?? '';
-        _nickname = _sharedPrefs.getString('nickname') ?? '';
-        _aboutMe = _sharedPrefs.getString('aboutMe') ?? '';
-        _photoUrl = _sharedPrefs.getString('photoUrl') ?? '';
+        _provider.sharedPref(prefs);
+        _id = _provider.sharedGet.getString('id') ?? '';
+        _provider.nickname(_provider.sharedGet.getString('nickname') ?? '');
+        _provider.aboutMe(_provider.sharedGet.getString('aboutMe') ?? '');
+        _provider.photoUrl(_provider.sharedGet.getString('photoUrl') ?? '');
       },
     ).then(
       (value) => {
@@ -237,16 +250,16 @@ class SettingsChatState extends State<SettingsChat> {
         document.get().then(
           (document) {
             if (document.exists) {
-              setState(() {
-                _nickname = document['nickname'];
-                _aboutMe = document['aboutMe'];
-                _photoUrl = document['photoUrl'];
-              });
+              _provider.nickname(document['nickname']);
+              _provider.aboutMe(document['aboutMe']);
+              _provider.photoUrl(document['photoUrl']);
             }
           },
         ).then((value) => {
-              _controllerNickname = TextEditingController(text: _nickname),
-              _controllerAboutMe = TextEditingController(text: _aboutMe),
+              _controllerNickname =
+                  TextEditingController(text: _provider.nicknameGet),
+              _controllerAboutMe =
+                  TextEditingController(text: _provider.aboutMeGet),
             }),
       },
     );
@@ -256,18 +269,18 @@ class SettingsChatState extends State<SettingsChat> {
     File image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
-      setState(() {
-        _avatarImageFile = image;
-        _isLoading = true;
-      });
+      _provider.avatarImageFile(image);
+      _provider.loading(true);
     }
+
     _uploadFile();
   }
 
   void _uploadFile() async {
     String fileName = _id;
     StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
-    StorageUploadTask uploadTask = reference.putFile(_avatarImageFile);
+    StorageUploadTask uploadTask =
+        reference.putFile(_provider.avatarImageFileGet);
     StorageTaskSnapshot storageTaskSnapshot;
     uploadTask.onComplete.then(
       (value) {
@@ -275,18 +288,16 @@ class SettingsChatState extends State<SettingsChat> {
           storageTaskSnapshot = value;
           storageTaskSnapshot.ref.getDownloadURL().then(
             (downloadUrl) {
-              _photoUrl = downloadUrl;
+              _provider.photoUrl(downloadUrl);
               _firestore.collection('users').document(_id).updateData(
                 {
-                  'nickname': _nickname,
-                  'aboutMe': _aboutMe,
-                  'photoUrl': _photoUrl,
+                  'nickname': _provider.nicknameGet,
+                  'aboutMe': _provider.aboutMeGet,
+                  'photoUrl': _provider.photoUrlGet,
                 },
               ).then(
                 (data) {
-                  setState(() {
-                    _isLoading = false;
-                  });
+                  _provider.loading(false);
 
                   Fluttertoast.showToast(
                     msg: "Upload success",
@@ -294,9 +305,7 @@ class SettingsChatState extends State<SettingsChat> {
                 },
               ).catchError(
                 (err) {
-                  setState(() {
-                    _isLoading = false;
-                  });
+                  _provider.loading(false);
 
                   Fluttertoast.showToast(
                     msg: err.toString(),
@@ -305,9 +314,7 @@ class SettingsChatState extends State<SettingsChat> {
               );
             },
             onError: (err) {
-              setState(() {
-                _isLoading = false;
-              });
+              _provider.loading(false);
 
               Fluttertoast.showToast(
                 msg: 'This file is not an image',
@@ -315,18 +322,16 @@ class SettingsChatState extends State<SettingsChat> {
             },
           );
         } else {
-          setState(() {
-            _isLoading = false;
-          });
+          _provider.loading(false);
+
           Fluttertoast.showToast(
             msg: 'This file is not an image',
           );
         }
       },
       onError: (err) {
-        setState(() {
-          _isLoading = false;
-        });
+        _provider.loading(false);
+
         Fluttertoast.showToast(
           msg: err.toString(),
         );
@@ -338,21 +343,17 @@ class SettingsChatState extends State<SettingsChat> {
     _focusNodeNickname.unfocus();
     _focusNodeAboutMe.unfocus();
 
-    setState(() {
-      _isLoading = true;
-    });
+    _provider.loading(true);
 
     _firestore.collection('users').document(_id).updateData(
       {
-        'nickname': _nickname,
-        'aboutMe': _aboutMe,
-        'photoUrl': _photoUrl,
+        'nickname': _provider.nicknameGet,
+        'aboutMe': _provider.aboutMeGet,
+        'photoUrl': _provider.photoUrlGet,
       },
     ).then(
       (data) {
-        setState(() {
-          _isLoading = false;
-        });
+        _provider.loading(false);
 
         Fluttertoast.showToast(
           msg: "Update success",
@@ -360,9 +361,7 @@ class SettingsChatState extends State<SettingsChat> {
       },
     ).catchError(
       (err) {
-        setState(() {
-          _isLoading = false;
-        });
+        _provider.loading(false);
 
         Fluttertoast.showToast(
           msg: err.toString(),

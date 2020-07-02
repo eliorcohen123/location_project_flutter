@@ -7,6 +7,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/data/models/model_live_favorites/results_live_favorites.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/live_favorite_places_provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
@@ -16,38 +17,36 @@ import 'package:share/share.dart';
 import 'add_or_edit_data_favorites.dart';
 import 'map_list.dart';
 
-class LiveFavoritePlaces extends StatefulWidget {
-  const LiveFavoritePlaces({Key key}) : super(key: key);
-
-  @override
-  _LiveFavoritePlacesState createState() => _LiveFavoritePlacesState();
-}
-
-class _LiveFavoritePlacesState extends State<LiveFavoritePlaces> {
+class LiveFavoritePlaces extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FavoritesDataProv();
+    return Consumer<LiveFavoritePlacesProvider>(
+      builder: (context, results, child) {
+        return LiveFavoritePlacesProv();
+      },
+    );
   }
 }
 
-class FavoritesDataProv extends StatefulWidget {
-  const FavoritesDataProv({Key key}) : super(key: key);
+class LiveFavoritePlacesProv extends StatefulWidget {
+  const LiveFavoritePlacesProv({Key key}) : super(key: key);
 
   @override
-  _FavoritesDataProvState createState() => _FavoritesDataProvState();
+  _LiveFavoritePlacesProvState createState() => _LiveFavoritePlacesProvState();
 }
 
-class _FavoritesDataProvState extends State<FavoritesDataProv> {
-  var _userLocation;
+class _LiveFavoritePlacesProvState extends State<LiveFavoritePlacesProv> {
+  var _userLocation, _provider;
   String _API_KEY = Constants.API_KEY;
   StreamSubscription<QuerySnapshot> _placeSub;
   Stream<QuerySnapshot> _snapshots =
       Firestore.instance.collection('places').snapshots();
-  List<ResultsFirestore> _places = List();
 
   @override
   void initState() {
     super.initState();
+
+    _provider = Provider.of<LiveFavoritePlacesProvider>(context, listen: false);
 
     _readFirebase();
   }
@@ -62,19 +61,14 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   @override
   Widget build(BuildContext context) {
     _userLocation = Provider.of<UserLocation>(context);
-    _places.sort(
-      (a, b) {
-        return b.count.compareTo(a.count);
-      },
-    );
     return Scaffold(
       appBar: AppBarTotal(),
       body: Center(
         child: Column(
           children: <Widget>[
-            _places.length == 0
+            _provider.placesGet.length == 0
                 ? Text(
-                    'No Favorite Places',
+                    'No Top Places',
                     style: TextStyle(
                       color: Colors.deepPurpleAccent,
                       fontSize: 30,
@@ -86,7 +80,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                       showItemDuration: Duration(milliseconds: 50),
                       reAnimateOnVisibility: true,
                       scrollDirection: Axis.vertical,
-                      itemCount: _places.length,
+                      itemCount: _provider.placesGet.length,
                       itemBuilder: buildAnimatedItem,
                       separatorBuilder: (context, i) {
                         return SizedBox(
@@ -131,7 +125,8 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
     final dis.Distance _distance = dis.Distance();
     final double _meter = _distance(
       dis.LatLng(_userLocation.latitude, _userLocation.longitude),
-      dis.LatLng(_places[index].lat, _places[index].lng),
+      dis.LatLng(
+          _provider.placesGet[index].lat, _provider.placesGet[index].lng),
     );
     return Slidable(
       key: UniqueKey(),
@@ -146,12 +141,12 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
               context,
               MaterialPageRoute(
                 builder: (context) => AddOrEditDataFavorites(
-                  nameList: _places[index].name,
-                  addressList: _places[index].vicinity,
-                  latList: _places[index].lat,
-                  lngList: _places[index].lng,
-                  photoList: _places[index].photo.isNotEmpty
-                      ? _places[index].photo
+                  nameList: _provider.placesGet[index].name,
+                  addressList: _provider.placesGet[index].vicinity,
+                  latList: _provider.placesGet[index].lat,
+                  lngList: _provider.placesGet[index].lng,
+                  photoList: _provider.placesGet[index].photo.isNotEmpty
+                      ? _provider.placesGet[index].photo
                       : "",
                   edit: false,
                 ),
@@ -167,10 +162,10 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
               context,
               MaterialPageRoute(
                 builder: (context) => MapList(
-                  nameList: _places[index].name,
-                  vicinityList: _places[index].vicinity,
-                  latList: _places[index].lat,
-                  lngList: _places[index].lng,
+                  nameList: _provider.placesGet[index].name,
+                  vicinityList: _provider.placesGet[index].vicinity,
+                  latList: _provider.placesGet[index].lat,
+                  lngList: _provider.placesGet[index].lng,
                 ),
               ),
             ),
@@ -180,8 +175,12 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           color: Colors.blueGrey,
           icon: Icons.share,
           onTap: () => {
-            _shareContent(_places[index].name, _places[index].vicinity,
-                _places[index].lat, _places[index].lng, _places[index].photo)
+            _shareContent(
+                _provider.placesGet[index].name,
+                _provider.placesGet[index].vicinity,
+                _provider.placesGet[index].lat,
+                _provider.placesGet[index].lng,
+                _provider.placesGet[index].photo)
           },
         ),
       ],
@@ -195,9 +194,9 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                   fit: BoxFit.fill,
                   height: ResponsiveScreen().heightMediaQuery(context, 150),
                   width: double.infinity,
-                  imageUrl: _places[index].photo.isNotEmpty
+                  imageUrl: _provider.placesGet[index].photo.isNotEmpty
                       ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                          _places[index].photo +
+                          _provider.placesGet[index].photo +
                           "&key=$_API_KEY"
                       : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
                   placeholder: (context, url) =>
@@ -228,8 +227,9 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  _textList(_places[index].name, 17.0, 0xffE9FFFF),
-                  _textList(_places[index].vicinity, 15.0, 0xFFFFFFFF),
+                  _textList(_provider.placesGet[index].name, 17.0, 0xffE9FFFF),
+                  _textList(
+                      _provider.placesGet[index].vicinity, 15.0, 0xFFFFFFFF),
                   _textList(_calculateDistance(_meter), 15.0, 0xFFFFFFFF),
                 ],
               ),
@@ -251,9 +251,13 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
             )
             .toList();
 
-        setState(() {
-          this._places = places;
-        });
+        places.sort(
+          (a, b) {
+            return b.count.compareTo(a.count);
+          },
+        );
+
+        _provider.places(places);
       },
     );
   }

@@ -263,7 +263,7 @@ class DrawerTotal extends StatelessWidget {
                               (value) =>
                                   Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
-                                        builder: (context) => SigninFirebase(),
+                                        builder: (context) => SignInFirebase(),
                                       ),
                                       (Route<dynamic> route) => false),
                             ),

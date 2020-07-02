@@ -3,20 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:locationprojectflutter/presentation/pages/phone_auth.dart';
+import 'package:locationprojectflutter/presentation/pages/phone_sms_auth.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/sign_in_firebase_provider.dart';
 import 'package:locationprojectflutter/presentation/utils/validations.dart';
 import 'package:locationprojectflutter/presentation/pages/register_email_firebase.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/tff_firebase.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'list_map.dart';
 
-class SigninFirebase extends StatefulWidget {
+class SignInFirebase extends StatelessWidget {
   @override
-  SigninFirebaseState createState() => SigninFirebaseState();
+  Widget build(BuildContext context) {
+    return Consumer<SignInFirebaseProvider>(
+      builder: (context, results, child) {
+        return SignInFirebaseProv();
+      },
+    );
+  }
 }
 
-class SigninFirebaseState extends State<SigninFirebase> {
+class SignInFirebaseProv extends StatefulWidget {
+  @override
+  _SignInFirebaseProvState createState() => _SignInFirebaseProvState();
+}
+
+class _SignInFirebaseProvState extends State<SignInFirebaseProv> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -24,13 +37,18 @@ class SigninFirebaseState extends State<SigninFirebase> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _success, _loading = false, _isLoggedIn = false;
-  String _userEmail, _textError = "";
-  SharedPreferences _sharedPrefs;
+  String _userEmail;
+  var _provider;
 
   @override
   void initState() {
     super.initState();
+
+    _provider = Provider.of<SignInFirebaseProvider>(context, listen: false);
+    _provider.success(null);
+    _provider.loading(false);
+    _provider.isLoggedIn(false);
+    _provider.textError('');
 
     _initGetSharedPrefs();
     _checkUserLogin();
@@ -46,7 +64,7 @@ class SigninFirebaseState extends State<SigninFirebase> {
 
   @override
   Widget build(BuildContext context) {
-    return _isLoggedIn
+    return _provider.isLoggedInGet
         ? ListMap()
         : Scaffold(
             resizeToAvoidBottomPadding: false,
@@ -137,24 +155,19 @@ class SigninFirebaseState extends State<SigninFirebase> {
                                           _emailController.text) &&
                                       Validations().validatePassword(
                                           _passwordController.text)) {
-                                    setState(() {
-                                      _loading = true;
-                                      _textError = '';
-                                    });
+                                    _provider.loading(true);
+                                    _provider.textError('');
+
                                     _loginEmailFirebase();
                                   } else if (!Validations()
                                       .validateEmail(_emailController.text)) {
-                                    setState(() {
-                                      _success = false;
-                                      _textError = 'Invalid Email';
-                                    });
+                                    _provider.success(false);
+                                    _provider.textError('Invalid Email');
                                   } else if (!Validations().validatePassword(
                                       _passwordController.text)) {
-                                    setState(() {
-                                      _success = false;
-                                      _textError =
-                                          'Password must be at least 8 characters';
-                                    });
+                                    _provider.success(false);
+                                    _provider.textError(
+                                        'Password must be at least 8 characters');
                                   }
                                 }
                               },
@@ -168,7 +181,11 @@ class SigninFirebaseState extends State<SigninFirebase> {
                         Container(
                           alignment: Alignment.center,
                           child: Text(
-                            _success == null ? '' : _success ? '' : _textError,
+                            _provider.successGet == null
+                                ? ''
+                                : _provider.successGet
+                                    ? ''
+                                    : _provider.textErrorGet,
                             style: TextStyle(
                               color: Colors.redAccent,
                               fontSize: 15,
@@ -212,10 +229,8 @@ class SigninFirebaseState extends State<SigninFirebase> {
                                 color: Colors.white,
                                 onPressed: () {
                                   _facebookLogin();
-                                  setState(() {
-                                    _loading = true;
-                                    _textError = '';
-                                  });
+                                  _provider.loading(true);
+                                  _provider.textError('');
                                 },
                               ),
                             ),
@@ -232,10 +247,8 @@ class SigninFirebaseState extends State<SigninFirebase> {
                                 color: Colors.white,
                                 onPressed: () {
                                   _signInWithGoogle();
-                                  setState(() {
-                                    _loading = true;
-                                    _textError = '';
-                                  });
+                                  _provider.loading(true);
+                                  _provider.textError('');
                                 },
                               ),
                             ),
@@ -254,7 +267,7 @@ class SigninFirebaseState extends State<SigninFirebase> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => PhoneAuth(),
+                                      builder: (context) => PhoneSMSAuth(),
                                     ),
                                   );
                                 },
@@ -266,7 +279,7 @@ class SigninFirebaseState extends State<SigninFirebase> {
                           height:
                               ResponsiveScreen().heightMediaQuery(context, 20),
                         ),
-                        _loading == true
+                        _provider.loadingGet == true
                             ? CircularProgressIndicator()
                             : Container(),
                       ],
@@ -279,11 +292,9 @@ class SigninFirebaseState extends State<SigninFirebase> {
   }
 
   void _checkUserLogin() {
-    _auth.currentUser().then((user) => user != null
-        ? setState(() {
-            _isLoggedIn = true;
-          })
-        : null);
+    _auth
+        .currentUser()
+        .then((user) => user != null ? _provider.isLoggedIn(true) : null);
   }
 
   void _loginEmailFirebase() async {
@@ -294,11 +305,9 @@ class SigninFirebaseState extends State<SigninFirebase> {
     )
             .catchError(
       (error) {
-        setState(() {
-          _success = false;
-          _loading = false;
-          _textError = error.message;
-        });
+        _provider.success(false);
+        _provider.loading(false);
+        _provider.textError(error.message);
       },
     ))
         .user;
@@ -317,11 +326,9 @@ class SigninFirebaseState extends State<SigninFirebase> {
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential).catchError(
       (error) {
-        setState(() {
-          _success = false;
-          _loading = false;
-          _textError = error.message;
-        });
+        _provider.success(false);
+        _provider.loading(false);
+        _provider.textError(error.message);
       },
     ))
             .user;
@@ -346,11 +353,9 @@ class SigninFirebaseState extends State<SigninFirebase> {
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential).catchError(
       (error) {
-        setState(() {
-          _success = false;
-          _loading = false;
-          _textError = error.message;
-        });
+        _provider.success(false);
+        _provider.loading(false);
+        _provider.textError(error.message);
       },
     ))
             .user;
@@ -367,11 +372,9 @@ class SigninFirebaseState extends State<SigninFirebase> {
 
   void _addToFirebase(FirebaseUser user) async {
     if (user != null) {
-      setState(() {
-        _success = true;
-        _loading = false;
-        _textError = '';
-      });
+      _provider.success(true);
+      _provider.loading(false);
+      _provider.textError('');
 
       final QuerySnapshot result = await _firestore
           .collection('users')
@@ -389,14 +392,16 @@ class SigninFirebaseState extends State<SigninFirebase> {
           },
         );
 
-        await _sharedPrefs.setString('id', user.uid);
-        await _sharedPrefs.setString('nickname', user.displayName);
-        await _sharedPrefs.setString('photoUrl', user.photoUrl);
+        await _provider.sharedGet.setString('id', user.uid);
+        await _provider.sharedGet.setString('nickname', user.displayName);
+        await _provider.sharedGet.setString('photoUrl', user.photoUrl);
       } else {
-        await _sharedPrefs.setString('id', documents[0]['id']);
-        await _sharedPrefs.setString('nickname', documents[0]['nickname']);
-        await _sharedPrefs.setString('aboutMe', documents[0]['aboutMe']);
-        await _sharedPrefs.setString('photoUrl', documents[0]['photoUrl']);
+        await _provider.sharedGet.setString('id', documents[0]['id']);
+        await _provider.sharedGet
+            .setString('nickname', documents[0]['nickname']);
+        await _provider.sharedGet.setString('aboutMe', documents[0]['aboutMe']);
+        await _provider.sharedGet
+            .setString('photoUrl', documents[0]['photoUrl']);
       }
 
       _userEmail = user.email;
@@ -410,26 +415,24 @@ class SigninFirebaseState extends State<SigninFirebase> {
         ),
       );
     } else {
-      setState(() {
-        _success = false;
-        _loading = false;
-      });
+      _provider.success(false);
+      _provider.loading(false);
     }
   }
 
   void _initGetSharedPrefs() {
     SharedPreferences.getInstance().then(
       (prefs) {
-        setState(() => _sharedPrefs = prefs);
+        _provider.sharedPref(prefs);
       },
     );
   }
 
   void _addUserEmail(String value) async {
-    _sharedPrefs.setString('userEmail', value);
+    _provider.sharedGet.setString('userEmail', value);
   }
 
   void _addIdEmail(String value) async {
-    _sharedPrefs.setString('userIdEmail', value);
+    _provider.sharedGet.setString('userIdEmail', value);
   }
 }

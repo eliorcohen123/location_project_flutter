@@ -2,30 +2,44 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/data/models/model_live_chat/results_live_chat.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/live_chat_provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LiveChat extends StatefulWidget {
-  const LiveChat({Key key}) : super(key: key);
-
+class LiveChat extends StatelessWidget {
   @override
-  _LiveChatState createState() => _LiveChatState();
+  Widget build(BuildContext context) {
+    return Consumer<LiveChatProvider>(
+      builder: (context, results, child) {
+        return LiveChatProv();
+      },
+    );
+  }
 }
 
-class _LiveChatState extends State<LiveChat> {
+class LiveChatProv extends StatefulWidget {
+  const LiveChatProv({Key key}) : super(key: key);
+
+  @override
+  _LiveChatProvState createState() => _LiveChatProvState();
+}
+
+class _LiveChatProvState extends State<LiveChatProv> {
   StreamSubscription<QuerySnapshot> _placeSub;
   Stream<QuerySnapshot> _snapshots =
       Firestore.instance.collection('liveMessages').limit(50).snapshots();
-  List<ResultsLiveChat> _places = List();
-  SharedPreferences _sharedPrefs;
   TextEditingController _messageController = TextEditingController();
   final _databaseReference = Firestore.instance;
   String _valueUserEmail;
+  var _provider;
 
   @override
   void initState() {
     super.initState();
+
+    _provider = Provider.of<LiveChatProvider>(context, listen: false);
 
     _initGetSharedPrefs();
     _readFirebase();
@@ -40,11 +54,6 @@ class _LiveChatState extends State<LiveChat> {
 
   @override
   Widget build(BuildContext context) {
-    _places.sort(
-      (a, b) {
-        return b.date.compareTo(a.date);
-      },
-    );
     return Scaffold(
       backgroundColor: Colors.blueGrey,
       appBar: AppBarTotal(),
@@ -55,12 +64,12 @@ class _LiveChatState extends State<LiveChat> {
             Expanded(
               child: ListView.builder(
                   reverse: true,
-                  itemCount: _places.length,
+                  itemCount: _provider.placesGet.length,
                   itemBuilder: (BuildContext ctx, int index) {
                     return _message(
-                      _places[index].from,
-                      _places[index].text,
-                      _valueUserEmail == _places[index].from,
+                      _provider.placesGet[index].from,
+                      _provider.placesGet[index].text,
+                      _valueUserEmail == _provider.placesGet[index].from,
                     );
                   }),
             ),
@@ -114,9 +123,9 @@ class _LiveChatState extends State<LiveChat> {
   void _initGetSharedPrefs() {
     SharedPreferences.getInstance().then(
       (prefs) {
-        setState(() => _sharedPrefs = prefs);
+        _provider.sharedPref(prefs);
         _valueUserEmail =
-            _sharedPrefs.getString('userEmail') ?? 'guest@gmail.com';
+            _provider.sharedGet.getString('userEmail') ?? 'guest@gmail.com';
       },
     );
   }
@@ -148,9 +157,13 @@ class _LiveChatState extends State<LiveChat> {
             )
             .toList();
 
-        setState(() {
-          this._places = places;
-        });
+        places.sort(
+          (a, b) {
+            return b.date.compareTo(a.date);
+          },
+        );
+
+        _provider.places(places);
       },
     );
   }

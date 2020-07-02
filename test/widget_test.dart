@@ -33,7 +33,7 @@ void main() {
         (WidgetTester tester) async {
           MaterialApp app = MaterialApp(
             home: Scaffold(
-              body: SigninFirebase(),
+              body: SignInFirebase(),
             ),
           );
           await tester.pumpWidget(app);

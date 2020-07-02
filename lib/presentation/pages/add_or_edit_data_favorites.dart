@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/results_sqfl_provider.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/add_or_edit_data_favorites&favorites_data_provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:provider/provider.dart';
-//import 'package:locationprojectflutter/presentation/state_management/mobx/results_data_mobx.dart';
 
 class AddOrEditDataFavorites extends StatelessWidget {
   final double latList, lngList;
@@ -25,7 +24,7 @@ class AddOrEditDataFavorites extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ResultsSqflProvider>(
+    return Consumer<AddOrEditDataFavoritesAndFavoritesDataProvider>(
       builder: (context, results, child) {
         return AddOrEditDataFavoritesProv(
           nameList: nameList,
@@ -70,22 +69,21 @@ class _AddOrEditDataFavoritesProvState
   final _textLat = TextEditingController();
   final _textLng = TextEditingController();
   final _textPhoto = TextEditingController();
-  var _sqflProv;
-
-//  final ResultsDataMobXStore _dataMobx = ResultsDataMobXStore(); // MobX
+  var _provider;
 
   @override
   void initState() {
     super.initState();
+
+    _provider = Provider.of<AddOrEditDataFavoritesAndFavoritesDataProvider>(
+        context,
+        listen: false);
 
     _textName.text = widget.nameList;
     _textAddress.text = widget.addressList;
     _textLat.text = widget.latList.toString();
     _textLng.text = widget.lngList.toString();
     _textPhoto.text = widget.photoList;
-
-    _sqflProv =
-        Provider.of<ResultsSqflProvider>(context, listen: false); // Provider
   }
 
   @override
@@ -196,7 +194,7 @@ class _AddOrEditDataFavoritesProvState
                     borderRadius: BorderRadius.circular(80.0),
                   ),
                   onPressed: () => widget.edit
-                      ? _sqflProv.updateItem(
+                      ? _provider.updateItem(
                           widget.id,
                           _textName.text,
                           _textAddress.text,
@@ -204,32 +202,15 @@ class _AddOrEditDataFavoritesProvState
                           double.parse(_textLng.text),
                           _textPhoto.text,
                           context,
-                        ) // Provider
-                      : _sqflProv.addItem(
+                        )
+                      : _provider.addItem(
                           _textName.text,
                           _textAddress.text,
                           double.parse(_textLat.text),
                           double.parse(_textLng.text),
                           _textPhoto.text,
                           context,
-                        ), // Provider
-//                      ? _dataMobx.updateItem(
-//                          widget.id,
-//                          _textName.text,
-//                          _textAddress.text,
-//                          double.parse(_textLat.text),
-//                          double.parse(_textLng.text),
-//                          _textPhoto.text,
-//                          context,
-//                          ) // MobX
-//                      : _dataMobx.addItem(
-//                          _textName.text,
-//                          _textAddress.text,
-//                          double.parse(_textLat.text),
-//                          double.parse(_textLng.text),
-//                          _textPhoto.text,
-//                          context,
-//                          ), // MobX
+                        ),
                   child: Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(

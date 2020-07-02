@@ -1,25 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/settings_app_provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'list_map.dart';
 
-class SettingsApp extends StatefulWidget {
-  const SettingsApp({Key key}) : super(key: key);
-
+class SettingsApp extends StatelessWidget {
   @override
-  _SettingsAppState createState() => _SettingsAppState();
+  Widget build(BuildContext context) {
+    return Consumer<SettingsAppProvider>(
+      builder: (context, results, child) {
+        return SettingsAppProv();
+      },
+    );
+  }
 }
 
-class _SettingsAppState extends State<SettingsApp> {
-  SharedPreferences _sharedPrefs;
-  double _valueRadius, _valueGeofence;
+class SettingsAppProv extends StatefulWidget {
+  const SettingsAppProv({Key key}) : super(key: key);
+
+  @override
+  _SettingsAppProvState createState() => _SettingsAppProvState();
+}
+
+class _SettingsAppProvState extends State<SettingsAppProv> {
+  var _provider;
 
   @override
   void initState() {
     super.initState();
+
+    _provider = Provider.of<SettingsAppProvider>(context, listen: false);
 
     _initGetSharedPrefs();
   }
@@ -84,18 +98,17 @@ class _SettingsAppState extends State<SettingsApp> {
                 ],
               ),
               Slider(
-                value: _valueRadius,
+                value: _provider.valueRadiusGet,
                 min: 0.0,
                 max: 50000.0,
                 divisions: 50000,
                 activeColor: Colors.indigo,
                 inactiveColor: Colors.grey,
-                label: _valueRadius.round().toString(),
+                label: _provider.valueRadiusGet.round().toString(),
                 onChanged: (double newValue) {
-                  setState(() {
-                    _valueRadius = newValue;
-                  });
-                  _addRadiusSearchToSF(_valueRadius);
+                  _provider.valueRadius(newValue);
+
+                  _addRadiusSearchToSF(_provider.valueRadiusGet);
                 },
                 semanticFormatterCallback: (double newValue) {
                   return '${newValue.round()}';
@@ -120,18 +133,17 @@ class _SettingsAppState extends State<SettingsApp> {
                 ],
               ),
               Slider(
-                value: _valueGeofence,
+                value: _provider.valueGeofenceGet,
                 min: 500.0,
                 max: 1000.0,
                 divisions: 500,
                 activeColor: Colors.indigo,
                 inactiveColor: Colors.grey,
-                label: _valueGeofence.round().toString(),
+                label: _provider.valueGeofenceGet.round().toString(),
                 onChanged: (double newValue) {
-                  setState(() {
-                    _valueGeofence = newValue;
-                  });
-                  _addGeofenceToSF(_valueGeofence);
+                  _provider.valueGeofence(newValue);
+
+                  _addGeofenceToSF(_provider.valueGeofenceGet);
                 },
                 semanticFormatterCallback: (double newValue) {
                   return '${newValue.round()}';
@@ -161,26 +173,28 @@ class _SettingsAppState extends State<SettingsApp> {
   void _initGetSharedPrefs() {
     SharedPreferences.getInstance().then(
       (prefs) {
-        setState(() => _sharedPrefs = prefs);
-        _valueRadius = _sharedPrefs.getDouble('rangeRadius') ?? 5000.0;
-        _valueGeofence = _sharedPrefs.getDouble('rangeGeofence') ?? 500.0;
+        _provider.sharedPref(prefs);
+        _provider.valueRadius(
+            _provider.sharedGet.getDouble('rangeRadius') ?? 5000.0);
+        _provider.valueGeofence(
+            _provider.sharedGet.getDouble('rangeGeofence') ?? 500.0);
       },
     );
   }
 
   void _addRadiusSearchToSF(double value) async {
-    _sharedPrefs.setDouble('rangeRadius', value);
+    _provider.sharedGet.setDouble('rangeRadius', value);
   }
 
   void _addGeofenceToSF(double value) async {
-    _sharedPrefs.setDouble('rangeGeofence', value);
+    _provider.sharedGet.setDouble('rangeGeofence', value);
   }
 
   void _addOpenToSF(String value) async {
     if (value == 'Open') {
-      _sharedPrefs.setString('open', '&opennow=true');
+      _provider.sharedGet.setString('open', '&opennow=true');
     } else if (value == 'All(Open + Close)') {
-      _sharedPrefs.setString('open', '');
+      _provider.sharedGet.setString('open', '');
     }
   }
 }

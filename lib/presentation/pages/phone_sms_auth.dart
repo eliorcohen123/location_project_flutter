@@ -2,18 +2,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/phone_sms_auth_provider.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/utils/validations.dart';
 import 'package:locationprojectflutter/presentation/widgets/tff_firebase.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'list_map.dart';
 
-class PhoneAuth extends StatefulWidget {
+class PhoneSMSAuth extends StatelessWidget {
   @override
-  _PhoneAuthState createState() => _PhoneAuthState();
+  Widget build(BuildContext context) {
+    return Consumer<PhoneSMSAuthProvider>(
+      builder: (context, results, child) {
+        return PhoneAuthProv();
+      },
+    );
+  }
 }
 
-class _PhoneAuthState extends State<PhoneAuth> {
+class PhoneAuthProv extends StatefulWidget {
+  @override
+  _PhoneAuthProvState createState() => _PhoneAuthProvState();
+}
+
+class _PhoneAuthProvState extends State<PhoneAuthProv> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
   final GlobalKey<FormState> _formKeyPhone = GlobalKey<FormState>();
@@ -25,19 +38,25 @@ class _PhoneAuthState extends State<PhoneAuth> {
   final TextEditingController _smsController4 = TextEditingController();
   final TextEditingController _smsController5 = TextEditingController();
   final TextEditingController _smsController6 = TextEditingController();
-  bool _success, _loading = false;
-  String _userEmail, _textError = '', _textOk = '', _verificationId;
-  SharedPreferences _sharedPrefs;
+  String _userEmail;
   FocusNode _focus1 = FocusNode();
   FocusNode _focus2 = FocusNode();
   FocusNode _focus3 = FocusNode();
   FocusNode _focus4 = FocusNode();
   FocusNode _focus5 = FocusNode();
   FocusNode _focus6 = FocusNode();
+  var _provider;
 
   @override
   void initState() {
     super.initState();
+
+    _provider = Provider.of<PhoneSMSAuthProvider>(context, listen: false);
+    _provider.success(null);
+    _provider.loading(false);
+    _provider.textError('');
+    _provider.textOk('');
+    _provider.verificationId(null);
 
     _initGetSharedPrefs();
   }
@@ -46,11 +65,20 @@ class _PhoneAuthState extends State<PhoneAuth> {
   void dispose() {
     super.dispose();
 
+    _focus1.dispose();
     _focus2.dispose();
     _focus3.dispose();
     _focus4.dispose();
     _focus5.dispose();
     _focus6.dispose();
+
+    _phoneController.dispose();
+    _smsController1.dispose();
+    _smsController2.dispose();
+    _smsController3.dispose();
+    _smsController4.dispose();
+    _smsController5.dispose();
+    _smsController6.dispose();
   }
 
   @override
@@ -141,20 +169,20 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 ),
                 Container(
                   alignment: Alignment.center,
-                  child: _success == null
+                  child: _provider.successGet == null
                       ? null
-                      : _textError != ''
+                      : _provider.textErrorGet != ''
                           ? Text(
-                              _textError,
+                              _provider.textErrorGet,
                               style: TextStyle(
                                 color: Colors.redAccent,
                                 fontSize: 15,
                               ),
                               textAlign: TextAlign.center,
                             )
-                          : _textOk != ''
+                          : _provider.textOkGet != ''
                               ? Text(
-                                  _textOk,
+                                  _provider.textOkGet,
                                   style: TextStyle(
                                     color: Colors.lightGreenAccent,
                                     fontSize: 15,
@@ -166,7 +194,9 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 20),
                 ),
-                _loading == true ? CircularProgressIndicator() : Container(),
+                _provider.loadingGet == true
+                    ? CircularProgressIndicator()
+                    : Container(),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 20),
                 ),
@@ -201,18 +231,15 @@ class _PhoneAuthState extends State<PhoneAuth> {
                           if (_phoneController.text.isNotEmpty) {
                             if (Validations()
                                 .validatePhone(_phoneController.text)) {
-                              setState(() {
-                                _loading = true;
-                                _textError = '';
-                                _textOk = '';
-                              });
+                              _provider.loading(true);
+                              _provider.textError('');
+                              _provider.textOk('');
+
                               _verifyPhoneNumber();
                             } else if (!Validations()
                                 .validatePhone(_phoneController.text)) {
-                              setState(() {
-                                _success = false;
-                                _textError = 'Invalid Phone';
-                              });
+                              _provider.success(false);
+                              _provider.textError('Invalid Phone');
                             }
                           }
                         }
@@ -257,10 +284,9 @@ class _PhoneAuthState extends State<PhoneAuth> {
                               _smsController4.text.isNotEmpty &&
                               _smsController5.text.isNotEmpty &&
                               _smsController6.text.isNotEmpty) {
-                            setState(() {
-                              _loading = true;
-                              _textError = '';
-                            });
+                            _provider.loading(true);
+                            _provider.textError('');
+
                             _signInWithPhoneNumber();
                           }
                         }
@@ -284,47 +310,37 @@ class _PhoneAuthState extends State<PhoneAuth> {
         (AuthCredential phoneAuthCredential) {
       _auth.signInWithCredential(phoneAuthCredential).catchError(
         (error) {
-          setState(() {
-            _success = false;
-            _loading = false;
-            _textError = error.message;
-          });
+          _provider.success(false);
+          _provider.loading(false);
+          _provider.textError(error.message);
         },
       );
-      setState(() {
-        _textOk = 'Received phone auth credential: $phoneAuthCredential';
-        _success = false;
-        _loading = false;
-      });
+      _provider.textOk('Received phone auth credential: $phoneAuthCredential');
+      _provider.success(false);
+      _provider.loading(false);
     };
 
     final PhoneVerificationFailed verificationFailed =
         (AuthException authException) {
-      setState(() {
-        _textError =
-            'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}';
-        _success = false;
-        _loading = false;
-      });
+      _provider.textError(
+          'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
+      _provider.success(false);
+      _provider.loading(false);
     };
 
     final PhoneCodeSent codeSent =
         (String verificationId, [int forceResendingToken]) async {
-      setState(() {
-        _textOk = 'Please check your phone for the verification code.';
-        _verificationId = verificationId;
-        _success = false;
-        _loading = false;
-      });
+      _provider.textOk('Please check your phone for the verification code.');
+      _provider.verificationId(verificationId);
+      _provider.success(false);
+      _provider.loading(false);
     };
 
     final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
         (String verificationId) {
-      setState(() {
-        _verificationId = verificationId;
-        _success = false;
-        _loading = false;
-      });
+      _provider.verificationId(verificationId);
+      _provider.success(false);
+      _provider.loading(false);
     };
 
     await _auth
@@ -338,18 +354,16 @@ class _PhoneAuthState extends State<PhoneAuth> {
     )
         .catchError(
       (error) {
-        setState(() {
-          _success = false;
-          _loading = false;
-          _textError = error.message;
-        });
+        _provider.success(false);
+        _provider.loading(false);
+        _provider.textError(error.message);
       },
     );
   }
 
   void _signInWithPhoneNumber() async {
     final AuthCredential credential = PhoneAuthProvider.getCredential(
-      verificationId: _verificationId,
+      verificationId: _provider.verificationIdGet,
       smsCode: _smsController1.text +
           _smsController2.text +
           _smsController3.text +
@@ -360,11 +374,9 @@ class _PhoneAuthState extends State<PhoneAuth> {
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential).catchError(
       (error) {
-        setState(() {
-          _success = false;
-          _loading = false;
-          _textError = error.message;
-        });
+        _provider.success(false);
+        _provider.loading(false);
+        _provider.textError(error.message);
       },
     ))
             .user;
@@ -376,12 +388,10 @@ class _PhoneAuthState extends State<PhoneAuth> {
 
   void _addToFirebase(FirebaseUser user) async {
     if (user != null) {
-      setState(() {
-        _success = true;
-        _loading = false;
-        _textError = '';
-        _textOk = '';
-      });
+      _provider.success(true);
+      _provider.loading(false);
+      _provider.textError('');
+      _provider.textOk('');
 
       final QuerySnapshot result = await _firestore
           .collection('users')
@@ -397,14 +407,16 @@ class _PhoneAuthState extends State<PhoneAuth> {
           'chattingWith': null
         });
 
-        await _sharedPrefs.setString('id', user.uid);
-        await _sharedPrefs.setString('nickname', user.displayName);
-        await _sharedPrefs.setString('photoUrl', user.photoUrl);
+        await _provider.sharedGet.setString('id', user.uid);
+        await _provider.sharedGet.setString('nickname', user.displayName);
+        await _provider.sharedGet.setString('photoUrl', user.photoUrl);
       } else {
-        await _sharedPrefs.setString('id', documents[0]['id']);
-        await _sharedPrefs.setString('nickname', documents[0]['nickname']);
-        await _sharedPrefs.setString('photoUrl', documents[0]['photoUrl']);
-        await _sharedPrefs.setString('aboutMe', documents[0]['aboutMe']);
+        await _provider.sharedGet.setString('id', documents[0]['id']);
+        await _provider.sharedGet
+            .setString('nickname', documents[0]['nickname']);
+        await _provider.sharedGet
+            .setString('photoUrl', documents[0]['photoUrl']);
+        await _provider.sharedGet.setString('aboutMe', documents[0]['aboutMe']);
       }
 
       _userEmail = user.email;
@@ -418,27 +430,25 @@ class _PhoneAuthState extends State<PhoneAuth> {
         ),
       );
     } else {
-      setState(() {
-        _success = false;
-        _loading = false;
-      });
+      _provider.success(false);
+      _provider.loading(false);
     }
   }
 
   void _initGetSharedPrefs() {
     SharedPreferences.getInstance().then(
       (prefs) {
-        setState(() => _sharedPrefs = prefs);
+        _provider.sharedPref(prefs);
       },
     );
   }
 
   void _addUserEmail(String value) async {
-    _sharedPrefs.setString('userEmail', value);
+    _provider.sharedGet.setString('userEmail', value);
   }
 
   void _addIdEmail(String value) async {
-    _sharedPrefs.setString('userIdEmail', value);
+    _provider.sharedGet.setString('userIdEmail', value);
   }
 
   Widget _tffSms(TextEditingController num, FocusNode thisFocusNode,

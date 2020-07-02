@@ -8,30 +8,44 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:locationprojectflutter/presentation/pages/chat_screen.dart';
 import 'package:locationprojectflutter/presentation/pages/settings_chat.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/home_chat_provider.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeChat extends StatefulWidget {
-  HomeChat({Key key}) : super(key: key);
-
+class HomeChat extends StatelessWidget {
   @override
-  State createState() => HomeChatState();
+  Widget build(BuildContext context) {
+    return Consumer<HomeChatProvider>(
+      builder: (context, results, child) {
+        return HomeChatProv();
+      },
+    );
+  }
 }
 
-class HomeChatState extends State<HomeChat> {
+class HomeChatProv extends StatefulWidget {
+  HomeChatProv({Key key}) : super(key: key);
+
+  @override
+  _HomeChatProvState createState() => _HomeChatProvState();
+}
+
+class _HomeChatProvState extends State<HomeChatProv> {
   final Firestore _firestore = Firestore.instance;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   bool _isLoading = false;
-  SharedPreferences _sharedPrefs;
   String _valueIdUser;
-  var _listMessage;
+  var _listMessage, _provider;
 
   @override
   void initState() {
     super.initState();
+
+    _provider = Provider.of<HomeChatProvider>(context, listen: false);
 
     _initGetSharedPrefs();
     _initNotifications();
@@ -199,8 +213,8 @@ class HomeChatState extends State<HomeChat> {
   void _initGetSharedPrefs() {
     SharedPreferences.getInstance().then(
       (prefs) {
-        setState(() => _sharedPrefs = prefs);
-        _valueIdUser = _sharedPrefs.getString('userIdEmail');
+        _provider.sharedPref(prefs);
+        _valueIdUser = _provider.sharedGet.getString('userIdEmail');
       },
     ).then(
       (value) => {

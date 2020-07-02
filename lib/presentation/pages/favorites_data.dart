@@ -3,10 +3,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:locationprojectflutter/core/constants/constants.dart';
-import 'package:locationprojectflutter/data/models/model_sqfl/results_sqfl.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/pages/add_or_edit_data_favorites.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/results_sqfl_provider.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/add_or_edit_data_favorites&favorites_data_provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:latlong/latlong.dart' as dis;
@@ -14,14 +13,10 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'map_list.dart';
 
-//import 'package:locationprojectflutter/presentation/state_management/mobx/results_data_mobx.dart';
-//import 'package:mobx/mobx.dart';
-//import 'package:flutter_mobx/flutter_mobx.dart';
-
 class FavoritesData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ResultsSqflProvider>(
+    return Consumer<AddOrEditDataFavoritesAndFavoritesDataProvider>(
       builder: (context, results, child) {
         return FavoritesDataProv();
       },
@@ -37,24 +32,17 @@ class FavoritesDataProv extends StatefulWidget {
 }
 
 class _FavoritesDataProvState extends State<FavoritesDataProv> {
-  var _userLocation, _sqflProv;
+  var _userLocation, _provider;
   String _API_KEY = Constants.API_KEY;
-  List<ResultsSqfl> _places = List();
-
-//  ObservableList<ResultsSqfl> _places = ObservableList.of([]); // MobX
-//  ResultsDataMobXStore _dataMobx = ResultsDataMobXStore(); // MobX
 
   @override
   void initState() {
     super.initState();
 
-    _sqflProv =
-        Provider.of<ResultsSqflProvider>(context, listen: false); // Provider
-    _sqflProv.initList(_places); // Provider
-    _sqflProv.getItems(); // Provider
-
-//    _dataMobx.initList(_places); // MobX
-//    _dataMobx.getItems(); // MobX
+    _provider = Provider.of<AddOrEditDataFavoritesAndFavoritesDataProvider>(
+        context,
+        listen: false);
+    _provider.getItems();
   }
 
   @override
@@ -74,30 +62,28 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           IconButton(
             icon: Icon(Icons.delete_forever),
             color: Color(0xFFE9FFFF),
-            onPressed: () => _sqflProv.deleteData(), // Provider
-//              onPressed: () => _dataMobx.deleteData(), // MobX
+            onPressed: () => _provider.deleteData(),
           ),
         ],
       ),
       body: Center(
         child: Column(
           children: <Widget>[
-            _places.length == 0
+            _provider.resultsSqflGet.length == 0
                 ? Text(
-                    'No favorite places',
+                    'No Favorite Places',
                     style: TextStyle(
                       color: Colors.deepPurpleAccent,
                       fontSize: 30,
                     ),
                   )
                 : Expanded(
-//            child: Observer(builder: (_) { // MobX
                     child: LiveList(
                       showItemInterval: Duration(milliseconds: 50),
                       showItemDuration: Duration(milliseconds: 50),
                       reAnimateOnVisibility: true,
                       scrollDirection: Axis.vertical,
-                      itemCount: _places.length,
+                      itemCount: _provider.resultsSqflGet.length,
                       itemBuilder: buildAnimatedItem,
                       separatorBuilder: (context, i) {
                         return SizedBox(
@@ -111,7 +97,6 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                         );
                       },
                     ),
-//            },
                   ),
           ],
         ),
@@ -143,7 +128,8 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
     final dis.Distance _distance = dis.Distance();
     final double _meter = _distance(
       dis.LatLng(_userLocation.latitude, _userLocation.longitude),
-      dis.LatLng(_places[index].lat, _places[index].lng),
+      dis.LatLng(_provider.resultsSqflGet[index].lat,
+          _provider.resultsSqflGet[index].lng),
     );
     return Slidable(
       key: UniqueKey(),
@@ -158,12 +144,12 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
               context,
               MaterialPageRoute(
                 builder: (context) => AddOrEditDataFavorites(
-                  id: _places[index].id,
-                  nameList: _places[index].name,
-                  addressList: _places[index].vicinity,
-                  latList: _places[index].lat,
-                  lngList: _places[index].lng,
-                  photoList: _places[index].photo,
+                  id: _provider.resultsSqflGet[index].id,
+                  nameList: _provider.resultsSqflGet[index].name,
+                  addressList: _provider.resultsSqflGet[index].vicinity,
+                  latList: _provider.resultsSqflGet[index].lat,
+                  lngList: _provider.resultsSqflGet[index].lng,
+                  photoList: _provider.resultsSqflGet[index].photo,
                   edit: true,
                 ),
               ),
@@ -178,10 +164,10 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
               context,
               MaterialPageRoute(
                 builder: (context) => MapList(
-                  nameList: _places[index].name,
-                  vicinityList: _places[index].vicinity,
-                  latList: _places[index].lat,
-                  lngList: _places[index].lng,
+                  nameList: _provider.resultsSqflGet[index].name,
+                  vicinityList: _provider.resultsSqflGet[index].vicinity,
+                  latList: _provider.resultsSqflGet[index].lat,
+                  lngList: _provider.resultsSqflGet[index].lng,
                 ),
               ),
             ),
@@ -191,8 +177,12 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           color: Colors.blueGrey,
           icon: Icons.share,
           onTap: () => {
-            _shareContent(_places[index].name, _places[index].vicinity,
-                _places[index].lat, _places[index].lng, _places[index].photo)
+            _shareContent(
+                _provider.resultsSqflGet[index].name,
+                _provider.resultsSqflGet[index].vicinity,
+                _provider.resultsSqflGet[index].lat,
+                _provider.resultsSqflGet[index].lng,
+                _provider.resultsSqflGet[index].photo)
           },
         ),
       ],
@@ -200,10 +190,8 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
         IconSlideAction(
           color: Colors.red,
           icon: Icons.delete,
-          onTap: () => {
-            _sqflProv.deleteItem(_places[index], index) // Provider
-//            _dataMobx.deleteItem(_places[index], index) // MobX
-          },
+          onTap: () =>
+              {_provider.deleteItem(_provider.resultsSqflGet[index], index)},
         ),
       ],
       dismissal: SlidableDismissal(
@@ -212,8 +200,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           SlideActionType.secondary: 1.0
         },
         onDismissed: (actionType) {
-          _sqflProv.deleteItem(_places[index], index); // Provider
-//          _dataMobx.deleteItem(_places[index], index); // MobX
+          _provider.deleteItem(_provider.resultsSqflGet[index], index);
         },
       ),
       child: Container(
@@ -226,9 +213,9 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                   fit: BoxFit.fill,
                   height: ResponsiveScreen().heightMediaQuery(context, 150),
                   width: double.infinity,
-                  imageUrl: _places[index].photo.isNotEmpty
+                  imageUrl: _provider.resultsSqflGet[index].photo.isNotEmpty
                       ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                          _places[index].photo +
+                          _provider.resultsSqflGet[index].photo +
                           "&key=$_API_KEY"
                       : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
                   placeholder: (context, url) =>
@@ -259,8 +246,10 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  _textList(_places[index].name, 17.0, 0xffE9FFFF),
-                  _textList(_places[index].vicinity, 15.0, 0xFFFFFFFF),
+                  _textList(
+                      _provider.resultsSqflGet[index].name, 17.0, 0xffE9FFFF),
+                  _textList(_provider.resultsSqflGet[index].vicinity, 15.0,
+                      0xFFFFFFFF),
                   _textList(_calculateDistance(_meter), 15.0, 0xFFFFFFFF),
                 ],
               ),

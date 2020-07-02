@@ -1,16 +1,13 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/data/data_resources/locals/sqflite_helper.dart';
 import 'package:locationprojectflutter/data/models/model_sqfl/results_sqfl.dart';
 import 'package:locationprojectflutter/presentation/pages/favorites_data.dart';
 
-class ResultsSqflProvider extends ChangeNotifier {
+class AddOrEditDataFavoritesAndFavoritesDataProvider extends ChangeNotifier {
   SQFLiteHelper _db = SQFLiteHelper();
   List<ResultsSqfl> _resultsSqfl = List();
 
-  void initList(List<ResultsSqfl> resultsSqfl) {
-    this._resultsSqfl = resultsSqfl;
-  }
+  List<ResultsSqfl> get resultsSqflGet => _resultsSqfl;
 
   void addItem(String name, String vicinity, double lat, double lng,
       String photo, BuildContext context) {
