@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/add_or_edit_data_favorites&favorites_data_provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
@@ -64,12 +66,12 @@ class AddOrEditDataFavoritesProv extends StatefulWidget {
 
 class _AddOrEditDataFavoritesProvState
     extends State<AddOrEditDataFavoritesProv> {
-  final _textName = TextEditingController();
-  final _textAddress = TextEditingController();
-  final _textLat = TextEditingController();
-  final _textLng = TextEditingController();
-  final _textPhoto = TextEditingController();
+  TextEditingController _textName;
+  TextEditingController _textAddress;
+  TextEditingController _textLat;
+  TextEditingController _textLng;
   var _provider;
+  String _API_KEY = Constants.API_KEY;
 
   @override
   void initState() {
@@ -79,11 +81,10 @@ class _AddOrEditDataFavoritesProvState
         context,
         listen: false);
 
-    _textName.text = widget.nameList;
-    _textAddress.text = widget.addressList;
-    _textLat.text = widget.latList.toString();
-    _textLng.text = widget.lngList.toString();
-    _textPhoto.text = widget.photoList;
+    _textName = TextEditingController(text: widget.nameList);
+    _textAddress = TextEditingController(text: widget.addressList);
+    _textLat = TextEditingController(text: widget.latList.toString());
+    _textLng = TextEditingController(text: widget.lngList.toString());
   }
 
   @override
@@ -94,7 +95,6 @@ class _AddOrEditDataFavoritesProvState
     _textAddress.dispose();
     _textLat.dispose();
     _textLng.dispose();
-    _textPhoto.dispose();
   }
 
   @override
@@ -184,7 +184,18 @@ class _AddOrEditDataFavoritesProvState
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 2),
                 ),
-                _innerTextField(_textPhoto),
+                CachedNetworkImage(
+                  fit: BoxFit.fill,
+                  height: ResponsiveScreen().heightMediaQuery(context, 75),
+                  width: ResponsiveScreen().heightMediaQuery(context, 175),
+                  imageUrl:
+                      "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                          widget.photoList +
+                          "&key=$_API_KEY",
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 20),
                 ),
@@ -200,7 +211,7 @@ class _AddOrEditDataFavoritesProvState
                           _textAddress.text,
                           double.parse(_textLat.text),
                           double.parse(_textLng.text),
-                          _textPhoto.text,
+                          widget.photoList,
                           context,
                         )
                       : _provider.addItem(
@@ -208,7 +219,7 @@ class _AddOrEditDataFavoritesProvState
                           _textAddress.text,
                           double.parse(_textLat.text),
                           double.parse(_textLng.text),
-                          _textPhoto.text,
+                          widget.photoList,
                           context,
                         ),
                   child: Container(
