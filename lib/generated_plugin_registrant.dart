@@ -12,7 +12,6 @@ import 'package:google_sign_in_web/google_sign_in_web.dart';
 import 'package:location_web/location_web.dart';
 import 'package:shared_preferences_web/shared_preferences_web.dart';
 import 'package:video_player_web/video_player_web.dart';
-
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 // ignore: public_member_api_docs
@@ -22,7 +21,8 @@ void registerPlugins(PluginRegistry registry) {
   FirebaseCoreWeb.registerWith(registry.registrarFor(FirebaseCoreWeb));
   GoogleSignInPlugin.registerWith(registry.registrarFor(GoogleSignInPlugin));
   LocationWebPlugin.registerWith(registry.registrarFor(LocationWebPlugin));
-  SharedPreferencesPlugin.registerWith(registry.registrarFor(SharedPreferencesPlugin));
+  SharedPreferencesPlugin.registerWith(
+      registry.registrarFor(SharedPreferencesPlugin));
   VideoPlayerPlugin.registerWith(registry.registrarFor(VideoPlayerPlugin));
   registry.registerMessageHandler();
 }
