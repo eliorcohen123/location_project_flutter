@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:auto_animated/auto_animated.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,7 +20,7 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
-import 'add_or_edit_data_favorites.dart';
+import 'package:locationprojectflutter/presentation/widgets/add_or_edit_favorites_places.dart';
 import 'map_list.dart';
 //import 'package:locationprojectflutter/core/services/service_locator.dart';
 
@@ -61,12 +62,13 @@ class _ListMapProvState extends State<ListMapProv> {
     super.initState();
 
     _provider = Provider.of<ListMapProvider>(context, listen: false);
+    _provider.isCheckingBottomSheet(false);
 
     _initGetSharedPrefs();
   }
 
   PreferredSizeWidget _appBar() {
-    if (_provider.isActiveSearchGet) {
+    if (_provider.activeSearchGet) {
       return AppBar(
         backgroundColor: Color(0xFF1E2538),
         title: Form(
@@ -266,7 +268,7 @@ class _ListMapProvState extends State<ListMapProv> {
                           ),
               ],
             ),
-            if (_provider.isActiveNavGet)
+            if (_provider.activeNavGet)
               Container(
                 decoration: BoxDecoration(
                   color: Color(0x80000000),
@@ -275,6 +277,19 @@ class _ListMapProvState extends State<ListMapProv> {
                   child: CircularProgressIndicator(),
                 ),
               ),
+            _provider.checkingBottomSheetGet == true
+                ? Positioned.fill(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(
+                        sigmaX: 5,
+                        sigmaY: 5,
+                      ),
+                      child: Container(
+                        color: Colors.black.withOpacity(0),
+                      ),
+                    ),
+                  )
+                : Container(),
           ],
         ),
       ),
@@ -317,21 +332,10 @@ class _ListMapProvState extends State<ListMapProv> {
           color: Colors.green,
           icon: Icons.add,
           onTap: () => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AddOrEditDataFavorites(
-                  nameList: _places[index].name,
-                  addressList: _places[index].vicinity,
-                  latList: _places[index].geometry.location.lat,
-                  lngList: _places[index].geometry.location.lng,
-                  photoList: _places[index].photos.isNotEmpty
-                      ? _places[index].photos[0].photo_reference
-                      : "",
-                  edit: false,
-                ),
-              ),
-            ),
+            setState(() {
+              _provider.isCheckingBottomSheet(true);
+            }),
+            _newTaskModalBottomSheet(context, index),
           },
         ),
         IconSlideAction(
@@ -491,7 +495,7 @@ class _ListMapProvState extends State<ListMapProv> {
             ).then(
               (result) => {
                 _provider.isActiveNav(false),
-                print(_provider.isActiveNavGet),
+                print(_provider.activeNavGet),
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -636,5 +640,43 @@ class _ListMapProvState extends State<ListMapProv> {
             '\n' +
             'Photo: $photo',
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+  }
+
+  void _newTaskModalBottomSheet(BuildContext context, int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () {
+            _provider.isCheckingBottomSheet(false);
+
+            Navigator.pop(context, false);
+
+            return Future.value(false);
+          },
+          child: StatefulBuilder(
+            builder: (BuildContext context,
+                void Function(void Function()) setState) {
+              return Container(
+                child: ListView(
+                  children: [
+                    AddOrEditFavoritesPlaces(
+                      nameList: _places[index].name,
+                      addressList: _places[index].vicinity,
+                      latList: _places[index].geometry.location.lat,
+                      lngList: _places[index].geometry.location.lng,
+                      photoList: _places[index].photos.isNotEmpty
+                          ? _places[index].photos[0].photo_reference
+                          : "",
+                      edit: false,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 }

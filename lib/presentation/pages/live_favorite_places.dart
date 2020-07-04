@@ -14,7 +14,7 @@ import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart
 import 'package:latlong/latlong.dart' as dis;
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
-import 'add_or_edit_data_favorites.dart';
+import '../widgets/add_or_edit_favorites_places.dart';
 import 'map_list.dart';
 
 class LiveFavoritePlaces extends StatelessWidget {
@@ -140,7 +140,7 @@ class _LiveFavoritePlacesProvState extends State<LiveFavoritePlacesProv> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => AddOrEditDataFavorites(
+                builder: (context) => AddOrEditFavoritesPlaces(
                   nameList: _provider.placesGet[index].name,
                   addressList: _provider.placesGet[index].vicinity,
                   latList: _provider.placesGet[index].lat,

@@ -5,7 +5,7 @@ import 'package:locationprojectflutter/presentation/state_management/provider/cu
 import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
-import 'add_or_edit_data_favorites.dart';
+import '../widgets/add_or_edit_favorites_places.dart';
 
 class CustomMapList extends StatelessWidget {
   @override
@@ -72,7 +72,7 @@ class _CustomMapListProvState extends State<CustomMapListProv> {
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => AddOrEditDataFavorites(
+            builder: (context) => AddOrEditFavoritesPlaces(
               latList: point.latitude,
               lngList: point.longitude,
               edit: false,

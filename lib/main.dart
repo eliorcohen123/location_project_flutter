@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/core/services/location_service.dart';
 import 'package:locationprojectflutter/presentation/pages/sign_in_firebase.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/add_or_edit_data_favorites&favorites_data_provider.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/favorites_places_provider.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/chat_screen_provider.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/custom_map_list_provider.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/home_chat_provider.dart';
@@ -31,8 +31,8 @@ class MyApp extends StatelessWidget {
         StreamProvider<UserLocation>(
           create: (context) => LocationService().locationStream,
         ),
-        ChangeNotifierProvider<AddOrEditDataFavoritesAndFavoritesDataProvider>(
-          create: (context) => AddOrEditDataFavoritesAndFavoritesDataProvider(),
+        ChangeNotifierProvider<FavoritesPlacesProvider>(
+          create: (context) => FavoritesPlacesProvider(),
         ),
         ChangeNotifierProvider<ChatScreenProvider>(
           create: (context) => ChatScreenProvider(),

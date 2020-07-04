@@ -1,11 +1,12 @@
+import 'dart:ui';
 import 'package:auto_animated/auto_animated.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
-import 'package:locationprojectflutter/presentation/pages/add_or_edit_data_favorites.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/add_or_edit_data_favorites&favorites_data_provider.dart';
+import 'package:locationprojectflutter/presentation/widgets/add_or_edit_favorites_places.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/favorites_places_provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:latlong/latlong.dart' as dis;
@@ -13,10 +14,10 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'map_list.dart';
 
-class FavoritesData extends StatelessWidget {
+class FavoritesPlaces extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<AddOrEditDataFavoritesAndFavoritesDataProvider>(
+    return Consumer<FavoritesPlacesProvider>(
       builder: (context, results, child) {
         return FavoritesDataProv();
       },
@@ -39,9 +40,8 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
   void initState() {
     super.initState();
 
-    _provider = Provider.of<AddOrEditDataFavoritesAndFavoritesDataProvider>(
-        context,
-        listen: false);
+    _provider = Provider.of<FavoritesPlacesProvider>(context, listen: false);
+    _provider.isCheckingBottomSheet(false);
     _provider.getItems();
   }
 
@@ -66,38 +66,60 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            _provider.resultsSqflGet.length == 0
-                ? Text(
-                    'No Favorite Places',
-                    style: TextStyle(
-                      color: Colors.deepPurpleAccent,
-                      fontSize: 30,
+      body: Container(
+        child: Stack(
+          children: [
+            Column(
+              children: <Widget>[
+                _provider.resultsSqflGet.length == 0
+                    ? Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'No Favorite Places',
+                            style: TextStyle(
+                              color: Colors.deepPurpleAccent,
+                              fontSize: 30,
+                            ),
+                          ),
+                        ),
+                      )
+                    : Expanded(
+                        child: LiveList(
+                          showItemInterval: Duration(milliseconds: 50),
+                          showItemDuration: Duration(milliseconds: 50),
+                          reAnimateOnVisibility: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: _provider.resultsSqflGet.length,
+                          itemBuilder: buildAnimatedItem,
+                          separatorBuilder: (context, i) {
+                            return SizedBox(
+                              height: ResponsiveScreen()
+                                  .heightMediaQuery(context, 5),
+                              width: double.infinity,
+                              child: const DecoratedBox(
+                                decoration:
+                                    const BoxDecoration(color: Colors.white),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+              ],
+            ),
+            _provider.checkingBottomSheetGet == true
+                ? Positioned.fill(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(
+                        sigmaX: 5,
+                        sigmaY: 5,
+                      ),
+                      child: Container(
+                        color: Colors.black.withOpacity(0),
+                      ),
                     ),
                   )
-                : Expanded(
-                    child: LiveList(
-                      showItemInterval: Duration(milliseconds: 50),
-                      showItemDuration: Duration(milliseconds: 50),
-                      reAnimateOnVisibility: true,
-                      scrollDirection: Axis.vertical,
-                      itemCount: _provider.resultsSqflGet.length,
-                      itemBuilder: buildAnimatedItem,
-                      separatorBuilder: (context, i) {
-                        return SizedBox(
-                          height:
-                              ResponsiveScreen().heightMediaQuery(context, 5),
-                          width: double.infinity,
-                          child: const DecoratedBox(
-                            decoration:
-                                const BoxDecoration(color: Colors.white),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                : Container(),
           ],
         ),
       ),
@@ -140,20 +162,10 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           color: Colors.orange,
           icon: Icons.edit,
           onTap: () => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AddOrEditDataFavorites(
-                  id: _provider.resultsSqflGet[index].id,
-                  nameList: _provider.resultsSqflGet[index].name,
-                  addressList: _provider.resultsSqflGet[index].vicinity,
-                  latList: _provider.resultsSqflGet[index].lat,
-                  lngList: _provider.resultsSqflGet[index].lng,
-                  photoList: _provider.resultsSqflGet[index].photo,
-                  edit: true,
-                ),
-              ),
-            ),
+            setState(() {
+              _provider.isCheckingBottomSheet(true);
+            }),
+            _newTaskModalBottomSheet(context, index),
           },
         ),
         IconSlideAction(
@@ -307,5 +319,42 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
             '\n' +
             'Photo: $photo',
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+  }
+
+  void _newTaskModalBottomSheet(BuildContext context, int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () {
+            _provider.isCheckingBottomSheet(false);
+
+            Navigator.pop(context, false);
+
+            return Future.value(false);
+          },
+          child: StatefulBuilder(
+            builder: (BuildContext context,
+                void Function(void Function()) setState) {
+              return Container(
+                child: ListView(
+                  children: [
+                    AddOrEditFavoritesPlaces(
+                      id: _provider.resultsSqflGet[index].id,
+                      nameList: _provider.resultsSqflGet[index].name,
+                      addressList: _provider.resultsSqflGet[index].vicinity,
+                      latList: _provider.resultsSqflGet[index].lat,
+                      lngList: _provider.resultsSqflGet[index].lng,
+                      photoList: _provider.resultsSqflGet[index].photo,
+                      edit: true,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 }
