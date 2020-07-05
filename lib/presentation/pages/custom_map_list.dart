@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
@@ -40,9 +39,8 @@ class _CustomMapListProvState extends State<CustomMapListProv> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _provider = Provider.of<CustomMapListProvider>(context, listen: false);
       _provider.isCheckingBottomSheet(false);
+      _provider.clearMarkers();
     });
-
-    _provider.clearMarkers();
   }
 
   @override
