@@ -29,8 +29,7 @@ class CustomMapListProv extends StatefulWidget {
 
 class _CustomMapListProvState extends State<CustomMapListProv> {
   MapCreatedCallback _onMapCreated;
-  bool _zoomGesturesEnabled = true,
-      _checkingBottomSheet = false;
+  bool _zoomGesturesEnabled = true;
   LatLng _currentLocation;
   var _userLocation, _provider;
 
@@ -38,7 +37,11 @@ class _CustomMapListProvState extends State<CustomMapListProv> {
   void initState() {
     super.initState();
 
-    _provider = Provider.of<CustomMapListProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _provider = Provider.of<CustomMapListProvider>(context, listen: false);
+      _provider.isCheckingBottomSheet(false);
+    });
+
     _provider.clearMarkers();
   }
 
@@ -50,35 +53,35 @@ class _CustomMapListProvState extends State<CustomMapListProv> {
       appBar: AppBarTotal(),
       body: Container(
           child: Stack(
-            children: [
-              GoogleMap(
-                onMapCreated: _onMapCreated,
-                initialCameraPosition: CameraPosition(
-                  target: _currentLocation,
-                  zoom: 10.0,
-                ),
-                markers: Set<Marker>.of(_provider.markersGet),
-                myLocationEnabled: true,
-                myLocationButtonEnabled: true,
-                zoomGesturesEnabled: _zoomGesturesEnabled,
-                mapType: MapType.normal,
-                onTap: _addMarker,
-              ),
-              _checkingBottomSheet == true
-                  ? Positioned.fill(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                    sigmaX: 5,
-                    sigmaY: 5,
+        children: [
+          GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(
+              target: _currentLocation,
+              zoom: 10.0,
+            ),
+            markers: Set<Marker>.of(_provider.markersGet),
+            myLocationEnabled: true,
+            myLocationButtonEnabled: true,
+            zoomGesturesEnabled: _zoomGesturesEnabled,
+            mapType: MapType.normal,
+            onTap: _addMarker,
+          ),
+          _provider.checkingBottomSheetGet == true
+              ? Positioned.fill(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(
+                      sigmaX: 5,
+                      sigmaY: 5,
+                    ),
+                    child: Container(
+                      color: Colors.black.withOpacity(0),
+                    ),
                   ),
-                  child: Container(
-                    color: Colors.black.withOpacity(0),
-                  ),
-                ),
-              )
-                  : Container(),
-            ],
-          )),
+                )
+              : Container(),
+        ],
+      )),
       drawer: DrawerTotal(),
     );
   }
@@ -91,14 +94,12 @@ class _CustomMapListProvState extends State<CustomMapListProv> {
           point.toString(),
         ),
         position: point,
-        onTap: () =>
-        {
-          setState(() {
-            _checkingBottomSheet = true;
-          }), _newTaskModalBottomSheet(context, point),
+        onTap: () => {
+          _provider.isCheckingBottomSheet(true),
+          _newTaskModalBottomSheet(context, point),
         },
         icon:
-        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueMagenta),
+            BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueMagenta),
       ),
     );
   }
@@ -109,18 +110,11 @@ class _CustomMapListProvState extends State<CustomMapListProv> {
       builder: (BuildContext context) {
         return WillPopScope(
           onWillPop: () {
-            setState(() {
-              _checkingBottomSheet = false;
-            });
+            _provider.isCheckingBottomSheet(false);
 
             Navigator.pop(context, false);
 
-            return Future
-            .
-            value
-            (
-            false
-            );
+            return Future.value(false);
           },
           child: StatefulBuilder(
             builder: (BuildContext context,

@@ -44,7 +44,6 @@ class ListMapProv extends StatefulWidget {
 
 class _ListMapProvState extends State<ListMapProv> {
   List<Results> _places = List();
-  bool _searching = true;
   double _valueRadius;
   String _open;
   var _userLocation, _provider;
@@ -53,7 +52,6 @@ class _ListMapProvState extends State<ListMapProv> {
   final _controllerSearch = TextEditingController();
   final _databaseReference = Firestore.instance;
   LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
-  bool _checkingBottomSheet = false;
 
 //  LocationRepoImpl _locationRepoImpl;
 //  _ListMapState() : _locationRepoImpl = serviceLocator();
@@ -62,7 +60,11 @@ class _ListMapProvState extends State<ListMapProv> {
   void initState() {
     super.initState();
 
-    _provider = Provider.of<ListMapProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _provider = Provider.of<ListMapProvider>(context, listen: false);
+      _provider.isCheckingBottomSheet(false);
+      _provider.isSearch(true);
+    });
 
     _initGetSharedPrefs();
   }
@@ -147,7 +149,7 @@ class _ListMapProvState extends State<ListMapProv> {
   @override
   Widget build(BuildContext context) {
     _userLocation = Provider.of<UserLocation>(context);
-    _searchNearbyTotal(_searching, "", "");
+    _searchNearbyTotal(_provider.searchGet, "", "");
     return Scaffold(
       appBar: _appBar(),
       body: Container(
@@ -235,7 +237,7 @@ class _ListMapProvState extends State<ListMapProv> {
                     ],
                   ),
                 ),
-                _searching
+                _provider.searchGet
                     ? CircularProgressIndicator()
                     : _places.length == 0
                         ? Text(
@@ -277,7 +279,7 @@ class _ListMapProvState extends State<ListMapProv> {
                   child: CircularProgressIndicator(),
                 ),
               ),
-            _checkingBottomSheet == true
+            _provider.checkingBottomSheetGet == true
                 ? Positioned.fill(
                     child: BackdropFilter(
                       filter: ImageFilter.blur(
@@ -332,9 +334,7 @@ class _ListMapProvState extends State<ListMapProv> {
           color: Colors.green,
           icon: Icons.add,
           onTap: () => {
-            setState(() {
-              _checkingBottomSheet = true;
-            }),
+            _provider.isCheckingBottomSheet(true),
             _newTaskModalBottomSheet(context, index),
           },
         ),
@@ -604,10 +604,8 @@ class _ListMapProvState extends State<ListMapProv> {
     if (isSearching) {
       _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
           _userLocation.longitude, _open, type, _valueRadius.round(), text);
-      setState(() {
-        _searching = false;
-      });
-      print(_searching);
+      _provider.isSearch(false);
+      print(_provider.searchGet);
     }
     return _places;
   }
@@ -648,9 +646,7 @@ class _ListMapProvState extends State<ListMapProv> {
       builder: (BuildContext context) {
         return WillPopScope(
           onWillPop: () {
-            setState(() {
-              _checkingBottomSheet = false;
-            });
+            _provider.isCheckingBottomSheet(false);
 
             Navigator.pop(context, false);
 

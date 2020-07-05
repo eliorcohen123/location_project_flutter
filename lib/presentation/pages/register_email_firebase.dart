@@ -40,11 +40,13 @@ class _RegisterEmailFirebaseProvState extends State<RegisterEmailFirebaseProv> {
   void initState() {
     super.initState();
 
-    _provider =
-        Provider.of<RegisterEmailFirebaseProvider>(context, listen: false);
-    _provider.success(null);
-    _provider.loading(false);
-    _provider.textError('');
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _provider =
+          Provider.of<RegisterEmailFirebaseProvider>(context, listen: false);
+      _provider.success(null);
+      _provider.loading(false);
+      _provider.textError('');
+    });
 
     _initGetSharedPrefs();
   }

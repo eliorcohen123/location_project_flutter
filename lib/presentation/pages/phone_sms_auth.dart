@@ -51,12 +51,14 @@ class _PhoneAuthProvState extends State<PhoneAuthProv> {
   void initState() {
     super.initState();
 
-    _provider = Provider.of<PhoneSMSAuthProvider>(context, listen: false);
-    _provider.success(null);
-    _provider.loading(false);
-    _provider.textError('');
-    _provider.textOk('');
-    _provider.verificationId(null);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _provider = Provider.of<PhoneSMSAuthProvider>(context, listen: false);
+      _provider.success(null);
+      _provider.loading(false);
+      _provider.textError('');
+      _provider.textOk('');
+      _provider.verificationId(null);
+    });
 
     _initGetSharedPrefs();
   }

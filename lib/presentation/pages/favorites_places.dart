@@ -34,15 +34,17 @@ class FavoritesDataProv extends StatefulWidget {
 
 class _FavoritesDataProvState extends State<FavoritesDataProv> {
   var _userLocation, _provider;
-  bool _checkingBottomSheet = false;
   String _API_KEY = Constants.API_KEY;
 
   @override
   void initState() {
     super.initState();
 
-    _provider = Provider.of<FavoritesPlacesProvider>(context, listen: false);
-    _provider.getItems();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _provider = Provider.of<FavoritesPlacesProvider>(context, listen: false);
+      _provider.isCheckingBottomSheet(false);
+      _provider.getItems();
+    });
   }
 
   @override
@@ -105,7 +107,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                       ),
               ],
             ),
-            _checkingBottomSheet == true
+            _provider.checkingBottomSheetGet == true
                 ? Positioned.fill(
                     child: BackdropFilter(
                       filter: ImageFilter.blur(
@@ -160,9 +162,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           color: Colors.orange,
           icon: Icons.edit,
           onTap: () => {
-            setState(() {
-              _checkingBottomSheet = true;
-            }),
+            _provider.isCheckingBottomSheet(true),
             _newTaskModalBottomSheet(context, index),
           },
         ),
@@ -325,9 +325,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
       builder: (BuildContext context) {
         return WillPopScope(
           onWillPop: () {
-            setState(() {
-              _checkingBottomSheet = false;
-            });
+            _provider.isCheckingBottomSheet(false);
 
             Navigator.pop(context, false);
 
