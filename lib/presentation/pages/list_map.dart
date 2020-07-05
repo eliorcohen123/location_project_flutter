@@ -64,6 +64,7 @@ class _ListMapProvState extends State<ListMapProv> {
       _provider = Provider.of<ListMapProvider>(context, listen: false);
       _provider.isCheckingBottomSheet(false);
       _provider.isSearch(true);
+      _provider.isSearchAfter(false);
     });
 
     _initGetSharedPrefs();
@@ -105,7 +106,9 @@ class _ListMapProvState extends State<ListMapProv> {
                 color: Color(0xFFE9FFFF),
                 onPressed: () {
                   if (_formKeySearch.currentState.validate()) {
-                    _searchNearbyTotal(true, "", _controllerSearch.text);
+                    _provider.isSearchAfter(true);
+                    _searchNearbyTotal(false, true, _provider.searchAfterGet,
+                        "", _controllerSearch.text);
                   }
                 },
               ),
@@ -139,7 +142,10 @@ class _ListMapProvState extends State<ListMapProv> {
           IconButton(
             icon: Icon(Icons.navigation),
             color: Color(0xFFE9FFFF),
-            onPressed: () => _searchNearbyTotal(true, "", ""),
+            onPressed: () => {
+              _provider.isSearchAfter(true),
+              _searchNearbyTotal(false, true, _provider.searchAfterGet, "", ""),
+            },
           ),
         ],
       );
@@ -149,7 +155,7 @@ class _ListMapProvState extends State<ListMapProv> {
   @override
   Widget build(BuildContext context) {
     _userLocation = Provider.of<UserLocation>(context);
-    _searchNearbyTotal(_provider.searchGet, "", "");
+    _searchNearbyTotal(true, _provider.searchGet, false, "", "");
     return Scaffold(
       appBar: _appBar(),
       body: Container(
@@ -237,7 +243,7 @@ class _ListMapProvState extends State<ListMapProv> {
                     ],
                   ),
                 ),
-                _provider.searchGet
+                _provider.searchGet || _provider.searchAfterGet
                     ? CircularProgressIndicator()
                     : _places.length == 0
                         ? Text(
@@ -548,7 +554,10 @@ class _ListMapProvState extends State<ListMapProv> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(80.0),
           ),
-          onPressed: () => _searchNearbyTotal(true, type, ""),
+          onPressed: () => {
+            _provider.isSearchAfter(true),
+            _searchNearbyTotal(false, true, _provider.searchAfterGet, type, ""),
+          },
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -592,20 +601,27 @@ class _ListMapProvState extends State<ListMapProv> {
     );
   }
 
-  void _searchNearbyTotal(bool isSearching, String type, String text) {
-    _searchNearby(isSearching, type, text).then(
+  void _searchNearbyTotal(bool start, bool isSearching, bool isSearchingAfter,
+      String type, String text) {
+    _searchNearby(start, isSearching, isSearchingAfter, type, text).then(
       (value) => {
         _sortSearchNearby(value),
       },
     );
   }
 
-  Future _searchNearby(bool isSearching, String type, String text) async {
-    if (isSearching) {
+  Future _searchNearby(bool start, bool isSearching, bool isSearchingAfter,
+      String type, String text) async {
+    if (start && isSearching) {
       _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
           _userLocation.longitude, _open, type, _valueRadius.round(), text);
       _provider.isSearch(false);
       print(_provider.searchGet);
+    } else if (!start && isSearchingAfter) {
+      _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
+          _userLocation.longitude, _open, type, _valueRadius.round(), text);
+      _provider.isSearchAfter(false);
+      print(_provider.searchAfterGet);
     }
     return _places;
   }

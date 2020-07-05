@@ -70,14 +70,14 @@ class _MapListProvState extends State<MapListProv> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _provider = Provider.of<MapListProvider>(context, listen: false);
-      _provider.isSearch(true);
+      _provider.isSearch(false);
+      _initMarker();
     });
 
     _initGetSharedPrefs();
     _initGeofence();
     _initPlatformState();
     _initNotifications();
-    _initMarker();
   }
 
   @override
@@ -210,7 +210,6 @@ class _MapListProvState extends State<MapListProv> {
   }
 
   void _initMarker() {
-    _provider.clearMarkers();
     _provider.markersGet.add(
       Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
