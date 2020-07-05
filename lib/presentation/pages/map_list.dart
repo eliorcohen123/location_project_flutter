@@ -56,7 +56,6 @@ class MapListProv extends StatefulWidget {
 class _MapListProvState extends State<MapListProv> {
   MapCreatedCallback _onMapCreated;
   double _valueRadius, _valueGeofence;
-  bool _searching = false;
   String _open;
   bool _zoomGesturesEnabled = true;
   List<Results> _places = List();
@@ -69,7 +68,10 @@ class _MapListProvState extends State<MapListProv> {
   void initState() {
     super.initState();
 
-    _provider = Provider.of<MapListProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _provider = Provider.of<MapListProvider>(context, listen: false);
+      _provider.isSearch(true);
+    });
 
     _initGetSharedPrefs();
     _initGeofence();
@@ -112,7 +114,7 @@ class _MapListProvState extends State<MapListProv> {
                 ]),
                 mapType: MapType.normal,
               ),
-              if (_searching)
+              if (_provider.searchGet)
                 Container(
                   decoration: BoxDecoration(
                     color: Color(0x80000000),
@@ -226,9 +228,7 @@ class _MapListProvState extends State<MapListProv> {
   }
 
   void _searchNearbyList() async {
-    setState(() {
-      _searching = true;
-    });
+    _provider.isSearch(true);
     _provider.clearMarkers();
     _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
         _userLocation.longitude, _open, '', _valueRadius.round(), '');
@@ -253,9 +253,7 @@ class _MapListProvState extends State<MapListProv> {
         ),
       );
     }
-    setState(() {
-      _searching = false;
-    });
+    _provider.isSearch(false);
   }
 
   Future _showDialog(
