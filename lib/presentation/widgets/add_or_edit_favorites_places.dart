@@ -24,7 +24,8 @@ class AddOrEditFavoritesPlaces extends StatefulWidget {
       : super(key: key);
 
   @override
-  _AddOrEditFavoritesPlacesState createState() => _AddOrEditFavoritesPlacesState();
+  _AddOrEditFavoritesPlacesState createState() =>
+      _AddOrEditFavoritesPlacesState();
 }
 
 class _AddOrEditFavoritesPlacesState extends State<AddOrEditFavoritesPlaces> {
@@ -123,10 +124,11 @@ class _AddOrEditFavoritesPlacesState extends State<AddOrEditFavoritesPlaces> {
             fit: BoxFit.fill,
             height: ResponsiveScreen().heightMediaQuery(context, 75),
             width: ResponsiveScreen().heightMediaQuery(context, 175),
-            imageUrl:
-                "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+            imageUrl: widget.photoList.isNotEmpty
+                ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
                     widget.photoList +
-                    "&key=$_API_KEY",
+                    "&key=$_API_KEY"
+                : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
             placeholder: (context, url) => const CircularProgressIndicator(),
             errorWidget: (context, url, error) => const Icon(Icons.error),
           ),

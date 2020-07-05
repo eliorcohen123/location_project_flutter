@@ -162,9 +162,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           color: Colors.orange,
           icon: Icons.edit,
           onTap: () => {
-            setState(() {
-              _provider.isCheckingBottomSheet(true);
-            }),
+            _provider.isCheckingBottomSheet(true),
             _newTaskModalBottomSheet(context, index),
           },
         ),
@@ -203,7 +201,7 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
           color: Colors.red,
           icon: Icons.delete,
           onTap: () =>
-              {_provider.deleteItem(_provider.resultsSqflGet[index], index)},
+              _provider.deleteItem(_provider.resultsSqflGet[index], index),
         ),
       ],
       dismissal: SlidableDismissal(
@@ -345,7 +343,10 @@ class _FavoritesDataProvState extends State<FavoritesDataProv> {
                       addressList: _provider.resultsSqflGet[index].vicinity,
                       latList: _provider.resultsSqflGet[index].lat,
                       lngList: _provider.resultsSqflGet[index].lng,
-                      photoList: _provider.resultsSqflGet[index].photo,
+                      photoList:
+                          _provider.resultsSqflGet[index].photo.isNotEmpty
+                              ? _provider.resultsSqflGet[index].photo
+                              : "",
                       edit: true,
                     ),
                   ],

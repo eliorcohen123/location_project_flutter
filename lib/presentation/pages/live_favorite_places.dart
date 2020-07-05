@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:auto_animated/auto_animated.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,13 +9,13 @@ import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/data/models/model_live_favorites/results_live_favorites.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/live_favorite_places_provider.dart';
-import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
+import 'package:locationprojectflutter/presentation/widgets/appbar_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:latlong/latlong.dart' as dis;
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
-import '../widgets/add_or_edit_favorites_places.dart';
+import 'package:locationprojectflutter/presentation/widgets/add_or_edit_favorites_places.dart';
 import 'map_list.dart';
 
 class LiveFavoritePlaces extends StatelessWidget {
@@ -47,6 +48,7 @@ class _LiveFavoritePlacesProvState extends State<LiveFavoritePlacesProv> {
     super.initState();
 
     _provider = Provider.of<LiveFavoritePlacesProvider>(context, listen: false);
+    _provider.isCheckingBottomSheet(false);
 
     _readFirebase();
   }
@@ -63,38 +65,55 @@ class _LiveFavoritePlacesProvState extends State<LiveFavoritePlacesProv> {
     _userLocation = Provider.of<UserLocation>(context);
     return Scaffold(
       appBar: AppBarTotal(),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            _provider.placesGet.length == 0
-                ? Text(
-                    'No Top Places',
-                    style: TextStyle(
-                      color: Colors.deepPurpleAccent,
-                      fontSize: 30,
+      body: Container(
+        child: Stack(
+          children: [
+            Column(
+              children: <Widget>[
+                _provider.placesGet.length == 0
+                    ? Text(
+                        'No Top Places',
+                        style: TextStyle(
+                          color: Colors.deepPurpleAccent,
+                          fontSize: 30,
+                        ),
+                      )
+                    : Expanded(
+                        child: LiveList(
+                          showItemInterval: Duration(milliseconds: 50),
+                          showItemDuration: Duration(milliseconds: 50),
+                          reAnimateOnVisibility: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: _provider.placesGet.length,
+                          itemBuilder: buildAnimatedItem,
+                          separatorBuilder: (context, i) {
+                            return SizedBox(
+                              height: ResponsiveScreen()
+                                  .heightMediaQuery(context, 5),
+                              width: double.infinity,
+                              child: const DecoratedBox(
+                                decoration:
+                                    const BoxDecoration(color: Colors.white),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+              ],
+            ),
+            _provider.checkingBottomSheetGet == true
+                ? Positioned.fill(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(
+                        sigmaX: 5,
+                        sigmaY: 5,
+                      ),
+                      child: Container(
+                        color: Colors.black.withOpacity(0),
+                      ),
                     ),
                   )
-                : Expanded(
-                    child: LiveList(
-                      showItemInterval: Duration(milliseconds: 50),
-                      showItemDuration: Duration(milliseconds: 50),
-                      reAnimateOnVisibility: true,
-                      scrollDirection: Axis.vertical,
-                      itemCount: _provider.placesGet.length,
-                      itemBuilder: buildAnimatedItem,
-                      separatorBuilder: (context, i) {
-                        return SizedBox(
-                          height:
-                              ResponsiveScreen().heightMediaQuery(context, 5),
-                          width: double.infinity,
-                          child: const DecoratedBox(
-                            decoration:
-                                const BoxDecoration(color: Colors.white),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                : Container(),
           ],
         ),
       ),
@@ -137,21 +156,8 @@ class _LiveFavoritePlacesProvState extends State<LiveFavoritePlacesProv> {
           color: Colors.green,
           icon: Icons.add,
           onTap: () => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AddOrEditFavoritesPlaces(
-                  nameList: _provider.placesGet[index].name,
-                  addressList: _provider.placesGet[index].vicinity,
-                  latList: _provider.placesGet[index].lat,
-                  lngList: _provider.placesGet[index].lng,
-                  photoList: _provider.placesGet[index].photo.isNotEmpty
-                      ? _provider.placesGet[index].photo
-                      : "",
-                  edit: false,
-                ),
-              ),
-            ),
+            _provider.isCheckingBottomSheet(true),
+            _newTaskModalBottomSheet(context, index),
           },
         ),
         IconSlideAction(
@@ -309,5 +315,43 @@ class _LiveFavoritePlacesProvState extends State<LiveFavoritePlacesProv> {
             '\n' +
             'Photo: $photo',
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+  }
+
+  void _newTaskModalBottomSheet(BuildContext context, int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () {
+            _provider.isCheckingBottomSheet(false);
+
+            Navigator.pop(context, false);
+
+            return Future.value(false);
+          },
+          child: StatefulBuilder(
+            builder: (BuildContext context,
+                void Function(void Function()) setState) {
+              return Container(
+                child: ListView(
+                  children: [
+                    AddOrEditFavoritesPlaces(
+                      nameList: _provider.placesGet[index].name,
+                      addressList: _provider.placesGet[index].vicinity,
+                      latList: _provider.placesGet[index].lat,
+                      lngList: _provider.placesGet[index].lng,
+                      photoList: _provider.placesGet[index].photo.isNotEmpty
+                          ? _provider.placesGet[index].photo
+                          : "",
+                      edit: false,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 }

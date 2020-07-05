@@ -332,9 +332,7 @@ class _ListMapProvState extends State<ListMapProv> {
           color: Colors.green,
           icon: Icons.add,
           onTap: () => {
-            setState(() {
-              _provider.isCheckingBottomSheet(true);
-            }),
+            _provider.isCheckingBottomSheet(true),
             _newTaskModalBottomSheet(context, index),
           },
         ),

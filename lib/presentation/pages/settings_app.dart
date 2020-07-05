@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/settings_app_provider.dart';
-import 'package:locationprojectflutter/presentation/widgets/appbar_totar.dart';
+import 'package:locationprojectflutter/presentation/widgets/appbar_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:provider/provider.dart';
