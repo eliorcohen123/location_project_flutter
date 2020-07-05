@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ListMapProvider extends ChangeNotifier {
-  bool _activeSearch = false, _activeNav = false, _checkingBottomSheet = false;
+  bool _activeSearch = false, _activeNav = false;
   int _count;
   SharedPreferences _sharedPrefs;
 
@@ -11,8 +11,6 @@ class ListMapProvider extends ChangeNotifier {
   bool get activeSearchGet => _activeSearch;
 
   bool get activeNavGet => _activeNav;
-
-  bool get checkingBottomSheetGet => _checkingBottomSheet;
 
   int get countGet => _count;
 
@@ -28,11 +26,6 @@ class ListMapProvider extends ChangeNotifier {
 
   void isActiveNav(bool activeNav) {
     _activeNav = activeNav;
-    notifyListeners();
-  }
-
-  void isCheckingBottomSheet(bool checkingBottomSheet) {
-    _checkingBottomSheet = checkingBottomSheet;
     notifyListeners();
   }
 

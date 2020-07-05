@@ -38,6 +38,7 @@ class LiveFavoritePlacesProv extends StatefulWidget {
 
 class _LiveFavoritePlacesProvState extends State<LiveFavoritePlacesProv> {
   var _userLocation, _provider;
+  bool _checkingBottomSheet = false;
   String _API_KEY = Constants.API_KEY;
   StreamSubscription<QuerySnapshot> _placeSub;
   Stream<QuerySnapshot> _snapshots =
@@ -48,7 +49,6 @@ class _LiveFavoritePlacesProvState extends State<LiveFavoritePlacesProv> {
     super.initState();
 
     _provider = Provider.of<LiveFavoritePlacesProvider>(context, listen: false);
-    _provider.isCheckingBottomSheet(false);
 
     _readFirebase();
   }
@@ -101,7 +101,7 @@ class _LiveFavoritePlacesProvState extends State<LiveFavoritePlacesProv> {
                       ),
               ],
             ),
-            _provider.checkingBottomSheetGet == true
+            _checkingBottomSheet == true
                 ? Positioned.fill(
                     child: BackdropFilter(
                       filter: ImageFilter.blur(
@@ -156,7 +156,9 @@ class _LiveFavoritePlacesProvState extends State<LiveFavoritePlacesProv> {
           color: Colors.green,
           icon: Icons.add,
           onTap: () => {
-            _provider.isCheckingBottomSheet(true),
+            setState(() {
+              _checkingBottomSheet = true;
+            }),
             _newTaskModalBottomSheet(context, index),
           },
         ),
@@ -323,7 +325,9 @@ class _LiveFavoritePlacesProvState extends State<LiveFavoritePlacesProv> {
       builder: (BuildContext context) {
         return WillPopScope(
           onWillPop: () {
-            _provider.isCheckingBottomSheet(false);
+            setState(() {
+              _checkingBottomSheet = false;
+            });
 
             Navigator.pop(context, false);
 

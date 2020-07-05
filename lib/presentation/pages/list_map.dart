@@ -53,6 +53,7 @@ class _ListMapProvState extends State<ListMapProv> {
   final _controllerSearch = TextEditingController();
   final _databaseReference = Firestore.instance;
   LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
+  bool _checkingBottomSheet = false;
 
 //  LocationRepoImpl _locationRepoImpl;
 //  _ListMapState() : _locationRepoImpl = serviceLocator();
@@ -62,7 +63,6 @@ class _ListMapProvState extends State<ListMapProv> {
     super.initState();
 
     _provider = Provider.of<ListMapProvider>(context, listen: false);
-    _provider.isCheckingBottomSheet(false);
 
     _initGetSharedPrefs();
   }
@@ -277,7 +277,7 @@ class _ListMapProvState extends State<ListMapProv> {
                   child: CircularProgressIndicator(),
                 ),
               ),
-            _provider.checkingBottomSheetGet == true
+            _checkingBottomSheet == true
                 ? Positioned.fill(
                     child: BackdropFilter(
                       filter: ImageFilter.blur(
@@ -332,7 +332,9 @@ class _ListMapProvState extends State<ListMapProv> {
           color: Colors.green,
           icon: Icons.add,
           onTap: () => {
-            _provider.isCheckingBottomSheet(true),
+            setState(() {
+              _checkingBottomSheet = true;
+            }),
             _newTaskModalBottomSheet(context, index),
           },
         ),
@@ -646,7 +648,9 @@ class _ListMapProvState extends State<ListMapProv> {
       builder: (BuildContext context) {
         return WillPopScope(
           onWillPop: () {
-            _provider.isCheckingBottomSheet(false);
+            setState(() {
+              _checkingBottomSheet = false;
+            });
 
             Navigator.pop(context, false);
 
