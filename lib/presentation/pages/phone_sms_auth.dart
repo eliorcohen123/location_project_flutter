@@ -15,18 +15,18 @@ class PhoneSMSAuth extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<PhoneSMSAuthProvider>(
       builder: (context, results, child) {
-        return PhoneAuthProv();
+        return PhoneSMSAuthProv();
       },
     );
   }
 }
 
-class PhoneAuthProv extends StatefulWidget {
+class PhoneSMSAuthProv extends StatefulWidget {
   @override
-  _PhoneAuthProvState createState() => _PhoneAuthProvState();
+  _PhoneSMSAuthProvState createState() => _PhoneSMSAuthProvState();
 }
 
-class _PhoneAuthProvState extends State<PhoneAuthProv> {
+class _PhoneSMSAuthProvState extends State<PhoneSMSAuthProv> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
   final GlobalKey<FormState> _formKeyPhone = GlobalKey<FormState>();
