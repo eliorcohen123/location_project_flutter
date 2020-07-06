@@ -6,7 +6,7 @@ import 'package:locationprojectflutter/presentation/state_management/provider/cu
 import 'package:locationprojectflutter/presentation/widgets/appbar_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
-import '../widgets/add_or_edit_favorites_places.dart';
+import 'package:locationprojectflutter/presentation/widgets/add_or_edit_favorites_places.dart';
 
 class CustomMapList extends StatelessWidget {
   @override
