@@ -17,18 +17,18 @@ class ChatSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<SettingsChatProvider>(
       builder: (context, results, child) {
-        return SettingsChatProv();
+        return ChatSettingsProv();
       },
     );
   }
 }
 
-class SettingsChatProv extends StatefulWidget {
+class ChatSettingsProv extends StatefulWidget {
   @override
-  _SettingsChatProvState createState() => _SettingsChatProvState();
+  _ChatSettingsProvState createState() => _ChatSettingsProvState();
 }
 
-class _SettingsChatProvState extends State<SettingsChatProv> {
+class _ChatSettingsProvState extends State<ChatSettingsProv> {
   final Firestore _firestore = Firestore.instance;
   TextEditingController _controllerNickname, _controllerAboutMe;
   String _id = '';

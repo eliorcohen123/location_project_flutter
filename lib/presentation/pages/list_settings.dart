@@ -13,20 +13,20 @@ class ListSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ListSettingsProvider>(
       builder: (context, results, child) {
-        return SettingsAppProv();
+        return ChatSettingsProv();
       },
     );
   }
 }
 
-class SettingsAppProv extends StatefulWidget {
-  const SettingsAppProv({Key key}) : super(key: key);
+class ChatSettingsProv extends StatefulWidget {
+  const ChatSettingsProv({Key key}) : super(key: key);
 
   @override
-  _SettingsAppProvState createState() => _SettingsAppProvState();
+  _ChatSettingsProvState createState() => _ChatSettingsProvState();
 }
 
-class _SettingsAppProvState extends State<SettingsAppProv> {
+class _ChatSettingsProvState extends State<ChatSettingsProv> {
   var _provider;
 
   @override
