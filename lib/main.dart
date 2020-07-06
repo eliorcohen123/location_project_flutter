@@ -11,8 +11,8 @@ import 'package:locationprojectflutter/presentation/state_management/provider/li
 import 'package:locationprojectflutter/presentation/state_management/provider/map_list_provider.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/phone_sms_auth_provider.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/register_email_firebase_provider.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/settings_app_provider.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/settings_chat_provider.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/list_settings_provider.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/chat_settings_provider.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/sign_in_firebase_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
@@ -61,8 +61,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<RegisterEmailFirebaseProvider>(
           create: (context) => RegisterEmailFirebaseProvider(),
         ),
-        ChangeNotifierProvider<SettingsAppProvider>(
-          create: (context) => SettingsAppProvider(),
+        ChangeNotifierProvider<ListSettingsProvider>(
+          create: (context) => ListSettingsProvider(),
         ),
         ChangeNotifierProvider<SettingsChatProvider>(
           create: (context) => SettingsChatProvider(),

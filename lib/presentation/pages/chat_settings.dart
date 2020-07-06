@@ -5,14 +5,14 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/settings_chat_provider.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/chat_settings_provider.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/appbar_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SettingsChat extends StatelessWidget {
+class ChatSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<SettingsChatProvider>(

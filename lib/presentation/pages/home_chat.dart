@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:locationprojectflutter/presentation/pages/chat_screen.dart';
-import 'package:locationprojectflutter/presentation/pages/settings_chat.dart';
+import 'package:locationprojectflutter/presentation/pages/chat_settings.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/home_chat_provider.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
@@ -70,7 +70,7 @@ class _HomeChatProvState extends State<HomeChatProv> {
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => SettingsChat(),
+                builder: (context) => ChatSettings(),
               ),
             ),
           ),

@@ -8,7 +8,7 @@ import 'package:locationprojectflutter/presentation/pages/list_map.dart';
 import 'package:locationprojectflutter/presentation/pages/live_chat.dart';
 import 'package:locationprojectflutter/presentation/pages/live_favorite_places.dart';
 import 'package:locationprojectflutter/presentation/pages/sign_in_firebase.dart';
-import 'package:locationprojectflutter/presentation/pages/settings_app.dart';
+import 'package:locationprojectflutter/presentation/pages/list_settings.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 
 class DrawerTotal extends StatelessWidget {
@@ -232,7 +232,7 @@ class DrawerTotal extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SettingsApp(),
+                    builder: (context) => ListSettings(),
                   ),
                 );
               },

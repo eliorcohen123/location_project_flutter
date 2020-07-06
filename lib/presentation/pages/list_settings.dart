@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/settings_app_provider.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/list_settings_provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/appbar_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
@@ -8,10 +8,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'list_map.dart';
 
-class SettingsApp extends StatelessWidget {
+class ListSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsAppProvider>(
+    return Consumer<ListSettingsProvider>(
       builder: (context, results, child) {
         return SettingsAppProv();
       },
@@ -33,7 +33,7 @@ class _SettingsAppProvState extends State<SettingsAppProv> {
   void initState() {
     super.initState();
 
-    _provider = Provider.of<SettingsAppProvider>(context, listen: false);
+    _provider = Provider.of<ListSettingsProvider>(context, listen: false);
 
     _initGetSharedPrefs();
   }
