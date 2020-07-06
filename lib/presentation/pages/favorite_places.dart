@@ -14,25 +14,25 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'map_list.dart';
 
-class FavoritesPlaces extends StatelessWidget {
+class FavoritePlaces extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<FavoritesPlacesProvider>(
       builder: (context, results, child) {
-        return FavoritesDataProv();
+        return FavoritePlacesProv();
       },
     );
   }
 }
 
-class FavoritesDataProv extends StatefulWidget {
-  const FavoritesDataProv({Key key}) : super(key: key);
+class FavoritePlacesProv extends StatefulWidget {
+  const FavoritePlacesProv({Key key}) : super(key: key);
 
   @override
-  _FavoritesDataProvState createState() => _FavoritesDataProvState();
+  _FavoritePlacesProvState createState() => _FavoritePlacesProvState();
 }
 
-class _FavoritesDataProvState extends State<FavoritesDataProv> {
+class _FavoritePlacesProvState extends State<FavoritePlacesProv> {
   var _userLocation, _provider;
   String _API_KEY = Constants.API_KEY;
 

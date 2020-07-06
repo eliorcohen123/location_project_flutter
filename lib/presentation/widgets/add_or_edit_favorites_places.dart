@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/data/data_resources/locals/sqflite_helper.dart';
 import 'package:locationprojectflutter/data/models/model_sqfl/results_sqfl.dart';
-import 'package:locationprojectflutter/presentation/pages/favorites_places.dart';
+import 'package:locationprojectflutter/presentation/pages/favorite_places.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 
 class AddOrEditFavoritesPlaces extends StatefulWidget {
@@ -190,7 +190,7 @@ class _AddOrEditFavoritesPlacesState extends State<AddOrEditFavoritesPlaces> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => FavoritesPlaces(),
+            builder: (context) => FavoritePlaces(),
           ),
         );
       },
@@ -217,7 +217,7 @@ class _AddOrEditFavoritesPlacesState extends State<AddOrEditFavoritesPlaces> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => FavoritesPlaces(),
+            builder: (context) => FavoritePlaces(),
           ),
         );
       },

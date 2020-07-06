@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:locationprojectflutter/presentation/pages/custom_map_list.dart';
-import 'package:locationprojectflutter/presentation/pages/favorites_places.dart';
+import 'package:locationprojectflutter/presentation/pages/favorite_places.dart';
 import 'package:locationprojectflutter/presentation/pages/home_chat.dart';
 import 'package:locationprojectflutter/presentation/pages/list_map.dart';
 import 'package:locationprojectflutter/presentation/pages/live_chat.dart';
@@ -151,7 +151,7 @@ class DrawerTotal extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FavoritesPlaces(),
+                    builder: (context) => FavoritePlaces(),
                   ),
                 );
               },
