@@ -65,6 +65,8 @@ class _ListMapProvState extends State<ListMapProv> {
       _provider.isCheckingBottomSheet(false);
       _provider.isSearch(true);
       _provider.isSearchAfter(false);
+      _provider.isActiveSearch(false);
+      _provider.isActiveNav(false);
     });
 
     _initGetSharedPrefs();

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ListMapProvider extends ChangeNotifier {
-  bool _activeSearch = false, _activeNav = false, _checkingBottomSheet = false, _search = false, _searchAfter = false;
+  bool _activeSearch = false, _activeNav = false, _checkingBottomSheet = false, _search = true, _searchAfter = false;
   int _count;
   SharedPreferences _sharedPrefs;
 
