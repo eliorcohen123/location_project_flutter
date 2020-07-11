@@ -193,7 +193,7 @@ class _MapListProvState extends State<MapListProv> {
   }
 
   void _initNotifications() {
-    var android = AndroidInitializationSettings('assets/icon.png');
+    var android = AndroidInitializationSettings('@mipmap/ic_launcher');
     var iOS = IOSInitializationSettings();
     var initSettings = InitializationSettings(android, iOS);
     _flutterLocalNotificationsPlugin.initialize(initSettings);

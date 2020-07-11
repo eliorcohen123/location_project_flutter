@@ -167,7 +167,7 @@ class _HomeChatProvState extends State<HomeChatProv> {
                     children: <Widget>[
                       Container(
                         child: Text(
-                          'Nickname: ${document['nickname']}',
+                          'Nickname: ${document['nickname'] ?? 'Not available'}',
                           style: TextStyle(color: Color(0xff203152)),
                         ),
                         alignment: Alignment.centerLeft,
@@ -263,12 +263,10 @@ class _HomeChatProvState extends State<HomeChatProv> {
   }
 
   void _initNotifications() {
-    var initializationSettingsAndroid =
-        AndroidInitializationSettings('assets/icon.png');
-    var initializationSettingsIOS = IOSInitializationSettings();
-    var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
-    _flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    var android = AndroidInitializationSettings('@mipmap/ic_launcher');
+    var iOS = IOSInitializationSettings();
+    var initSettings = InitializationSettings(android, iOS);
+    _flutterLocalNotificationsPlugin.initialize(initSettings);
   }
 
   void _showNotifications(message) async {
