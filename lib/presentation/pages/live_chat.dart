@@ -28,8 +28,11 @@ class LiveChatProv extends StatefulWidget {
 
 class _LiveChatProvState extends State<LiveChatProv> {
   StreamSubscription<QuerySnapshot> _placeSub;
-  Stream<QuerySnapshot> _snapshots =
-      Firestore.instance.collection('liveMessages').limit(50).snapshots();
+  Stream<QuerySnapshot> _snapshots = Firestore.instance
+      .collection('liveMessages')
+      .orderBy('date', descending: true)
+      .limit(50)
+      .snapshots();
   TextEditingController _messageController = TextEditingController();
   final _databaseReference = Firestore.instance;
   String _valueUserEmail;
@@ -156,12 +159,6 @@ class _LiveChatProvState extends State<LiveChatProv> {
                   ResultsLiveChat.fromSqfl(documentSnapshot.data),
             )
             .toList();
-
-        places.sort(
-          (a, b) {
-            return b.date.compareTo(a.date);
-          },
-        );
 
         _provider.places(places);
       },
