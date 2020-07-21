@@ -9,6 +9,7 @@ import 'package:locationprojectflutter/presentation/state_management/provider/ch
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/appbar_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
+import 'package:locationprojectflutter/presentation/widgets/simple_image_crop.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -268,6 +269,15 @@ class _ChatSettingsProvState extends State<ChatSettingsProv> {
   void _getImage() async {
     File image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
+    image = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SimpleImageCrop(
+          image: image,
+        ),
+      ),
+    );
+
     if (image != null) {
       _provider.avatarImageFile(image);
       _provider.loading(true);
@@ -277,8 +287,7 @@ class _ChatSettingsProvState extends State<ChatSettingsProv> {
   }
 
   void _uploadFile() async {
-    String fileName = _id;
-    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
+    StorageReference reference = FirebaseStorage.instance.ref().child(_id);
     StorageUploadTask uploadTask =
         reference.putFile(_provider.avatarImageFileGet);
     StorageTaskSnapshot storageTaskSnapshot;
