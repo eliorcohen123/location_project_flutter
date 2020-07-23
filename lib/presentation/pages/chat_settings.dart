@@ -116,7 +116,7 @@ class _ChatSettingsProvState extends State<ChatSettingsProv> {
                             Icons.camera_alt,
                             color: Color(0xff203152).withOpacity(0.5),
                           ),
-                          onPressed: _getImage,
+                          onPressed: () => _newTaskModalBottomSheet(context),
                           padding: EdgeInsets.all(30.0),
                           splashColor: Colors.transparent,
                           highlightColor: Color(0xff203152),
@@ -266,24 +266,31 @@ class _ChatSettingsProvState extends State<ChatSettingsProv> {
     );
   }
 
-  void _getImage() async {
-    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
-
-    image = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SimpleImageCrop(
-          image: image,
-        ),
-      ),
-    );
-
-    if (image != null) {
-      _provider.avatarImageFile(image);
-      _provider.loading(true);
+  void _getImage(bool take) async {
+    File image;
+    if (take) {
+      image = await ImagePicker.pickImage(source: ImageSource.camera);
+    } else {
+      image = await ImagePicker.pickImage(source: ImageSource.gallery);
     }
 
-    _uploadFile();
+    if (image != null) {
+      image = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SimpleImageCrop(
+            image: image,
+          ),
+        ),
+      );
+
+      _provider.avatarImageFile(image);
+      _provider.loading(true);
+
+      Navigator.pop(context, false);
+
+      _uploadFile();
+    }
   }
 
   void _uploadFile() async {
@@ -374,6 +381,44 @@ class _ChatSettingsProvState extends State<ChatSettingsProv> {
 
         Fluttertoast.showToast(
           msg: err.toString(),
+        );
+      },
+    );
+  }
+
+  void _newTaskModalBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () {
+            Navigator.pop(context, false);
+
+            return Future.value(false);
+          },
+          child: StatefulBuilder(
+            builder: (BuildContext context,
+                void Function(void Function()) setState) {
+              return Container(
+                child: Wrap(
+                  children: [
+                    ListTile(
+                      title: Center(
+                        child: Text('Take A Picture'),
+                      ),
+                      onTap: () => _getImage(true),
+                    ),
+                    ListTile(
+                      title: Center(
+                        child: Text('Open A Gallery'),
+                      ),
+                      onTap: () => _getImage(false),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         );
       },
     );
