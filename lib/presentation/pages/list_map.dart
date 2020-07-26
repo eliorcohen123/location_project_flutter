@@ -415,10 +415,9 @@ class _ListMapProvState extends State<ListMapProv> {
                       ),
                       _textListView(
                           _places[index].opening_hours != null
-                              ? _places[index].opening_hours.open_now == true
+                              ? _places[index].opening_hours.open_now
                                   ? 'Open'
-                                  : _places[index].opening_hours.open_now ==
-                                          false
+                                  : !_places[index].opening_hours.open_now
                                       ? 'Close'
                                       : 'No info'
                               : "No info",
