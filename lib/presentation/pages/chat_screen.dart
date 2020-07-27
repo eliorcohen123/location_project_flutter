@@ -58,11 +58,12 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
 
   final Firestore _firestore = Firestore.instance;
   String peerId, peerAvatar, _groupChatId = '', _imageVideoUrl = '', _id;
-  var _listMessage, _provider;
+  var _listMessage;
   File _imageVideoFile;
   final TextEditingController _textEditingController = TextEditingController();
   final ScrollController _listScrollController = ScrollController();
   final FocusNode _focusNode = FocusNode();
+  ChatScreenProvider _provider;
 
   @override
   void initState() {

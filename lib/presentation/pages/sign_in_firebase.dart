@@ -38,7 +38,7 @@ class _SignInFirebaseProvState extends State<SignInFirebaseProv> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String _userEmail;
-  var _provider;
+  SignInFirebaseProvider _provider;
 
   @override
   void initState() {

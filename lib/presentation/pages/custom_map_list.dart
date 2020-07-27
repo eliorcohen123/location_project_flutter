@@ -30,7 +30,8 @@ class _CustomMapListProvState extends State<CustomMapListProv> {
   MapCreatedCallback _onMapCreated;
   bool _zoomGesturesEnabled = true;
   LatLng _currentLocation;
-  var _userLocation, _provider;
+  var _userLocation;
+  CustomMapListProvider _provider;
 
   @override
   void initState() {

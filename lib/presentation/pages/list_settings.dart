@@ -27,7 +27,7 @@ class ChatSettingsProv extends StatefulWidget {
 }
 
 class _ChatSettingsProvState extends State<ChatSettingsProv> {
-  var _provider;
+  ListSettingsProvider _provider;
 
   @override
   void initState() {

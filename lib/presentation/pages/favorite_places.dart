@@ -33,8 +33,9 @@ class FavoritePlacesProv extends StatefulWidget {
 }
 
 class _FavoritePlacesProvState extends State<FavoritePlacesProv> {
-  var _userLocation, _provider;
+  var _userLocation;
   String _API_KEY = Constants.API_KEY;
+  FavoritesPlacesProvider _provider;
 
   @override
   void initState() {

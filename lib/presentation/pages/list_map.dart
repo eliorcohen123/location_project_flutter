@@ -46,12 +46,13 @@ class _ListMapProvState extends State<ListMapProv> {
   List<Results> _places = List();
   double _valueRadius;
   String _open;
-  var _userLocation, _provider;
+  var _userLocation;
   String _API_KEY = Constants.API_KEY;
   final _formKeySearch = GlobalKey<FormState>();
   final _controllerSearch = TextEditingController();
   final _databaseReference = Firestore.instance;
   LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
+  ListMapProvider _provider;
 
 //  LocationRepoImpl _locationRepoImpl;
 //  _ListMapState() : _locationRepoImpl = serviceLocator();

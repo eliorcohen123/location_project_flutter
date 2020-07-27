@@ -59,10 +59,11 @@ class _MapListProvState extends State<MapListProv> {
   String _open;
   bool _zoomGesturesEnabled = true;
   List<Results> _places = List();
-  var _userLocation, _provider;
+  var _userLocation;
   LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
   FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
+  MapListProvider _provider;
 
   @override
   void initState() {

@@ -45,7 +45,7 @@ class _PhoneSMSAuthProvState extends State<PhoneSMSAuthProv> {
   FocusNode _focus4 = FocusNode();
   FocusNode _focus5 = FocusNode();
   FocusNode _focus6 = FocusNode();
-  var _provider;
+  PhoneSMSAuthProvider _provider;
 
   @override
   void initState() {

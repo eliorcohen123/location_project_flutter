@@ -36,7 +36,7 @@ class _LiveChatProvState extends State<LiveChatProv> {
   TextEditingController _messageController = TextEditingController();
   final _databaseReference = Firestore.instance;
   String _valueUserEmail;
-  var _provider;
+  LiveChatProvider _provider;
 
   @override
   void initState() {

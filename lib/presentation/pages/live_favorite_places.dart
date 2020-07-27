@@ -37,18 +37,20 @@ class LiveFavoritePlacesProv extends StatefulWidget {
 }
 
 class _LiveFavoritePlacesProvState extends State<LiveFavoritePlacesProv> {
-  var _userLocation, _provider;
+  var _userLocation;
   String _API_KEY = Constants.API_KEY;
   StreamSubscription<QuerySnapshot> _placeSub;
   Stream<QuerySnapshot> _snapshots =
       Firestore.instance.collection('places').snapshots();
+  LiveFavoritePlacesProvider _provider;
 
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _provider = Provider.of<LiveFavoritePlacesProvider>(context, listen: false);
+      _provider =
+          Provider.of<LiveFavoritePlacesProvider>(context, listen: false);
       _provider.isCheckingBottomSheet(false);
     });
 

@@ -34,7 +34,7 @@ class _RegisterEmailFirebaseProvState extends State<RegisterEmailFirebaseProv> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String _userEmail;
-  var _provider;
+  RegisterEmailFirebaseProvider _provider;
 
   @override
   void initState() {

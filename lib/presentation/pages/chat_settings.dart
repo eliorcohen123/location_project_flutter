@@ -35,7 +35,8 @@ class _ChatSettingsProvState extends State<ChatSettingsProv> {
   String _id = '';
   final FocusNode _focusNodeNickname = FocusNode();
   final FocusNode _focusNodeAboutMe = FocusNode();
-  var document, _provider;
+  var document;
+  SettingsChatProvider _provider;
 
   @override
   void initState() {

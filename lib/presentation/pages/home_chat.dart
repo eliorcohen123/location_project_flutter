@@ -39,7 +39,8 @@ class _HomeChatProvState extends State<HomeChatProv> {
       FlutterLocalNotificationsPlugin();
   bool _isLoading = false;
   String _valueIdUser;
-  var _listMessage, _provider;
+  var _listMessage;
+  HomeChatProvider _provider;
 
   @override
   void initState() {
