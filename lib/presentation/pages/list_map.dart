@@ -444,6 +444,8 @@ class _ListMapProvState extends State<ListMapProv> {
       (document) {
         if (document.exists) {
           _provider.count(document['count']);
+        } else {
+          _provider.count(null);
         }
       },
     ).then(

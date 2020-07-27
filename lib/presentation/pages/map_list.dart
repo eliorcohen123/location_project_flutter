@@ -211,6 +211,7 @@ class _MapListProvState extends State<MapListProv> {
   }
 
   void _initMarker() {
+    _provider.clearMarkers();
     _provider.markersGet.add(
       Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
@@ -228,8 +229,8 @@ class _MapListProvState extends State<MapListProv> {
   }
 
   void _searchNearbyList() async {
-    _provider.isSearch(true);
     _provider.clearMarkers();
+    _provider.isSearch(true);
     _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
         _userLocation.longitude, _open, '', _valueRadius.round(), '');
     for (int i = 0; i < _places.length; i++) {
