@@ -698,11 +698,11 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
     }
 
     if (_imageVideoFile != null) {
+      Navigator.pop(context, false);
+
       _provider.isLoading(true);
 
       _showDialog(type);
-
-      Navigator.pop(context, false);
     }
   }
 
