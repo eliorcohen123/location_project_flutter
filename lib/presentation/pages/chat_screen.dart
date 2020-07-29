@@ -1,27 +1,31 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chewie/chewie.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file/local.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_audio_recorder/flutter_audio_recorder.dart' as rec;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/chat_screen_provider.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/appbar_total.dart';
+import 'package:locationprojectflutter/presentation/widgets/audio_widget.dart';
 import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/widgets/full_photo.dart';
+import 'package:locationprojectflutter/presentation/widgets/video_widget.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission/permission.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:video_player/video_player.dart';
 
 class ChatScreen extends StatelessWidget {
-  final String peerId;
-  final String peerAvatar;
+  final String peerId, peerAvatar;
 
-  ChatScreen({
+  const ChatScreen({
     Key key,
     this.peerId,
     this.peerAvatar,
@@ -41,11 +45,15 @@ class ChatScreen extends StatelessWidget {
 }
 
 class ChatScreenProv extends StatefulWidget {
-  final String peerId;
-  final String peerAvatar;
+  final String peerId, peerAvatar;
+  final LocalFileSystem localFileSystem;
 
-  ChatScreenProv({Key key, @required this.peerId, @required this.peerAvatar})
-      : super(key: key);
+  ChatScreenProv(
+      {Key key,
+      @required this.peerId,
+      @required this.peerAvatar,
+      localFileSystem})
+      : this.localFileSystem = localFileSystem ?? LocalFileSystem();
 
   @override
   _ChatScreenProvState createState() =>
@@ -57,23 +65,29 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
       {Key key, @required this.peerId, @required this.peerAvatar});
 
   final Firestore _firestore = Firestore.instance;
-  String peerId, peerAvatar, _groupChatId = '', _imageVideoUrl = '', _id;
+  String peerId, peerAvatar, _groupChatId = '', _imageVideoAudioUrl = '', _id;
   var _listMessage;
-  File _imageVideoFile;
+  File _imageVideoAudioFile;
   final TextEditingController _textEditingController = TextEditingController();
   final ScrollController _listScrollController = ScrollController();
   final FocusNode _focusNode = FocusNode();
+  rec.FlutterAudioRecorder _recorder;
   ChatScreenProvider _provider;
 
   @override
   void initState() {
     super.initState();
 
-    _provider = Provider.of<ChatScreenProvider>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _provider = Provider.of<ChatScreenProvider>(context, listen: false);
+      _provider.isShowSticker(false);
+      _provider.isRecordingStatus(rec.RecordingStatus.Initialized);
+    });
 
     _focusNode.addListener(_onFocusChange);
 
     _initGetSharedPrefs();
+    _initRecord();
   }
 
   @override
@@ -263,6 +277,23 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
             ),
             color: Colors.white,
           ),
+          Material(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 1.0),
+              child: IconButton(
+                icon: _provider.isCurrentStatusGet ==
+                        rec.RecordingStatus.Initialized
+                    ? Icon(Icons.mic_none)
+                    : Icon(Icons.mic),
+                onPressed: () => _provider.isCurrentStatusGet ==
+                        rec.RecordingStatus.Initialized
+                    ? _startRecord()
+                    : _stopRecord(),
+                color: Color(0xff203152),
+              ),
+            ),
+            color: Colors.white,
+          ),
           Flexible(
             child: Container(
               child: TextField(
@@ -437,38 +468,39 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
                     )
                   : document['type'] == 3
                       ? Container(
-                          child: Container(
-                            width: ResponsiveScreen()
-                                .widthMediaQuery(context, 200),
-                            height: ResponsiveScreen()
-                                .heightMediaQuery(context, 200),
-                            key: PageStorageKey(
-                              "keydata$index",
-                            ),
-                            child: VideoWidget(
-                              play: true,
-                              url: document['content'],
-                            ),
+                          child: VideoWidget(
+                            url: document['content'],
                           ),
                           margin: EdgeInsets.only(
                             bottom: _isLastMessageRight(index) ? 20.0 : 10.0,
                             right: 10.0,
                           ),
                         )
-                      : Container(
-                          child: Image.asset(
-                            'assets/${document['content']}.gif',
-                            width: ResponsiveScreen()
-                                .widthMediaQuery(context, 100),
-                            height: ResponsiveScreen()
-                                .heightMediaQuery(context, 100),
-                            fit: BoxFit.cover,
-                          ),
-                          margin: EdgeInsets.only(
-                            bottom: _isLastMessageRight(index) ? 20.0 : 10.0,
-                            right: 10.0,
-                          ),
-                        ),
+                      : document['type'] == 4
+                          ? Container(
+                              width: ResponsiveScreen()
+                                  .widthMediaQuery(context, 300),
+                              height: ResponsiveScreen()
+                                  .heightMediaQuery(context, 120),
+                              child: AudioWidget(
+                                url: document['content'],
+                              ),
+                            )
+                          : Container(
+                              child: Image.asset(
+                                'assets/${document['content']}.gif',
+                                width: ResponsiveScreen()
+                                    .widthMediaQuery(context, 100),
+                                height: ResponsiveScreen()
+                                    .heightMediaQuery(context, 100),
+                                fit: BoxFit.cover,
+                              ),
+                              margin: EdgeInsets.only(
+                                bottom:
+                                    _isLastMessageRight(index) ? 20.0 : 10.0,
+                                right: 10.0,
+                              ),
+                            ),
         ],
         mainAxisAlignment: MainAxisAlignment.end,
       );
@@ -593,32 +625,38 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
                           )
                         : document['type'] == 3
                             ? Container(
-                                child: Container(
-                                  width: ResponsiveScreen()
-                                      .widthMediaQuery(context, 200),
-                                  height: ResponsiveScreen()
-                                      .heightMediaQuery(context, 200),
-                                  key: PageStorageKey(
-                                    "keydata$index",
-                                  ),
-                                  child: VideoWidget(
-                                    play: true,
-                                    url: document['content'],
-                                  ),
+                                width: ResponsiveScreen()
+                                    .widthMediaQuery(context, 200),
+                                height: ResponsiveScreen()
+                                    .heightMediaQuery(context, 200),
+                                key: PageStorageKey(
+                                  "keydata$index",
                                 ),
-                                margin: EdgeInsets.only(left: 10.0),
+                                child: VideoWidget(
+                                  url: document['content'],
+                                ),
                               )
-                            : Container(
-                                child: Image.asset(
-                                  'assets/${document['content']}.gif',
-                                  width: ResponsiveScreen()
-                                      .widthMediaQuery(context, 100),
-                                  height: ResponsiveScreen()
-                                      .heightMediaQuery(context, 100),
-                                  fit: BoxFit.cover,
-                                ),
-                                margin: EdgeInsets.only(left: 10.0),
-                              ),
+                            : document['type'] == 4
+                                ? Container(
+                                    width: ResponsiveScreen()
+                                        .widthMediaQuery(context, 300),
+                                    height: ResponsiveScreen()
+                                        .heightMediaQuery(context, 105),
+                                    child: AudioWidget(
+                                      url: document['content'],
+                                    ),
+                                  )
+                                : Container(
+                                    child: Image.asset(
+                                      'assets/${document['content']}.gif',
+                                      width: ResponsiveScreen()
+                                          .widthMediaQuery(context, 100),
+                                      height: ResponsiveScreen()
+                                          .heightMediaQuery(context, 100),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    margin: EdgeInsets.only(left: 10.0),
+                                  ),
               ],
             ),
             _isLastMessageLeft(index)
@@ -681,23 +719,23 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
   void _getImageVideo(int type, bool take) async {
     if (type == 1) {
       if (take) {
-        _imageVideoFile =
+        _imageVideoAudioFile =
             await ImagePicker.pickImage(source: ImageSource.camera);
       } else {
-        _imageVideoFile =
+        _imageVideoAudioFile =
             await ImagePicker.pickImage(source: ImageSource.gallery);
       }
     } else if (type == 3) {
       if (take) {
-        _imageVideoFile =
+        _imageVideoAudioFile =
             await ImagePicker.pickVideo(source: ImageSource.camera);
       } else {
-        _imageVideoFile =
+        _imageVideoAudioFile =
             await ImagePicker.pickVideo(source: ImageSource.gallery);
       }
     }
 
-    if (_imageVideoFile != null) {
+    if (_imageVideoAudioFile != null) {
       Navigator.pop(context, false);
 
       _provider.isLoading(true);
@@ -722,23 +760,28 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask;
-    if (type == 3) {
+    if (type == 1) {
       uploadTask = reference.putFile(
-        _imageVideoFile,
+        _imageVideoAudioFile,
+      );
+    } else if (type == 3) {
+      uploadTask = reference.putFile(
+        _imageVideoAudioFile,
         StorageMetadata(contentType: 'video/mp4'),
       );
-    } else if (type == 1) {
+    } else if (type == 4) {
       uploadTask = reference.putFile(
-        _imageVideoFile,
+        _imageVideoAudioFile,
+        StorageMetadata(contentType: 'audio/mp3'),
       );
     }
     StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
     storageTaskSnapshot.ref.getDownloadURL().then(
       (downloadUrl) {
-        _imageVideoUrl = downloadUrl;
+        _imageVideoAudioUrl = downloadUrl;
 
         _provider.isLoading(false);
-        _onSendMessage(_imageVideoUrl, type);
+        _onSendMessage(_imageVideoAudioUrl, type);
       },
       onError: (err) {
         _provider.isLoading(false);
@@ -811,84 +854,97 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
     return showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                type == 1
-                    ? "Would you want to send this image?"
-                    : type == 3 ? "Would you want to send this video?" : '',
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(
-                height: ResponsiveScreen().heightMediaQuery(context, 20),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    height: ResponsiveScreen().heightMediaQuery(context, 40),
-                    width: ResponsiveScreen().widthMediaQuery(context, 100),
-                    child: RaisedButton(
-                      highlightElevation: 0.0,
-                      splashColor: Colors.deepPurpleAccent,
-                      highlightColor: Colors.deepPurpleAccent,
-                      elevation: 0.0,
-                      color: Colors.deepPurpleAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      child: Text(
-                        'No',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 15,
+        return WillPopScope(
+          onWillPop: () {
+            _provider.isLoading(false);
+
+            Navigator.pop(context, false);
+
+            return Future.value(false);
+          },
+          child: AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  type == 1
+                      ? "Would you want to send this image?"
+                      : type == 3
+                          ? "Would you want to send this video?"
+                          : type == 4
+                              ? "Would you want to send this audio?"
+                              : '',
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  height: ResponsiveScreen().heightMediaQuery(context, 20),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: ResponsiveScreen().heightMediaQuery(context, 40),
+                      width: ResponsiveScreen().widthMediaQuery(context, 100),
+                      child: RaisedButton(
+                        highlightElevation: 0.0,
+                        splashColor: Colors.deepPurpleAccent,
+                        highlightColor: Colors.deepPurpleAccent,
+                        elevation: 0.0,
+                        color: Colors.deepPurpleAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
                         ),
-                      ),
-                      onPressed: () {
-                        _provider.isLoading(false);
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    width: ResponsiveScreen().widthMediaQuery(context, 20),
-                  ),
-                  Container(
-                    height: ResponsiveScreen().heightMediaQuery(context, 40),
-                    width: ResponsiveScreen().widthMediaQuery(context, 100),
-                    child: RaisedButton(
-                      highlightElevation: 0.0,
-                      splashColor: Colors.deepPurpleAccent,
-                      highlightColor: Colors.deepPurpleAccent,
-                      elevation: 0.0,
-                      color: Colors.deepPurpleAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      child: Text(
-                        'Yes',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 15,
+                        child: Text(
+                          'No',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
                         ),
+                        onPressed: () {
+                          _provider.isLoading(false);
+                          Navigator.of(context).pop();
+                        },
                       ),
-                      onPressed: () {
-                        _uploadFile(type);
-                        Navigator.of(context).pop();
-                      },
                     ),
-                  ),
-                ],
-              )
-            ],
+                    SizedBox(
+                      width: ResponsiveScreen().widthMediaQuery(context, 20),
+                    ),
+                    Container(
+                      height: ResponsiveScreen().heightMediaQuery(context, 40),
+                      width: ResponsiveScreen().widthMediaQuery(context, 100),
+                      child: RaisedButton(
+                        highlightElevation: 0.0,
+                        splashColor: Colors.deepPurpleAccent,
+                        highlightColor: Colors.deepPurpleAccent,
+                        elevation: 0.0,
+                        color: Colors.deepPurpleAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        child: Text(
+                          'Yes',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
+                        ),
+                        onPressed: () {
+                          _uploadFile(type);
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         );
       },
@@ -936,81 +992,81 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
       },
     );
   }
-}
 
-class VideoWidget extends StatefulWidget {
-  final bool play;
-  final String url;
-
-  const VideoWidget({Key key, @required this.url, @required this.play})
-      : super(key: key);
-
-  @override
-  _VideoWidgetState createState() => _VideoWidgetState();
-}
-
-class _VideoWidgetState extends State<VideoWidget> {
-  VideoPlayerController _videoPlayerController;
-  Future<void> _initializeVideoPlayerFuture;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _videoPlayerController = VideoPlayerController.network(widget.url);
-    _initializeVideoPlayerFuture = _videoPlayerController.initialize();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    _videoPlayerController.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _initializeVideoPlayerFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return Container(
-            child: Card(
-              key: PageStorageKey(widget.url),
-              elevation: 5.0,
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Chewie(
-                      key: PageStorageKey(widget.url),
-                      controller: ChewieController(
-                        videoPlayerController: _videoPlayerController,
-                        aspectRatio: 1,
-                        autoInitialize: true,
-                        looping: false,
-                        autoPlay: false,
-                        errorBuilder: (context, errorMessage) {
-                          return Center(
-                            child: Text(
-                              errorMessage,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
+  void _initRecord() async {
+    try {
+      if (await rec.FlutterAudioRecorder.hasPermissions) {
+        String customPath = '/flutter_audio_recorder_';
+        Directory appDocDirectory;
+        if (Platform.isIOS) {
+          appDocDirectory = await getApplicationDocumentsDirectory();
         } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          appDocDirectory = await getExternalStorageDirectory();
         }
-      },
-    );
+
+        customPath = appDocDirectory.path +
+            customPath +
+            DateTime.now().millisecondsSinceEpoch.toString();
+
+        _recorder = rec.FlutterAudioRecorder(customPath,
+            audioFormat: rec.AudioFormat.WAV);
+
+        await _recorder.initialized;
+        var current = await _recorder.current(channel: 0);
+        _provider.isRecording(current);
+        _provider.isRecordingStatus(current.status);
+      } else {
+        Scaffold.of(context).showSnackBar(
+            SnackBar(content: Text("You must accept permissions")));
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void _startRecord() async {
+    _requestPermissions();
+
+    try {
+      await _recorder.start();
+      var recording = await _recorder.current(channel: 0);
+      _provider.isRecording(recording);
+
+      const tick = const Duration(milliseconds: 50);
+      Timer.periodic(tick, (Timer t) async {
+        if (_provider.isCurrentStatusGet == rec.RecordingStatus.Stopped) {
+          t.cancel();
+        }
+
+        var current = await _recorder.current(channel: 0);
+        _provider.isRecording(current);
+        _provider.isRecordingStatus(_provider.isCurrentGet.status);
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void _stopRecord() async {
+    var result = await _recorder.stop();
+    _imageVideoAudioFile = widget.localFileSystem.file(result.path);
+
+    _provider.isRecording(result);
+    _provider.isRecordingStatus(_provider.isCurrentGet.status);
+
+    if (_imageVideoAudioFile != null) {
+      _provider.isLoading(true);
+
+      _showDialog(4);
+    }
+
+    _initRecord();
+  }
+
+  void _requestPermissions() async {
+    List<PermissionName> permissionNames = [];
+    permissionNames.add(PermissionName.Storage);
+    permissionNames.add(PermissionName.Microphone);
+    await Permission.requestPermissions(permissionNames);
   }
 }

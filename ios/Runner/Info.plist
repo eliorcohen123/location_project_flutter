@@ -28,6 +28,13 @@
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+	<key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Can We Use Your Microphone Please</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	   <key>CFBundleURLTypes</key>
