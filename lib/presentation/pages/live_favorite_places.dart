@@ -37,7 +37,7 @@ class LiveFavoritePlacesProv extends StatefulWidget {
 }
 
 class _LiveFavoritePlacesProvState extends State<LiveFavoritePlacesProv> {
-  var _userLocation;
+  UserLocation _userLocation;
   String _API_KEY = Constants.API_KEY;
   StreamSubscription<QuerySnapshot> _placeSub;
   Stream<QuerySnapshot> _snapshots =

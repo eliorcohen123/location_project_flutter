@@ -46,7 +46,7 @@ class _ListMapProvState extends State<ListMapProv> {
   List<Results> _places = List();
   double _valueRadius;
   String _open;
-  var _userLocation;
+  UserLocation _userLocation;
   String _API_KEY = Constants.API_KEY;
   final _formKeySearch = GlobalKey<FormState>();
   final _controllerSearch = TextEditingController();

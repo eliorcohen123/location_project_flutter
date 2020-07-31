@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  agora_rtc_engine:
+    dependency: "direct main"
+    description:
+      name: agora_rtc_engine
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.13"
   analyzer:
     dependency: transitive
     description:
@@ -176,13 +183,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
-  fake_async:
-    dependency: transitive
-    description:
-      name: fake_async
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
   file:
     dependency: transitive
     description:
@@ -601,7 +601,7 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.0"
+    version: "1.6.4"
   path_drawing:
     dependency: transitive
     description:
@@ -651,13 +651,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.0"
-  permission:
+  permission_handler:
     dependency: "direct main"
     description:
-      name: permission
+      name: permission_handler
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.7"
+    version: "3.3.0"
   petitparser:
     dependency: transitive
     description:
@@ -893,21 +893,21 @@ packages:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.14.7"
+    version: "1.14.4"
   test_api:
     dependency: transitive
     description:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.16"
+    version: "0.2.15"
   test_core:
     dependency: transitive
     description:
       name: test_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.7"
+    version: "0.3.4"
   typed_data:
     dependency: transitive
     description:

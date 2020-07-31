@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/core/services/location_service.dart';
 import 'package:locationprojectflutter/presentation/pages/sign_in_firebase.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/video_call_provider.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/favorites_places_provider.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/chat_screen_provider.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/custom_map_list_provider.dart';
@@ -69,6 +70,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<SignInFirebaseProvider>(
           create: (context) => SignInFirebaseProvider(),
+        ),
+        ChangeNotifierProvider<VideoCallProvider>(
+          create: (context) => VideoCallProvider(),
         ),
       ],
       child: MaterialApp(

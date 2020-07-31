@@ -18,11 +18,11 @@ class _SimpleImageCropState extends State<SimpleImageCrop> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: new IconButton(
+        backgroundColor: Colors.blueGrey,
+        leading: IconButton(
           icon: Icon(
             Icons.navigate_before,
-            color: Colors.black,
+            color: Colors.white,
             size: 40,
           ),
           onPressed: () => Navigator.of(context).pop(),
