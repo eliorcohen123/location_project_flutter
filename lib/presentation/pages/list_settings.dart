@@ -77,12 +77,15 @@ class _ChatSettingsProvState extends State<ChatSettingsProv> {
               ),
               RadioButtonGroup(
                 labels: [
-                  "Open",
-                  "All(Open + Close)",
+                  'Open',
+                  'All(Open + Close)',
                 ],
+                picked: _provider.valueOpenGet,
                 labelStyle: TextStyle(color: Colors.indigo),
                 activeColor: Colors.greenAccent,
-                onSelected: (String label) => _addOpenToSF(label),
+                onSelected: (String label) => {
+                  _provider.valueOpen(label),
+                },
               ),
               SizedBox(
                 height: ResponsiveScreen().heightMediaQuery(context, 20),
@@ -115,8 +118,6 @@ class _ChatSettingsProvState extends State<ChatSettingsProv> {
                 label: _provider.valueRadiusGet.round().toString(),
                 onChanged: (double newValue) {
                   _provider.valueRadius(newValue);
-
-                  _addRadiusSearchToSF(_provider.valueRadiusGet);
                 },
                 semanticFormatterCallback: (double newValue) {
                   return '${newValue.round()}';
@@ -150,8 +151,6 @@ class _ChatSettingsProvState extends State<ChatSettingsProv> {
                 label: _provider.valueGeofenceGet.round().toString(),
                 onChanged: (double newValue) {
                   _provider.valueGeofence(newValue);
-
-                  _addGeofenceToSF(_provider.valueGeofenceGet);
                 },
                 semanticFormatterCallback: (double newValue) {
                   return '${newValue.round()}';
@@ -161,14 +160,19 @@ class _ChatSettingsProvState extends State<ChatSettingsProv> {
                 height: ResponsiveScreen().heightMediaQuery(context, 100),
               ),
               RaisedButton(
-                child: Text('Return'),
+                child: Text('Save'),
                 color: Colors.greenAccent,
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ListMap(),
+                onPressed: () => {
+                  _addOpenToSF(_provider.valueOpenGet),
+                  _addRadiusSearchToSF(_provider.valueRadiusGet),
+                  _addGeofenceToSF(_provider.valueGeofenceGet),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ListMap(),
+                    ),
                   ),
-                ),
+                },
               )
             ],
           ),
@@ -181,20 +185,22 @@ class _ChatSettingsProvState extends State<ChatSettingsProv> {
     SharedPreferences.getInstance().then(
       (prefs) {
         _provider.sharedPref(prefs);
+
+        _provider.valueOpen(_provider.sharedGet.getString('open') ?? '');
+
+        _provider.valueOpenGet == '&opennow=true'
+            ? _provider.valueOpen('Open')
+            : _provider.valueOpenGet == ''
+                ? _provider.valueOpen('All(Open + Close)')
+                : _provider.valueOpen('All(Open + Close)');
+
         _provider.valueRadius(
             _provider.sharedGet.getDouble('rangeRadius') ?? 5000.0);
+
         _provider.valueGeofence(
             _provider.sharedGet.getDouble('rangeGeofence') ?? 500.0);
       },
     );
-  }
-
-  void _addRadiusSearchToSF(double value) async {
-    _provider.sharedGet.setDouble('rangeRadius', value);
-  }
-
-  void _addGeofenceToSF(double value) async {
-    _provider.sharedGet.setDouble('rangeGeofence', value);
   }
 
   void _addOpenToSF(String value) async {
@@ -203,5 +209,13 @@ class _ChatSettingsProvState extends State<ChatSettingsProv> {
     } else if (value == 'All(Open + Close)') {
       _provider.sharedGet.setString('open', '');
     }
+  }
+
+  void _addRadiusSearchToSF(double value) async {
+    _provider.sharedGet.setDouble('rangeRadius', value);
+  }
+
+  void _addGeofenceToSF(double value) async {
+    _provider.sharedGet.setDouble('rangeGeofence', value);
   }
 }
