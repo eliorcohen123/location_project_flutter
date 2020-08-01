@@ -66,6 +66,7 @@ class DrawerTotal extends StatelessWidget {
                 ],
               ),
               onTap: () {
+                Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -93,6 +94,7 @@ class DrawerTotal extends StatelessWidget {
                 ],
               ),
               onTap: () {
+                Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -120,6 +122,7 @@ class DrawerTotal extends StatelessWidget {
                 ],
               ),
               onTap: () {
+                Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -147,6 +150,7 @@ class DrawerTotal extends StatelessWidget {
                 ],
               ),
               onTap: () {
+                Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -174,6 +178,7 @@ class DrawerTotal extends StatelessWidget {
                 ],
               ),
               onTap: () {
+                Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -201,6 +206,7 @@ class DrawerTotal extends StatelessWidget {
                 ],
               ),
               onTap: () {
+                Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
