@@ -4,7 +4,6 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:locationprojectflutter/presentation/pages/custom_map_list.dart';
 import 'package:locationprojectflutter/presentation/pages/favorite_places.dart';
 import 'package:locationprojectflutter/presentation/pages/home_chat.dart';
-import 'package:locationprojectflutter/presentation/pages/list_map.dart';
 import 'package:locationprojectflutter/presentation/pages/live_chat.dart';
 import 'package:locationprojectflutter/presentation/pages/live_favorite_places.dart';
 import 'package:locationprojectflutter/presentation/pages/sign_in_firebase.dart';
@@ -47,33 +46,6 @@ class DrawerTotal extends StatelessWidget {
             ),
             SizedBox(
               height: ResponsiveScreen().heightMediaQuery(context, 50),
-            ),
-            ListTile(
-              title: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.view_list,
-                    color: Color(0xFFcd4312),
-                  ),
-                  SizedBox(
-                    width: ResponsiveScreen().widthMediaQuery(context, 10),
-                  ),
-                  Text(
-                    'Main List',
-                    style: TextStyle(
-                      color: Color(0xFF9FA31C),
-                    ),
-                  ),
-                ],
-              ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ListMap(),
-                  ),
-                );
-              },
             ),
             ListTile(
               title: Row(

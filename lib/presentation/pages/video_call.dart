@@ -305,18 +305,18 @@ class _VideoCallProvState extends State<VideoCallProv> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.blueAccent,
         leading: IconButton(
           icon: Icon(
             Icons.navigate_before,
-            color: Colors.white,
+            color: Color(0xFFE9FFFF),
             size: 40,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      backgroundColor: Colors.black,
       body: Center(
         child: Stack(
           children: <Widget>[

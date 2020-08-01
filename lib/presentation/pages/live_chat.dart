@@ -3,8 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/data/models/model_live_chat/results_live_chat.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/live_chat_provider.dart';
-import 'package:locationprojectflutter/presentation/widgets/appbar_total.dart';
-import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -59,7 +57,17 @@ class _LiveChatProvState extends State<LiveChatProv> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blueGrey,
-      appBar: AppBarTotal(),
+      appBar: AppBar(
+        backgroundColor: Colors.blueAccent,
+        leading: IconButton(
+          icon: Icon(
+            Icons.navigate_before,
+            color: Color(0xFFE9FFFF),
+            size: 40,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,7 +127,6 @@ class _LiveChatProvState extends State<LiveChatProv> {
           ],
         ),
       ),
-      drawer: DrawerTotal(),
     );
   }
 

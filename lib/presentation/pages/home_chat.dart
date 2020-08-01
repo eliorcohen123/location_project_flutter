@@ -10,7 +10,6 @@ import 'package:locationprojectflutter/presentation/pages/chat_screen.dart';
 import 'package:locationprojectflutter/presentation/pages/chat_settings.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/home_chat_provider.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
-import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -56,14 +55,7 @@ class _HomeChatProvState extends State<HomeChatProv> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Text(
-          'Lovely Favorite Places',
-          style: TextStyle(color: Color(0xFFE9FFFF)),
-        ),
-        iconTheme: IconThemeData(
-          color: Color(0xFFE9FFFF),
-        ),
+        backgroundColor: Colors.blueAccent,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.settings),
@@ -76,6 +68,14 @@ class _HomeChatProvState extends State<HomeChatProv> {
             ),
           ),
         ],
+        leading: IconButton(
+          icon: Icon(
+            Icons.navigate_before,
+            color: Color(0xFFE9FFFF),
+            size: 40,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: Stack(
         children: <Widget>[
@@ -121,7 +121,6 @@ class _HomeChatProvState extends State<HomeChatProv> {
           )
         ],
       ),
-      drawer: DrawerTotal(),
     );
   }
 

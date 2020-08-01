@@ -9,8 +9,6 @@ import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/data/models/model_live_favorites/results_live_favorites.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/live_favorite_places_provider.dart';
-import 'package:locationprojectflutter/presentation/widgets/appbar_total.dart';
-import 'package:locationprojectflutter/presentation/widgets/drawer_total.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:latlong/latlong.dart' as dis;
 import 'package:provider/provider.dart';
@@ -68,7 +66,17 @@ class _LiveFavoritePlacesProvState extends State<LiveFavoritePlacesProv> {
   Widget build(BuildContext context) {
     _userLocation = Provider.of<UserLocation>(context);
     return Scaffold(
-      appBar: AppBarTotal(),
+      appBar: AppBar(
+        backgroundColor: Colors.blueAccent,
+        leading: IconButton(
+          icon: Icon(
+            Icons.navigate_before,
+            color: Color(0xFFE9FFFF),
+            size: 40,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       body: Container(
         child: Stack(
           children: [
@@ -124,7 +132,6 @@ class _LiveFavoritePlacesProvState extends State<LiveFavoritePlacesProv> {
           ],
         ),
       ),
-      drawer: DrawerTotal(),
     );
   }
 

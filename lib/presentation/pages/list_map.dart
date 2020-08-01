@@ -128,14 +128,7 @@ class _ListMapProvState extends State<ListMapProv> {
       );
     } else {
       return AppBar(
-        backgroundColor: Colors.black,
-        title: Text(
-          'Lovely Favorite Places',
-          style: TextStyle(color: Color(0xFFE9FFFF)),
-        ),
-        iconTheme: IconThemeData(
-          color: Color(0xFFE9FFFF),
-        ),
+        backgroundColor: Colors.blueAccent,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
