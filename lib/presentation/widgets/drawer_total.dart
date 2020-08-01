@@ -47,173 +47,41 @@ class DrawerTotal extends StatelessWidget {
             SizedBox(
               height: ResponsiveScreen().heightMediaQuery(context, 50),
             ),
-            ListTile(
-              title: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.chat,
-                    color: Color(0xFFcd4312),
-                  ),
-                  SizedBox(
-                    width: ResponsiveScreen().widthMediaQuery(context, 10),
-                  ),
-                  Text(
-                    'Live Chat',
-                    style: TextStyle(
-                      color: Color(0xFF9FA31C),
-                    ),
-                  ),
-                ],
-              ),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LiveChat(),
-                  ),
-                );
-              },
+            _listTile(
+              context,
+              LiveChat(),
+              Icons.chat,
+              'Live Chat',
             ),
-            ListTile(
-              title: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.done,
-                    color: Color(0xFFcd4312),
-                  ),
-                  SizedBox(
-                    width: ResponsiveScreen().widthMediaQuery(context, 10),
-                  ),
-                  Text(
-                    'Top Places',
-                    style: TextStyle(
-                      color: Color(0xFF9FA31C),
-                    ),
-                  ),
-                ],
-              ),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LiveFavoritePlaces(),
-                  ),
-                );
-              },
+            _listTile(
+              context,
+              LiveFavoritePlaces(),
+              Icons.done,
+              'Top Places',
             ),
-            ListTile(
-              title: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.favorite,
-                    color: Color(0xFFcd4312),
-                  ),
-                  SizedBox(
-                    width: ResponsiveScreen().widthMediaQuery(context, 10),
-                  ),
-                  Text(
-                    'Favorites',
-                    style: TextStyle(
-                      color: Color(0xFF9FA31C),
-                    ),
-                  ),
-                ],
-              ),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FavoritePlaces(),
-                  ),
-                );
-              },
+            _listTile(
+              context,
+              FavoritePlaces(),
+              Icons.favorite,
+              'Favorites',
             ),
-            ListTile(
-              title: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.edit,
-                    color: Color(0xFFcd4312),
-                  ),
-                  SizedBox(
-                    width: ResponsiveScreen().widthMediaQuery(context, 10),
-                  ),
-                  Text(
-                    'Add Custom Marker',
-                    style: TextStyle(
-                      color: Color(0xFF9FA31C),
-                    ),
-                  ),
-                ],
-              ),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CustomMapList(),
-                  ),
-                );
-              },
+            _listTile(
+              context,
+              CustomMapList(),
+              Icons.edit,
+              'Add Custom Marker',
             ),
-            ListTile(
-              title: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.chat_bubble_outline,
-                    color: Color(0xFFcd4312),
-                  ),
-                  SizedBox(
-                    width: ResponsiveScreen().widthMediaQuery(context, 10),
-                  ),
-                  Text(
-                    'Private Chat',
-                    style: TextStyle(
-                      color: Color(0xFF9FA31C),
-                    ),
-                  ),
-                ],
-              ),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HomeChat(),
-                  ),
-                );
-              },
+            _listTile(
+              context,
+              HomeChat(),
+              Icons.chat_bubble_outline,
+              'Private Chat',
             ),
-            ListTile(
-              title: Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.settings,
-                    color: Color(0xFFcd4312),
-                  ),
-                  SizedBox(
-                    width: ResponsiveScreen().widthMediaQuery(context, 10),
-                  ),
-                  Text(
-                    'List Settings',
-                    style: TextStyle(
-                      color: Color(0xFF9FA31C),
-                    ),
-                  ),
-                ],
-              ),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ListSettings(),
-                  ),
-                );
-              },
+            _listTile(
+              context,
+              ListSettings(),
+              Icons.settings,
+              'List Settings',
             ),
             ListTile(
               title: Row(
@@ -237,21 +105,52 @@ class DrawerTotal extends StatelessWidget {
                 FacebookLogin _fbLogin = FacebookLogin();
                 await FirebaseAuth.instance.signOut().then(
                       (value) async => {
-                        await _fbLogin.logOut().then(
-                              (value) =>
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                        builder: (context) => SignInFirebase(),
-                                      ),
-                                      (Route<dynamic> route) => false),
-                            ),
-                      },
-                    );
+                    await _fbLogin.logOut().then(
+                          (value) =>
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                builder: (context) => SignInFirebase(),
+                              ),
+                                  (Route<dynamic> route) => false),
+                    ),
+                  },
+                );
               },
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _listTile(BuildContext context, cls, IconData iconData, String text) {
+    return ListTile(
+      title: Row(
+        children: <Widget>[
+          Icon(
+            iconData,
+            color: Color(0xFFcd4312),
+          ),
+          SizedBox(
+            width: ResponsiveScreen().widthMediaQuery(context, 10),
+          ),
+          Text(
+            text,
+            style: TextStyle(
+              color: Color(0xFF9FA31C),
+            ),
+          ),
+        ],
+      ),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => cls,
+          ),
+        );
+      },
     );
   }
 }
