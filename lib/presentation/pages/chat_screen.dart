@@ -124,7 +124,7 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
           Column(
             children: <Widget>[
               _buildMessagesList(),
-              _provider.isShowStickerGet ? _buildSticker() : Container(),
+              _provider.isShowStickerGet ? _buildStickers() : Container(),
               _buildInput(),
             ],
           ),
@@ -145,106 +145,26 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
     );
   }
 
-  Widget _buildSticker() {
+  Widget _buildStickers() {
     return Container(
       child: Column(
         children: <Widget>[
           Row(
             children: <Widget>[
-              FlatButton(
-                onPressed: () => _onSendMessage('mimi1', 2),
-                child: Image.asset(
-                  'assets/mimi1.gif',
-                  width: ResponsiveScreen().widthMediaQuery(context, 50),
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              FlatButton(
-                onPressed: () => _onSendMessage('mimi2', 2),
-                child: Image.asset(
-                  'assets/mimi2.gif',
-                  width: ResponsiveScreen().widthMediaQuery(context, 50),
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              FlatButton(
-                onPressed: () => _onSendMessage('mimi3', 2),
-                child: Image.asset(
-                  'assets/mimi3.gif',
-                  width: ResponsiveScreen().widthMediaQuery(context, 50),
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
-              )
+              _stickers('mimi1', 'assets/mimi1.gif'),
+              _stickers('mimi2', 'assets/mimi2.gif'),
+              _stickers('mimi3', 'assets/mimi3.gif'),
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           ),
           Row(
             children: <Widget>[
-              FlatButton(
-                onPressed: () => _onSendMessage('mimi4', 2),
-                child: Image.asset(
-                  'assets/mimi4.gif',
-                  width: ResponsiveScreen().widthMediaQuery(context, 50),
-                  height: ResponsiveScreen().heightMediaQuery(context, 50),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              FlatButton(
-                onPressed: () => _onSendMessage('mimi5', 2),
-                child: Image.asset(
-                  'assets/mimi5.gif',
-                  width: ResponsiveScreen().widthMediaQuery(context, 50),
-                  height: ResponsiveScreen().heightMediaQuery(context, 50),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              FlatButton(
-                onPressed: () => _onSendMessage('mimi6', 2),
-                child: Image.asset(
-                  'assets/mimi6.gif',
-                  width: ResponsiveScreen().widthMediaQuery(context, 50),
-                  height: ResponsiveScreen().heightMediaQuery(context, 50),
-                  fit: BoxFit.cover,
-                ),
-              )
+              _stickers('mimi4', 'assets/mimi4.gif'),
+              _stickers('mimi5', 'assets/mimi5.gif'),
+              _stickers('mimi6', 'assets/mimi6.gif'),
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           ),
-          Row(
-            children: <Widget>[
-              FlatButton(
-                onPressed: () => _onSendMessage('mimi7', 2),
-                child: Image.asset(
-                  'assets/mimi7.gif',
-                  width: ResponsiveScreen().widthMediaQuery(context, 50),
-                  height: ResponsiveScreen().heightMediaQuery(context, 50),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              FlatButton(
-                onPressed: () => _onSendMessage('mimi8', 2),
-                child: Image.asset(
-                  'assets/mimi8.gif',
-                  width: ResponsiveScreen().widthMediaQuery(context, 50),
-                  height: ResponsiveScreen().heightMediaQuery(context, 50),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              FlatButton(
-                onPressed: () => _onSendMessage('mimi9', 2),
-                child: Image.asset(
-                  'assets/mimi9.gif',
-                  width: ResponsiveScreen().widthMediaQuery(context, 50),
-                  height: ResponsiveScreen().heightMediaQuery(context, 50),
-                  fit: BoxFit.cover,
-                ),
-              )
-            ],
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          )
         ],
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       ),
@@ -259,6 +179,18 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
       ),
       padding: EdgeInsets.all(5.0),
       height: ResponsiveScreen().heightMediaQuery(context, 180),
+    );
+  }
+
+  Widget _stickers(String name, String asset) {
+    return FlatButton(
+      onPressed: () => _onSendMessage(name, 2),
+      child: Image.asset(
+        asset,
+        width: ResponsiveScreen().widthMediaQuery(context, 50),
+        height: ResponsiveScreen().heightMediaQuery(context, 50),
+        fit: BoxFit.cover,
+      ),
     );
   }
 
@@ -485,66 +417,69 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
                         right: 10.0,
                       ),
                     )
-                  : document['type'] == 3
+                  : document['type'] == 2
                       ? Container(
-                          child: VideoWidget(
-                            url: document['content'],
+                          child: Image.asset(
+                            'assets/${document['content']}.gif',
+                            width: ResponsiveScreen()
+                                .widthMediaQuery(context, 100),
+                            height: ResponsiveScreen()
+                                .heightMediaQuery(context, 100),
+                            fit: BoxFit.cover,
                           ),
                           margin: EdgeInsets.only(
                             bottom: _isLastMessageRight(index) ? 20.0 : 10.0,
                             right: 10.0,
                           ),
                         )
-                      : document['type'] == 4
+                      : document['type'] == 3
                           ? Container(
-                              width: ResponsiveScreen()
-                                  .widthMediaQuery(context, 300),
-                              height: ResponsiveScreen()
-                                  .heightMediaQuery(context, 120),
-                              child: AudioWidget(
+                              child: VideoWidget(
                                 url: document['content'],
                               ),
+                              margin: EdgeInsets.only(
+                                bottom:
+                                    _isLastMessageRight(index) ? 20.0 : 10.0,
+                                right: 10.0,
+                              ),
                             )
-                          : document['type'] == 5
-                              ? GestureDetector(
-                                  onTap: () => _videoSendMessage(),
-                                  child: Container(
-                                    child: Text(
-                                      'Join video call',
-                                      style: TextStyle(color: Colors.lightBlue),
-                                    ),
-                                    padding: EdgeInsets.fromLTRB(
-                                        15.0, 10.0, 15.0, 10.0),
-                                    width: ResponsiveScreen()
-                                        .widthMediaQuery(context, 200),
-                                    decoration: BoxDecoration(
-                                      color: Color(0xff203152),
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    margin: EdgeInsets.only(
-                                      bottom: _isLastMessageRight(index)
-                                          ? 20.0
-                                          : 10.0,
-                                      right: 10.0,
-                                    ),
+                          : document['type'] == 4
+                              ? Container(
+                                  width: ResponsiveScreen()
+                                      .widthMediaQuery(context, 300),
+                                  height: ResponsiveScreen()
+                                      .heightMediaQuery(context, 120),
+                                  child: AudioWidget(
+                                    url: document['content'],
                                   ),
                                 )
-                              : Container(
-                                  child: Image.asset(
-                                    'assets/${document['content']}.gif',
-                                    width: ResponsiveScreen()
-                                        .widthMediaQuery(context, 100),
-                                    height: ResponsiveScreen()
-                                        .heightMediaQuery(context, 100),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  margin: EdgeInsets.only(
-                                    bottom: _isLastMessageRight(index)
-                                        ? 20.0
-                                        : 10.0,
-                                    right: 10.0,
-                                  ),
-                                ),
+                              : document['type'] == 5
+                                  ? GestureDetector(
+                                      onTap: () => _videoSendMessage(),
+                                      child: Container(
+                                        child: Text(
+                                          'Join video call',
+                                          style: TextStyle(
+                                              color: Colors.lightBlue),
+                                        ),
+                                        padding: EdgeInsets.fromLTRB(
+                                            15.0, 10.0, 15.0, 10.0),
+                                        width: ResponsiveScreen()
+                                            .widthMediaQuery(context, 200),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xff203152),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        margin: EdgeInsets.only(
+                                          bottom: _isLastMessageRight(index)
+                                              ? 20.0
+                                              : 10.0,
+                                          right: 10.0,
+                                        ),
+                                      ),
+                                    )
+                                  : Container(),
         ],
         mainAxisAlignment: MainAxisAlignment.end,
       );
@@ -673,30 +608,28 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                           )
-                        : document['type'] == 3
+                        : document['type'] == 2
                             ? Container(
-                                width: ResponsiveScreen()
-                                    .widthMediaQuery(context, 200),
-                                height: ResponsiveScreen()
-                                    .heightMediaQuery(context, 200),
-                                key: PageStorageKey(
-                                  "keydata$index",
+                                child: Image.asset(
+                                  'assets/${document['content']}.gif',
+                                  width: ResponsiveScreen()
+                                      .widthMediaQuery(context, 100),
+                                  height: ResponsiveScreen()
+                                      .heightMediaQuery(context, 100),
+                                  fit: BoxFit.cover,
                                 ),
-                                child: VideoWidget(
-                                  url: document['content'],
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Color(0xffE8E8E8),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
+                                margin: EdgeInsets.only(left: 10.0),
                               )
-                            : document['type'] == 4
+                            : document['type'] == 3
                                 ? Container(
                                     width: ResponsiveScreen()
-                                        .widthMediaQuery(context, 300),
+                                        .widthMediaQuery(context, 200),
                                     height: ResponsiveScreen()
-                                        .heightMediaQuery(context, 105),
-                                    child: AudioWidget(
+                                        .heightMediaQuery(context, 200),
+                                    key: PageStorageKey(
+                                      "keydata$index",
+                                    ),
+                                    child: VideoWidget(
                                       url: document['content'],
                                     ),
                                     decoration: BoxDecoration(
@@ -704,38 +637,45 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
                                       borderRadius: BorderRadius.circular(8.0),
                                     ),
                                   )
-                                : document['type'] == 5
-                                    ? GestureDetector(
-                                        onTap: () => _videoSendMessage(),
-                                        child: Container(
-                                          child: Text(
-                                            'Join video call',
-                                            style: TextStyle(
-                                                color: Colors.lightBlue),
-                                          ),
-                                          padding: EdgeInsets.fromLTRB(
-                                              15.0, 10.0, 15.0, 10.0),
-                                          width: ResponsiveScreen()
-                                              .widthMediaQuery(context, 200),
-                                          decoration: BoxDecoration(
-                                            color: Color(0xffE8E8E8),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                          ),
-                                          margin: EdgeInsets.only(left: 10.0),
+                                : document['type'] == 4
+                                    ? Container(
+                                        width: ResponsiveScreen()
+                                            .widthMediaQuery(context, 300),
+                                        height: ResponsiveScreen()
+                                            .heightMediaQuery(context, 105),
+                                        child: AudioWidget(
+                                          url: document['content'],
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xffE8E8E8),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
                                         ),
                                       )
-                                    : Container(
-                                        child: Image.asset(
-                                          'assets/${document['content']}.gif',
-                                          width: ResponsiveScreen()
-                                              .widthMediaQuery(context, 100),
-                                          height: ResponsiveScreen()
-                                              .heightMediaQuery(context, 100),
-                                          fit: BoxFit.cover,
-                                        ),
-                                        margin: EdgeInsets.only(left: 10.0),
-                                      ),
+                                    : document['type'] == 5
+                                        ? GestureDetector(
+                                            onTap: () => _videoSendMessage(),
+                                            child: Container(
+                                              child: Text(
+                                                'Join video call',
+                                                style: TextStyle(
+                                                    color: Colors.lightBlue),
+                                              ),
+                                              padding: EdgeInsets.fromLTRB(
+                                                  15.0, 10.0, 15.0, 10.0),
+                                              width: ResponsiveScreen()
+                                                  .widthMediaQuery(
+                                                      context, 200),
+                                              decoration: BoxDecoration(
+                                                color: Color(0xffE8E8E8),
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              margin:
+                                                  EdgeInsets.only(left: 10.0),
+                                            ),
+                                          )
+                                        : Container(),
               ],
             ),
             _isLastMessageLeft(index)
@@ -832,7 +772,7 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
   void _getSticker() {
     _focusNode.unfocus();
 
-    _provider.isShowSticker(true);
+    _provider.isShowSticker(!_provider.isShowStickerGet);
   }
 
   void _uploadFile(int type) async {
