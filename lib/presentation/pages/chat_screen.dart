@@ -153,15 +153,14 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
             children: <Widget>[
               _stickers('mimi1', 'assets/mimi1.gif'),
               _stickers('mimi2', 'assets/mimi2.gif'),
-              _stickers('mimi3', 'assets/mimi3.gif'),
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           ),
           Row(
             children: <Widget>[
+              _stickers('mimi3', 'assets/mimi3.gif'),
               _stickers('mimi4', 'assets/mimi4.gif'),
               _stickers('mimi5', 'assets/mimi5.gif'),
-              _stickers('mimi6', 'assets/mimi6.gif'),
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           ),
