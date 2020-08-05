@@ -10,13 +10,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(_ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions:
       [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+
     FirebaseApp.configure()
     GMSServices.provideAPIKey("API_KEY")
+
+    if #available(iOS 10.0, *) {
+        UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+    }
+
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-  }
-
-  if #available(iOS 10.0, *) {
-    UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
   }
 }
