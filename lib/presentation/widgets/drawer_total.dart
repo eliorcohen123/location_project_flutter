@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:locationprojectflutter/presentation/pages/custom_map_list.dart';
 import 'package:locationprojectflutter/presentation/pages/favorite_places.dart';
@@ -9,6 +10,7 @@ import 'package:locationprojectflutter/presentation/pages/live_favorite_places.d
 import 'package:locationprojectflutter/presentation/pages/sign_in_firebase.dart';
 import 'package:locationprojectflutter/presentation/pages/list_settings.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
+import 'dart:io' show Platform;
 
 class DrawerTotal extends StatelessWidget {
   static final DrawerTotal _singleton = DrawerTotal.internal();
@@ -16,6 +18,9 @@ class DrawerTotal extends StatelessWidget {
   factory DrawerTotal() => _singleton;
 
   DrawerTotal.internal();
+
+  static const _platform =
+      const MethodChannel("com.eliorcohen.locationprojectflutter.channel");
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +88,32 @@ class DrawerTotal extends StatelessWidget {
               Icons.settings,
               'List Settings',
             ),
+            Platform.isAndroid
+                ? ListTile(
+                    title: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.info,
+                          color: Color(0xFFcd4312),
+                        ),
+                        SizedBox(
+                          width:
+                              ResponsiveScreen().widthMediaQuery(context, 10),
+                        ),
+                        Text(
+                          'Credits',
+                          style: TextStyle(
+                            color: Color(0xFF9FA31C),
+                          ),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      _showNativeView();
+                    },
+                  )
+                : Container(),
             ListTile(
               title: Row(
                 children: <Widget>[
@@ -105,16 +136,16 @@ class DrawerTotal extends StatelessWidget {
                 FacebookLogin _fbLogin = FacebookLogin();
                 await FirebaseAuth.instance.signOut().then(
                       (value) async => {
-                    await _fbLogin.logOut().then(
-                          (value) =>
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                builder: (context) => SignInFirebase(),
-                              ),
-                                  (Route<dynamic> route) => false),
-                    ),
-                  },
-                );
+                        await _fbLogin.logOut().then(
+                              (value) =>
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                        builder: (context) => SignInFirebase(),
+                                      ),
+                                      (Route<dynamic> route) => false),
+                            ),
+                      },
+                    );
               },
             ),
           ],
@@ -152,5 +183,9 @@ class DrawerTotal extends StatelessWidget {
         );
       },
     );
+  }
+
+  void _showNativeView() async {
+    await _platform.invokeMethod("showNativeView");
   }
 }

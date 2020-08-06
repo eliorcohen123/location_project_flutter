@@ -1,12 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.eliorcohen.locationprojectflutter">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -18,31 +20,39 @@
         android:icon="@mipmap/ic_launcher"
         android:label="Lovely Favorite Places"
         android:requestLegacyExternalStorage="true"
-        android:usesCleartextTraffic="true">
+        android:supportsRtl="false"
+        android:usesCleartextTraffic="true"
+        tools:replace="android:supportsRtl">
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="API_KEY" />
+
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
-            android:theme="@style/LaunchTheme"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".CreditActivity" />
 
         <receiver
             android:name="com.intivoto.geofence.GeofenceBroadcastReceiver"
             android:enabled="true"
             android:exported="true" />
+
         <service
             android:name="com.intivoto.geofence.GeofencePlugin"
             android:exported="true"
@@ -51,7 +61,6 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -73,4 +82,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>
