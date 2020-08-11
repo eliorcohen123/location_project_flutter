@@ -94,214 +94,284 @@ class _PhoneSMSAuthProvState extends State<PhoneSMSAuthProv> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  'Phone Auth',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.greenAccent,
-                    fontSize: 40,
-                  ),
-                ),
+                _title(),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 70),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Form(
-                      key: _formKeyPhone,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          bottom:
-                              ResponsiveScreen().heightMediaQuery(context, 20),
-                        ),
-                        child: TFFFirebase(
-                          icon: Icon(Icons.phone),
-                          hint: "Phone",
-                          controller: _phoneController,
-                          textInputType: TextInputType.phone,
-                          obSecure: false,
-                        ),
-                      ),
-                    ),
-                    Form(
-                      key: _formKeySms,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          bottom:
-                              ResponsiveScreen().heightMediaQuery(context, 20),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _tffSms(_smsController1, _focus1, _focus2, null),
-                            SizedBox(
-                              width: ResponsiveScreen()
-                                  .widthMediaQuery(context, 5),
-                            ),
-                            _tffSms(_smsController2, _focus2, _focus3, _focus1),
-                            SizedBox(
-                              width: ResponsiveScreen()
-                                  .widthMediaQuery(context, 5),
-                            ),
-                            _tffSms(_smsController3, _focus3, _focus4, _focus2),
-                            SizedBox(
-                              width: ResponsiveScreen()
-                                  .widthMediaQuery(context, 5),
-                            ),
-                            _tffSms(_smsController4, _focus4, _focus5, _focus3),
-                            SizedBox(
-                              width: ResponsiveScreen()
-                                  .widthMediaQuery(context, 5),
-                            ),
-                            _tffSms(_smsController5, _focus5, _focus6, _focus4),
-                            SizedBox(
-                              width: ResponsiveScreen()
-                                  .widthMediaQuery(context, 5),
-                            ),
-                            _tffSms(_smsController6, _focus6, null, _focus5),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                _textFieldsData(),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 20),
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  child: _provider.successGet == null
-                      ? null
-                      : _provider.textErrorGet != ''
-                          ? Text(
-                              _provider.textErrorGet,
-                              style: TextStyle(
-                                color: Colors.redAccent,
-                                fontSize: 15,
-                              ),
-                              textAlign: TextAlign.center,
-                            )
-                          : _provider.textOkGet != ''
-                              ? Text(
-                                  _provider.textOkGet,
-                                  style: TextStyle(
-                                    color: Colors.lightGreenAccent,
-                                    fontSize: 15,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                )
-                              : null,
-                ),
+                _showErrors(),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 20),
                 ),
-                _provider.loadingGet == true
-                    ? CircularProgressIndicator()
-                    : Container(),
+                _loading(),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 20),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: ResponsiveScreen().widthMediaQuery(context, 20),
-                    right: ResponsiveScreen().widthMediaQuery(context, 20),
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  child: Container(
-                    height: ResponsiveScreen().heightMediaQuery(context, 50),
-                    width: MediaQuery.of(context).size.width,
-                    child: RaisedButton(
-                      highlightElevation: 0.0,
-                      splashColor: Colors.greenAccent,
-                      highlightColor: Colors.lightGreenAccent,
-                      elevation: 0.0,
-                      color: Colors.greenAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      child: Text(
-                        'Send SMS',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                      onPressed: () {
-                        if (_formKeyPhone.currentState.validate()) {
-                          if (_phoneController.text.isNotEmpty) {
-                            if (Validations()
-                                .validatePhone(_phoneController.text)) {
-                              _provider.loading(true);
-                              _provider.textError('');
-                              _provider.textOk('');
-
-                              _verifyPhoneNumber();
-                            } else if (!Validations()
-                                .validatePhone(_phoneController.text)) {
-                              _provider.success(false);
-                              _provider.textError('Invalid Phone');
-                            }
-                          }
-                        }
-                      },
-                    ),
-                  ),
-                ),
+                _buttonSendSms(),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 20),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: ResponsiveScreen().widthMediaQuery(context, 20),
-                    right: ResponsiveScreen().widthMediaQuery(context, 20),
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  child: Container(
-                    height: ResponsiveScreen().heightMediaQuery(context, 50),
-                    width: MediaQuery.of(context).size.width,
-                    child: RaisedButton(
-                      highlightElevation: 0.0,
-                      splashColor: Colors.greenAccent,
-                      highlightColor: Colors.lightGreenAccent,
-                      elevation: 0.0,
-                      color: Colors.greenAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      child: Text(
-                        'Login after SMS',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                      onPressed: () {
-                        if (_formKeySms.currentState.validate()) {
-                          if (_smsController1.text.isNotEmpty &&
-                              _smsController2.text.isNotEmpty &&
-                              _smsController3.text.isNotEmpty &&
-                              _smsController4.text.isNotEmpty &&
-                              _smsController5.text.isNotEmpty &&
-                              _smsController6.text.isNotEmpty) {
-                            _provider.loading(true);
-                            _provider.textError('');
-
-                            _signInWithPhoneNumber();
-                          }
-                        }
-                      },
-                    ),
-                  ),
-                ),
+                _buttonLogin(),
                 SizedBox(
                   height: ResponsiveScreen().heightMediaQuery(context, 5),
                 ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _title() {
+    return Text(
+      'Phone Auth',
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.greenAccent,
+        fontSize: 40,
+      ),
+    );
+  }
+
+  Widget _textFieldsData() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Form(
+          key: _formKeyPhone,
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: ResponsiveScreen().heightMediaQuery(context, 20),
+            ),
+            child: TFFFirebase(
+              icon: Icon(Icons.phone),
+              hint: "Phone",
+              controller: _phoneController,
+              textInputType: TextInputType.phone,
+              obSecure: false,
+            ),
+          ),
+        ),
+        Form(
+          key: _formKeySms,
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: ResponsiveScreen().heightMediaQuery(context, 20),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _tffSms(_smsController1, _focus1, _focus2, null),
+                SizedBox(
+                  width: ResponsiveScreen().widthMediaQuery(context, 5),
+                ),
+                _tffSms(_smsController2, _focus2, _focus3, _focus1),
+                SizedBox(
+                  width: ResponsiveScreen().widthMediaQuery(context, 5),
+                ),
+                _tffSms(_smsController3, _focus3, _focus4, _focus2),
+                SizedBox(
+                  width: ResponsiveScreen().widthMediaQuery(context, 5),
+                ),
+                _tffSms(_smsController4, _focus4, _focus5, _focus3),
+                SizedBox(
+                  width: ResponsiveScreen().widthMediaQuery(context, 5),
+                ),
+                _tffSms(_smsController5, _focus5, _focus6, _focus4),
+                SizedBox(
+                  width: ResponsiveScreen().widthMediaQuery(context, 5),
+                ),
+                _tffSms(_smsController6, _focus6, null, _focus5),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _showErrors() {
+    return Container(
+      alignment: Alignment.center,
+      child: _provider.successGet == null
+          ? null
+          : _provider.textErrorGet != ''
+              ? Text(
+                  _provider.textErrorGet,
+                  style: TextStyle(
+                    color: Colors.redAccent,
+                    fontSize: 15,
+                  ),
+                  textAlign: TextAlign.center,
+                )
+              : _provider.textOkGet != ''
+                  ? Text(
+                      _provider.textOkGet,
+                      style: TextStyle(
+                        color: Colors.lightGreenAccent,
+                        fontSize: 15,
+                      ),
+                      textAlign: TextAlign.center,
+                    )
+                  : null,
+    );
+  }
+
+  Widget _loading() {
+    return _provider.loadingGet == true
+        ? CircularProgressIndicator()
+        : Container();
+  }
+
+  Widget _buttonSendSms() {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: ResponsiveScreen().widthMediaQuery(context, 20),
+        right: ResponsiveScreen().widthMediaQuery(context, 20),
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: Container(
+        height: ResponsiveScreen().heightMediaQuery(context, 50),
+        width: MediaQuery.of(context).size.width,
+        child: RaisedButton(
+          highlightElevation: 0.0,
+          splashColor: Colors.greenAccent,
+          highlightColor: Colors.lightGreenAccent,
+          elevation: 0.0,
+          color: Colors.greenAccent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          child: Text(
+            'Send SMS',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontSize: 20,
+            ),
+          ),
+          onPressed: () {
+            if (_formKeyPhone.currentState.validate()) {
+              if (_phoneController.text.isNotEmpty) {
+                if (Validations().validatePhone(_phoneController.text)) {
+                  _provider.loading(true);
+                  _provider.textError('');
+                  _provider.textOk('');
+
+                  _verifyPhoneNumber();
+                } else if (!Validations()
+                    .validatePhone(_phoneController.text)) {
+                  _provider.success(false);
+                  _provider.textError('Invalid Phone');
+                }
+              }
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buttonLogin() {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: ResponsiveScreen().widthMediaQuery(context, 20),
+        right: ResponsiveScreen().widthMediaQuery(context, 20),
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: Container(
+        height: ResponsiveScreen().heightMediaQuery(context, 50),
+        width: MediaQuery.of(context).size.width,
+        child: RaisedButton(
+          highlightElevation: 0.0,
+          splashColor: Colors.greenAccent,
+          highlightColor: Colors.lightGreenAccent,
+          elevation: 0.0,
+          color: Colors.greenAccent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          child: Text(
+            'Login after SMS',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontSize: 20,
+            ),
+          ),
+          onPressed: () {
+            if (_formKeySms.currentState.validate()) {
+              if (_smsController1.text.isNotEmpty &&
+                  _smsController2.text.isNotEmpty &&
+                  _smsController3.text.isNotEmpty &&
+                  _smsController4.text.isNotEmpty &&
+                  _smsController5.text.isNotEmpty &&
+                  _smsController6.text.isNotEmpty) {
+                _provider.loading(true);
+                _provider.textError('');
+
+                _signInWithPhoneNumber();
+              }
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _tffSms(TextEditingController num, FocusNode thisFocusNode,
+      FocusNode nextFocusNode, FocusNode previousFocusNode) {
+    return Container(
+      width: 48,
+      height: 48,
+      alignment: Alignment.center,
+      child: TextFormField(
+        focusNode: thisFocusNode,
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(1),
+        ],
+        keyboardType: TextInputType.number,
+        onChanged: (v) {
+          if (num.text.length == 1) {
+            FocusScope.of(context).requestFocus(nextFocusNode);
+          } else if (num.text.length == 0) {
+            FocusScope.of(context).requestFocus(previousFocusNode);
+          }
+        },
+        decoration: InputDecoration(
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(
+              color: Colors.green,
+              width: 2,
+            ),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(
+              color: Colors.green,
+              width: 3,
+            ),
+          ),
+        ),
+        textAlign: TextAlign.center,
+        controller: num,
+        validator: (String value) {
+          if (value.isEmpty) {
+            return '';
+          }
+          return null;
+        },
+        style: TextStyle(
+          fontFamily: 'Avenir',
+          color: Colors.greenAccent,
+          fontSize: 17,
+          fontWeight: FontWeight.w500,
+          fontStyle: FontStyle.normal,
         ),
       ),
     );
@@ -451,59 +521,5 @@ class _PhoneSMSAuthProvState extends State<PhoneSMSAuthProv> {
 
   void _addIdEmail(String value) async {
     _provider.sharedGet.setString('userIdEmail', value);
-  }
-
-  Widget _tffSms(TextEditingController num, FocusNode thisFocusNode,
-      FocusNode nextFocusNode, FocusNode previousFocusNode) {
-    return Container(
-      width: 48,
-      height: 48,
-      alignment: Alignment.center,
-      child: TextFormField(
-        focusNode: thisFocusNode,
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(1),
-        ],
-        keyboardType: TextInputType.number,
-        onChanged: (v) {
-          if (num.text.length == 1) {
-            FocusScope.of(context).requestFocus(nextFocusNode);
-          } else if (num.text.length == 0) {
-            FocusScope.of(context).requestFocus(previousFocusNode);
-          }
-        },
-        decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(
-              color: Colors.green,
-              width: 2,
-            ),
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(
-              color: Colors.green,
-              width: 3,
-            ),
-          ),
-        ),
-        textAlign: TextAlign.center,
-        controller: num,
-        validator: (String value) {
-          if (value.isEmpty) {
-            return '';
-          }
-          return null;
-        },
-        style: TextStyle(
-          fontFamily: 'Avenir',
-          color: Colors.greenAccent,
-          fontSize: 17,
-          fontWeight: FontWeight.w500,
-          fontStyle: FontStyle.normal,
-        ),
-      ),
-    );
   }
 }

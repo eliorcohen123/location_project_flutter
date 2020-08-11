@@ -79,211 +79,33 @@ class _SignInFirebaseProvState extends State<SignInFirebaseProv> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Text(
-                          'Login',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.greenAccent,
-                            fontSize: 40,
-                          ),
-                        ),
+                        _title(),
                         SizedBox(
                           height:
                               ResponsiveScreen().heightMediaQuery(context, 70),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            bottom: ResponsiveScreen()
-                                .heightMediaQuery(context, 20),
-                          ),
-                          child: TFFFirebase(
-                            key: Key('emailLogin'),
-                            icon: Icon(Icons.email),
-                            hint: "Email",
-                            controller: _emailController,
-                            textInputType: TextInputType.emailAddress,
-                            obSecure: false,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            bottom: ResponsiveScreen()
-                                .heightMediaQuery(context, 20),
-                          ),
-                          child: TFFFirebase(
-                            key: Key('passwordLogin'),
-                            icon: Icon(Icons.lock),
-                            hint: "Password",
-                            controller: _passwordController,
-                            textInputType: TextInputType.text,
-                            obSecure: true,
-                          ),
-                        ),
+                        _textFieldsData(),
                         SizedBox(
                           height:
                               ResponsiveScreen().heightMediaQuery(context, 20),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: ResponsiveScreen()
-                                  .widthMediaQuery(context, 20),
-                              right: ResponsiveScreen()
-                                  .widthMediaQuery(context, 20),
-                              bottom: MediaQuery.of(context).viewInsets.bottom),
-                          child: Container(
-                            height: ResponsiveScreen()
-                                .heightMediaQuery(context, 50),
-                            width: MediaQuery.of(context).size.width,
-                            child: RaisedButton(
-                              highlightElevation: 0.0,
-                              splashColor: Colors.greenAccent,
-                              highlightColor: Colors.lightGreenAccent,
-                              elevation: 0.0,
-                              color: Colors.greenAccent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              child: Text(
-                                'Login',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  if (Validations().validateEmail(
-                                          _emailController.text) &&
-                                      Validations().validatePassword(
-                                          _passwordController.text)) {
-                                    _provider.loading(true);
-                                    _provider.textError('');
-
-                                    _loginEmailFirebase();
-                                  } else if (!Validations()
-                                      .validateEmail(_emailController.text)) {
-                                    _provider.success(false);
-                                    _provider.textError('Invalid Email');
-                                  } else if (!Validations().validatePassword(
-                                      _passwordController.text)) {
-                                    _provider.success(false);
-                                    _provider.textError(
-                                        'Password must be at least 8 characters');
-                                  }
-                                }
-                              },
-                            ),
-                          ),
-                        ),
+                        _buttonLogin(),
                         SizedBox(
                           height:
                               ResponsiveScreen().heightMediaQuery(context, 5),
                         ),
-                        Container(
-                          alignment: Alignment.center,
-                          child: Text(
-                            _provider.successGet == null
-                                ? ''
-                                : _provider.successGet
-                                    ? ''
-                                    : _provider.textErrorGet,
-                            style: TextStyle(
-                              color: Colors.redAccent,
-                              fontSize: 15,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RegisterEmailFirebase(),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            'Don' +
-                                "'" +
-                                't Have an account? click here to register',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ),
+                        _showErrors(),
+                        _buttonToRegister(),
                         SizedBox(
                           height:
                               ResponsiveScreen().heightMediaQuery(context, 20),
                         ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 60,
-                              height: 60,
-                              child: MaterialButton(
-                                shape: CircleBorder(),
-                                child: Image.asset('assets/facebook_icon.jpg'),
-                                color: Colors.white,
-                                onPressed: () {
-                                  _facebookLogin();
-                                  _provider.loading(true);
-                                  _provider.textError('');
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              width: ResponsiveScreen()
-                                  .widthMediaQuery(context, 20),
-                            ),
-                            Container(
-                              width: 60,
-                              height: 60,
-                              child: MaterialButton(
-                                shape: CircleBorder(),
-                                child: Image.asset('assets/google_icon.png'),
-                                color: Colors.white,
-                                onPressed: () {
-                                  _signInWithGoogle();
-                                  _provider.loading(true);
-                                  _provider.textError('');
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              width: ResponsiveScreen()
-                                  .widthMediaQuery(context, 20),
-                            ),
-                            Container(
-                              width: 60,
-                              height: 60,
-                              child: MaterialButton(
-                                shape: CircleBorder(),
-                                child: Image.asset('assets/phone_icon.jpg'),
-                                color: Colors.white,
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => PhoneSMSAuth(),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
+                        _loginFacebookGmailSms(),
                         SizedBox(
                           height:
                               ResponsiveScreen().heightMediaQuery(context, 20),
                         ),
-                        _provider.loadingGet == true
-                            ? CircularProgressIndicator()
-                            : Container(),
+                        _loading(),
                       ],
                     ),
                   ),
@@ -291,6 +113,201 @@ class _SignInFirebaseProvState extends State<SignInFirebaseProv> {
               ),
             ),
           );
+  }
+
+  Widget _title() {
+    return Text(
+      'Login',
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.greenAccent,
+        fontSize: 40,
+      ),
+    );
+  }
+
+  Widget _textFieldsData() {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(
+            bottom: ResponsiveScreen().heightMediaQuery(context, 20),
+          ),
+          child: TFFFirebase(
+            key: Key('emailLogin'),
+            icon: Icon(Icons.email),
+            hint: "Email",
+            controller: _emailController,
+            textInputType: TextInputType.emailAddress,
+            obSecure: false,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+            bottom: ResponsiveScreen().heightMediaQuery(context, 20),
+          ),
+          child: TFFFirebase(
+            key: Key('passwordLogin'),
+            icon: Icon(Icons.lock),
+            hint: "Password",
+            controller: _passwordController,
+            textInputType: TextInputType.text,
+            obSecure: true,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buttonLogin() {
+    return Padding(
+      padding: EdgeInsets.only(
+          left: ResponsiveScreen().widthMediaQuery(context, 20),
+          right: ResponsiveScreen().widthMediaQuery(context, 20),
+          bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: Container(
+        height: ResponsiveScreen().heightMediaQuery(context, 50),
+        width: MediaQuery.of(context).size.width,
+        child: RaisedButton(
+          highlightElevation: 0.0,
+          splashColor: Colors.greenAccent,
+          highlightColor: Colors.lightGreenAccent,
+          elevation: 0.0,
+          color: Colors.greenAccent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          child: Text(
+            'Login',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontSize: 20,
+            ),
+          ),
+          onPressed: () {
+            if (_formKey.currentState.validate()) {
+              if (Validations().validateEmail(_emailController.text) &&
+                  Validations().validatePassword(_passwordController.text)) {
+                _provider.loading(true);
+                _provider.textError('');
+
+                _loginEmailFirebase();
+              } else if (!Validations().validateEmail(_emailController.text)) {
+                _provider.success(false);
+                _provider.textError('Invalid Email');
+              } else if (!Validations()
+                  .validatePassword(_passwordController.text)) {
+                _provider.success(false);
+                _provider.textError('Password must be at least 8 characters');
+              }
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _showErrors() {
+    return Container(
+      alignment: Alignment.center,
+      child: Text(
+        _provider.successGet == null
+            ? ''
+            : _provider.successGet ? '' : _provider.textErrorGet,
+        style: TextStyle(
+          color: Colors.redAccent,
+          fontSize: 15,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget _buttonToRegister() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RegisterEmailFirebase(),
+          ),
+        );
+      },
+      child: Text(
+        'Don' + "'" + 't Have an account? click here to register',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 15,
+        ),
+      ),
+    );
+  }
+
+  Widget _loginFacebookGmailSms() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 60,
+          height: 60,
+          child: MaterialButton(
+            shape: CircleBorder(),
+            child: Image.asset('assets/facebook_icon.jpg'),
+            color: Colors.white,
+            onPressed: () {
+              _facebookLogin();
+              _provider.loading(true);
+              _provider.textError('');
+            },
+          ),
+        ),
+        SizedBox(
+          width: ResponsiveScreen().widthMediaQuery(context, 20),
+        ),
+        Container(
+          width: 60,
+          height: 60,
+          child: MaterialButton(
+            shape: CircleBorder(),
+            child: Image.asset('assets/google_icon.png'),
+            color: Colors.white,
+            onPressed: () {
+              _signInWithGoogle();
+              _provider.loading(true);
+              _provider.textError('');
+            },
+          ),
+        ),
+        SizedBox(
+          width: ResponsiveScreen().widthMediaQuery(context, 20),
+        ),
+        Container(
+          width: 60,
+          height: 60,
+          child: MaterialButton(
+            shape: CircleBorder(),
+            child: Image.asset('assets/phone_icon.jpg'),
+            color: Colors.white,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PhoneSMSAuth(),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _loading() {
+    return _provider.loadingGet == true
+        ? CircularProgressIndicator()
+        : Container();
   }
 
   void _checkUserLogin() {

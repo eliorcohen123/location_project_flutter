@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 
-class TFFFirebase extends StatefulWidget {
-  const TFFFirebase(
-      {Key key, this.icon, this.hint, this.controller, this.obSecure, this.textInputType})
-      : super(key: key);
-
+class TFFFirebase extends StatelessWidget {
   final Icon icon;
   final String hint;
   final TextEditingController controller;
   final bool obSecure;
   final TextInputType textInputType;
 
-  @override
-  State<StatefulWidget> createState() => TFFFirebaseState();
-}
+  const TFFFirebase(
+      {Key key,
+      this.icon,
+      this.hint,
+      this.controller,
+      this.obSecure,
+      this.textInputType})
+      : super(key: key);
 
-class TFFFirebaseState extends State<TFFFirebase> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,10 +25,10 @@ class TFFFirebaseState extends State<TFFFirebase> {
         right: ResponsiveScreen().widthMediaQuery(context, 20),
       ),
       child: TextFormField(
-        key: widget.key,
-        controller: widget.controller,
-        obscureText: widget.obSecure,
-        keyboardType: widget.textInputType,
+        key: key,
+        controller: controller,
+        obscureText: obSecure,
+        keyboardType: textInputType,
         validator: (String value) {
           if (value.isEmpty) {
             return 'Please enter some text';
@@ -44,7 +44,7 @@ class TFFFirebaseState extends State<TFFFirebase> {
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
-          hintText: widget.hint,
+          hintText: hint,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
             borderSide: BorderSide(
@@ -64,7 +64,7 @@ class TFFFirebaseState extends State<TFFFirebase> {
               data: IconThemeData(
                 color: Colors.green,
               ),
-              child: widget.icon,
+              child: icon,
             ),
             padding: EdgeInsets.only(
               left: ResponsiveScreen().widthMediaQuery(context, 30),

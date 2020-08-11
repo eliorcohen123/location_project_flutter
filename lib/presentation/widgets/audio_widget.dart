@@ -39,6 +39,53 @@ class _AudioWidgetState extends State<AudioWidget> {
     _audioPlayer.stop();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buttonStart(),
+              _buttonPause(),
+              _buttonStop(),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buttonStart() {
+    return IconButton(
+      onPressed: isPlaying ? null : () => _play(),
+      iconSize: 64.0,
+      icon: Icon(Icons.play_arrow),
+      color: Colors.indigoAccent,
+    );
+  }
+
+  Widget _buttonPause() {
+    return IconButton(
+      onPressed: isPlaying ? () => _pause() : null,
+      iconSize: 64.0,
+      icon: Icon(Icons.pause),
+      color: Colors.indigoAccent,
+    );
+  }
+
+  Widget _buttonStop() {
+    return IconButton(
+      onPressed: isPlaying || isPaused ? () => _stop() : null,
+      iconSize: 64.0,
+      icon: Icon(Icons.stop),
+      color: Colors.indigoAccent,
+    );
+  }
+
   void initAudioPlayer() {
     _audioPlayerStateSubscription =
         _audioPlayer.onPlayerStateChanged.listen((s) {
@@ -69,40 +116,5 @@ class _AudioWidgetState extends State<AudioWidget> {
 
   void _onComplete() {
     setState(() => _playerState = PlayerState.stopped);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                onPressed: isPlaying ? null : () => _play(),
-                iconSize: 64.0,
-                icon: Icon(Icons.play_arrow),
-                color: Colors.indigoAccent,
-              ),
-              IconButton(
-                onPressed: isPlaying ? () => _pause() : null,
-                iconSize: 64.0,
-                icon: Icon(Icons.pause),
-                color: Colors.indigoAccent,
-              ),
-              IconButton(
-                onPressed: isPlaying || isPaused ? () => _stop() : null,
-                iconSize: 64.0,
-                icon: Icon(Icons.stop),
-                color: Colors.indigoAccent,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
   }
 }

@@ -90,58 +90,98 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
   Widget build(BuildContext context) {
     _handleCameraAndMic();
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.video_call),
-            color: Color(0xFFE9FFFF),
-            onPressed: () => {
-              _onSendMessage(_idVideo(), 5),
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => VideoCall(
-                    channelName: _idVideo(),
-                    role: ClientRole.Broadcaster,
-                  ),
-                ),
-              ),
-            },
-          ),
-        ],
-        leading: IconButton(
-          icon: Icon(
-            Icons.navigate_before,
-            color: Color(0xFFE9FFFF),
-            size: 40,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
+      appBar: _appBar(),
       body: Stack(
         children: <Widget>[
-          Column(
-            children: <Widget>[
-              _buildMessagesList(),
-              _provider.isShowStickerGet ? _buildStickers() : Container(),
-              _buildInput(),
-            ],
-          ),
-          Center(
-            child: _provider.isLoadingGet
-                ? Container(
-                    decoration: BoxDecoration(
-                      color: Color(0x80000000),
-                    ),
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
-                : Container(),
-          )
+          _mainBody(),
+          _loading(),
         ],
       ),
+    );
+  }
+
+  PreferredSizeWidget _appBar() {
+    return AppBar(
+      backgroundColor: Colors.blueAccent,
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.video_call),
+          color: Color(0xFFE9FFFF),
+          onPressed: () => {
+            _onSendMessage(_idVideo(), 5),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => VideoCall(
+                  channelName: _idVideo(),
+                  role: ClientRole.Broadcaster,
+                ),
+              ),
+            ),
+          },
+        ),
+      ],
+      leading: IconButton(
+        icon: Icon(
+          Icons.navigate_before,
+          color: Color(0xFFE9FFFF),
+          size: 40,
+        ),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+    );
+  }
+
+  Widget _mainBody() {
+    return Column(
+      children: <Widget>[
+        _buildMessagesList(),
+        _provider.isShowStickerGet ? _buildStickers() : Container(),
+        _buildInput(),
+      ],
+    );
+  }
+
+  Widget _buildMessagesList() {
+    return Flexible(
+      child: _groupChatId == ''
+          ? Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Color(0xfff5a623),
+                ),
+              ),
+            )
+          : StreamBuilder(
+              stream: _firestore
+                  .collection('messages')
+                  .document(_groupChatId)
+                  .collection(_groupChatId)
+                  .orderBy('timestamp', descending: true)
+                  .limit(30)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Color(0xfff5a623),
+                      ),
+                    ),
+                  );
+                } else {
+                  _listMessage = snapshot.data.documents;
+                  return ListView.builder(
+                    padding: EdgeInsets.all(10.0),
+                    itemBuilder: (context, index) =>
+                        _buildItem(index, _listMessage[index]),
+                    itemCount: _listMessage.length,
+                    reverse: true,
+                    controller: _listScrollController,
+                  );
+                }
+              },
+            ),
     );
   }
 
@@ -289,49 +329,6 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
             ),
           ),
           color: Colors.white),
-    );
-  }
-
-  Widget _buildMessagesList() {
-    return Flexible(
-      child: _groupChatId == ''
-          ? Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Color(0xfff5a623),
-                ),
-              ),
-            )
-          : StreamBuilder(
-              stream: _firestore
-                  .collection('messages')
-                  .document(_groupChatId)
-                  .collection(_groupChatId)
-                  .orderBy('timestamp', descending: true)
-                  .limit(30)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Color(0xfff5a623),
-                      ),
-                    ),
-                  );
-                } else {
-                  _listMessage = snapshot.data.documents;
-                  return ListView.builder(
-                    padding: EdgeInsets.all(10.0),
-                    itemBuilder: (context, index) =>
-                        _buildItem(index, _listMessage[index]),
-                    itemCount: _listMessage.length,
-                    reverse: true,
-                    controller: _listScrollController,
-                  );
-                }
-              },
-            ),
     );
   }
 
@@ -706,6 +703,21 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
         margin: EdgeInsets.only(bottom: 10.0),
       );
     }
+  }
+
+  Widget _loading() {
+    return _provider.isLoadingGet
+        ? Center(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color(0x80000000),
+              ),
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          )
+        : Container();
   }
 
   void _initGetSharedPrefs() {

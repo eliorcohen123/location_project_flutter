@@ -54,73 +54,85 @@ class _HomeChatProvState extends State<HomeChatProv> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.settings),
-            color: Color(0xFFE9FFFF),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ChatSettings(),
-              ),
-            ),
-          ),
-        ],
-        leading: IconButton(
-          icon: Icon(
-            Icons.navigate_before,
-            color: Color(0xFFE9FFFF),
-            size: 40,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
+      appBar: _appBar(),
       body: Stack(
         children: <Widget>[
-          Container(
-            child: Center(
-              child: StreamBuilder(
-                stream: _firestore
-                    .collection('users')
-                    .orderBy('createdAt', descending: true)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Color(0xfff5a623),
-                        ),
-                      ),
-                    );
-                  } else {
-                    _listMessage = snapshot.data.documents;
-                    return _listMessage.length == 0
-                        ? Text(
-                            'No Users',
-                            style: TextStyle(
-                              color: Colors.deepPurpleAccent,
-                              fontSize: 30,
-                            ),
-                          )
-                        : ListView.builder(
-                            padding: EdgeInsets.all(10.0),
-                            itemBuilder: (context, index) =>
-                                _buildItem(context, _listMessage[index]),
-                            itemCount: _listMessage.length,
-                          );
-                  }
-                },
-              ),
-            ),
-          ),
-          Positioned(
-            child: _isLoading ? const CircularProgressIndicator() : Container(),
-          )
+          _listViewData(),
+          _loading(),
         ],
       ),
+    );
+  }
+
+  PreferredSizeWidget _appBar() {
+    return AppBar(
+      backgroundColor: Colors.blueAccent,
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.settings),
+          color: Color(0xFFE9FFFF),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatSettings(),
+            ),
+          ),
+        ),
+      ],
+      leading: IconButton(
+        icon: Icon(
+          Icons.navigate_before,
+          color: Color(0xFFE9FFFF),
+          size: 40,
+        ),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+    );
+  }
+
+  Widget _listViewData() {
+    return Container(
+      child: Center(
+        child: StreamBuilder(
+          stream: _firestore
+              .collection('users')
+              .orderBy('createdAt', descending: true)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Color(0xfff5a623),
+                  ),
+                ),
+              );
+            } else {
+              _listMessage = snapshot.data.documents;
+              return _listMessage.length == 0
+                  ? Text(
+                      'No Users',
+                      style: TextStyle(
+                        color: Colors.deepPurpleAccent,
+                        fontSize: 30,
+                      ),
+                    )
+                  : ListView.builder(
+                      padding: EdgeInsets.all(10.0),
+                      itemBuilder: (context, index) =>
+                          _buildItem(context, _listMessage[index]),
+                      itemCount: _listMessage.length,
+                    );
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _loading() {
+    return Positioned(
+      child: _isLoading ? const CircularProgressIndicator() : Container(),
     );
   }
 

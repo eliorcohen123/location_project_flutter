@@ -73,6 +73,23 @@ class _ListMapProvState extends State<ListMapProv> {
     _initGetSharedPrefs();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    _userLocation = Provider.of<UserLocation>(context);
+    _searchNearbyTotal(true, _provider.searchGet, false, "", "");
+    return Scaffold(
+      appBar: _appBar(),
+      body: Stack(
+        children: [
+          _mainBody(),
+          if (_provider.activeNavGet) _loading(),
+          _blur(),
+        ],
+      ),
+      drawer: DrawerTotal(),
+    );
+  }
+
   PreferredSizeWidget _appBar() {
     if (_provider.activeSearchGet) {
       return AppBar(
@@ -148,157 +165,158 @@ class _ListMapProvState extends State<ListMapProv> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    _userLocation = Provider.of<UserLocation>(context);
-    _searchNearbyTotal(true, _provider.searchGet, false, "", "");
-    return Scaffold(
-      appBar: _appBar(),
-      body: Container(
-        child: Stack(
-          children: [
-            Column(
-              children: <Widget>[
-                FlutterInstagramStories(
-                  collectionDbName: 'stories',
-                  showTitleOnIcon: true,
-                  iconTextStyle: TextStyle(
-                    shadows: <Shadow>[
-                      Shadow(
-                        offset: Offset(1.0, 1.0),
-                        blurRadius: 1.0,
-                        color: Color(0xAA000000),
-                      ),
-                    ],
-                    fontSize: 6,
-                    color: Colors.white,
-                  ),
-                  iconImageBorderRadius: BorderRadius.circular(30),
-                  iconBoxDecoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(30),
-                    ),
-                    color: Color(0xFFffffff),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xff333333),
-                        blurRadius: 10.0,
-                        offset: Offset(
-                          0.0,
-                          4.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                  iconWidth: ResponsiveScreen().widthMediaQuery(context, 50),
-                  iconHeight: ResponsiveScreen().heightMediaQuery(context, 50),
-                  imageStoryDuration: 7,
-                  progressPosition: ProgressPosition.top,
-                  repeat: true,
-                  inline: false,
-                  languageCode: 'en',
-                  backgroundColorBetweenStories: Colors.black,
-                  closeButtonIcon: Icon(
-                    Icons.close,
-                    color: Colors.white,
-                    size: 28.0,
-                  ),
-                  closeButtonBackgroundColor: Color(0x11000000),
-                  sortingOrderDesc: true,
-                  lastIconHighlight: true,
-                  lastIconHighlightColor: Colors.deepOrange,
-                  lastIconHighlightRadius: const Radius.circular(30),
-                ),
-                SizedBox(
-                  height: ResponsiveScreen().heightMediaQuery(context, 1),
-                  width: double.infinity,
-                  child: const DecoratedBox(
-                    decoration: const BoxDecoration(color: Colors.grey),
-                  ),
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: <Widget>[
-                      _btnType('Banks', 'bank'),
-                      _btnType('Bars', 'bar|night_club'),
-                      _btnType('Beauty', 'beauty_salon|hair_care'),
-                      _btnType('Books', 'book_store|library'),
-                      _btnType('Bus stations', 'bus_station'),
-                      _btnType(
-                          'Cars', 'car_dealer|car_rental|car_repair|car_wash'),
-                      _btnType('Clothing', 'clothing_store'),
-                      _btnType('Doctors', 'doctor'),
-                      _btnType('Gas stations', 'gas_station'),
-                      _btnType('Gym', 'gym'),
-                      _btnType('Jewelries', 'jewelry_store'),
-                      _btnType('Parks', 'park|amusement_park|parking|rv_park'),
-                      _btnType('Restaurants', 'food|restaurant|cafe|bakery'),
-                      _btnType('School', 'school'),
-                      _btnType('Spa', 'spa'),
-                    ],
-                  ),
-                ),
-                _provider.searchGet || _provider.searchAfterGet
-                    ? CircularProgressIndicator()
-                    : _places.length == 0
-                        ? Text(
-                            'No Places',
-                            style: TextStyle(
-                              color: Colors.deepPurpleAccent,
-                              fontSize: 30,
-                            ),
-                          )
-                        : Expanded(
-                            child: LiveList(
-                              showItemInterval: Duration(milliseconds: 50),
-                              showItemDuration: Duration(milliseconds: 50),
-                              reAnimateOnVisibility: true,
-                              scrollDirection: Axis.vertical,
-                              itemCount: _places.length,
-                              itemBuilder: buildAnimatedItem,
-                              separatorBuilder: (context, i) {
-                                return SizedBox(
-                                  height: ResponsiveScreen()
-                                      .heightMediaQuery(context, 5),
-                                  width: double.infinity,
-                                  child: const DecoratedBox(
-                                    decoration: const BoxDecoration(
-                                        color: Colors.white),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-              ],
-            ),
-            if (_provider.activeNavGet)
-              Container(
-                decoration: BoxDecoration(
-                  color: Color(0x80000000),
-                ),
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-            _provider.checkingBottomSheetGet == true
-                ? Positioned.fill(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(
-                        sigmaX: 5,
-                        sigmaY: 5,
-                      ),
-                      child: Container(
-                        color: Colors.black.withOpacity(0),
-                      ),
-                    ),
-                  )
-                : Container(),
-          ],
+  Widget _mainBody() {
+    return Column(
+      children: <Widget>[
+        _storiesInstagram(),
+        SizedBox(
+          height: ResponsiveScreen().heightMediaQuery(context, 1),
+          width: double.infinity,
+          child: const DecoratedBox(
+            decoration: const BoxDecoration(color: Colors.grey),
+          ),
         ),
-      ),
-      drawer: DrawerTotal(),
+        _buttonsType(),
+        _listViewData(),
+      ],
     );
+  }
+
+  Widget _storiesInstagram() {
+    return FlutterInstagramStories(
+      collectionDbName: 'stories',
+      showTitleOnIcon: true,
+      iconTextStyle: TextStyle(
+        shadows: <Shadow>[
+          Shadow(
+            offset: Offset(1.0, 1.0),
+            blurRadius: 1.0,
+            color: Color(0xAA000000),
+          ),
+        ],
+        fontSize: 6,
+        color: Colors.white,
+      ),
+      iconImageBorderRadius: BorderRadius.circular(30),
+      iconBoxDecoration: BoxDecoration(
+        borderRadius: BorderRadius.all(
+          Radius.circular(30),
+        ),
+        color: Color(0xFFffffff),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0xff333333),
+            blurRadius: 10.0,
+            offset: Offset(
+              0.0,
+              4.0,
+            ),
+          ),
+        ],
+      ),
+      iconWidth: ResponsiveScreen().widthMediaQuery(context, 50),
+      iconHeight: ResponsiveScreen().heightMediaQuery(context, 50),
+      imageStoryDuration: 7,
+      progressPosition: ProgressPosition.top,
+      repeat: true,
+      inline: false,
+      languageCode: 'en',
+      backgroundColorBetweenStories: Colors.black,
+      closeButtonIcon: Icon(
+        Icons.close,
+        color: Colors.white,
+        size: 28.0,
+      ),
+      closeButtonBackgroundColor: Color(0x11000000),
+      sortingOrderDesc: true,
+      lastIconHighlight: true,
+      lastIconHighlightColor: Colors.deepOrange,
+      lastIconHighlightRadius: const Radius.circular(30),
+    );
+  }
+
+  Widget _buttonsType() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: <Widget>[
+          _btnType('Banks', 'bank'),
+          _btnType('Bars', 'bar|night_club'),
+          _btnType('Beauty', 'beauty_salon|hair_care'),
+          _btnType('Books', 'book_store|library'),
+          _btnType('Bus stations', 'bus_station'),
+          _btnType('Cars', 'car_dealer|car_rental|car_repair|car_wash'),
+          _btnType('Clothing', 'clothing_store'),
+          _btnType('Doctors', 'doctor'),
+          _btnType('Gas stations', 'gas_station'),
+          _btnType('Gym', 'gym'),
+          _btnType('Jewelries', 'jewelry_store'),
+          _btnType('Parks', 'park|amusement_park|parking|rv_park'),
+          _btnType('Restaurants', 'food|restaurant|cafe|bakery'),
+          _btnType('School', 'school'),
+          _btnType('Spa', 'spa'),
+        ],
+      ),
+    );
+  }
+
+  Widget _loading() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(0x80000000),
+      ),
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  Widget _listViewData() {
+    return _provider.searchGet || _provider.searchAfterGet
+        ? CircularProgressIndicator()
+        : _places.length == 0
+            ? Text(
+                'No Places',
+                style: TextStyle(
+                  color: Colors.deepPurpleAccent,
+                  fontSize: 30,
+                ),
+              )
+            : Expanded(
+                child: LiveList(
+                  showItemInterval: Duration(milliseconds: 50),
+                  showItemDuration: Duration(milliseconds: 50),
+                  reAnimateOnVisibility: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: _places.length,
+                  itemBuilder: buildAnimatedItem,
+                  separatorBuilder: (context, i) {
+                    return SizedBox(
+                      height: ResponsiveScreen().heightMediaQuery(context, 5),
+                      width: double.infinity,
+                      child: const DecoratedBox(
+                        decoration: const BoxDecoration(color: Colors.white),
+                      ),
+                    );
+                  },
+                ),
+              );
+  }
+
+  Widget _blur() {
+    return _provider.checkingBottomSheetGet == true
+        ? Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 5,
+                sigmaY: 5,
+              ),
+              child: Container(
+                color: Colors.black.withOpacity(0),
+              ),
+            ),
+          )
+        : Container();
   }
 
   Widget buildAnimatedItem(
@@ -428,6 +446,64 @@ class _ListMapProvState extends State<ListMapProv> {
     );
   }
 
+  Widget _btnType(String name, String type) {
+    return Row(
+      children: <Widget>[
+        SizedBox(
+          width: ResponsiveScreen().widthMediaQuery(context, 5),
+        ),
+        RaisedButton(
+          padding: EdgeInsets.all(0.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(80.0),
+          ),
+          onPressed: () => {
+            _provider.isSearchAfter(true),
+            _searchNearbyTotal(false, true, _provider.searchAfterGet, type, ""),
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: <Color>[
+                  Color(0xFF5e7974),
+                  Color(0xFF6494ED),
+                ],
+              ),
+              borderRadius: BorderRadius.all(
+                Radius.circular(80.0),
+              ),
+            ),
+            padding: EdgeInsets.fromLTRB(30, 10, 30, 10),
+            child: Text(
+              name,
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+        SizedBox(
+          width: ResponsiveScreen().widthMediaQuery(context, 5),
+        ),
+      ],
+    );
+  }
+
+  Widget _textListView(String text, double fontSize, int color) {
+    return Text(
+      text,
+      style: TextStyle(
+        shadows: <Shadow>[
+          Shadow(
+            offset: Offset(1.0, 1.0),
+            blurRadius: 1.0,
+            color: Color(0xAA000000),
+          ),
+        ],
+        fontSize: fontSize,
+        color: Color(color),
+      ),
+    );
+  }
+
   void _createNavPlace(int index) async {
     _provider.isActiveNav(true);
 
@@ -537,64 +613,6 @@ class _ListMapProvState extends State<ListMapProv> {
         _valueRadius = _provider.sharedGet.getDouble('rangeRadius') ?? 5000.0;
         _open = _provider.sharedGet.getString('open') ?? '';
       },
-    );
-  }
-
-  Widget _btnType(String name, String type) {
-    return Row(
-      children: <Widget>[
-        SizedBox(
-          width: ResponsiveScreen().widthMediaQuery(context, 5),
-        ),
-        RaisedButton(
-          padding: EdgeInsets.all(0.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(80.0),
-          ),
-          onPressed: () => {
-            _provider.isSearchAfter(true),
-            _searchNearbyTotal(false, true, _provider.searchAfterGet, type, ""),
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: <Color>[
-                  Color(0xFF5e7974),
-                  Color(0xFF6494ED),
-                ],
-              ),
-              borderRadius: BorderRadius.all(
-                Radius.circular(80.0),
-              ),
-            ),
-            padding: EdgeInsets.fromLTRB(30, 10, 30, 10),
-            child: Text(
-              name,
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: ResponsiveScreen().widthMediaQuery(context, 5),
-        ),
-      ],
-    );
-  }
-
-  Widget _textListView(String text, double fontSize, int color) {
-    return Text(
-      text,
-      style: TextStyle(
-        shadows: <Shadow>[
-          Shadow(
-            offset: Offset(1.0, 1.0),
-            blurRadius: 1.0,
-            color: Color(0xAA000000),
-          ),
-        ],
-        fontSize: fontSize,
-        color: Color(color),
-      ),
     );
   }
 

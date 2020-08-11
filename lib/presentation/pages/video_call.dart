@@ -65,91 +65,31 @@ class _VideoCallProvState extends State<VideoCallProv> {
     AgoraRtcEngine.destroy();
   }
 
-  void _initialize() async {
-    if (_AGORA_KEY.isEmpty) {
-      _provider.isInfoStringsAdd(
-          'APP_ID missing, please provide your APP_ID in settings.dart');
-      _provider.isInfoStringsAdd('Agora Engine is not starting');
-      return;
-    }
-
-    _initAgoraRtcEngine();
-    _addAgoraEventHandlers();
-    await AgoraRtcEngine.enableWebSdkInteroperability(true);
-    VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
-    configuration.dimensions = Size(1920, 1080);
-    await AgoraRtcEngine.setVideoEncoderConfiguration(configuration);
-    await AgoraRtcEngine.joinChannel(null, widget.channelName, null, 0);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: _appBar(),
+      body: Stack(
+        children: <Widget>[
+          _viewRows(),
+//            _panel(),
+          _toolbar(),
+        ],
+      ),
+    );
   }
 
-  void _initAgoraRtcEngine() async {
-    await AgoraRtcEngine.create(_AGORA_KEY);
-    await AgoraRtcEngine.enableVideo();
-    await AgoraRtcEngine.setChannelProfile(ChannelProfile.LiveBroadcasting);
-    await AgoraRtcEngine.setClientRole(widget.role);
-  }
-
-  void _addAgoraEventHandlers() {
-    AgoraRtcEngine.onError = (dynamic code) {
-      final info = 'onError: $code';
-      _provider.isInfoStringsAdd(info);
-    };
-
-    AgoraRtcEngine.onJoinChannelSuccess = (
-      String channel,
-      int uid,
-      int elapsed,
-    ) {
-      final info = 'onJoinChannel: $channel, uid: $uid';
-      _provider.isInfoStringsAdd(info);
-    };
-
-    AgoraRtcEngine.onLeaveChannel = () {
-      _provider.isInfoStringsAdd('onLeaveChannel');
-      _provider.isUsersClear();
-    };
-
-    AgoraRtcEngine.onUserJoined = (int uid, int elapsed) {
-      final info = 'userJoined: $uid';
-      _provider.isInfoStringsAdd(info);
-      _provider.isUsersAdd(uid);
-    };
-
-    AgoraRtcEngine.onUserOffline = (int uid, int reason) {
-      final info = 'userOffline: $uid';
-      _provider.isInfoStringsAdd(info);
-      _provider.isUsersRemove(uid);
-    };
-
-    AgoraRtcEngine.onFirstRemoteVideoFrame = (
-      int uid,
-      int width,
-      int height,
-      int elapsed,
-    ) {
-      final info = 'firstRemoteVideo: $uid ${width}x $height';
-      _provider.isInfoStringsAdd(info);
-    };
-  }
-
-  List<Widget> _getRenderViews() {
-    final List<AgoraRenderWidget> list = [];
-    if (widget.role == ClientRole.Broadcaster) {
-      list.add(AgoraRenderWidget(0, local: true, preview: true));
-    }
-    _provider.isUsersGet.forEach((int uid) => list.add(AgoraRenderWidget(uid)));
-    return list;
-  }
-
-  Widget _videoView(view) {
-    return Expanded(child: Container(child: view));
-  }
-
-  Widget _expandedVideoRow(List<Widget> views) {
-    final wrappedViews = views.map<Widget>(_videoView).toList();
-    return Expanded(
-      child: Row(
-        children: wrappedViews,
+  PreferredSizeWidget _appBar() {
+    return AppBar(
+      backgroundColor: Colors.blueAccent,
+      leading: IconButton(
+        icon: Icon(
+          Icons.navigate_before,
+          color: Color(0xFFE9FFFF),
+          size: 40,
+        ),
+        onPressed: () => Navigator.of(context).pop(),
       ),
     );
   }
@@ -189,6 +129,28 @@ class _VideoCallProvState extends State<VideoCallProv> {
       default:
     }
     return Container();
+  }
+
+  List<Widget> _getRenderViews() {
+    final List<AgoraRenderWidget> list = [];
+    if (widget.role == ClientRole.Broadcaster) {
+      list.add(AgoraRenderWidget(0, local: true, preview: true));
+    }
+    _provider.isUsersGet.forEach((int uid) => list.add(AgoraRenderWidget(uid)));
+    return list;
+  }
+
+  Widget _videoView(view) {
+    return Expanded(child: Container(child: view));
+  }
+
+  Widget _expandedVideoRow(List<Widget> views) {
+    final wrappedViews = views.map<Widget>(_videoView).toList();
+    return Expanded(
+      child: Row(
+        children: wrappedViews,
+      ),
+    );
   }
 
   Widget _toolbar() {
@@ -289,6 +251,73 @@ class _VideoCallProvState extends State<VideoCallProv> {
 //    );
 //  }
 
+  void _initialize() async {
+    if (_AGORA_KEY.isEmpty) {
+      _provider.isInfoStringsAdd(
+          'APP_ID missing, please provide your APP_ID in settings.dart');
+      _provider.isInfoStringsAdd('Agora Engine is not starting');
+      return;
+    }
+
+    _initAgoraRtcEngine();
+    _addAgoraEventHandlers();
+    await AgoraRtcEngine.enableWebSdkInteroperability(true);
+    VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
+    configuration.dimensions = Size(1920, 1080);
+    await AgoraRtcEngine.setVideoEncoderConfiguration(configuration);
+    await AgoraRtcEngine.joinChannel(null, widget.channelName, null, 0);
+  }
+
+  void _initAgoraRtcEngine() async {
+    await AgoraRtcEngine.create(_AGORA_KEY);
+    await AgoraRtcEngine.enableVideo();
+    await AgoraRtcEngine.setChannelProfile(ChannelProfile.LiveBroadcasting);
+    await AgoraRtcEngine.setClientRole(widget.role);
+  }
+
+  void _addAgoraEventHandlers() {
+    AgoraRtcEngine.onError = (dynamic code) {
+      final info = 'onError: $code';
+      _provider.isInfoStringsAdd(info);
+    };
+
+    AgoraRtcEngine.onJoinChannelSuccess = (
+      String channel,
+      int uid,
+      int elapsed,
+    ) {
+      final info = 'onJoinChannel: $channel, uid: $uid';
+      _provider.isInfoStringsAdd(info);
+    };
+
+    AgoraRtcEngine.onLeaveChannel = () {
+      _provider.isInfoStringsAdd('onLeaveChannel');
+      _provider.isUsersClear();
+    };
+
+    AgoraRtcEngine.onUserJoined = (int uid, int elapsed) {
+      final info = 'userJoined: $uid';
+      _provider.isInfoStringsAdd(info);
+      _provider.isUsersAdd(uid);
+    };
+
+    AgoraRtcEngine.onUserOffline = (int uid, int reason) {
+      final info = 'userOffline: $uid';
+      _provider.isInfoStringsAdd(info);
+      _provider.isUsersRemove(uid);
+    };
+
+    AgoraRtcEngine.onFirstRemoteVideoFrame = (
+      int uid,
+      int width,
+      int height,
+      int elapsed,
+    ) {
+      final info = 'firstRemoteVideo: $uid ${width}x $height';
+      _provider.isInfoStringsAdd(info);
+    };
+  }
+
   void _onCallEnd(BuildContext context) {
     Navigator.pop(context);
   }
@@ -300,32 +329,5 @@ class _VideoCallProvState extends State<VideoCallProv> {
 
   void _onSwitchCamera() {
     AgoraRtcEngine.switchCamera();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
-        leading: IconButton(
-          icon: Icon(
-            Icons.navigate_before,
-            color: Color(0xFFE9FFFF),
-            size: 40,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: Center(
-        child: Stack(
-          children: <Widget>[
-            _viewRows(),
-//            _panel(),
-            _toolbar(),
-          ],
-        ),
-      ),
-    );
   }
 }

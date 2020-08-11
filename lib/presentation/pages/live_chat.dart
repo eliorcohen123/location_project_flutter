@@ -57,75 +57,128 @@ class _LiveChatProvState extends State<LiveChatProv> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blueGrey,
-      appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
-        leading: IconButton(
-          icon: Icon(
-            Icons.navigate_before,
-            color: Color(0xFFE9FFFF),
-            size: 40,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
+      appBar: _appBar(),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Expanded(
-              child: ListView.builder(
-                  reverse: true,
-                  itemCount: _provider.placesGet.length,
-                  itemBuilder: (BuildContext ctx, int index) {
-                    return _message(
-                      _provider.placesGet[index].from,
-                      _provider.placesGet[index].text,
-                      _valueUserEmail == _provider.placesGet[index].from,
-                    );
-                  }),
-            ),
-            Container(
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Colors.white,
-                      ),
-                      child: TextFormField(
-                        style: TextStyle(color: Colors.blueGrey),
-                        onSaved: (value) => callback(),
-                        decoration: InputDecoration(
-                          hintText: 'Type your message...',
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                              color: Colors.green,
-                              width: 2,
-                            ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(
-                              color: Colors.green,
-                              width: 3,
-                            ),
-                          ),
-                        ),
-                        controller: _messageController,
-                      ),
-                    ),
-                  ),
-                  _sendButton(
-                    "Send",
-                    callback,
-                  ),
-                ],
-              ),
-            ),
+            _listViewData(),
+            _sendMessage(),
           ],
         ),
+      ),
+    );
+  }
+
+  PreferredSizeWidget _appBar() {
+    return AppBar(
+      backgroundColor: Colors.blueAccent,
+      leading: IconButton(
+        icon: Icon(
+          Icons.navigate_before,
+          color: Color(0xFFE9FFFF),
+          size: 40,
+        ),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+    );
+  }
+
+  Widget _listViewData() {
+    return Expanded(
+      child: ListView.builder(
+        reverse: true,
+        itemCount: _provider.placesGet.length,
+        itemBuilder: (BuildContext ctx, int index) {
+          return _message(
+            _provider.placesGet[index].from,
+            _provider.placesGet[index].text,
+            _valueUserEmail == _provider.placesGet[index].from,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _sendMessage() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          _buildInput(),
+          _sendButton(
+            "Send",
+            callback,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInput() {
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: Colors.white,
+        ),
+        child: TextFormField(
+          style: TextStyle(color: Colors.blueGrey),
+          onSaved: (value) => callback(),
+          decoration: InputDecoration(
+            hintText: 'Type your message...',
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(
+                color: Colors.green,
+                width: 2,
+              ),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(
+                color: Colors.green,
+                width: 3,
+              ),
+            ),
+          ),
+          controller: _messageController,
+        ),
+      ),
+    );
+  }
+
+  Widget _sendButton(String text, VoidCallback callback) {
+    return FlatButton(
+      color: Colors.greenAccent,
+      textColor: Colors.blueGrey,
+      onPressed: callback,
+      child: Text(text),
+    );
+  }
+
+  Widget _message(String from, String text, bool me) {
+    return Container(
+      child: Column(
+        crossAxisAlignment:
+            me ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            from,
+            style: TextStyle(color: me ? Colors.lightGreen : Colors.lightBlue),
+          ),
+          Material(
+            color: me ? Colors.lightGreenAccent : Colors.lightBlueAccent,
+            borderRadius: BorderRadius.circular(10.0),
+            elevation: 6.0,
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+              child: Text(
+                text,
+                style: TextStyle(color: Colors.blueGrey),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -169,42 +222,6 @@ class _LiveChatProvState extends State<LiveChatProv> {
 
         _provider.places(places);
       },
-    );
-  }
-
-  Widget _sendButton(String text, VoidCallback callback) {
-    return FlatButton(
-      color: Colors.greenAccent,
-      textColor: Colors.blueGrey,
-      onPressed: callback,
-      child: Text(text),
-    );
-  }
-
-  Widget _message(String from, String text, bool me) {
-    return Container(
-      child: Column(
-        crossAxisAlignment:
-            me ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            from,
-            style: TextStyle(color: me ? Colors.lightGreen : Colors.lightBlue),
-          ),
-          Material(
-            color: me ? Colors.lightGreenAccent : Colors.lightBlueAccent,
-            borderRadius: BorderRadius.circular(10.0),
-            elevation: 6.0,
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-              child: Text(
-                text,
-                style: TextStyle(color: Colors.blueGrey),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

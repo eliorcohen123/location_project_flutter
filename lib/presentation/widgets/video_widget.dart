@@ -36,43 +36,51 @@ class _VideoWidgetState extends State<VideoWidget> {
       future: _initializeVideoPlayerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return Container(
-            child: Card(
-              key: PageStorageKey(widget.url),
-              elevation: 5.0,
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Chewie(
-                      key: PageStorageKey(widget.url),
-                      controller: ChewieController(
-                        videoPlayerController: _videoPlayerController,
-                        aspectRatio: 4 / 2,
-                        autoInitialize: true,
-                        looping: false,
-                        autoPlay: false,
-                        errorBuilder: (context, errorMessage) {
-                          return Center(
-                            child: Text(
-                              errorMessage,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
+          return _showVideo();
         } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return _loading();
         }
       },
+    );
+  }
+
+  Widget _showVideo() {
+    return Container(
+      child: Card(
+        key: PageStorageKey(widget.url),
+        elevation: 5.0,
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Chewie(
+                key: PageStorageKey(widget.url),
+                controller: ChewieController(
+                  videoPlayerController: _videoPlayerController,
+                  aspectRatio: 4 / 2,
+                  autoInitialize: true,
+                  looping: false,
+                  autoPlay: false,
+                  errorBuilder: (context, errorMessage) {
+                    return Center(
+                      child: Text(
+                        errorMessage,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _loading() {
+    return Center(
+      child: CircularProgressIndicator(),
     );
   }
 }

@@ -40,144 +40,176 @@ class _ChatSettingsProvState extends State<ChatSettingsProv> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blueGrey,
-      appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
-        leading: IconButton(
-          icon: Icon(
-            Icons.navigate_before,
-            color: Color(0xFFE9FFFF),
-            size: 40,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
+      appBar: _appBar(),
       body: Container(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    "Open Places",
-                    style: TextStyle(color: Colors.greenAccent),
-                  ),
-                  SizedBox(
-                    width: ResponsiveScreen().widthMediaQuery(context, 5),
-                  ),
-                  Icon(
-                    Icons.open_with,
-                    color: Colors.greenAccent,
-                    size: ResponsiveScreen().heightMediaQuery(context, 40),
-                  ),
-                ],
-              ),
-              RadioButtonGroup(
-                labels: [
-                  'Open',
-                  'All(Open + Close)',
-                ],
-                picked: _provider.valueOpenGet,
-                labelStyle: TextStyle(color: Colors.indigo),
-                activeColor: Colors.greenAccent,
-                onSelected: (String label) => {
-                  _provider.valueOpen(label),
-                },
-              ),
+              _openPlaces(),
               SizedBox(
                 height: ResponsiveScreen().heightMediaQuery(context, 20),
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    "Radius Search",
-                    style: TextStyle(color: Colors.greenAccent),
-                  ),
-                  SizedBox(
-                    width: ResponsiveScreen().widthMediaQuery(context, 5),
-                  ),
-                  Icon(
-                    Icons.my_location,
-                    color: Colors.greenAccent,
-                    size: ResponsiveScreen().heightMediaQuery(context, 40),
-                  ),
-                ],
-              ),
-              Slider(
-                value: _provider.valueRadiusGet,
-                min: 0.0,
-                max: 50000.0,
-                divisions: 50000,
-                activeColor: Colors.indigo,
-                inactiveColor: Colors.grey,
-                label: _provider.valueRadiusGet.round().toString(),
-                onChanged: (double newValue) {
-                  _provider.valueRadius(newValue);
-                },
-                semanticFormatterCallback: (double newValue) {
-                  return '${newValue.round()}';
-                },
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    "Radius Geofence",
-                    style: TextStyle(color: Colors.greenAccent),
-                  ),
-                  SizedBox(
-                    width: ResponsiveScreen().widthMediaQuery(context, 5),
-                  ),
-                  Icon(
-                    Icons.location_searching,
-                    color: Colors.greenAccent,
-                    size: ResponsiveScreen().heightMediaQuery(context, 40),
-                  ),
-                ],
-              ),
-              Slider(
-                value: _provider.valueGeofenceGet,
-                min: 500.0,
-                max: 1000.0,
-                divisions: 500,
-                activeColor: Colors.indigo,
-                inactiveColor: Colors.grey,
-                label: _provider.valueGeofenceGet.round().toString(),
-                onChanged: (double newValue) {
-                  _provider.valueGeofence(newValue);
-                },
-                semanticFormatterCallback: (double newValue) {
-                  return '${newValue.round()}';
-                },
-              ),
+              _radiusSearch(),
+              _radiusGeofence(),
               SizedBox(
                 height: ResponsiveScreen().heightMediaQuery(context, 100),
               ),
-              RaisedButton(
-                child: Text('Save'),
-                color: Colors.greenAccent,
-                onPressed: () => {
-                  _addOpenToSF(_provider.valueOpenGet),
-                  _addRadiusSearchToSF(_provider.valueRadiusGet),
-                  _addGeofenceToSF(_provider.valueGeofenceGet),
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ListMap(),
-                    ),
-                  ),
-                },
-              )
+              _buttonSave()
             ],
           ),
         ),
       ),
+    );
+  }
+
+  PreferredSizeWidget _appBar() {
+    return AppBar(
+      backgroundColor: Colors.blueAccent,
+      leading: IconButton(
+        icon: Icon(
+          Icons.navigate_before,
+          color: Color(0xFFE9FFFF),
+          size: 40,
+        ),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+    );
+  }
+
+  Widget _openPlaces() {
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "Open Places",
+              style: TextStyle(color: Colors.greenAccent),
+            ),
+            SizedBox(
+              width: ResponsiveScreen().widthMediaQuery(context, 5),
+            ),
+            Icon(
+              Icons.open_with,
+              color: Colors.greenAccent,
+              size: ResponsiveScreen().heightMediaQuery(context, 40),
+            ),
+          ],
+        ),
+        RadioButtonGroup(
+          labels: [
+            'Open',
+            'All(Open + Close)',
+          ],
+          picked: _provider.valueOpenGet,
+          labelStyle: TextStyle(color: Colors.indigo),
+          activeColor: Colors.greenAccent,
+          onSelected: (String label) => {
+            _provider.valueOpen(label),
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _radiusSearch() {
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "Radius Search",
+              style: TextStyle(color: Colors.greenAccent),
+            ),
+            SizedBox(
+              width: ResponsiveScreen().widthMediaQuery(context, 5),
+            ),
+            Icon(
+              Icons.my_location,
+              color: Colors.greenAccent,
+              size: ResponsiveScreen().heightMediaQuery(context, 40),
+            ),
+          ],
+        ),
+        Slider(
+          value: _provider.valueRadiusGet,
+          min: 0.0,
+          max: 50000.0,
+          divisions: 50000,
+          activeColor: Colors.indigo,
+          inactiveColor: Colors.grey,
+          label: _provider.valueRadiusGet.round().toString(),
+          onChanged: (double newValue) {
+            _provider.valueRadius(newValue);
+          },
+          semanticFormatterCallback: (double newValue) {
+            return '${newValue.round()}';
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _radiusGeofence() {
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "Radius Geofence",
+              style: TextStyle(color: Colors.greenAccent),
+            ),
+            SizedBox(
+              width: ResponsiveScreen().widthMediaQuery(context, 5),
+            ),
+            Icon(
+              Icons.location_searching,
+              color: Colors.greenAccent,
+              size: ResponsiveScreen().heightMediaQuery(context, 40),
+            ),
+          ],
+        ),
+        Slider(
+          value: _provider.valueGeofenceGet,
+          min: 500.0,
+          max: 1000.0,
+          divisions: 500,
+          activeColor: Colors.indigo,
+          inactiveColor: Colors.grey,
+          label: _provider.valueGeofenceGet.round().toString(),
+          onChanged: (double newValue) {
+            _provider.valueGeofence(newValue);
+          },
+          semanticFormatterCallback: (double newValue) {
+            return '${newValue.round()}';
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buttonSave() {
+    return RaisedButton(
+      child: Text('Save'),
+      color: Colors.greenAccent,
+      onPressed: () => {
+        _addOpenToSF(_provider.valueOpenGet),
+        _addRadiusSearchToSF(_provider.valueRadiusGet),
+        _addGeofenceToSF(_provider.valueGeofenceGet),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ListMap(),
+          ),
+        ),
+      },
     );
   }
 

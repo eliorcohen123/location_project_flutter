@@ -66,118 +66,135 @@ class _AddOrEditFavoritesPlacesState extends State<AddOrEditFavoritesPlaces> {
           SizedBox(
             height: ResponsiveScreen().heightMediaQuery(context, 10),
           ),
-          Text(
-            widget.edit ? 'Edit Place' : 'Add Place',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 25,
-            ),
-          ),
+          _title(),
           SizedBox(
             height: ResponsiveScreen().heightMediaQuery(context, 20),
           ),
-          Text(
-            'Name',
-            style: TextStyle(color: Colors.white),
-          ),
-          SizedBox(
-            height: ResponsiveScreen().heightMediaQuery(context, 2),
-          ),
-          _innerTextField(_textName),
+          _textFieldsData(),
           SizedBox(
             height: ResponsiveScreen().heightMediaQuery(context, 10),
           ),
-          Text(
-            'Address',
-            style: TextStyle(color: Colors.white),
-          ),
-          SizedBox(
-            height: ResponsiveScreen().heightMediaQuery(context, 2),
-          ),
-          _innerTextField(_textAddress),
-          SizedBox(
-            height: ResponsiveScreen().heightMediaQuery(context, 10),
-          ),
-          Text(
-            'Coordinates',
-            style: TextStyle(color: Colors.white),
-          ),
-          SizedBox(
-            height: ResponsiveScreen().heightMediaQuery(context, 2),
-          ),
-          _innerTextField(_textLat),
-          SizedBox(
-            height: ResponsiveScreen().heightMediaQuery(context, 2),
-          ),
-          _innerTextField(_textLng),
-          SizedBox(
-            height: ResponsiveScreen().heightMediaQuery(context, 10),
-          ),
-          Text(
-            'Photo',
-            style: TextStyle(color: Colors.white),
-          ),
-          SizedBox(
-            height: ResponsiveScreen().heightMediaQuery(context, 2),
-          ),
-          CachedNetworkImage(
-            fit: BoxFit.fill,
-            height: ResponsiveScreen().heightMediaQuery(context, 75),
-            width: ResponsiveScreen().heightMediaQuery(context, 175),
-            imageUrl: widget.photoList.isNotEmpty
-                ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                    widget.photoList +
-                    "&key=$_API_KEY"
-                : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
-            placeholder: (context, url) => const CircularProgressIndicator(),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
-          ),
+          _imagePlace(),
           SizedBox(
             height: ResponsiveScreen().heightMediaQuery(context, 20),
           ),
-          RaisedButton(
-            padding: const EdgeInsets.all(0.0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(80.0),
-            ),
-            onPressed: () => widget.edit
-                ? updateItem(
-                    widget.id,
-                    _textName.text,
-                    _textAddress.text,
-                    double.parse(_textLat.text),
-                    double.parse(_textLng.text),
-                    widget.photoList,
-                    context,
-                  )
-                : addItem(
-                    _textName.text,
-                    _textAddress.text,
-                    double.parse(_textLat.text),
-                    double.parse(_textLng.text),
-                    widget.photoList,
-                    context,
-                  ),
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: <Color>[
-                    Color(0xFF5e7974),
-                    Color(0xFF6494ED),
-                  ],
-                ),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(80.0),
-                ),
-              ),
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-              child: Text(
-                widget.edit ? 'Edit Your Place' : 'Add Your Place',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
+          _buttonSave(),
         ],
+      ),
+    );
+  }
+
+  Widget _title() {
+    return Text(
+      widget.edit ? 'Edit Place' : 'Add Place',
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 25,
+      ),
+    );
+  }
+
+  Widget _textFieldsData() {
+    return Column(
+      children: [
+        _innerTextField(_textName),
+        SizedBox(
+          height: ResponsiveScreen().heightMediaQuery(context, 10),
+        ),
+        Text(
+          'Address',
+          style: TextStyle(color: Colors.white),
+        ),
+        SizedBox(
+          height: ResponsiveScreen().heightMediaQuery(context, 2),
+        ),
+        _innerTextField(_textAddress),
+        SizedBox(
+          height: ResponsiveScreen().heightMediaQuery(context, 10),
+        ),
+        Text(
+          'Coordinates',
+          style: TextStyle(color: Colors.white),
+        ),
+        SizedBox(
+          height: ResponsiveScreen().heightMediaQuery(context, 2),
+        ),
+        _innerTextField(_textLat),
+        SizedBox(
+          height: ResponsiveScreen().heightMediaQuery(context, 2),
+        ),
+        _innerTextField(_textLng),
+      ],
+    );
+  }
+
+  Widget _imagePlace() {
+    return Column(
+      children: [
+        Text(
+          'Photo',
+          style: TextStyle(color: Colors.white),
+        ),
+        SizedBox(
+          height: ResponsiveScreen().heightMediaQuery(context, 2),
+        ),
+        CachedNetworkImage(
+          fit: BoxFit.fill,
+          height: ResponsiveScreen().heightMediaQuery(context, 75),
+          width: ResponsiveScreen().heightMediaQuery(context, 175),
+          imageUrl: widget.photoList.isNotEmpty
+              ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                  widget.photoList +
+                  "&key=$_API_KEY"
+              : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
+          placeholder: (context, url) => const CircularProgressIndicator(),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+        ),
+      ],
+    );
+  }
+
+  Widget _buttonSave() {
+    return RaisedButton(
+      padding: const EdgeInsets.all(0.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(80.0),
+      ),
+      onPressed: () => widget.edit
+          ? updateItem(
+              widget.id,
+              _textName.text,
+              _textAddress.text,
+              double.parse(_textLat.text),
+              double.parse(_textLng.text),
+              widget.photoList,
+              context,
+            )
+          : addItem(
+              _textName.text,
+              _textAddress.text,
+              double.parse(_textLat.text),
+              double.parse(_textLng.text),
+              widget.photoList,
+              context,
+            ),
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: <Color>[
+              Color(0xFF5e7974),
+              Color(0xFF6494ED),
+            ],
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(80.0),
+          ),
+        ),
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+        child: Text(
+          widget.edit ? 'Edit Your Place' : 'Add Your Place',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
     );
   }

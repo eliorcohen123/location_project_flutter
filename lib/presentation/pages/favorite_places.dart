@@ -51,80 +51,90 @@ class _FavoritePlacesProvState extends State<FavoritePlacesProv> {
   Widget build(BuildContext context) {
     _userLocation = Provider.of<UserLocation>(context);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.delete_forever),
-            color: Color(0xFFE9FFFF),
-            onPressed: () => _provider.deleteData(),
-          ),
+      appBar: _appBar(),
+      body: Stack(
+        children: [
+          _listViewData(),
+          _loading(),
         ],
-        leading: IconButton(
-          icon: Icon(
-            Icons.navigate_before,
-            color: Color(0xFFE9FFFF),
-            size: 40,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: Container(
-        child: Stack(
-          children: [
-            Column(
-              children: <Widget>[
-                _provider.resultsSqflGet.length == 0
-                    ? Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'No Favorite Places',
-                          style: TextStyle(
-                            color: Colors.deepPurpleAccent,
-                            fontSize: 30,
-                          ),
-                        ),
-                      )
-                    : Expanded(
-                        child: LiveList(
-                          showItemInterval: Duration(milliseconds: 50),
-                          showItemDuration: Duration(milliseconds: 50),
-                          reAnimateOnVisibility: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: _provider.resultsSqflGet.length,
-                          itemBuilder: buildAnimatedItem,
-                          separatorBuilder: (context, i) {
-                            return SizedBox(
-                              height: ResponsiveScreen()
-                                  .heightMediaQuery(context, 5),
-                              width: double.infinity,
-                              child: const DecoratedBox(
-                                decoration:
-                                    const BoxDecoration(color: Colors.white),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-              ],
-            ),
-            _provider.checkingBottomSheetGet == true
-                ? Positioned.fill(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(
-                        sigmaX: 5,
-                        sigmaY: 5,
-                      ),
-                      child: Container(
-                        color: Colors.black.withOpacity(0),
-                      ),
-                    ),
-                  )
-                : Container(),
-          ],
-        ),
       ),
     );
+  }
+
+  PreferredSizeWidget _appBar() {
+    return AppBar(
+      backgroundColor: Colors.blueAccent,
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.delete_forever),
+          color: Color(0xFFE9FFFF),
+          onPressed: () => _provider.deleteData(),
+        ),
+      ],
+      leading: IconButton(
+        icon: Icon(
+          Icons.navigate_before,
+          color: Color(0xFFE9FFFF),
+          size: 40,
+        ),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+    );
+  }
+
+  Widget _listViewData() {
+    return Column(
+      children: <Widget>[
+        _provider.resultsSqflGet.length == 0
+            ? Align(
+          alignment: Alignment.center,
+          child: Text(
+            'No Favorite Places',
+            style: TextStyle(
+              color: Colors.deepPurpleAccent,
+              fontSize: 30,
+            ),
+          ),
+        )
+            : Expanded(
+          child: LiveList(
+            showItemInterval: Duration(milliseconds: 50),
+            showItemDuration: Duration(milliseconds: 50),
+            reAnimateOnVisibility: true,
+            scrollDirection: Axis.vertical,
+            itemCount: _provider.resultsSqflGet.length,
+            itemBuilder: buildAnimatedItem,
+            separatorBuilder: (context, i) {
+              return SizedBox(
+                height: ResponsiveScreen()
+                    .heightMediaQuery(context, 5),
+                width: double.infinity,
+                child: const DecoratedBox(
+                  decoration:
+                  const BoxDecoration(color: Colors.white),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _loading() {
+    return _provider.checkingBottomSheetGet == true
+        ? Positioned.fill(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: 5,
+          sigmaY: 5,
+        ),
+        child: Container(
+          color: Colors.black.withOpacity(0),
+        ),
+      ),
+    )
+        : Container();
   }
 
   Widget buildAnimatedItem(
@@ -270,17 +280,6 @@ class _FavoritePlacesProvState extends State<FavoritePlacesProv> {
     );
   }
 
-  String _calculateDistance(double _meter) {
-    String _myMeters;
-    if (_meter < 1000.0) {
-      _myMeters = 'Meters: ' + (_meter.round()).toString();
-    } else {
-      _myMeters =
-          'KM: ' + (_meter.round() / 1000.0).toStringAsFixed(2).toString();
-    }
-    return _myMeters;
-  }
-
   Widget _textList(String text, double fontSize, int color) {
     return Text(
       text,
@@ -301,6 +300,17 @@ class _FavoritePlacesProvState extends State<FavoritePlacesProv> {
         color: Color(color),
       ),
     );
+  }
+
+  String _calculateDistance(double _meter) {
+    String _myMeters;
+    if (_meter < 1000.0) {
+      _myMeters = 'Meters: ' + (_meter.round()).toString();
+    } else {
+      _myMeters =
+          'KM: ' + (_meter.round() / 1000.0).toStringAsFixed(2).toString();
+    }
+    return _myMeters;
   }
 
   void _shareContent(
