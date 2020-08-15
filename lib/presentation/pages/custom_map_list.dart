@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/custom_map_list_provider.dart';
+import 'package:locationprojectflutter/presentation/widgets/app_bar_total.dart';
 import 'package:provider/provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/add_or_edit_favorites_places.dart';
 
@@ -47,26 +48,12 @@ class _CustomMapListProvState extends State<CustomMapListProv> {
     _userLocation = Provider.of<UserLocation>(context);
     _currentLocation = LatLng(_userLocation.latitude, _userLocation.longitude);
     return Scaffold(
-      appBar: _appBar(),
+      appBar: AppBarTotal(),
       body: Stack(
         children: [
           _googleMap(),
           _blur(),
         ],
-      ),
-    );
-  }
-
-  PreferredSizeWidget _appBar() {
-    return AppBar(
-      backgroundColor: Colors.blueAccent,
-      leading: IconButton(
-        icon: Icon(
-          Icons.navigate_before,
-          color: Color(0xFFE9FFFF),
-          size: 40,
-        ),
-        onPressed: () => Navigator.of(context).pop(),
       ),
     );
   }

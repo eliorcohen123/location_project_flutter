@@ -9,6 +9,7 @@ import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl
 import 'package:locationprojectflutter/presentation/state_management/provider/map_list_provider.dart';
 import 'package:locationprojectflutter/presentation/utils/map_utils.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
+import 'package:locationprojectflutter/presentation/widgets/app_bar_total.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -85,7 +86,7 @@ class _MapListProvState extends State<MapListProv> {
     LatLng _currentLocation =
         LatLng(_userLocation.latitude, _userLocation.longitude);
     return Scaffold(
-      appBar: _appBar(),
+      appBar: AppBarTotal(),
       body: Stack(
         children: [
           _googleMap(_currentLocation),
@@ -94,20 +95,6 @@ class _MapListProvState extends State<MapListProv> {
       ),
       floatingActionButton: _floatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
-  }
-
-  PreferredSizeWidget _appBar() {
-    return AppBar(
-      backgroundColor: Colors.blueAccent,
-      leading: IconButton(
-        icon: Icon(
-          Icons.navigate_before,
-          color: Color(0xFFE9FFFF),
-          size: 40,
-        ),
-        onPressed: () => Navigator.of(context).pop(),
-      ),
     );
   }
 

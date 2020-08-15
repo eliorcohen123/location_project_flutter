@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/list_settings_provider.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
+import 'package:locationprojectflutter/presentation/widgets/app_bar_total.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'list_map.dart';
@@ -40,7 +41,7 @@ class _ChatSettingsProvState extends State<ChatSettingsProv> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blueGrey,
-      appBar: _appBar(),
+      appBar: AppBarTotal(),
       body: Container(
         child: Center(
           child: Column(
@@ -60,20 +61,6 @@ class _ChatSettingsProvState extends State<ChatSettingsProv> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  PreferredSizeWidget _appBar() {
-    return AppBar(
-      backgroundColor: Colors.blueAccent,
-      leading: IconButton(
-        icon: Icon(
-          Icons.navigate_before,
-          color: Color(0xFFE9FFFF),
-          size: 40,
-        ),
-        onPressed: () => Navigator.of(context).pop(),
       ),
     );
   }

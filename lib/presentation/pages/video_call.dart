@@ -2,6 +2,7 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:locationprojectflutter/core/constants/constants.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/video_call_provider.dart';
+import 'package:locationprojectflutter/presentation/widgets/app_bar_total.dart';
 import 'package:provider/provider.dart';
 
 class VideoCall extends StatelessWidget {
@@ -69,27 +70,13 @@ class _VideoCallProvState extends State<VideoCallProv> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: _appBar(),
+      appBar: AppBarTotal(),
       body: Stack(
         children: <Widget>[
           _viewRows(),
 //            _panel(),
           _toolbar(),
         ],
-      ),
-    );
-  }
-
-  PreferredSizeWidget _appBar() {
-    return AppBar(
-      backgroundColor: Colors.blueAccent,
-      leading: IconButton(
-        icon: Icon(
-          Icons.navigate_before,
-          color: Color(0xFFE9FFFF),
-          size: 40,
-        ),
-        onPressed: () => Navigator.of(context).pop(),
       ),
     );
   }
