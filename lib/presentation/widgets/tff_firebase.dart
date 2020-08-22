@@ -24,51 +24,53 @@ class TFFFirebase extends StatelessWidget {
         left: ResponsiveScreen().widthMediaQuery(context, 20),
         right: ResponsiveScreen().widthMediaQuery(context, 20),
       ),
-      child: TextFormField(
-        key: key,
-        controller: controller,
-        obscureText: obSecure,
-        keyboardType: textInputType,
-        validator: (String value) {
-          if (value.isEmpty) {
-            return 'Please enter some text';
-          }
-          return null;
-        },
-        style: TextStyle(
-          fontSize: 20,
-          color: Colors.greenAccent,
-        ),
-        decoration: InputDecoration(
-          hintStyle: TextStyle(
-            fontWeight: FontWeight.bold,
+      child: Center(
+        child: TextFormField(
+          key: key,
+          controller: controller,
+          obscureText: obSecure,
+          keyboardType: textInputType,
+          validator: (String value) {
+            if (value.isEmpty) {
+              return 'Please enter some text';
+            }
+            return null;
+          },
+          style: TextStyle(
             fontSize: 20,
+            color: Colors.greenAccent,
           ),
-          hintText: hint,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(
-              color: Colors.green,
-              width: 2,
+          decoration: InputDecoration(
+            hintStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
             ),
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(
-              color: Colors.green,
-              width: 3,
-            ),
-          ),
-          prefixIcon: Padding(
-            child: IconTheme(
-              data: IconThemeData(
+            hintText: hint,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(
                 color: Colors.green,
+                width: 2,
               ),
-              child: icon,
             ),
-            padding: EdgeInsets.only(
-              left: ResponsiveScreen().widthMediaQuery(context, 30),
-              right: ResponsiveScreen().widthMediaQuery(context, 10),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(
+                color: Colors.green,
+                width: 3,
+              ),
+            ),
+            prefixIcon: Padding(
+              child: IconTheme(
+                data: IconThemeData(
+                  color: Colors.green,
+                ),
+                child: icon,
+              ),
+              padding: EdgeInsets.only(
+                left: ResponsiveScreen().widthMediaQuery(context, 30),
+                right: ResponsiveScreen().widthMediaQuery(context, 10),
+              ),
             ),
           ),
         ),
