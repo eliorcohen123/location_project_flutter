@@ -15,7 +15,7 @@ class LocationRemoteDataSource {
 
   Error _error;
   List<Results> _places = List();
-  String _baseUrl = Constants.baseUrl;
+  String _baseUrl = Constants.BASE_URL;
   String _API_KEY = Constants.API_KEY;
 
 //  Dio _dio = new Dio();

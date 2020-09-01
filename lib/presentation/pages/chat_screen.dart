@@ -237,58 +237,29 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
     return Container(
       child: Row(
         children: <Widget>[
-          Material(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 1.0),
-              child: IconButton(
-                icon: Icon(Icons.camera_alt),
-                onPressed: () => _newTaskModalBottomSheet(context, 1),
-                color: Color(0xff203152),
-              ),
-            ),
-            color: Colors.white,
+          _iconInput(
+            Icon(Icons.camera_alt),
+            () => _newTaskModalBottomSheet(context, 1),
           ),
-          Material(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 1.0),
-              child: IconButton(
-                icon: Icon(Icons.video_library),
-                onPressed: () => _newTaskModalBottomSheet(context, 3),
-                color: Color(0xff203152),
-              ),
-            ),
-            color: Colors.white,
+          _iconInput(
+            Icon(Icons.video_library),
+            () => _newTaskModalBottomSheet(context, 3),
           ),
-          Material(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 1.0),
-              child: IconButton(
-                icon: Icon(Icons.face),
-                onPressed: _getSticker,
-                color: Color(0xff203152),
-              ),
-            ),
-            color: Colors.white,
+          _iconInput(
+            Icon(Icons.face),
+            () => _getSticker(),
           ),
-          Material(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 1.0),
-              child: IconButton(
-                icon: _provider.isCurrentStatusGet ==
-                        rec.RecordingStatus.Initialized
-                    ? Icon(Icons.mic_none)
-                    : Icon(
-                        Icons.mic,
-                        color: Colors.red,
-                      ),
-                onPressed: () => _provider.isCurrentStatusGet ==
-                        rec.RecordingStatus.Initialized
+          _iconInput(
+            _provider.isCurrentStatusGet == rec.RecordingStatus.Initialized
+                ? Icon(Icons.mic_none)
+                : Icon(
+                    Icons.mic,
+                    color: Colors.red,
+                  ),
+            () =>
+                _provider.isCurrentStatusGet == rec.RecordingStatus.Initialized
                     ? _startRecord()
                     : _stopRecord(),
-                color: Color(0xff203152),
-              ),
-            ),
-            color: Colors.white,
           ),
           Flexible(
             child: Container(
@@ -306,16 +277,9 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
               ),
             ),
           ),
-          Material(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 8.0),
-              child: IconButton(
-                icon: Icon(Icons.send),
-                onPressed: () => _onSendMessage(_textEditingController.text, 0),
-                color: Color(0xff203152),
-              ),
-            ),
-            color: Colors.white,
+          _iconInput(
+            Icon(Icons.send),
+            () => _onSendMessage(_textEditingController.text, 0),
           ),
         ],
       ),
@@ -329,6 +293,20 @@ class _ChatScreenProvState extends State<ChatScreenProv> {
             ),
           ),
           color: Colors.white),
+    );
+  }
+
+  Material _iconInput(Widget icon, VoidCallback onTap) {
+    return Material(
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 1.0),
+        child: IconButton(
+          icon: icon,
+          onPressed: onTap,
+          color: Color(0xff203152),
+        ),
+      ),
+      color: Colors.white,
     );
   }
 
