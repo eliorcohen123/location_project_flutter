@@ -153,7 +153,7 @@ class DrawerTotal extends StatelessWidget {
   }
 
   Widget _listTile(
-      BuildContext context, cls, IconData iconData, String text) {
+      BuildContext context, var cls, IconData iconData, String text) {
     return ListTile(
       title: Row(
         children: <Widget>[

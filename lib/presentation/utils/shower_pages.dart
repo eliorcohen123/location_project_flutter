@@ -317,7 +317,7 @@ class ShowerPages {
     }
   }
 
-  static void pushDrawerTotal(BuildContext context, cls) {
+  static void pushDrawerTotal(BuildContext context, var cls) {
     if (kIsWeb) {
       Navigator.push(context, MaterialPageRoute(builder: (context) => cls));
     } else {
