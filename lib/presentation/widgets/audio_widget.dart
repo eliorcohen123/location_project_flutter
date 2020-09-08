@@ -9,14 +9,14 @@ enum PlayerState { stopped, playing, paused }
 class AudioWidget extends StatefulWidget {
   final String url;
 
-  AudioWidget({this.url});
+  const AudioWidget({this.url});
 
   @override
   _AudioWidgetState createState() => _AudioWidgetState();
 }
 
 class _AudioWidgetState extends State<AudioWidget> {
-  AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioPlayer _audioPlayer = AudioPlayer();
   PlayerState _playerState = PlayerState.stopped;
   StreamSubscription _audioPlayerStateSubscription;
 
@@ -42,7 +42,7 @@ class _AudioWidgetState extends State<AudioWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -63,7 +63,7 @@ class _AudioWidgetState extends State<AudioWidget> {
     return IconButton(
       onPressed: isPlaying ? null : () => _play(),
       iconSize: 64.0,
-      icon: Icon(Icons.play_arrow),
+      icon: const Icon(Icons.play_arrow),
       color: Colors.indigoAccent,
     );
   }
@@ -72,7 +72,7 @@ class _AudioWidgetState extends State<AudioWidget> {
     return IconButton(
       onPressed: isPlaying ? () => _pause() : null,
       iconSize: 64.0,
-      icon: Icon(Icons.pause),
+      icon: const Icon(Icons.pause),
       color: Colors.indigoAccent,
     );
   }
@@ -81,7 +81,7 @@ class _AudioWidgetState extends State<AudioWidget> {
     return IconButton(
       onPressed: isPlaying || isPaused ? () => _stop() : null,
       iconSize: 64.0,
-      icon: Icon(Icons.stop),
+      icon: const Icon(Icons.stop),
       color: Colors.indigoAccent,
     );
   }

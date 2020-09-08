@@ -2,15 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:locationprojectflutter/presentation/pages/custom_map_list.dart';
-import 'package:locationprojectflutter/presentation/pages/favorite_places.dart';
-import 'package:locationprojectflutter/presentation/pages/home_chat.dart';
-import 'package:locationprojectflutter/presentation/pages/live_chat.dart';
-import 'package:locationprojectflutter/presentation/pages/live_favorite_places.dart';
-import 'package:locationprojectflutter/presentation/pages/sign_in_firebase.dart';
-import 'package:locationprojectflutter/presentation/pages/list_settings.dart';
+import 'package:locationprojectflutter/core/constants/constants_colors.dart';
+import 'package:locationprojectflutter/presentation/pages/page_custom_map_list.dart';
+import 'package:locationprojectflutter/presentation/pages/page_favorite_places.dart';
+import 'package:locationprojectflutter/presentation/pages/page_home_chat.dart';
+import 'package:locationprojectflutter/presentation/pages/page_live_chat.dart';
+import 'package:locationprojectflutter/presentation/pages/page_live_favorite_places.dart';
+import 'package:locationprojectflutter/presentation/pages/page_list_settings.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'dart:io' show Platform;
+import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
 
 class DrawerTotal extends StatelessWidget {
   static final DrawerTotal _singleton = DrawerTotal.internal();
@@ -26,7 +27,7 @@ class DrawerTotal extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-        canvasColor: Color(0xFF1E2538),
+        canvasColor: ConstantsColors.BLACK2,
       ),
       child: Drawer(
         child: ListView(
@@ -35,7 +36,7 @@ class DrawerTotal extends StatelessWidget {
             Container(
               height: ResponsiveScreen().heightMediaQuery(context, 160),
               child: DrawerHeader(
-                child: Center(
+                child: const Center(
                   child: Text(
                     'Hello user!',
                     style: TextStyle(
@@ -45,7 +46,7 @@ class DrawerTotal extends StatelessWidget {
                   ),
                 ),
                 decoration: BoxDecoration(
-                  color: Color(0XFF0E121B),
+                  color: ConstantsColors.DARK_GRAY3,
                 ),
               ),
             ),
@@ -54,37 +55,37 @@ class DrawerTotal extends StatelessWidget {
             ),
             _listTile(
               context,
-              LiveChat(),
+              PageLiveChat(),
               Icons.chat,
               'Live Chat',
             ),
             _listTile(
               context,
-              LiveFavoritePlaces(),
+              PageLiveFavoritePlaces(),
               Icons.done,
               'Top Places',
             ),
             _listTile(
               context,
-              FavoritePlaces(),
+              PageFavoritePlaces(),
               Icons.favorite,
               'Favorites',
             ),
             _listTile(
               context,
-              CustomMapList(),
+              PageCustomMapList(),
               Icons.edit,
               'Add Custom Marker',
             ),
             _listTile(
               context,
-              HomeChat(),
+              PageHomeChat(),
               Icons.chat_bubble_outline,
               'Private Chat',
             ),
             _listTile(
               context,
-              ListSettings(),
+              PageListSettings(),
               Icons.settings,
               'List Settings',
             ),
@@ -94,7 +95,7 @@ class DrawerTotal extends StatelessWidget {
                       children: <Widget>[
                         Icon(
                           Icons.info,
-                          color: Color(0xFFcd4312),
+                          color: ConstantsColors.RED,
                         ),
                         SizedBox(
                           width:
@@ -103,7 +104,7 @@ class DrawerTotal extends StatelessWidget {
                         Text(
                           'Credits',
                           style: TextStyle(
-                            color: Color(0xFF9FA31C),
+                            color: ConstantsColors.LIGHT_DARK_GREEN,
                           ),
                         ),
                       ],
@@ -119,7 +120,7 @@ class DrawerTotal extends StatelessWidget {
                 children: <Widget>[
                   Icon(
                     Icons.exit_to_app,
-                    color: Color(0xFFcd4312),
+                    color: ConstantsColors.RED,
                   ),
                   SizedBox(
                     width: ResponsiveScreen().widthMediaQuery(context, 10),
@@ -127,7 +128,7 @@ class DrawerTotal extends StatelessWidget {
                   Text(
                     'Sign Out',
                     style: TextStyle(
-                      color: Color(0xFF9FA31C),
+                      color: ConstantsColors.LIGHT_DARK_GREEN,
                     ),
                   ),
                 ],
@@ -137,12 +138,9 @@ class DrawerTotal extends StatelessWidget {
                 await FirebaseAuth.instance.signOut().then(
                       (value) async => {
                         await _fbLogin.logOut().then(
-                              (value) =>
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                        builder: (context) => SignInFirebase(),
-                                      ),
-                                      (Route<dynamic> route) => false),
+                              (value) => ShowerPages
+                                  .pushRemoveReplacementPageSignInFirebase(
+                                      context),
                             ),
                       },
                     );
@@ -154,13 +152,14 @@ class DrawerTotal extends StatelessWidget {
     );
   }
 
-  Widget _listTile(BuildContext context, cls, IconData iconData, String text) {
+  Widget _listTile(
+      BuildContext context, cls, IconData iconData, String text) {
     return ListTile(
       title: Row(
         children: <Widget>[
           Icon(
             iconData,
-            color: Color(0xFFcd4312),
+            color: ConstantsColors.RED,
           ),
           SizedBox(
             width: ResponsiveScreen().widthMediaQuery(context, 10),
@@ -168,19 +167,14 @@ class DrawerTotal extends StatelessWidget {
           Text(
             text,
             style: TextStyle(
-              color: Color(0xFF9FA31C),
+              color: ConstantsColors.LIGHT_DARK_GREEN,
             ),
           ),
         ],
       ),
       onTap: () {
         Navigator.of(context).pop();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => cls,
-          ),
-        );
+        ShowerPages.pushDrawerTotal(context, cls);
       },
     );
   }

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:locationprojectflutter/core/constants/constants.dart';
+import 'package:locationprojectflutter/core/constants/constants_urls_keys.dart';
 import 'package:locationprojectflutter/data/models/model_googleapis/error.dart';
 import 'package:locationprojectflutter/data/models/model_googleapis/results.dart';
 //import 'package:dio/dio.dart';
@@ -13,17 +13,17 @@ class LocationRemoteDataSource {
 
   LocationRemoteDataSource.internal();
 
+  final String _BASE_URL = ConstantsUrlsKeys.BASE_URL_GOOGLE_MAPS;
+  final String _API_KEY = ConstantsUrlsKeys.API_KEY_GOOGLE_MAPS;
   Error _error;
-  List<Results> _places = List();
-  String _baseUrl = Constants.BASE_URL;
-  String _API_KEY = Constants.API_KEY;
+  List<Results> _places = [];
 
-//  Dio _dio = new Dio();
+//  Dio _dio = Dio();
 
   Future responseJsonLocation(double latitude, double longitude, String open,
       String type, int valueRadiusText, String text) async {
     String url =
-        '$_baseUrl?key=$_API_KEY&location=$latitude,$longitude$open&types=$type&radius=$valueRadiusText&keyword=$text';
+        '$_BASE_URL?key=$_API_KEY&location=$latitude,$longitude$open&types=$type&radius=$valueRadiusText&keyword=$text';
     print(url);
     final response = await http.get(url);
 //    final response = await _dio.get(url); // dio
@@ -39,7 +39,7 @@ class LocationRemoteDataSource {
 
   void _handleResponse(data) {
     if (data['status'] == "REQUEST_DENIED") {
-      _places = List();
+      _places = [];
       _error = Error.fromJson(data);
       print(_error.errorMessage);
     } else if (data['status'] == "OK") {
@@ -51,7 +51,7 @@ class LocationRemoteDataSource {
             .toList(),
       );
     } else {
-      _places = List();
+      _places = [];
       print(data);
     }
   }

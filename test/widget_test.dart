@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
-import 'package:locationprojectflutter/presentation/pages/sign_in_firebase.dart';
+import 'package:locationprojectflutter/presentation/pages/page_sign_in_firebase.dart';
 import 'package:mockito/mockito.dart';
 
 class MockRemoteReverseServiceAPI extends Mock implements LocationRepoImpl {}
@@ -33,7 +33,7 @@ void main() {
         (WidgetTester tester) async {
           MaterialApp app = MaterialApp(
             home: Scaffold(
-              body: SignInFirebase(),
+              body: PageSignInFirebase(),
             ),
           );
           await tester.pumpWidget(app);

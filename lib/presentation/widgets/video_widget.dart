@@ -5,7 +5,7 @@ import 'package:chewie/chewie.dart';
 class VideoWidget extends StatefulWidget {
   final String url;
 
-  const VideoWidget({Key key, @required this.url}) : super(key: key);
+  const VideoWidget({Key key, this.url}) : super(key: key);
 
   @override
   _VideoWidgetState createState() => _VideoWidgetState();
@@ -65,7 +65,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                     return Center(
                       child: Text(
                         errorMessage,
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                       ),
                     );
                   },
@@ -79,7 +79,7 @@ class _VideoWidgetState extends State<VideoWidget> {
   }
 
   Widget _loading() {
-    return Center(
+    return const Center(
       child: CircularProgressIndicator(),
     );
   }

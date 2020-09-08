@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:locationprojectflutter/core/services/location_service.dart';
-import 'package:locationprojectflutter/presentation/pages/sign_in_firebase.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/video_call_provider.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/favorites_places_provider.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/chat_screen_provider.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/custom_map_list_provider.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/home_chat_provider.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/list_map_provider.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/live_chat_provider.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/live_favorite_places_provider.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/map_list_provider.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/phone_sms_auth_provider.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/register_email_firebase_provider.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/list_settings_provider.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/chat_settings_provider.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/sign_in_firebase_provider.dart';
+import 'package:locationprojectflutter/presentation/pages/page_sign_in_firebase.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/provider_video_call.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/provider_favorites_places.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/provider_chat_screen.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/provider_custom_map_list.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/provider_home_chat.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/provider_list_map.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/provider_live_chat.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/provider_live_favorite_places.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/provider_map_list.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/provider_phone_sms_auth.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/provider_register_email_firebase.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/provider_list_settings.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/provider_chat_settings.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/provider_sign_in_firebase.dart';
 import 'package:provider/provider.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 //import 'package:locationprojectflutter/core/services/service_locator.dart';
@@ -39,51 +39,51 @@ class MyApp extends StatelessWidget {
         StreamProvider<UserLocation>(
           create: (context) => LocationService().locationStream,
         ),
-        ChangeNotifierProvider<FavoritesPlacesProvider>(
-          create: (context) => FavoritesPlacesProvider(),
+        ChangeNotifierProvider<ProviderFavoritesPlaces>(
+          create: (context) => ProviderFavoritesPlaces(),
         ),
-        ChangeNotifierProvider<ChatScreenProvider>(
-          create: (context) => ChatScreenProvider(),
+        ChangeNotifierProvider<ProviderChatScreen>(
+          create: (context) => ProviderChatScreen(),
         ),
-        ChangeNotifierProvider<CustomMapListProvider>(
-          create: (context) => CustomMapListProvider(),
+        ChangeNotifierProvider<ProviderCustomMapList>(
+          create: (context) => ProviderCustomMapList(),
         ),
-        ChangeNotifierProvider<HomeChatProvider>(
-          create: (context) => HomeChatProvider(),
+        ChangeNotifierProvider<ProviderHomeChat>(
+          create: (context) => ProviderHomeChat(),
         ),
-        ChangeNotifierProvider<ListMapProvider>(
-          create: (context) => ListMapProvider(),
+        ChangeNotifierProvider<ProviderListMap>(
+          create: (context) => ProviderListMap(),
         ),
-        ChangeNotifierProvider<LiveChatProvider>(
-          create: (context) => LiveChatProvider(),
+        ChangeNotifierProvider<ProviderLiveChat>(
+          create: (context) => ProviderLiveChat(),
         ),
-        ChangeNotifierProvider<LiveFavoritePlacesProvider>(
-          create: (context) => LiveFavoritePlacesProvider(),
+        ChangeNotifierProvider<ProviderLiveFavoritePlaces>(
+          create: (context) => ProviderLiveFavoritePlaces(),
         ),
-        ChangeNotifierProvider<MapListProvider>(
-          create: (context) => MapListProvider(),
+        ChangeNotifierProvider<ProviderMapList>(
+          create: (context) => ProviderMapList(),
         ),
-        ChangeNotifierProvider<PhoneSMSAuthProvider>(
-          create: (context) => PhoneSMSAuthProvider(),
+        ChangeNotifierProvider<ProviderPhoneSMSAuth>(
+          create: (context) => ProviderPhoneSMSAuth(),
         ),
-        ChangeNotifierProvider<RegisterEmailFirebaseProvider>(
-          create: (context) => RegisterEmailFirebaseProvider(),
+        ChangeNotifierProvider<ProviderRegisterEmailFirebase>(
+          create: (context) => ProviderRegisterEmailFirebase(),
         ),
-        ChangeNotifierProvider<ListSettingsProvider>(
-          create: (context) => ListSettingsProvider(),
+        ChangeNotifierProvider<ProviderListSettings>(
+          create: (context) => ProviderListSettings(),
         ),
-        ChangeNotifierProvider<SettingsChatProvider>(
-          create: (context) => SettingsChatProvider(),
+        ChangeNotifierProvider<ProviderSettingsChat>(
+          create: (context) => ProviderSettingsChat(),
         ),
-        ChangeNotifierProvider<SignInFirebaseProvider>(
-          create: (context) => SignInFirebaseProvider(),
+        ChangeNotifierProvider<ProviderSignInFirebase>(
+          create: (context) => ProviderSignInFirebase(),
         ),
-        ChangeNotifierProvider<VideoCallProvider>(
-          create: (context) => VideoCallProvider(),
+        ChangeNotifierProvider<ProviderVideoCall>(
+          create: (context) => ProviderVideoCall(),
         ),
       ],
       child: MaterialApp(
-        home: SignInFirebase(),
+        home: PageSignInFirebase(),
       ),
     );
   }

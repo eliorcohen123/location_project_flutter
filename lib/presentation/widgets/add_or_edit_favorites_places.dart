@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:locationprojectflutter/core/constants/constants.dart';
+import 'package:locationprojectflutter/core/constants/constants_colors.dart';
+import 'package:locationprojectflutter/core/constants/constants_urls_keys.dart';
 import 'package:locationprojectflutter/data/data_resources/locals/sqflite_helper.dart';
 import 'package:locationprojectflutter/data/models/model_sqfl/results_sqfl.dart';
-import 'package:locationprojectflutter/presentation/pages/favorite_places.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
+import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
+import 'package:locationprojectflutter/presentation/utils/utils_app.dart';
 
 class AddOrEditFavoritesPlaces extends StatefulWidget {
   final double latList, lngList;
@@ -12,7 +14,7 @@ class AddOrEditFavoritesPlaces extends StatefulWidget {
   final bool edit;
   final int id;
 
-  AddOrEditFavoritesPlaces(
+  const AddOrEditFavoritesPlaces(
       {Key key,
       this.nameList,
       this.addressList,
@@ -34,7 +36,7 @@ class _AddOrEditFavoritesPlacesState extends State<AddOrEditFavoritesPlaces> {
   TextEditingController _textLat;
   TextEditingController _textLng;
   SQFLiteHelper _db = SQFLiteHelper();
-  String _API_KEY = Constants.API_KEY;
+  String _API_KEY = ConstantsUrlsKeys.API_KEY_GOOGLE_MAPS;
 
   @override
   void initState() {
@@ -63,21 +65,13 @@ class _AddOrEditFavoritesPlacesState extends State<AddOrEditFavoritesPlaces> {
       width: ResponsiveScreen().widthMediaQuery(context, 300),
       child: Column(
         children: <Widget>[
-          SizedBox(
-            height: ResponsiveScreen().heightMediaQuery(context, 10),
-          ),
+          UtilsApp.dividerHeight(context, 10),
           _title(),
-          SizedBox(
-            height: ResponsiveScreen().heightMediaQuery(context, 20),
-          ),
+          UtilsApp.dividerHeight(context, 20),
           _textFieldsData(),
-          SizedBox(
-            height: ResponsiveScreen().heightMediaQuery(context, 10),
-          ),
+          UtilsApp.dividerHeight(context, 10),
           _imagePlace(),
-          SizedBox(
-            height: ResponsiveScreen().heightMediaQuery(context, 20),
-          ),
+          UtilsApp.dividerHeight(context, 20),
           _buttonSave(),
         ],
       ),
@@ -87,7 +81,7 @@ class _AddOrEditFavoritesPlacesState extends State<AddOrEditFavoritesPlaces> {
   Widget _title() {
     return Text(
       widget.edit ? 'Edit Place' : 'Add Place',
-      style: TextStyle(
+      style: const TextStyle(
         color: Colors.white,
         fontSize: 25,
       ),
@@ -98,31 +92,21 @@ class _AddOrEditFavoritesPlacesState extends State<AddOrEditFavoritesPlaces> {
     return Column(
       children: [
         _innerTextField(_textName),
-        SizedBox(
-          height: ResponsiveScreen().heightMediaQuery(context, 10),
-        ),
-        Text(
+        UtilsApp.dividerHeight(context, 10),
+        const Text(
           'Address',
           style: TextStyle(color: Colors.white),
         ),
-        SizedBox(
-          height: ResponsiveScreen().heightMediaQuery(context, 2),
-        ),
+        UtilsApp.dividerHeight(context, 2),
         _innerTextField(_textAddress),
-        SizedBox(
-          height: ResponsiveScreen().heightMediaQuery(context, 10),
-        ),
-        Text(
+        UtilsApp.dividerHeight(context, 10),
+        const Text(
           'Coordinates',
           style: TextStyle(color: Colors.white),
         ),
-        SizedBox(
-          height: ResponsiveScreen().heightMediaQuery(context, 2),
-        ),
+        UtilsApp.dividerHeight(context, 2),
         _innerTextField(_textLat),
-        SizedBox(
-          height: ResponsiveScreen().heightMediaQuery(context, 2),
-        ),
+        UtilsApp.dividerHeight(context, 2),
         _innerTextField(_textLng),
       ],
     );
@@ -131,13 +115,11 @@ class _AddOrEditFavoritesPlacesState extends State<AddOrEditFavoritesPlaces> {
   Widget _imagePlace() {
     return Column(
       children: [
-        Text(
+        const Text(
           'Photo',
           style: TextStyle(color: Colors.white),
         ),
-        SizedBox(
-          height: ResponsiveScreen().heightMediaQuery(context, 2),
-        ),
+        UtilsApp.dividerHeight(context, 2),
         CachedNetworkImage(
           fit: BoxFit.fill,
           height: ResponsiveScreen().heightMediaQuery(context, 75),
@@ -179,21 +161,24 @@ class _AddOrEditFavoritesPlacesState extends State<AddOrEditFavoritesPlaces> {
               context,
             ),
       child: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: <Color>[
-              Color(0xFF5e7974),
-              Color(0xFF6494ED),
+              ConstantsColors.GRAY3,
+              ConstantsColors.BLUE,
             ],
           ),
           borderRadius: BorderRadius.all(
             Radius.circular(80.0),
           ),
         ),
-        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+        padding: EdgeInsets.symmetric(
+          vertical: ResponsiveScreen().heightMediaQuery(context, 10),
+          horizontal: ResponsiveScreen().widthMediaQuery(context, 20),
+        ),
         child: Text(
           widget.edit ? 'Edit Your Place' : 'Add Your Place',
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
       ),
     );
@@ -204,12 +189,7 @@ class _AddOrEditFavoritesPlacesState extends State<AddOrEditFavoritesPlaces> {
     var add = ResultsSqfl.sqfl(name, vicinity, lat, lng, photo);
     _db.addResult(add).then(
       (_) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => FavoritePlaces(),
-          ),
-        );
+        ShowerPages.pushPageFavoritePlaces(context);
       },
     );
   }
@@ -231,12 +211,7 @@ class _AddOrEditFavoritesPlacesState extends State<AddOrEditFavoritesPlaces> {
     )
         .then(
       (_) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => FavoritePlaces(),
-          ),
-        );
+        ShowerPages.pushPageFavoritePlaces(context);
       },
     );
   }
@@ -244,19 +219,19 @@ class _AddOrEditFavoritesPlacesState extends State<AddOrEditFavoritesPlaces> {
   Widget _innerTextField(TextEditingController textEditingController) {
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xff778899).withOpacity(0.9189918041229248),
+        color: ConstantsColors.GRAY4.withOpacity(1),
         border: Border.all(
-          color: Color(0xff778899),
+          color: ConstantsColors.GRAY4,
           width: 1,
         ),
         borderRadius: BorderRadius.circular(24),
       ),
       child: TextField(
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           contentPadding: EdgeInsets.all(10.0),
           border: InputBorder.none,
         ),
-        style: TextStyle(color: Colors.lightGreenAccent),
+        style: const TextStyle(color: Colors.lightGreenAccent),
         controller: textEditingController,
       ),
     );

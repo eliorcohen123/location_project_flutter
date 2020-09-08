@@ -13,7 +13,7 @@ class _PushMessagingState extends State<PushMessaging> {
   void initState() {
     super.initState();
 
-    _initNotificationPermissions;
+    _initNotificationPermissions();
   }
 
   @override
