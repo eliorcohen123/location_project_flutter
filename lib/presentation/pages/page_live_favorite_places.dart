@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'dart:async';
 import 'dart:ui';
 import 'package:auto_animated/auto_animated.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:locationprojectflutter/core/constants/constants_urls_keys.dart';
 import 'package:locationprojectflutter/data/models/model_live_favorites/results_live_favorites.dart';
@@ -225,10 +226,9 @@ class _PageLiveFavoritePlacesProvState
                 children: <Widget>[
                   _textList(_provider.placesGet[index].name, 17.0,
                       ConstantsColors.LIGHT_BLUE),
-                  _textList(_provider.placesGet[index].vicinity, 15.0,
-                      Colors.white),
                   _textList(
-                      _calculateDistance(_meter), 15.0, Colors.white),
+                      _provider.placesGet[index].vicinity, 15.0, Colors.white),
+                  _textList(_calculateDistance(_meter), 15.0, Colors.white),
                 ],
               ),
             ),

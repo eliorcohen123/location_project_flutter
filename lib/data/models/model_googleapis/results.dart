@@ -1,5 +1,5 @@
-import 'package:locationprojectflutter/data/models/model_googleapis/opening_hours.dart';
-import 'package:locationprojectflutter/data/models/model_googleapis/photos.dart';
+import 'opening_hours.dart';
+import 'photos.dart';
 import 'geometry.dart';
 
 class Results {

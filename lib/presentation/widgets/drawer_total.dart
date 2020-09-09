@@ -1,5 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:locationprojectflutter/core/constants/constants_colors.dart';
@@ -10,8 +11,8 @@ import 'package:locationprojectflutter/presentation/pages/page_live_chat.dart';
 import 'package:locationprojectflutter/presentation/pages/page_live_favorite_places.dart';
 import 'package:locationprojectflutter/presentation/pages/page_list_settings.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
-import 'dart:io' show Platform;
 import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
+import 'dart:io' show Platform;
 
 class DrawerTotal extends StatelessWidget {
   static final DrawerTotal _singleton = DrawerTotal.internal();

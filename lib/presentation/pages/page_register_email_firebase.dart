@@ -1,5 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_register_email_firebase.dart';
 import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';

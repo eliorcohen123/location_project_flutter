@@ -18,6 +18,7 @@ class ConstantsColors {
   static final Color DARK_BLUE = Color(0xFF203152);
   static final Color ORANGE = Color(0xFFF5A623);
   static final Color RED = Color(0xFFCD4312);
+  static final Color RED2 = Color(0x300000FF);
   static final Color LIGHT_DARK_GREEN = Color(0xFF9FA31C);
   static final Color YELLOW = Color(0xFFFFEA54);
 }

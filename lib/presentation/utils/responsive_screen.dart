@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class ResponsiveScreen {
   static final ResponsiveScreen _singleton = ResponsiveScreen._internal();
