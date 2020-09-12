@@ -36,7 +36,6 @@ class _PageRegisterEmailFirebaseProvState
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String _userEmail;
   ProviderRegisterEmailFirebase _provider;
 
   @override
@@ -250,11 +249,10 @@ class _PageRegisterEmailFirebaseProvState
             .setString('photoUrl', documents[0]['photoUrl']);
       }
 
-      _userEmail = user.email;
-      print(_userEmail);
-      _addUserEmail(_userEmail);
+      print(user.email);
+      _addUserEmail(user.email);
       _addIdEmail(user.uid);
-      ShowerPages.pushPageListMap(context);
+      ShowerPages.pushRemoveReplacementPageListMap(context);
     } else {
       _provider.isSuccess(false);
       _provider.isLoading(false);

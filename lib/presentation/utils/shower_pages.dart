@@ -144,6 +144,24 @@ class ShowerPages {
     }
   }
 
+  static void pushRemoveReplacementPageListMap(BuildContext context) {
+    if (kIsWeb) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => PageListMap()),
+          (Route<dynamic> route) => false);
+    } else {
+      if (Platform.isAndroid) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => PageListMap()),
+            (Route<dynamic> route) => false);
+      } else {
+        Navigator.of(context).pushAndRemoveUntil(
+            CupertinoPageRoute(builder: (context) => PageListMap()),
+            (Route<dynamic> route) => false);
+      }
+    }
+  }
+
   static void pushPageListSettings(BuildContext context) {
     if (kIsWeb) {
       Navigator.of(context)

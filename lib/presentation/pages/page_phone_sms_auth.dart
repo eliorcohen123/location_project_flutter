@@ -47,7 +47,6 @@ class _PagePhoneSMSAuthProvState extends State<PagePhoneSMSAuthProv> {
   final FocusNode _focus4 = FocusNode();
   final FocusNode _focus5 = FocusNode();
   final FocusNode _focus6 = FocusNode();
-  String _userEmail;
   ProviderPhoneSMSAuth _provider;
 
   @override
@@ -470,11 +469,10 @@ class _PagePhoneSMSAuthProvState extends State<PagePhoneSMSAuthProv> {
         await _provider.sharedGet.setString('aboutMe', documents[0]['aboutMe']);
       }
 
-      _userEmail = user.email;
-      print(_userEmail);
-      _addUserEmail(_userEmail);
+      print(user.email);
+      _addUserEmail(user.email);
       _addIdEmail(user.uid);
-      ShowerPages.pushPageListMap(context);
+      ShowerPages.pushRemoveReplacementPageListMap(context);
     } else {
       _provider.isSuccess(false);
       _provider.isLoading(false);

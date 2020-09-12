@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ProviderSignInFirebase extends ChangeNotifier {
   SharedPreferences _sharedPrefs;
-  bool _isSuccess, _isLoading = false, _isLoggedIn = false;
+  bool _isSuccess, _isLoading = false;
   String _textError = '';
 
   SharedPreferences get sharedGet => _sharedPrefs;
@@ -12,8 +12,6 @@ class ProviderSignInFirebase extends ChangeNotifier {
   bool get isSuccessGet => _isSuccess;
 
   bool get isLoadingGet => _isLoading;
-
-  bool get isLoggedInGet => _isLoggedIn;
 
   String get textErrorGet => _textError;
 
@@ -29,11 +27,6 @@ class ProviderSignInFirebase extends ChangeNotifier {
 
   void isLoading(bool isLoading) {
     _isLoading = isLoading;
-    notifyListeners();
-  }
-
-  void isLoggedIn(bool isLoggedIn) {
-    _isLoggedIn = isLoggedIn;
     notifyListeners();
   }
 

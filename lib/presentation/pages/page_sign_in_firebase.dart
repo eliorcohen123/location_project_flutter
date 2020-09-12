@@ -14,7 +14,6 @@ import 'package:locationprojectflutter/presentation/widgets/btn_firebase.dart';
 import 'package:locationprojectflutter/presentation/widgets/tff_firebase.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'page_list_map.dart';
 
 class PageSignInFirebase extends StatelessWidget {
   @override
@@ -50,7 +49,6 @@ class _PageSignInFirebaseProvState extends State<PageSignInFirebaseProv> {
       _provider = Provider.of<ProviderSignInFirebase>(context, listen: false);
       _provider.isSuccess(null);
       _provider.isLoading(false);
-      _provider.isLoggedIn(false);
       _provider.textError('');
     });
 
@@ -68,37 +66,35 @@ class _PageSignInFirebaseProvState extends State<PageSignInFirebaseProv> {
 
   @override
   Widget build(BuildContext context) {
-    return _provider.isLoggedInGet
-        ? PageListMap()
-        : Scaffold(
-            backgroundColor: Colors.blueGrey,
-            body: Form(
-              key: _formKey,
-              child: Container(
-                child: Center(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        _title(),
-                        UtilsApp.dividerHeight(context, 70),
-                        _textFieldsData(),
-                        UtilsApp.dividerHeight(context, 20),
-                        _buttonLogin(),
-                        UtilsApp.dividerHeight(context, 5),
-                        _showErrors(),
-                        _buttonToRegister(),
-                        UtilsApp.dividerHeight(context, 20),
-                        _loginFacebookGmailSms(),
-                        UtilsApp.dividerHeight(context, 20),
-                        _loading(),
-                      ],
-                    ),
-                  ),
-                ),
+    return Scaffold(
+      backgroundColor: Colors.blueGrey,
+      body: Form(
+        key: _formKey,
+        child: Container(
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  _title(),
+                  UtilsApp.dividerHeight(context, 70),
+                  _textFieldsData(),
+                  UtilsApp.dividerHeight(context, 20),
+                  _buttonLogin(),
+                  UtilsApp.dividerHeight(context, 5),
+                  _showErrors(),
+                  _buttonToRegister(),
+                  UtilsApp.dividerHeight(context, 20),
+                  _loginFacebookGmailSms(),
+                  UtilsApp.dividerHeight(context, 20),
+                  _loading(),
+                ],
               ),
             ),
-          );
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _title() {
@@ -265,9 +261,11 @@ class _PageSignInFirebaseProvState extends State<PageSignInFirebaseProv> {
   }
 
   void _checkUserLogin() {
-    _auth
-        .currentUser()
-        .then((user) => user != null ? _provider.isLoggedIn(true) : null);
+    _auth.currentUser().then(
+          (user) => user != null
+              ? ShowerPages.pushRemoveReplacementPageListMap(context)
+              : null,
+        );
   }
 
   void _loginEmailFirebase() async {
@@ -380,7 +378,7 @@ class _PageSignInFirebaseProvState extends State<PageSignInFirebaseProv> {
       print(user.email);
       _addUserEmail(user.email);
       _addIdEmail(user.uid);
-      ShowerPages.pushPageListMap(context);
+      ShowerPages.pushRemoveReplacementPageListMap(context);
     } else {
       _provider.isSuccess(false);
       _provider.isLoading(false);
