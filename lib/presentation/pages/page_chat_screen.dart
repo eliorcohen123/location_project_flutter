@@ -1049,10 +1049,14 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
       if (await rec.FlutterAudioRecorder.hasPermissions) {
         String customPath = '/flutter_audio_recorder_';
         Directory appDocDirectory;
-        if (Platform.isIOS) {
-          appDocDirectory = await getApplicationDocumentsDirectory();
+        if (kIsWeb) {
+          print('Web');
         } else {
-          appDocDirectory = await getExternalStorageDirectory();
+          if (Platform.isIOS) {
+            appDocDirectory = await getApplicationDocumentsDirectory();
+          } else {
+            appDocDirectory = await getExternalStorageDirectory();
+          }
         }
 
         customPath = appDocDirectory.path +

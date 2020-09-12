@@ -1,4 +1,12 @@
 class Validations {
+  static final Validations _singleton = Validations._internal();
+
+  factory Validations() {
+    return _singleton;
+  }
+
+  Validations._internal();
+
   bool validateEmail(String value) {
     RegExp regex = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");

@@ -65,7 +65,6 @@ class _PageRegisterEmailFirebaseProvState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
       body: Form(
         key: _formKey,
         child: Container(

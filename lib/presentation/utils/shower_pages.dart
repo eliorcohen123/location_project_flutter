@@ -21,6 +21,14 @@ import 'package:locationprojectflutter/presentation/pages/page_video_call.dart';
 import 'package:locationprojectflutter/presentation/pages/page_phone_sms_auth.dart';
 
 class ShowerPages {
+  static final ShowerPages _singleton = ShowerPages._internal();
+
+  factory ShowerPages() {
+    return _singleton;
+  }
+
+  ShowerPages._internal();
+
   static void pushPageChatScreen(
       BuildContext context, String peerId, String peerAvatar) {
     if (kIsWeb) {

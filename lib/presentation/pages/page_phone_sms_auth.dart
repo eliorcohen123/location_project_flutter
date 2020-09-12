@@ -89,7 +89,6 @@ class _PagePhoneSMSAuthProvState extends State<PagePhoneSMSAuthProv> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
       body: Container(
         color: Colors.blueGrey,
         child: Center(

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,7 +13,8 @@ import 'package:locationprojectflutter/presentation/pages/page_live_favorite_pla
 import 'package:locationprojectflutter/presentation/pages/page_list_settings.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
-import 'dart:io' show Platform;
+import 'package:locationprojectflutter/presentation/utils/utils_app.dart';
+import 'dart:io';
 
 class DrawerTotal extends StatelessWidget {
   static final DrawerTotal _singleton = DrawerTotal.internal();
@@ -51,9 +53,7 @@ class DrawerTotal extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              height: ResponsiveScreen().heightMediaQuery(context, 50),
-            ),
+            UtilsApp.dividerHeight(context, 10),
             _listTile(
               context,
               PageLiveChat(),
@@ -90,32 +90,31 @@ class DrawerTotal extends StatelessWidget {
               Icons.settings,
               'List Settings',
             ),
-            Platform.isAndroid
-                ? ListTile(
-                    title: Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.info,
-                          color: ConstantsColors.RED,
+            kIsWeb
+                ? Container()
+                : Platform.isAndroid
+                    ? ListTile(
+                        title: Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.info,
+                              color: ConstantsColors.RED,
+                            ),
+                            UtilsApp.dividerWidth(context, 10),
+                            Text(
+                              'Credits',
+                              style: TextStyle(
+                                color: ConstantsColors.LIGHT_DARK_GREEN,
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          width:
-                              ResponsiveScreen().widthMediaQuery(context, 10),
-                        ),
-                        Text(
-                          'Credits',
-                          style: TextStyle(
-                            color: ConstantsColors.LIGHT_DARK_GREEN,
-                          ),
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      _showNativeView();
-                    },
-                  )
-                : Container(),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          _showNativeView();
+                        },
+                      )
+                    : Container(),
             ListTile(
               title: Row(
                 children: <Widget>[
@@ -123,9 +122,7 @@ class DrawerTotal extends StatelessWidget {
                     Icons.exit_to_app,
                     color: ConstantsColors.RED,
                   ),
-                  SizedBox(
-                    width: ResponsiveScreen().widthMediaQuery(context, 10),
-                  ),
+                  UtilsApp.dividerWidth(context, 10),
                   Text(
                     'Sign Out',
                     style: TextStyle(
@@ -162,9 +159,7 @@ class DrawerTotal extends StatelessWidget {
             iconData,
             color: ConstantsColors.RED,
           ),
-          SizedBox(
-            width: ResponsiveScreen().widthMediaQuery(context, 10),
-          ),
+          UtilsApp.dividerWidth(context, 10),
           Text(
             text,
             style: TextStyle(

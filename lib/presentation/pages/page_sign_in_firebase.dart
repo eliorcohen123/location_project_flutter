@@ -40,7 +40,6 @@ class _PageSignInFirebaseProvState extends State<PageSignInFirebaseProv> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String _userEmail;
   ProviderSignInFirebase _provider;
 
   @override
@@ -72,7 +71,6 @@ class _PageSignInFirebaseProvState extends State<PageSignInFirebaseProv> {
     return _provider.isLoggedInGet
         ? PageListMap()
         : Scaffold(
-            resizeToAvoidBottomPadding: false,
             backgroundColor: Colors.blueGrey,
             body: Form(
               key: _formKey,
@@ -379,9 +377,8 @@ class _PageSignInFirebaseProvState extends State<PageSignInFirebaseProv> {
             .setString('photoUrl', documents[0]['photoUrl']);
       }
 
-      _userEmail = user.email;
-      print(_userEmail);
-      _addUserEmail(_userEmail);
+      print(user.email);
+      _addUserEmail(user.email);
       _addIdEmail(user.uid);
       ShowerPages.pushPageListMap(context);
     } else {
