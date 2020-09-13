@@ -32,7 +32,7 @@ class _PageLiveChatProvState extends State<PageLiveChatProv> {
       .limit(50)
       .snapshots();
   final TextEditingController _messageController = TextEditingController();
-  final _databaseReference = Firestore.instance;
+  final Firestore _firestore = Firestore.instance;
   StreamSubscription<QuerySnapshot> _placeSub;
   String _valueUserEmail;
   ProviderLiveChat _provider;
@@ -187,7 +187,7 @@ class _PageLiveChatProvState extends State<PageLiveChatProv> {
     if (_messageController.text.length > 0) {
       DateTime now = DateTime.now();
 
-      await _databaseReference.collection("liveMessages").add(
+      await _firestore.collection("liveMessages").add(
         {
           'text': _messageController.text,
           'from': _valueUserEmail,
