@@ -3,4 +3,5 @@
     <string name="app_name">Lovely Favorite Places</string>
     <string name="facebook_app_id">API_KEY</string>
     <string name="fb_login_protocol_scheme">API_KEY</string>
+    <string name="api_key_map">API_KEY</string>
 </resources>
