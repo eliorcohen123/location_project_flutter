@@ -154,24 +154,6 @@ class _PageSignInFirebaseProvState extends State<PageSignInFirebaseProv> {
     );
   }
 
-  void _checkClickBtnLogin() {
-    if (_formKey.currentState.validate()) {
-      if (Validations().validateEmail(_emailController.text) &&
-          Validations().validatePassword(_passwordController.text)) {
-        _provider.isLoading(true);
-        _provider.textError('');
-
-        _loginEmailFirebase();
-      } else if (!Validations().validateEmail(_emailController.text)) {
-        _provider.isSuccess(false);
-        _provider.textError('Invalid Email');
-      } else if (!Validations().validatePassword(_passwordController.text)) {
-        _provider.isSuccess(false);
-        _provider.textError('Password must be at least 8 characters');
-      }
-    }
-  }
-
   Widget _showErrors() {
     return Container(
       alignment: Alignment.center,
@@ -258,6 +240,24 @@ class _PageSignInFirebaseProvState extends State<PageSignInFirebaseProv> {
     return _provider.isLoadingGet == true
         ? const CircularProgressIndicator()
         : Container();
+  }
+
+  void _checkClickBtnLogin() {
+    if (_formKey.currentState.validate()) {
+      if (Validations().validateEmail(_emailController.text) &&
+          Validations().validatePassword(_passwordController.text)) {
+        _provider.isLoading(true);
+        _provider.textError('');
+
+        _loginEmailFirebase();
+      } else if (!Validations().validateEmail(_emailController.text)) {
+        _provider.isSuccess(false);
+        _provider.textError('Invalid Email');
+      } else if (!Validations().validatePassword(_passwordController.text)) {
+        _provider.isSuccess(false);
+        _provider.textError('Password must be at least 8 characters');
+      }
+    }
   }
 
   void _checkUserLogin() {

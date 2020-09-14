@@ -186,6 +186,27 @@ class _WidgetAddEditFavoritePlacesState
     );
   }
 
+  Widget _innerTextField(TextEditingController textEditingController) {
+    return Container(
+      decoration: BoxDecoration(
+        color: ConstantsColors.GRAY4.withOpacity(1),
+        border: Border.all(
+          color: ConstantsColors.GRAY4,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: TextField(
+        decoration: const InputDecoration(
+          contentPadding: EdgeInsets.all(10.0),
+          border: InputBorder.none,
+        ),
+        style: const TextStyle(color: Colors.lightGreenAccent),
+        controller: textEditingController,
+      ),
+    );
+  }
+
   void addItem(String name, String vicinity, double lat, double lng,
       String photo, BuildContext context) {
     var add = ResultsSqfl.sqfl(name, vicinity, lat, lng, photo);
@@ -215,27 +236,6 @@ class _WidgetAddEditFavoritePlacesState
       (_) {
         ShowerPages.pushPageFavoritePlaces(context);
       },
-    );
-  }
-
-  Widget _innerTextField(TextEditingController textEditingController) {
-    return Container(
-      decoration: BoxDecoration(
-        color: ConstantsColors.GRAY4.withOpacity(1),
-        border: Border.all(
-          color: ConstantsColors.GRAY4,
-          width: 1,
-        ),
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: TextField(
-        decoration: const InputDecoration(
-          contentPadding: EdgeInsets.all(10.0),
-          border: InputBorder.none,
-        ),
-        style: const TextStyle(color: Colors.lightGreenAccent),
-        controller: textEditingController,
-      ),
     );
   }
 }
