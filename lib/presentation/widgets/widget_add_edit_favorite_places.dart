@@ -31,13 +31,14 @@ class WidgetAddEditFavoritePlaces extends StatefulWidget {
       _WidgetAddEditFavoritePlacesState();
 }
 
-class _WidgetAddEditFavoritePlacesState extends State<WidgetAddEditFavoritePlaces> {
+class _WidgetAddEditFavoritePlacesState
+    extends State<WidgetAddEditFavoritePlaces> {
+  final SQFLiteHelper _db = SQFLiteHelper();
+  final String _API_KEY = ConstantsUrlsKeys.API_KEY_GOOGLE_MAPS;
   TextEditingController _textName;
   TextEditingController _textAddress;
   TextEditingController _textLat;
   TextEditingController _textLng;
-  SQFLiteHelper _db = SQFLiteHelper();
-  String _API_KEY = ConstantsUrlsKeys.API_KEY_GOOGLE_MAPS;
 
   @override
   void initState() {
