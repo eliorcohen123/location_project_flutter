@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 
-class BtnFirebase extends StatelessWidget {
+class WidgetBtnFirebase extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
 
-  const BtnFirebase({
+  const WidgetBtnFirebase({
     Key key,
     this.text,
     this.onTap,

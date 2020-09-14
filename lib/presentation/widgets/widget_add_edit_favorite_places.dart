@@ -9,13 +9,13 @@ import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart
 import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
 import 'package:locationprojectflutter/presentation/utils/utils_app.dart';
 
-class AddOrEditFavoritesPlaces extends StatefulWidget {
+class WidgetAddEditFavoritePlaces extends StatefulWidget {
   final double latList, lngList;
   final String nameList, addressList, photoList;
   final bool edit;
   final int id;
 
-  const AddOrEditFavoritesPlaces(
+  const WidgetAddEditFavoritePlaces(
       {Key key,
       this.nameList,
       this.addressList,
@@ -27,11 +27,11 @@ class AddOrEditFavoritesPlaces extends StatefulWidget {
       : super(key: key);
 
   @override
-  _AddOrEditFavoritesPlacesState createState() =>
-      _AddOrEditFavoritesPlacesState();
+  _WidgetAddEditFavoritePlacesState createState() =>
+      _WidgetAddEditFavoritePlacesState();
 }
 
-class _AddOrEditFavoritesPlacesState extends State<AddOrEditFavoritesPlaces> {
+class _WidgetAddEditFavoritePlacesState extends State<WidgetAddEditFavoritePlaces> {
   TextEditingController _textName;
   TextEditingController _textAddress;
   TextEditingController _textLat;

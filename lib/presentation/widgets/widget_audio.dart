@@ -7,16 +7,16 @@ typedef void OnError(Exception exception);
 
 enum PlayerState { stopped, playing, paused }
 
-class AudioWidget extends StatefulWidget {
+class WidgetAudio extends StatefulWidget {
   final String url;
 
-  const AudioWidget({this.url});
+  const WidgetAudio({this.url});
 
   @override
-  _AudioWidgetState createState() => _AudioWidgetState();
+  _WidgetAudioState createState() => _WidgetAudioState();
 }
 
-class _AudioWidgetState extends State<AudioWidget> {
+class _WidgetAudioState extends State<WidgetAudio> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   PlayerState _playerState = PlayerState.stopped;
   StreamSubscription _audioPlayerStateSubscription;

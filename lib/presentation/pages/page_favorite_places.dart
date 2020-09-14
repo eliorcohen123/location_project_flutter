@@ -8,7 +8,7 @@ import 'package:locationprojectflutter/core/constants/constants_colors.dart';
 import 'package:locationprojectflutter/core/constants/constants_urls_keys.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
-import 'package:locationprojectflutter/presentation/widgets/add_or_edit_favorites_places.dart';
+import 'package:locationprojectflutter/presentation/widgets/widget_add_edit_favorite_places.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_favorites_places.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:latlong/latlong.dart' as dis;
@@ -341,7 +341,7 @@ class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
               return Container(
                 child: ListView(
                   children: [
-                    AddOrEditFavoritesPlaces(
+                    WidgetAddEditFavoritePlaces(
                       id: _provider.resultsSqflGet[index].id,
                       nameList: _provider.resultsSqflGet[index].name,
                       addressList: _provider.resultsSqflGet[index].vicinity,

@@ -4,9 +4,9 @@ import 'dart:ui';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_custom_map_list.dart';
-import 'package:locationprojectflutter/presentation/widgets/app_bar_total.dart';
+import 'package:locationprojectflutter/presentation/widgets/widget_app_bar_total.dart';
 import 'package:provider/provider.dart';
-import 'package:locationprojectflutter/presentation/widgets/add_or_edit_favorites_places.dart';
+import 'package:locationprojectflutter/presentation/widgets/widget_add_edit_favorite_places.dart';
 
 class PageCustomMapList extends StatelessWidget {
   @override
@@ -46,7 +46,7 @@ class _PageCustomMapListProvState extends State<PageCustomMapListProv> {
     _userLocation = Provider.of<UserLocation>(context);
     _currentLocation = LatLng(_userLocation.latitude, _userLocation.longitude);
     return Scaffold(
-      appBar: AppBarTotal(),
+      appBar: WidgetAppBarTotal(),
       body: Stack(
         children: [
           _googleMap(),
@@ -124,7 +124,7 @@ class _PageCustomMapListProvState extends State<PageCustomMapListProv> {
               return Container(
                 child: ListView(
                   children: [
-                    AddOrEditFavoritesPlaces(
+                    WidgetAddEditFavoritePlaces(
                       latList: point.latitude,
                       lngList: point.longitude,
                       photoList: "",

@@ -13,10 +13,10 @@ import 'package:locationprojectflutter/presentation/state_management/provider/pr
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:latlong/latlong.dart' as dis;
 import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
-import 'package:locationprojectflutter/presentation/widgets/app_bar_total.dart';
+import 'package:locationprojectflutter/presentation/widgets/widget_app_bar_total.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
-import 'package:locationprojectflutter/presentation/widgets/add_or_edit_favorites_places.dart';
+import 'package:locationprojectflutter/presentation/widgets/widget_add_edit_favorite_places.dart';
 import 'package:locationprojectflutter/core/constants/constants_colors.dart';
 
 class PageLiveFavoritePlaces extends StatelessWidget {
@@ -69,7 +69,7 @@ class _PageLiveFavoritePlacesProvState
   Widget build(BuildContext context) {
     _userLocation = Provider.of<UserLocation>(context);
     return Scaffold(
-      appBar: AppBarTotal(),
+      appBar: WidgetAppBarTotal(),
       body: Stack(
         children: [
           _listViewData(),
@@ -343,7 +343,7 @@ class _PageLiveFavoritePlacesProvState
               return Container(
                 child: ListView(
                   children: [
-                    AddOrEditFavoritesPlaces(
+                    WidgetAddEditFavoritePlaces(
                       nameList: _provider.placesGet[index].name,
                       addressList: _provider.placesGet[index].vicinity,
                       latList: _provider.placesGet[index].lat,

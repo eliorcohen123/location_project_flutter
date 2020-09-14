@@ -9,7 +9,7 @@ import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart
 import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
 import 'package:locationprojectflutter/presentation/utils/utils_app.dart';
 import 'package:locationprojectflutter/presentation/utils/validations.dart';
-import 'package:locationprojectflutter/presentation/widgets/tff_firebase.dart';
+import 'package:locationprojectflutter/presentation/widgets/widget_tff_firebase.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -135,7 +135,7 @@ class _PagePhoneSMSAuthProvState extends State<PagePhoneSMSAuthProv> {
             padding: EdgeInsets.only(
               bottom: ResponsiveScreen().heightMediaQuery(context, 20),
             ),
-            child: TFFFirebase(
+            child: WidgetTFFFirebase(
               icon: const Icon(Icons.phone),
               hint: "Phone",
               controller: _phoneController,

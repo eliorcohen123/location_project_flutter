@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:locationprojectflutter/core/constants/constants_colors.dart';
 
-class AppBarTotal extends StatelessWidget implements PreferredSizeWidget {
-  static final AppBarTotal _singleton = AppBarTotal.internal();
+class WidgetAppBarTotal extends StatelessWidget implements PreferredSizeWidget {
+  static final WidgetAppBarTotal _singleton = WidgetAppBarTotal.internal();
 
-  factory AppBarTotal() => _singleton;
+  factory WidgetAppBarTotal() => _singleton;
 
-  AppBarTotal.internal();
+  WidgetAppBarTotal.internal();
 
   @override
   final Size preferredSize = Size.fromHeight(kToolbarHeight);

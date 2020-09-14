@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_chat_settings.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
-import 'package:locationprojectflutter/presentation/widgets/app_bar_total.dart';
+import 'package:locationprojectflutter/presentation/widgets/widget_app_bar_total.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:locationprojectflutter/core/constants/constants_colors.dart';
@@ -51,7 +51,7 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarTotal(),
+      appBar: WidgetAppBarTotal(),
       body: Stack(
         children: <Widget>[
           _mainBody(),

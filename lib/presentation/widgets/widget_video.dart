@@ -3,16 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 
-class VideoWidget extends StatefulWidget {
+class WidgetVideo extends StatefulWidget {
   final String url;
 
-  const VideoWidget({Key key, this.url}) : super(key: key);
+  const WidgetVideo({Key key, this.url}) : super(key: key);
 
   @override
-  _VideoWidgetState createState() => _VideoWidgetState();
+  _WidgetVideoState createState() => _WidgetVideoState();
 }
 
-class _VideoWidgetState extends State<VideoWidget> {
+class _WidgetVideoState extends State<WidgetVideo> {
   VideoPlayerController _videoPlayerController;
   Future<void> _initializeVideoPlayerFuture;
 

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 
-class TFFFirebase extends StatelessWidget {
+class WidgetTFFFirebase extends StatelessWidget {
   final Icon icon;
   final String hint;
   final TextEditingController controller;
   final bool obSecure;
   final TextInputType textInputType;
 
-  const TFFFirebase(
+  const WidgetTFFFirebase(
       {Key key,
       this.icon,
       this.hint,

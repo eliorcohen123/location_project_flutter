@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:locationprojectflutter/core/constants/constants_urls_keys.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_video_call.dart';
-import 'package:locationprojectflutter/presentation/widgets/app_bar_total.dart';
+import 'package:locationprojectflutter/presentation/widgets/widget_app_bar_total.dart';
 import 'package:provider/provider.dart';
 
 class PageVideoCall extends StatelessWidget {
@@ -72,7 +72,7 @@ class _PageVideoCallProvState extends State<PageVideoCallProv> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBarTotal(),
+      appBar: WidgetAppBarTotal(),
       body: Stack(
         children: <Widget>[
           _viewRows(),

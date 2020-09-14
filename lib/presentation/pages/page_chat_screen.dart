@@ -18,8 +18,8 @@ import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart
 import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
 import 'package:locationprojectflutter/presentation/utils/utils_app.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:locationprojectflutter/presentation/widgets/audio_widget.dart';
-import 'package:locationprojectflutter/presentation/widgets/video_widget.dart';
+import 'package:locationprojectflutter/presentation/widgets/widget_audio.dart';
+import 'package:locationprojectflutter/presentation/widgets/widget_video.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -409,7 +409,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                         )
                       : document['type'] == 3
                           ? Container(
-                              child: VideoWidget(
+                              child: WidgetVideo(
                                 url: document['content'],
                               ),
                               margin: EdgeInsets.only(
@@ -428,7 +428,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                                       .widthMediaQuery(context, 300),
                                   height: ResponsiveScreen()
                                       .heightMediaQuery(context, 120),
-                                  child: AudioWidget(
+                                  child: WidgetAudio(
                                     url: document['content'],
                                   ),
                                 )
@@ -623,7 +623,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                                     key: PageStorageKey(
                                       "keydata$index",
                                     ),
-                                    child: VideoWidget(
+                                    child: WidgetVideo(
                                       url: document['content'],
                                     ),
                                     decoration: BoxDecoration(
@@ -637,7 +637,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                                             .widthMediaQuery(context, 300),
                                         height: ResponsiveScreen()
                                             .heightMediaQuery(context, 105),
-                                        child: AudioWidget(
+                                        child: WidgetAudio(
                                           url: document['content'],
                                         ),
                                         decoration: BoxDecoration(

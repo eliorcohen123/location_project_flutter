@@ -16,12 +16,12 @@ import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
 import 'package:locationprojectflutter/presentation/utils/utils_app.dart';
 import 'dart:io';
 
-class DrawerTotal extends StatelessWidget {
-  static final DrawerTotal _singleton = DrawerTotal.internal();
+class WidgetDrawerTotal extends StatelessWidget {
+  static final WidgetDrawerTotal _singleton = WidgetDrawerTotal.internal();
 
-  factory DrawerTotal() => _singleton;
+  factory WidgetDrawerTotal() => _singleton;
 
-  DrawerTotal.internal();
+  WidgetDrawerTotal.internal();
 
   static const _platform =
       const MethodChannel("com.eliorcohen.locationprojectflutter.channel");

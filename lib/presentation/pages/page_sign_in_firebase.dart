@@ -10,8 +10,8 @@ import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
 import 'package:locationprojectflutter/presentation/utils/utils_app.dart';
 import 'package:locationprojectflutter/presentation/utils/validations.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
-import 'package:locationprojectflutter/presentation/widgets/btn_firebase.dart';
-import 'package:locationprojectflutter/presentation/widgets/tff_firebase.dart';
+import 'package:locationprojectflutter/presentation/widgets/widget_btn_firebase.dart';
+import 'package:locationprojectflutter/presentation/widgets/widget_tff_firebase.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -115,7 +115,7 @@ class _PageSignInFirebaseProvState extends State<PageSignInFirebaseProv> {
           padding: EdgeInsets.only(
             bottom: ResponsiveScreen().heightMediaQuery(context, 20),
           ),
-          child: TFFFirebase(
+          child: WidgetTFFFirebase(
             key: const Key('emailLogin'),
             icon: const Icon(Icons.email),
             hint: "Email",
@@ -128,7 +128,7 @@ class _PageSignInFirebaseProvState extends State<PageSignInFirebaseProv> {
           padding: EdgeInsets.only(
             bottom: ResponsiveScreen().heightMediaQuery(context, 20),
           ),
-          child: TFFFirebase(
+          child: WidgetTFFFirebase(
             key: const Key('passwordLogin'),
             icon: const Icon(Icons.lock),
             hint: "Password",
@@ -147,7 +147,7 @@ class _PageSignInFirebaseProvState extends State<PageSignInFirebaseProv> {
           left: ResponsiveScreen().widthMediaQuery(context, 20),
           right: ResponsiveScreen().widthMediaQuery(context, 20),
           bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: BtnFirebase(
+      child: WidgetBtnFirebase(
         text: 'Login',
         onTap: () => _checkClickBtnLogin(),
       ),

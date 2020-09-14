@@ -4,7 +4,7 @@ import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_list_settings.dart';
 import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
 import 'package:locationprojectflutter/presentation/utils/utils_app.dart';
-import 'package:locationprojectflutter/presentation/widgets/app_bar_total.dart';
+import 'package:locationprojectflutter/presentation/widgets/widget_app_bar_total.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,7 +40,7 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blueGrey,
-      appBar: AppBarTotal(),
+      appBar: WidgetAppBarTotal(),
       body: Container(
         child: Center(
           child: Column(

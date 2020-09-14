@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:locationprojectflutter/data/models/model_live_chat/results_live_chat.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_live_chat.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
-import 'package:locationprojectflutter/presentation/widgets/app_bar_total.dart';
+import 'package:locationprojectflutter/presentation/widgets/widget_app_bar_total.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -58,7 +58,7 @@ class _PageLiveChatProvState extends State<PageLiveChatProv> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blueGrey,
-      appBar: AppBarTotal(),
+      appBar: WidgetAppBarTotal(),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
