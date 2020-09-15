@@ -7,7 +7,7 @@ import 'package:simple_image_crop/simple_image_crop.dart';
 class PageSimpleImageCrop extends StatelessWidget {
   final File image;
 
-  const PageSimpleImageCrop({Key key, this.image}) : super(key: key);
+  const PageSimpleImageCrop({Key key, @required this.image}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

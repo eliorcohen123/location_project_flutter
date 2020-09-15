@@ -20,7 +20,11 @@ class PageMapList extends StatelessWidget {
   final String nameList, vicinityList;
 
   const PageMapList(
-      {Key key, this.latList, this.lngList, this.nameList, this.vicinityList})
+      {Key key,
+      @required this.latList,
+      @required this.lngList,
+      @required this.nameList,
+      @required this.vicinityList})
       : super(key: key);
 
   @override
@@ -137,7 +141,7 @@ class _PageMapListProvState extends State<PageMapListProv> {
       onPressed: () {
         _searchNearbyList();
       },
-      label: const Text('Show nearby places'),
+      label: const Text('Show Nearby Places'),
       icon: const Icon(Icons.place),
     );
   }
@@ -286,7 +290,7 @@ class _PageMapListProvState extends State<PageMapListProv> {
               ),
               UtilsApp.dividerHeight(context, 20),
               Text(
-                "Would you want to navigate $namePlace?",
+                "Would you want to navigate to $namePlace?",
                 textAlign: TextAlign.center,
               ),
               UtilsApp.dividerHeight(context, 20),

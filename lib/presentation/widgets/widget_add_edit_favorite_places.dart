@@ -17,13 +17,13 @@ class WidgetAddEditFavoritePlaces extends StatefulWidget {
 
   const WidgetAddEditFavoritePlaces(
       {Key key,
-      this.nameList,
-      this.addressList,
-      this.latList,
-      this.lngList,
-      this.photoList,
-      this.edit,
-      this.id})
+      @required this.nameList,
+      @required this.addressList,
+      @required this.latList,
+      @required this.lngList,
+      @required this.photoList,
+      @required this.edit,
+      @required this.id})
       : super(key: key);
 
   @override

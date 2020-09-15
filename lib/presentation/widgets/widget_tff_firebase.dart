@@ -11,11 +11,11 @@ class WidgetTFFFirebase extends StatelessWidget {
 
   const WidgetTFFFirebase(
       {Key key,
-      this.icon,
-      this.hint,
-      this.controller,
-      this.obSecure,
-      this.textInputType})
+      @required this.icon,
+      @required this.hint,
+      @required this.controller,
+      @required this.obSecure,
+      @required this.textInputType})
       : super(key: key);
 
   @override

@@ -10,11 +10,9 @@ class PageVideoCall extends StatelessWidget {
   final String channelName;
   final ClientRole role;
 
-  const PageVideoCall({
-    Key key,
-    this.channelName,
-    this.role,
-  }) : super(key: key);
+  const PageVideoCall(
+      {Key key, @required this.channelName, @required this.role})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

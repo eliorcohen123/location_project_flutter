@@ -10,7 +10,7 @@ enum PlayerState { stopped, playing, paused }
 class WidgetAudio extends StatefulWidget {
   final String url;
 
-  const WidgetAudio({this.url});
+  const WidgetAudio({Key key, @required this.url}) : super(key: key);
 
   @override
   _WidgetAudioState createState() => _WidgetAudioState();

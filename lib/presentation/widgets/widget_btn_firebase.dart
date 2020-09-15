@@ -6,11 +6,8 @@ class WidgetBtnFirebase extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
 
-  const WidgetBtnFirebase({
-    Key key,
-    this.text,
-    this.onTap,
-  }) : super(key: key);
+  const WidgetBtnFirebase({Key key, @required this.text, @required this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
