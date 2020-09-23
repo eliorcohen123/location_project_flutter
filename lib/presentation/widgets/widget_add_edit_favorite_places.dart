@@ -23,7 +23,7 @@ class WidgetAddEditFavoritePlaces extends StatefulWidget {
       @required this.lngList,
       @required this.photoList,
       @required this.edit,
-      @required this.id})
+      this.id})
       : super(key: key);
 
   @override
