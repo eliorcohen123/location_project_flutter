@@ -6,7 +6,6 @@ import 'package:auto_animated/auto_animated.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_instagram_stories/flutter_instagram_stories.dart';
-import 'package:flutter_instagram_stories/settings.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:latlong/latlong.dart' as dis;
 import 'package:locationprojectflutter/core/constants/constants_colors.dart';
