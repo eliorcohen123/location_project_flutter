@@ -80,8 +80,8 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
       child: Center(
         child: Stack(
           children: <Widget>[
-            (_provider.avatarImageFileGet == null)
-                ? (_provider.photoUrlGet != ''
+            _provider.avatarImageFileGet == null
+                ? _provider.photoUrlGet != ''
                     ? Material(
                         child: CachedNetworkImage(
                           placeholder: (context, url) => Container(
@@ -117,7 +117,7 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
                         Icons.account_circle,
                         size: 90.0,
                         color: ConstantsColors.DARK_GRAY,
-                      ))
+                      )
                 : Material(
                     child: Image.file(
                       _provider.avatarImageFileGet,
