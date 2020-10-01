@@ -81,7 +81,7 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
         child: Stack(
           children: <Widget>[
             _provider.avatarImageFileGet == null
-                ? _provider.photoUrlGet != ''
+                ? _provider.photoUrlGet != null
                     ? Material(
                         child: CachedNetworkImage(
                           placeholder: (context, url) => Container(
@@ -100,10 +100,8 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
                           imageUrl: _provider.photoUrlGet != null
                               ? _provider.photoUrlGet
                               : '',
-                          width:
-                              ResponsiveScreen().widthMediaQuery(context, 90),
-                          height:
-                              ResponsiveScreen().heightMediaQuery(context, 90),
+                          width: 90,
+                          height: 90,
                           fit: BoxFit.cover,
                         ),
                         borderRadius: BorderRadius.all(
