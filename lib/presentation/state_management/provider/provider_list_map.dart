@@ -10,6 +10,8 @@ class ProviderListMap extends ChangeNotifier {
       _isSearching = true,
       _isSearchingAfter = false;
   int _count;
+  String _finalTagsChips;
+  List<String> _tagsChips = [];
 
   SharedPreferences get sharedGet => _sharedPrefs;
 
@@ -24,6 +26,10 @@ class ProviderListMap extends ChangeNotifier {
   bool get isActiveNavGet => _isActiveNav;
 
   int get countGet => _count;
+
+  String get finalTagsChipsGet => _finalTagsChips;
+
+  List<String> get tagsChipsGet => _tagsChips;
 
   void sharedPref(SharedPreferences sharedPrefs) {
     _sharedPrefs = sharedPrefs;
@@ -57,6 +63,34 @@ class ProviderListMap extends ChangeNotifier {
 
   void count(int count) {
     _count = count;
+    notifyListeners();
+  }
+
+  void finalTagsChips(String finalTagsChips) {
+    _finalTagsChips = finalTagsChips
+        .replaceAll('[', '')
+        .replaceAll(']', '')
+        .replaceAll(', ', '')
+        .replaceAll('Banks', '&bank')
+        .replaceAll('Bars', '&bar|night_club')
+        .replaceAll('Beauty', '&beauty_salon|hair_care')
+        .replaceAll('Books', '&book_store|library')
+        .replaceAll('Bus stations', '&bus_station')
+        .replaceAll('Cars', '&car_dealer|car_rental|car_repair|car_wash')
+        .replaceAll('Clothing', '&clothing_store')
+        .replaceAll('Doctors', '&doctor')
+        .replaceAll('Gas stations', '&gas_station')
+        .replaceAll('Gym', '&gym')
+        .replaceAll('Jewelries', '&jewelry_store')
+        .replaceAll('Parks', '&park|amusement_park|parking|rv_park')
+        .replaceAll('Restaurants', '&food|restaurant|cafe|bakery')
+        .replaceAll('School', '&school')
+        .replaceAll('Spa', '&spa');
+    notifyListeners();
+  }
+
+  void tagsChips(List<String> tagsChips) {
+    _tagsChips = tagsChips;
     notifyListeners();
   }
 }
