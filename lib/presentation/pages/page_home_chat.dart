@@ -137,16 +137,13 @@ class _PageHomeChatProvState extends State<PageHomeChatProv> {
                               ConstantsColors.ORANGE,
                             ),
                           ),
-                          width:
-                              ResponsiveScreen().widthMediaQuery(context, 50),
-                          height:
-                              ResponsiveScreen().heightMediaQuery(context, 50),
+                          width: 50,
+                          height: 50,
                           padding: const EdgeInsets.all(15.0),
                         ),
                         imageUrl: document['photoUrl'],
-                        width: ResponsiveScreen().widthMediaQuery(context, 50),
-                        height:
-                            ResponsiveScreen().heightMediaQuery(context, 50),
+                        width: 50,
+                        height: 50,
                         fit: BoxFit.cover,
                       )
                     : Icon(
