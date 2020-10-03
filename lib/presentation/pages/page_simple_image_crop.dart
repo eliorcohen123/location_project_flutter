@@ -21,7 +21,7 @@ class PageSimpleImageCrop extends StatelessWidget {
 
   PreferredSizeWidget _appBar(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.blueAccent,
+      backgroundColor: Colors.indigoAccent,
       leading: IconButton(
         icon: Icon(
           Icons.navigate_before,

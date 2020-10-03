@@ -145,6 +145,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
   PreferredSizeWidget _appBar() {
     if (_provider.isActiveSearchGet) {
       return AppBar(
+        iconTheme: IconThemeData(color: ConstantsColors.LIGHT_BLUE),
         backgroundColor: ConstantsColors.BLACK2,
         title: Form(
           key: _formKeySearch,
@@ -206,7 +207,8 @@ class _PageListMapProvState extends State<PageListMapProv> {
       );
     } else {
       return AppBar(
-        backgroundColor: Colors.blueAccent,
+        iconTheme: IconThemeData(color: ConstantsColors.LIGHT_BLUE),
+        backgroundColor: Colors.indigoAccent,
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.search),
@@ -364,82 +366,82 @@ class _PageListMapProvState extends State<PageListMapProv> {
   Widget _listViewData() {
     return _provider.isSearchingGet || _provider.isSearchingAfterGet
         ? Padding(
-            padding: EdgeInsets.only(
-                top: ResponsiveScreen().heightMediaQuery(context, 8)),
-            child: const CircularProgressIndicator(),
-          )
+      padding: EdgeInsets.only(
+          top: ResponsiveScreen().heightMediaQuery(context, 8)),
+      child: const CircularProgressIndicator(),
+    )
         : _places.length == 0
-            ? const Text(
-                'No Places',
-                style: TextStyle(
-                  color: Colors.deepPurpleAccent,
-                  fontSize: 30,
-                ),
-              )
-            : Expanded(
-                child: _provider.isDisplayGridGet
-                    ? Padding(
-                        padding: EdgeInsets.all(
-                            ResponsiveScreen().widthMediaQuery(context, 8)),
-                        child: LiveGrid(
-                          showItemInterval: const Duration(milliseconds: 50),
-                          showItemDuration: const Duration(milliseconds: 50),
-                          reAnimateOnVisibility: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: _places.length,
-                          itemBuilder: buildAnimatedItem,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing:
-                                ResponsiveScreen().widthMediaQuery(context, 8),
-                            mainAxisSpacing:
-                                ResponsiveScreen().widthMediaQuery(context, 8),
-                          ),
-                        ),
-                      )
-                    : LiveList(
-                        showItemInterval: const Duration(milliseconds: 50),
-                        showItemDuration: const Duration(milliseconds: 50),
-                        reAnimateOnVisibility: true,
-                        scrollDirection: Axis.vertical,
-                        itemCount: _places.length,
-                        itemBuilder: buildAnimatedItem,
-                        separatorBuilder: (context, i) {
-                          return SizedBox(
-                            height:
-                                ResponsiveScreen().heightMediaQuery(context, 5),
-                            width: double.infinity,
-                            child: const DecoratedBox(
-                              decoration: BoxDecoration(color: Colors.white),
-                            ),
-                          );
-                        },
-                      ),
-              );
+        ? const Text(
+      'No Places',
+      style: TextStyle(
+        color: Colors.deepPurpleAccent,
+        fontSize: 30,
+      ),
+    )
+        : Expanded(
+      child: _provider.isDisplayGridGet
+          ? Padding(
+        padding: EdgeInsets.all(
+            ResponsiveScreen().widthMediaQuery(context, 8)),
+        child: LiveGrid(
+          showItemInterval: const Duration(milliseconds: 50),
+          showItemDuration: const Duration(milliseconds: 50),
+          reAnimateOnVisibility: true,
+          scrollDirection: Axis.vertical,
+          itemCount: _places.length,
+          itemBuilder: buildAnimatedItem,
+          gridDelegate:
+          SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing:
+            ResponsiveScreen().widthMediaQuery(context, 8),
+            mainAxisSpacing:
+            ResponsiveScreen().widthMediaQuery(context, 8),
+          ),
+        ),
+      )
+          : LiveList(
+        showItemInterval: const Duration(milliseconds: 50),
+        showItemDuration: const Duration(milliseconds: 50),
+        reAnimateOnVisibility: true,
+        scrollDirection: Axis.vertical,
+        itemCount: _places.length,
+        itemBuilder: buildAnimatedItem,
+        separatorBuilder: (context, i) {
+          return SizedBox(
+            height:
+            ResponsiveScreen().heightMediaQuery(context, 5),
+            width: double.infinity,
+            child: const DecoratedBox(
+              decoration: BoxDecoration(color: Colors.white),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   Widget _blur() {
     return _provider.isCheckingBottomSheetGet == true
         ? Positioned.fill(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: ResponsiveScreen().widthMediaQuery(context, 5),
-                sigmaY: ResponsiveScreen().widthMediaQuery(context, 5),
-              ),
-              child: Container(
-                color: Colors.black.withOpacity(0),
-              ),
-            ),
-          )
+      child: BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: ResponsiveScreen().widthMediaQuery(context, 5),
+          sigmaY: ResponsiveScreen().widthMediaQuery(context, 5),
+        ),
+        child: Container(
+          color: Colors.black.withOpacity(0),
+        ),
+      ),
+    )
         : Container();
   }
 
   Widget buildAnimatedItem(
-    BuildContext context,
-    int index,
-    Animation<double> animation,
-  ) =>
+      BuildContext context,
+      int index,
+      Animation<double> animation,
+      ) =>
       FadeTransition(
         opacity: Tween<double>(
           begin: 0,
@@ -512,8 +514,8 @@ class _PageListMapProvState extends State<PageListMapProv> {
               width: double.infinity,
               imageUrl: _places[index].photos.isNotEmpty
                   ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                      _places[index].photos[0].photo_reference +
-                      "&key=$_API_KEY"
+                  _places[index].photos[0].photo_reference +
+                  "&key=$_API_KEY"
                   : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
               placeholder: (context, url) => const CircularProgressIndicator(),
               errorWidget: (context, url, error) => const Icon(Icons.error),
@@ -554,10 +556,10 @@ class _PageListMapProvState extends State<PageListMapProv> {
                       _textListView(
                         _places[index].opening_hours != null
                             ? _places[index].opening_hours.open_now
-                                ? 'Open'
-                                : !_places[index].opening_hours.open_now
-                                    ? 'Close'
-                                    : 'No info'
+                            ? 'Open'
+                            : !_places[index].opening_hours.open_now
+                            ? 'Close'
+                            : 'No info'
                             : "No info",
                         15.0,
                         ConstantsColors.YELLOW,
@@ -656,7 +658,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
 
     var document = _firestore.collection('places').document(_places[index].id);
     document.get().then(
-      (document) {
+          (document) {
         if (document.exists) {
           _provider.count(document['count']);
         } else {
@@ -664,7 +666,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
         }
       },
     ).then(
-      (value) => _addToFirebase(index, _provider.countGet),
+          (value) => _addToFirebase(index, _provider.countGet),
     );
   }
 
@@ -676,8 +678,8 @@ class _PageListMapProvState extends State<PageListMapProv> {
     dataFile["url"] = {
       'en': _places[index].photos.isNotEmpty
           ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-              _places[index].photos[0].photo_reference +
-              "&key=$_API_KEY"
+          _places[index].photos[0].photo_reference +
+          "&key=$_API_KEY"
           : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
     };
 
@@ -688,53 +690,53 @@ class _PageListMapProvState extends State<PageListMapProv> {
         .collection("stories")
         .document(_places[index].id)
         .setData(
-          {
-            "date": now,
-            "file": listFile,
-            "previewImage": _places[index].photos.isNotEmpty
-                ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                    _places[index].photos[0].photo_reference +
-                    "&key=$_API_KEY"
-                : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
-            "previewTitle": {'en': _places[index].name},
-          },
-        )
+      {
+        "date": now,
+        "file": listFile,
+        "previewImage": _places[index].photos.isNotEmpty
+            ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+            _places[index].photos[0].photo_reference +
+            "&key=$_API_KEY"
+            : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
+        "previewTitle": {'en': _places[index].name},
+      },
+    )
         .then(
           (result) async => {
-            await _firestore
-                .collection("places")
-                .document(_places[index].id)
-                .setData(
-              {
-                "date": now,
-                'idLive': _places[index].id,
-                'count': count != null ? count + 1 : 1,
-                "name": _places[index].name,
-                "vicinity": _places[index].vicinity,
-                "lat": _places[index].geometry.location.lat,
-                "lng": _places[index].geometry.location.lng,
-                "photo": _places[index].photos.isNotEmpty
-                    ? _places[index].photos[0].photo_reference
-                    : "",
-              },
-            ).then(
+        await _firestore
+            .collection("places")
+            .document(_places[index].id)
+            .setData(
+          {
+            "date": now,
+            'idLive': _places[index].id,
+            'count': count != null ? count + 1 : 1,
+            "name": _places[index].name,
+            "vicinity": _places[index].vicinity,
+            "lat": _places[index].geometry.location.lat,
+            "lng": _places[index].geometry.location.lng,
+            "photo": _places[index].photos.isNotEmpty
+                ? _places[index].photos[0].photo_reference
+                : "",
+          },
+        ).then(
               (result) => {
-                _provider.isActiveNav(false),
-                print(_provider.isActiveNavGet),
-                ShowerPages.pushPageMapList(
-                  context,
-                  _places[index].name,
-                  _places[index].vicinity,
-                  _places[index].geometry.location.lat,
-                  _places[index].geometry.location.lng,
-                ),
-              },
-            )
+            _provider.isActiveNav(false),
+            print(_provider.isActiveNavGet),
+            ShowerPages.pushPageMapList(
+              context,
+              _places[index].name,
+              _places[index].vicinity,
+              _places[index].geometry.location.lat,
+              _places[index].geometry.location.lng,
+            ),
           },
         )
+      },
+    )
         .catchError(
           (err) => print(err),
-        );
+    );
   }
 
   String _calculateDistance(double _meter) {
@@ -750,7 +752,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
 
   void _initGetSharedPrefs() {
     SharedPreferences.getInstance().then(
-      (prefs) {
+          (prefs) {
         _provider.sharedPref(prefs);
         _valueRadius = _provider.sharedGet.getDouble('rangeRadius') ?? 5000.0;
         _open = _provider.sharedGet.getString('open') ?? '';
@@ -761,7 +763,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
   void _searchNearbyTotal(bool start, bool isSearching, bool isSearchingAfter,
       String type, String text) {
     _searchNearby(start, isSearching, isSearchingAfter, type, text).then(
-      (value) => {
+          (value) => {
         _sortSearchNearby(value),
       },
     );
@@ -785,7 +787,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
 
   void _sortSearchNearby(List<Results> _places) {
     _places.sort(
-      (a, b) => sqrt(
+          (a, b) => sqrt(
         pow(a.geometry.location.lat - _userLocation.latitude, 2) +
             pow(a.geometry.location.lng - _userLocation.longitude, 2),
       ).compareTo(

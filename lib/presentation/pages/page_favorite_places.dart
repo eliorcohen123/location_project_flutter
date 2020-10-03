@@ -63,7 +63,7 @@ class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
 
   PreferredSizeWidget _appBar() {
     return AppBar(
-      backgroundColor: Colors.blueAccent,
+      backgroundColor: Colors.indigoAccent,
       actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.delete_forever),

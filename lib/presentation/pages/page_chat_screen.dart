@@ -98,7 +98,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
 
   PreferredSizeWidget _appBar() {
     return AppBar(
-      backgroundColor: Colors.blueAccent,
+      backgroundColor: Colors.indigoAccent,
       actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.video_call),

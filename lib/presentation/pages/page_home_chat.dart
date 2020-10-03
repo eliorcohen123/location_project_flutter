@@ -60,7 +60,7 @@ class _PageHomeChatProvState extends State<PageHomeChatProv> {
 
   PreferredSizeWidget _appBar() {
     return AppBar(
-      backgroundColor: Colors.blueAccent,
+      backgroundColor: Colors.indigoAccent,
       actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.settings),

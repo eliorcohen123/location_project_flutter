@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:locationprojectflutter/data/models/model_live_chat/results_live_chat.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_live_chat.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
+import 'package:locationprojectflutter/presentation/utils/utils_app.dart';
 import 'package:locationprojectflutter/presentation/widgets/widget_app_bar_total.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -86,15 +87,19 @@ class _PageLiveChatProvState extends State<PageLiveChatProv> {
   }
 
   Widget _sendMessage() {
-    return Container(
-      child: Row(
-        children: <Widget>[
-          _buildInput(),
-          _sendButton(
-            "Send",
-            callback,
-          ),
-        ],
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          vertical: ResponsiveScreen().heightMediaQuery(context, 5)),
+      child: Container(
+        child: Row(
+          children: <Widget>[
+            _buildInput(),
+            _sendButton(
+              "Send",
+              callback,
+            ),
+          ],
+        ),
       ),
     );
   }
