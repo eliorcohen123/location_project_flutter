@@ -160,7 +160,9 @@ class _PageSignInFirebaseProvState extends State<PageSignInFirebaseProv> {
       child: Text(
         _provider.isSuccessGet == null
             ? ''
-            : _provider.isSuccessGet ? '' : _provider.textErrorGet,
+            : _provider.isSuccessGet
+                ? ''
+                : _provider.textErrorGet,
         style: const TextStyle(
           color: Colors.redAccent,
           fontSize: 15,
@@ -191,8 +193,8 @@ class _PageSignInFirebaseProvState extends State<PageSignInFirebaseProv> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: 60,
-          height: 60,
+          width: ResponsiveScreen().widthMediaQuery(context, 60),
+          height: ResponsiveScreen().widthMediaQuery(context, 60),
           child: MaterialButton(
             shape: const CircleBorder(),
             child: Image.asset(ConstantsImages.FACEBOOK_ICON),
@@ -206,8 +208,8 @@ class _PageSignInFirebaseProvState extends State<PageSignInFirebaseProv> {
         ),
         UtilsApp.dividerWidth(context, 20),
         Container(
-          width: 60,
-          height: 60,
+          width: ResponsiveScreen().widthMediaQuery(context, 60),
+          height: ResponsiveScreen().widthMediaQuery(context, 60),
           child: MaterialButton(
             shape: const CircleBorder(),
             child: Image.asset(ConstantsImages.GOOGLE_ICON),
@@ -221,8 +223,8 @@ class _PageSignInFirebaseProvState extends State<PageSignInFirebaseProv> {
         ),
         UtilsApp.dividerWidth(context, 20),
         Container(
-          width: 60,
-          height: 60,
+          width: ResponsiveScreen().widthMediaQuery(context, 60),
+          height: ResponsiveScreen().widthMediaQuery(context, 60),
           child: MaterialButton(
             shape: const CircleBorder(),
             child: Image.asset(ConstantsImages.PHONE_ICON),

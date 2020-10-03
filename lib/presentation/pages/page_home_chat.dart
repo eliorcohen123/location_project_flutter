@@ -107,7 +107,8 @@ class _PageHomeChatProvState extends State<PageHomeChatProv> {
                       ),
                     )
                   : ListView.builder(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(
+                          ResponsiveScreen().widthMediaQuery(context, 10)),
                       itemBuilder: (context, index) =>
                           _buildItem(context, _listMessage[index]),
                       itemCount: _listMessage.length,
@@ -132,18 +133,22 @@ class _PageHomeChatProvState extends State<PageHomeChatProv> {
                     ? CachedNetworkImage(
                         placeholder: (context, url) => Container(
                           child: CircularProgressIndicator(
-                            strokeWidth: 1.0,
+                            strokeWidth:
+                                ResponsiveScreen().widthMediaQuery(context, 1),
                             valueColor: AlwaysStoppedAnimation<Color>(
                               ConstantsColors.ORANGE,
                             ),
                           ),
-                          width: 50,
-                          height: 50,
-                          padding: const EdgeInsets.all(15.0),
+                          width:
+                              ResponsiveScreen().widthMediaQuery(context, 50),
+                          height:
+                              ResponsiveScreen().widthMediaQuery(context, 50),
+                          padding: EdgeInsets.all(
+                              ResponsiveScreen().widthMediaQuery(context, 15)),
                         ),
                         imageUrl: document['photoUrl'],
-                        width: 50,
-                        height: 50,
+                        width: ResponsiveScreen().widthMediaQuery(context, 50),
+                        height: ResponsiveScreen().widthMediaQuery(context, 50),
                         fit: BoxFit.cover,
                       )
                     : Icon(

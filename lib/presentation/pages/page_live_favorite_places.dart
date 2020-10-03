@@ -199,7 +199,8 @@ class _PageLiveFavoritePlacesProvState
                         : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
                     placeholder: (context, url) =>
                         const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
                 ],
               ),
@@ -220,15 +221,16 @@ class _PageLiveFavoritePlacesProvState
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(4.0),
+                padding: EdgeInsets.all(
+                    ResponsiveScreen().widthMediaQuery(context, 4)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     _textList(_provider.placesGet[index].name, 17.0,
                         ConstantsColors.LIGHT_BLUE),
-                    _textList(
-                        _provider.placesGet[index].vicinity, 15.0, Colors.white),
+                    _textList(_provider.placesGet[index].vicinity, 15.0,
+                        Colors.white),
                     _textList(_calculateDistance(_meter), 15.0, Colors.white),
                   ],
                 ),
@@ -246,13 +248,15 @@ class _PageLiveFavoritePlacesProvState
       style: TextStyle(
         shadows: <Shadow>[
           Shadow(
-            offset: const Offset(1.0, 1.0),
-            blurRadius: 1.0,
+            offset: Offset(ResponsiveScreen().widthMediaQuery(context, 1),
+                ResponsiveScreen().widthMediaQuery(context, 1)),
+            blurRadius: ResponsiveScreen().widthMediaQuery(context, 1),
             color: ConstantsColors.GRAY,
           ),
           Shadow(
-            offset: const Offset(1.0, 1.0),
-            blurRadius: 1.0,
+            offset: Offset(ResponsiveScreen().widthMediaQuery(context, 1),
+                ResponsiveScreen().widthMediaQuery(context, 1)),
+            blurRadius: ResponsiveScreen().widthMediaQuery(context, 1),
             color: ConstantsColors.GRAY,
           ),
         ],
@@ -267,8 +271,8 @@ class _PageLiveFavoritePlacesProvState
         ? Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(
-                sigmaX: 5,
-                sigmaY: 5,
+                sigmaX: ResponsiveScreen().widthMediaQuery(context, 5),
+                sigmaY: ResponsiveScreen().widthMediaQuery(context, 5),
               ),
               child: Container(
                 color: Colors.black.withOpacity(0),

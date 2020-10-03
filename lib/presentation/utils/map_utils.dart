@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:map_launcher/map_launcher.dart';
 
 class MapUtils {
@@ -28,8 +29,10 @@ class MapUtils {
                         title: Text(map.mapName),
                         leading: Image(
                           image: map.icon,
-                          height: 30.0,
-                          width: 30.0,
+                          height:
+                              ResponsiveScreen().widthMediaQuery(context, 30),
+                          width:
+                              ResponsiveScreen().widthMediaQuery(context, 30),
                         ),
                       ),
                   ],

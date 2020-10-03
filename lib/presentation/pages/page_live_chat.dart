@@ -113,16 +113,16 @@ class _PageLiveChatProvState extends State<PageLiveChatProv> {
             hintText: 'Type your message...',
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
-              borderSide: const BorderSide(
+              borderSide: BorderSide(
                 color: Colors.green,
-                width: 2,
+                width: ResponsiveScreen().widthMediaQuery(context, 2),
               ),
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
-              borderSide: const BorderSide(
+              borderSide: BorderSide(
                 color: Colors.green,
-                width: 3,
+                width: ResponsiveScreen().widthMediaQuery(context, 3),
               ),
             ),
           ),
@@ -154,7 +154,7 @@ class _PageLiveChatProvState extends State<PageLiveChatProv> {
           Material(
             color: me ? Colors.lightGreenAccent : Colors.lightBlueAccent,
             borderRadius: BorderRadius.circular(10.0),
-            elevation: 6.0,
+            elevation: ResponsiveScreen().widthMediaQuery(context, 6),
             child: Container(
               padding: EdgeInsets.symmetric(
                 vertical: ResponsiveScreen().heightMediaQuery(context, 10),

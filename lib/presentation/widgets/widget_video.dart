@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 
@@ -49,11 +50,12 @@ class _WidgetVideoState extends State<WidgetVideo> {
     return Container(
       child: Card(
         key: PageStorageKey(widget.url),
-        elevation: 5.0,
+        elevation: ResponsiveScreen().widthMediaQuery(context, 5),
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(
+                  ResponsiveScreen().widthMediaQuery(context, 8)),
               child: Chewie(
                 key: PageStorageKey(widget.url),
                 controller: ChewieController(

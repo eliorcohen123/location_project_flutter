@@ -48,16 +48,16 @@ class WidgetTFFFirebase extends StatelessWidget {
           hintText: hint,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
-            borderSide: const BorderSide(
+            borderSide: BorderSide(
               color: Colors.green,
-              width: 2,
+              width: ResponsiveScreen().widthMediaQuery(context, 2),
             ),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
-            borderSide: const BorderSide(
+            borderSide: BorderSide(
               color: Colors.green,
-              width: 3,
+              width: ResponsiveScreen().widthMediaQuery(context, 3),
             ),
           ),
           prefixIcon: Padding(

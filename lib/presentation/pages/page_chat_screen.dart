@@ -164,7 +164,8 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                 } else {
                   _listMessage = snapshot.data.documents;
                   return ListView.builder(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: EdgeInsets.all(
+                        ResponsiveScreen().widthMediaQuery(context, 10)),
                     itemBuilder: (context, index) =>
                         _buildItem(index, _listMessage[index]),
                     itemCount: _listMessage.length,
@@ -203,12 +204,12 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
         border: Border(
           top: BorderSide(
             color: ConstantsColors.LIGHT_GRAY,
-            width: 0.5,
+            width: ResponsiveScreen().widthMediaQuery(context, 0.5),
           ),
         ),
         color: Colors.white,
       ),
-      padding: const EdgeInsets.all(5.0),
+      padding: EdgeInsets.all(ResponsiveScreen().widthMediaQuery(context, 5)),
       height: ResponsiveScreen().heightMediaQuery(context, 180),
     );
   }
@@ -281,7 +282,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
         border: Border(
           top: BorderSide(
             color: ConstantsColors.LIGHT_GRAY,
-            width: 0.5,
+            width: ResponsiveScreen().widthMediaQuery(context, 0.5),
           ),
         ),
         color: Colors.white,
@@ -292,7 +293,8 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
   Widget _iconInput(Widget icon, VoidCallback onTap) {
     return Material(
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 1.0),
+        margin: EdgeInsets.symmetric(
+            horizontal: ResponsiveScreen().widthMediaQuery(context, 1)),
         child: IconButton(
           icon: icon,
           onPressed: onTap,
@@ -343,8 +345,9 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                               width: ResponsiveScreen()
                                   .widthMediaQuery(context, 200),
                               height: ResponsiveScreen()
-                                  .heightMediaQuery(context, 200),
-                              padding: const EdgeInsets.all(70.0),
+                                  .widthMediaQuery(context, 200),
+                              padding: EdgeInsets.all(ResponsiveScreen()
+                                  .widthMediaQuery(context, 70)),
                             ),
                             errorWidget: (context, url, error) => Material(
                               child: Image.asset(
@@ -352,7 +355,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                                 width: ResponsiveScreen()
                                     .widthMediaQuery(context, 200),
                                 height: ResponsiveScreen()
-                                    .heightMediaQuery(context, 200),
+                                    .widthMediaQuery(context, 200),
                                 fit: BoxFit.cover,
                               ),
                               borderRadius: const BorderRadius.all(
@@ -364,7 +367,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                             width: ResponsiveScreen()
                                 .widthMediaQuery(context, 200),
                             height: ResponsiveScreen()
-                                .heightMediaQuery(context, 200),
+                                .widthMediaQuery(context, 200),
                             fit: BoxFit.cover,
                           ),
                           borderRadius: const BorderRadius.all(
@@ -394,7 +397,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                             width: ResponsiveScreen()
                                 .widthMediaQuery(context, 100),
                             height: ResponsiveScreen()
-                                .heightMediaQuery(context, 100),
+                                .widthMediaQuery(context, 100),
                             fit: BoxFit.cover,
                           ),
                           margin: EdgeInsets.only(
@@ -481,16 +484,18 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                         child: CachedNetworkImage(
                           placeholder: (context, url) => Container(
                             child: CircularProgressIndicator(
-                              strokeWidth: 1.0,
+                              strokeWidth: ResponsiveScreen()
+                                  .widthMediaQuery(context, 1),
                               valueColor: AlwaysStoppedAnimation<Color>(
                                 ConstantsColors.ORANGE,
                               ),
                             ),
                             width:
                                 ResponsiveScreen().widthMediaQuery(context, 35),
-                            height: ResponsiveScreen()
-                                .heightMediaQuery(context, 35),
-                            padding: const EdgeInsets.all(10.0),
+                            height:
+                                ResponsiveScreen().widthMediaQuery(context, 35),
+                            padding: EdgeInsets.all(ResponsiveScreen()
+                                .widthMediaQuery(context, 10)),
                           ),
                           imageUrl: widget.peerAvatar != null
                               ? widget.peerAvatar
@@ -498,7 +503,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                           width:
                               ResponsiveScreen().widthMediaQuery(context, 35),
                           height:
-                              ResponsiveScreen().heightMediaQuery(context, 35),
+                              ResponsiveScreen().widthMediaQuery(context, 35),
                           fit: BoxFit.cover,
                         ),
                         borderRadius: const BorderRadius.all(
@@ -544,8 +549,9 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                                     width: ResponsiveScreen()
                                         .widthMediaQuery(context, 200),
                                     height: ResponsiveScreen()
-                                        .heightMediaQuery(context, 200),
-                                    padding: const EdgeInsets.all(70.0),
+                                        .widthMediaQuery(context, 200),
+                                    padding: EdgeInsets.all(ResponsiveScreen()
+                                        .widthMediaQuery(context, 70)),
                                     decoration: BoxDecoration(
                                       color: ConstantsColors.LIGHT_GRAY,
                                       borderRadius: const BorderRadius.all(
@@ -560,7 +566,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                                       width: ResponsiveScreen()
                                           .widthMediaQuery(context, 200),
                                       height: ResponsiveScreen()
-                                          .heightMediaQuery(context, 200),
+                                          .widthMediaQuery(context, 200),
                                       fit: BoxFit.cover,
                                     ),
                                     borderRadius: const BorderRadius.all(
@@ -574,7 +580,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                                   width: ResponsiveScreen()
                                       .widthMediaQuery(context, 200),
                                   height: ResponsiveScreen()
-                                      .heightMediaQuery(context, 200),
+                                      .widthMediaQuery(context, 200),
                                   fit: BoxFit.cover,
                                 ),
                                 borderRadius: const BorderRadius.all(
@@ -605,7 +611,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                                   width: ResponsiveScreen()
                                       .widthMediaQuery(context, 100),
                                   height: ResponsiveScreen()
-                                      .heightMediaQuery(context, 100),
+                                      .widthMediaQuery(context, 100),
                                   fit: BoxFit.cover,
                                 ),
                                 margin: EdgeInsets.only(
@@ -617,7 +623,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                                     width: ResponsiveScreen()
                                         .widthMediaQuery(context, 200),
                                     height: ResponsiveScreen()
-                                        .heightMediaQuery(context, 200),
+                                        .widthMediaQuery(context, 200),
                                     key: PageStorageKey(
                                       "keydata$index",
                                     ),

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:locationprojectflutter/core/constants/constants_urls_keys.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_video_call.dart';
+import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/widget_app_bar_total.dart';
 import 'package:provider/provider.dart';
 
@@ -146,7 +147,8 @@ class _PageVideoCallProvState extends State<PageVideoCallProv> {
     if (widget.role == ClientRole.Audience) return Container();
     return Container(
       alignment: Alignment.bottomCenter,
-      padding: const EdgeInsets.symmetric(vertical: 48),
+      padding: EdgeInsets.symmetric(
+          vertical: ResponsiveScreen().heightMediaQuery(context, 48)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -158,9 +160,10 @@ class _PageVideoCallProvState extends State<PageVideoCallProv> {
               size: 20.0,
             ),
             shape: const CircleBorder(),
-            elevation: 2.0,
+            elevation: ResponsiveScreen().widthMediaQuery(context, 2),
             fillColor: _provider.isMutedGet ? Colors.blueAccent : Colors.white,
-            padding: const EdgeInsets.all(12.0),
+            padding:
+                EdgeInsets.all(ResponsiveScreen().widthMediaQuery(context, 12)),
           ),
           RawMaterialButton(
             onPressed: () => _onCallEnd(context),
@@ -170,9 +173,10 @@ class _PageVideoCallProvState extends State<PageVideoCallProv> {
               size: 35.0,
             ),
             shape: const CircleBorder(),
-            elevation: 2.0,
+            elevation: ResponsiveScreen().widthMediaQuery(context, 2),
             fillColor: Colors.redAccent,
-            padding: const EdgeInsets.all(15.0),
+            padding:
+                EdgeInsets.all(ResponsiveScreen().widthMediaQuery(context, 15)),
           ),
           RawMaterialButton(
             onPressed: _onSwitchCamera,
@@ -182,9 +186,10 @@ class _PageVideoCallProvState extends State<PageVideoCallProv> {
               size: 20.0,
             ),
             shape: const CircleBorder(),
-            elevation: 2.0,
+            elevation: ResponsiveScreen().widthMediaQuery(context, 2),
             fillColor: Colors.white,
-            padding: const EdgeInsets.all(12.0),
+            padding:
+                EdgeInsets.all(ResponsiveScreen().widthMediaQuery(context, 12)),
           )
         ],
       ),
@@ -193,7 +198,7 @@ class _PageVideoCallProvState extends State<PageVideoCallProv> {
 
   // Widget _panel() {
   //   return Container(
-  //     padding: const EdgeInsets.symmetric(vertical: 48),
+  //     padding: const EdgeInsets.symmetric(vertical: ResponsiveScreen().heightMediaQuery(context, 48)),
   //     alignment: Alignment.bottomCenter,
   //     child: FractionallySizedBox(
   //       heightFactor: 0.5,

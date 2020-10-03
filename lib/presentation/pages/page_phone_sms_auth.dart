@@ -304,8 +304,8 @@ class _PagePhoneSMSAuthProvState extends State<PagePhoneSMSAuthProv> {
   Widget _tffSms(TextEditingController num, FocusNode thisFocusNode,
       FocusNode nextFocusNode, FocusNode previousFocusNode) {
     return Container(
-      width: 48,
-      height: 48,
+      width: ResponsiveScreen().widthMediaQuery(context, 48),
+      height: ResponsiveScreen().widthMediaQuery(context, 48),
       alignment: Alignment.center,
       child: TextFormField(
         focusNode: thisFocusNode,
@@ -323,16 +323,16 @@ class _PagePhoneSMSAuthProvState extends State<PagePhoneSMSAuthProv> {
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
-            borderSide: const BorderSide(
+            borderSide: BorderSide(
               color: Colors.green,
-              width: 2,
+              width: ResponsiveScreen().widthMediaQuery(context, 2),
             ),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
-            borderSide: const BorderSide(
+            borderSide: BorderSide(
               color: Colors.green,
-              width: 3,
+              width: ResponsiveScreen().widthMediaQuery(context, 3),
             ),
           ),
         ),

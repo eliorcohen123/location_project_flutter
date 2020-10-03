@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:async';
 import 'package:audioplayer/audioplayer.dart';
+import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 
 typedef void OnError(Exception exception);
 
@@ -43,7 +44,7 @@ class _WidgetAudioState extends State<WidgetAudio> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(ResponsiveScreen().widthMediaQuery(context, 16)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

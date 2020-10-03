@@ -17,8 +17,8 @@ class WidgetAddEditFavoritePlaces extends StatefulWidget {
 
   const WidgetAddEditFavoritePlaces(
       {Key key,
-      @required this.nameList,
-      @required this.addressList,
+      this.nameList,
+      this.addressList,
       @required this.latList,
       @required this.lngList,
       @required this.photoList,
@@ -192,13 +192,14 @@ class _WidgetAddEditFavoritePlacesState
         color: ConstantsColors.GRAY4.withOpacity(1),
         border: Border.all(
           color: ConstantsColors.GRAY4,
-          width: 1,
+          width: ResponsiveScreen().widthMediaQuery(context, 1),
         ),
         borderRadius: BorderRadius.circular(24),
       ),
       child: TextField(
-        decoration: const InputDecoration(
-          contentPadding: EdgeInsets.all(10.0),
+        decoration: InputDecoration(
+          contentPadding:
+              EdgeInsets.all(ResponsiveScreen().widthMediaQuery(context, 10)),
           border: InputBorder.none,
         ),
         style: const TextStyle(color: Colors.lightGreenAccent),

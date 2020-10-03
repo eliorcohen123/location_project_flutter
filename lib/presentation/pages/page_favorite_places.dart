@@ -124,8 +124,8 @@ class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
         ? Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(
-                sigmaX: 5,
-                sigmaY: 5,
+                sigmaX: ResponsiveScreen().widthMediaQuery(context, 5),
+                sigmaY: ResponsiveScreen().widthMediaQuery(context, 5),
               ),
               child: Container(
                 color: Colors.black.withOpacity(0),
@@ -257,7 +257,8 @@ class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(4.0),
+                padding: EdgeInsets.all(
+                    ResponsiveScreen().widthMediaQuery(context, 4)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -283,13 +284,15 @@ class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
       style: TextStyle(
         shadows: <Shadow>[
           Shadow(
-            offset: const Offset(1.0, 1.0),
-            blurRadius: 1.0,
+            offset: Offset(ResponsiveScreen().widthMediaQuery(context, 1),
+                ResponsiveScreen().widthMediaQuery(context, 1)),
+            blurRadius: ResponsiveScreen().widthMediaQuery(context, 1),
             color: ConstantsColors.GRAY,
           ),
           Shadow(
-            offset: const Offset(1.0, 1.0),
-            blurRadius: 1.0,
+            offset: Offset(ResponsiveScreen().widthMediaQuery(context, 1),
+                ResponsiveScreen().widthMediaQuery(context, 1)),
+            blurRadius: ResponsiveScreen().widthMediaQuery(context, 1),
             color: ConstantsColors.GRAY,
           ),
         ],

@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_custom_map_list.dart';
+import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/widget_app_bar_total.dart';
 import 'package:provider/provider.dart';
 import 'package:locationprojectflutter/presentation/widgets/widget_add_edit_favorite_places.dart';
@@ -77,8 +78,8 @@ class _PageCustomMapListProvState extends State<PageCustomMapListProv> {
         ? Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(
-                sigmaX: 5,
-                sigmaY: 5,
+                sigmaX: ResponsiveScreen().widthMediaQuery(context, 5),
+                sigmaY: ResponsiveScreen().widthMediaQuery(context, 5),
               ),
               child: Container(
                 color: Colors.black.withOpacity(0),

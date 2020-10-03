@@ -100,12 +100,43 @@ class _PageListMapProvState extends State<PageListMapProv> {
     _searchNearbyTotal(true, _provider.isSearchingGet, false, "", "");
     return Scaffold(
       appBar: _appBar(),
-      body: Stack(
-        children: [
-          _mainBody(),
-          if (_provider.isActiveNavGet) _loading(),
-          _blur(),
-        ],
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              expandedHeight: ResponsiveScreen().heightMediaQuery(context, 140),
+              automaticallyImplyLeading: false,
+              floating: true,
+              pinned: true,
+              backgroundColor: Colors.transparent,
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(
+                    ResponsiveScreen().widthMediaQuery(context, 0)),
+                child: Container(),
+              ),
+              flexibleSpace: FlexibleSpaceBar(
+                background: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _storiesInstagram(),
+                      _dividerGrey(),
+                      _chipsType(),
+                      _dividerGrey(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ];
+        },
+        body: Stack(
+          children: [
+            _mainBody(),
+            if (_provider.isActiveNavGet) _loading(),
+            _blur(),
+          ],
+        ),
       ),
       drawer: WidgetDrawerTotal(),
     );
@@ -121,13 +152,13 @@ class _PageListMapProvState extends State<PageListMapProv> {
             children: <Widget>[
               Flexible(
                 child: TextFormField(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Search a place...',
                     hintStyle: TextStyle(color: Colors.grey),
-                    enabledBorder: const UnderlineInputBorder(
+                    enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
                         color: Colors.white,
-                        width: 1.0,
+                        width: ResponsiveScreen().widthMediaQuery(context, 1),
                         style: BorderStyle.solid,
                       ),
                     ),
@@ -200,10 +231,6 @@ class _PageListMapProvState extends State<PageListMapProv> {
   Widget _mainBody() {
     return Column(
       children: <Widget>[
-        _storiesInstagram(),
-        _dividerGrey(),
-        _chipsType(),
-        _dividerGrey(),
         _imagesListGrid(),
         _dividerGrey(),
         _listViewData(),
@@ -228,8 +255,9 @@ class _PageListMapProvState extends State<PageListMapProv> {
       iconTextStyle: TextStyle(
         shadows: <Shadow>[
           Shadow(
-            offset: const Offset(1.0, 1.0),
-            blurRadius: 1.0,
+            offset: Offset(ResponsiveScreen().widthMediaQuery(context, 1),
+                ResponsiveScreen().widthMediaQuery(context, 1)),
+            blurRadius: ResponsiveScreen().widthMediaQuery(context, 1),
             color: ConstantsColors.GRAY,
           ),
         ],
@@ -245,16 +273,16 @@ class _PageListMapProvState extends State<PageListMapProv> {
         boxShadow: [
           BoxShadow(
             color: ConstantsColors.BLACK2,
-            blurRadius: 10.0,
-            offset: const Offset(
-              0.0,
-              4.0,
+            blurRadius: ResponsiveScreen().widthMediaQuery(context, 10),
+            offset: Offset(
+              ResponsiveScreen().widthMediaQuery(context, 0),
+              ResponsiveScreen().widthMediaQuery(context, 4),
             ),
           ),
         ],
       ),
-      iconWidth: 50,
-      iconHeight: 50,
+      iconWidth: ResponsiveScreen().widthMediaQuery(context, 50),
+      iconHeight: ResponsiveScreen().widthMediaQuery(context, 50),
       imageStoryDuration: 7,
       progressPosition: ProgressPosition.top,
       repeat: true,
@@ -287,6 +315,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
 
   Widget _imagesListGrid() {
     return Container(
+      height: ResponsiveScreen().heightMediaQuery(context, 40),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -350,7 +379,8 @@ class _PageListMapProvState extends State<PageListMapProv> {
             : Expanded(
                 child: _provider.isDisplayGridGet
                     ? Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(
+                            ResponsiveScreen().widthMediaQuery(context, 8)),
                         child: LiveGrid(
                           showItemInterval: const Duration(milliseconds: 50),
                           showItemDuration: const Duration(milliseconds: 50),
@@ -361,8 +391,10 @@ class _PageListMapProvState extends State<PageListMapProv> {
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            crossAxisSpacing: 8,
-                            mainAxisSpacing: 8,
+                            crossAxisSpacing:
+                                ResponsiveScreen().widthMediaQuery(context, 8),
+                            mainAxisSpacing:
+                                ResponsiveScreen().widthMediaQuery(context, 8),
                           ),
                         ),
                       )
@@ -392,8 +424,8 @@ class _PageListMapProvState extends State<PageListMapProv> {
         ? Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(
-                sigmaX: 5,
-                sigmaY: 5,
+                sigmaX: ResponsiveScreen().widthMediaQuery(context, 5),
+                sigmaY: ResponsiveScreen().widthMediaQuery(context, 5),
               ),
               child: Container(
                 color: Colors.black.withOpacity(0),
@@ -505,7 +537,8 @@ class _PageListMapProvState extends State<PageListMapProv> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(4.0),
+              padding: EdgeInsets.all(
+                  ResponsiveScreen().widthMediaQuery(context, 4)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -606,8 +639,9 @@ class _PageListMapProvState extends State<PageListMapProv> {
       style: TextStyle(
         shadows: <Shadow>[
           Shadow(
-            offset: const Offset(1.0, 1.0),
-            blurRadius: 1.0,
+            offset: Offset(ResponsiveScreen().widthMediaQuery(context, 1),
+                ResponsiveScreen().widthMediaQuery(context, 1)),
+            blurRadius: ResponsiveScreen().widthMediaQuery(context, 1),
             color: ConstantsColors.GRAY,
           ),
         ],

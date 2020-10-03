@@ -86,7 +86,8 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
                         child: CachedNetworkImage(
                           placeholder: (context, url) => Container(
                             child: CircularProgressIndicator(
-                              strokeWidth: 2.0,
+                              strokeWidth: ResponsiveScreen()
+                                  .widthMediaQuery(context, 2),
                               valueColor: AlwaysStoppedAnimation<Color>(
                                 ConstantsColors.ORANGE,
                               ),
@@ -95,13 +96,16 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
                                 ResponsiveScreen().widthMediaQuery(context, 90),
                             height: ResponsiveScreen()
                                 .heightMediaQuery(context, 50),
-                            padding: const EdgeInsets.all(20.0),
+                            padding: EdgeInsets.all(ResponsiveScreen()
+                                .widthMediaQuery(context, 20)),
                           ),
                           imageUrl: _provider.photoUrlGet != null
                               ? _provider.photoUrlGet
                               : '',
-                          width: 90,
-                          height: 90,
+                          width:
+                              ResponsiveScreen().widthMediaQuery(context, 90),
+                          height:
+                              ResponsiveScreen().widthMediaQuery(context, 90),
                           fit: BoxFit.cover,
                         ),
                         borderRadius: BorderRadius.all(
@@ -117,8 +121,8 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
                 : Material(
                     child: Image.file(
                       _provider.avatarImageFileGet,
-                      width: 90.0,
-                      height: 90.0,
+                      width: ResponsiveScreen().widthMediaQuery(context, 90),
+                      height: ResponsiveScreen().widthMediaQuery(context, 90),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.all(
@@ -141,7 +145,7 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
         ),
       ),
       width: double.infinity,
-      margin: const EdgeInsets.all(20.0),
+      margin: EdgeInsets.all(ResponsiveScreen().widthMediaQuery(context, 20)),
     );
   }
 
@@ -171,7 +175,8 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Cool Man',
-                contentPadding: const EdgeInsets.all(5.0),
+                contentPadding: EdgeInsets.all(
+                    ResponsiveScreen().widthMediaQuery(context, 5)),
                 hintStyle: TextStyle(color: ConstantsColors.DARK_GRAY),
               ),
               controller: _controllerNickname,
@@ -207,7 +212,8 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Fun, like travel and play PES...',
-                contentPadding: const EdgeInsets.all(5.0),
+                contentPadding: EdgeInsets.all(
+                    ResponsiveScreen().widthMediaQuery(context, 5)),
                 hintStyle: TextStyle(color: ConstantsColors.DARK_GRAY),
               ),
               controller: _controllerAboutMe,
