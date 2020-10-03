@@ -1,7 +1,7 @@
 name: locationprojectflutter
 description: A new Flutter application.
 
-version: 1.0.0+43
+version: 1.0.0+44
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -45,6 +45,7 @@ dependencies:
   permission_handler: ^3.0.0
   agora_rtc_engine: ^1.0.13
   chips_choice: ^1.4.1
+  flutter_svg: ^0.18.1
   provider: ^4.0.5+1
 #  get_it: ^3.1.0
 #  dio: ^3.0.9
@@ -76,3 +77,7 @@ flutter:
     - assets/mimi5.gif
     - assets/facebook_icon.jpg
     - assets/phone_icon.jpg
+    - assets/icon_type_list_unselected.svg
+    - assets/icon_type_list_selected.svg
+    - assets/icon_type_grid_unselected.svg
+    - assets/icon_type_grid_selected.svg

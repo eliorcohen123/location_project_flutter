@@ -8,8 +8,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_instagram_stories/flutter_instagram_stories.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong/latlong.dart' as dis;
 import 'package:locationprojectflutter/core/constants/constants_colors.dart';
+import 'package:locationprojectflutter/core/constants/constants_images.dart';
 import 'package:locationprojectflutter/core/constants/constants_urls_keys.dart';
 import 'package:locationprojectflutter/data/models/model_googleapis/results.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
@@ -84,6 +86,9 @@ class _PageListMapProvState extends State<PageListMapProv> {
       _provider.isSearchAfter(false);
       _provider.isActiveSearch(false);
       _provider.isActiveNav(false);
+      _provider.isDisplayGrid(false);
+      _provider.finalTagsChips('');
+      _provider.tagsChips([]);
     });
 
     _initGetSharedPrefs();
@@ -196,16 +201,23 @@ class _PageListMapProvState extends State<PageListMapProv> {
     return Column(
       children: <Widget>[
         _storiesInstagram(),
-        SizedBox(
-          height: ResponsiveScreen().heightMediaQuery(context, 1),
-          width: double.infinity,
-          child: const DecoratedBox(
-            decoration: BoxDecoration(color: Colors.grey),
-          ),
-        ),
+        _dividerGrey(),
         _chipsType(),
+        _dividerGrey(),
+        _imagesListGrid(),
+        _dividerGrey(),
         _listViewData(),
       ],
+    );
+  }
+
+  Widget _dividerGrey() {
+    return SizedBox(
+      height: ResponsiveScreen().heightMediaQuery(context, 1),
+      width: double.infinity,
+      child: const DecoratedBox(
+        decoration: BoxDecoration(color: Colors.grey),
+      ),
     );
   }
 
@@ -273,9 +285,60 @@ class _PageListMapProvState extends State<PageListMapProv> {
     );
   }
 
+  Widget _imagesListGrid() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            ConstantsColors.GRAY,
+            ConstantsColors.TRANSPARENT,
+            ConstantsColors.TRANSPARENT,
+            ConstantsColors.GRAY,
+          ],
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          _displayListGrid(
+              ConstantsImages.LIST_LIGHT, ConstantsImages.LIST_DARK, false),
+          _displayListGrid(
+              ConstantsImages.GRID_DARK, ConstantsImages.GRID_LIGHT, true),
+        ],
+      ),
+    );
+  }
+
+  Widget _displayListGrid(
+      String showTrue, String showFalse, bool isDisplayGrid) {
+    return Container(
+      width: ResponsiveScreen().widthMediaQuery(context, 40),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          child: Container(
+            child: IconButton(
+              icon: SvgPicture.asset(
+                  _provider.isDisplayGridGet ? showTrue : showFalse),
+              onPressed: () {
+                _provider.isDisplayGrid(isDisplayGrid);
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _listViewData() {
     return _provider.isSearchingGet || _provider.isSearchingAfterGet
-        ? const CircularProgressIndicator()
+        ? Padding(
+            padding: EdgeInsets.only(
+                top: ResponsiveScreen().heightMediaQuery(context, 8)),
+            child: const CircularProgressIndicator(),
+          )
         : _places.length == 0
             ? const Text(
                 'No Places',
@@ -285,23 +348,42 @@ class _PageListMapProvState extends State<PageListMapProv> {
                 ),
               )
             : Expanded(
-                child: LiveList(
-                  showItemInterval: const Duration(milliseconds: 50),
-                  showItemDuration: const Duration(milliseconds: 50),
-                  reAnimateOnVisibility: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: _places.length,
-                  itemBuilder: buildAnimatedItem,
-                  separatorBuilder: (context, i) {
-                    return SizedBox(
-                      height: ResponsiveScreen().heightMediaQuery(context, 5),
-                      width: double.infinity,
-                      child: const DecoratedBox(
-                        decoration: BoxDecoration(color: Colors.white),
+                child: _provider.isDisplayGridGet
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: LiveGrid(
+                          showItemInterval: const Duration(milliseconds: 50),
+                          showItemDuration: const Duration(milliseconds: 50),
+                          reAnimateOnVisibility: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: _places.length,
+                          itemBuilder: buildAnimatedItem,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
+                          ),
+                        ),
+                      )
+                    : LiveList(
+                        showItemInterval: const Duration(milliseconds: 50),
+                        showItemDuration: const Duration(milliseconds: 50),
+                        reAnimateOnVisibility: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: _places.length,
+                        itemBuilder: buildAnimatedItem,
+                        separatorBuilder: (context, i) {
+                          return SizedBox(
+                            height:
+                                ResponsiveScreen().heightMediaQuery(context, 5),
+                            width: double.infinity,
+                            child: const DecoratedBox(
+                              decoration: BoxDecoration(color: Colors.white),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               );
   }
 
@@ -336,11 +418,11 @@ class _PageListMapProvState extends State<PageListMapProv> {
             begin: const Offset(0, -0.1),
             end: Offset.zero,
           ).animate(animation),
-          child: _childLiveList(index),
+          child: _childLiveListGrid(index),
         ),
       );
 
-  Widget _childLiveList(int index) {
+  Widget _childLiveListGrid(int index) {
     final dis.Distance _distance = dis.Distance();
     final double _meter = _distance(
       dis.LatLng(_userLocation.latitude, _userLocation.longitude),
@@ -350,7 +432,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
     return Slidable(
       key: UniqueKey(),
       actionPane: const SlidableDrawerActionPane(),
-      actionExtentRatio: 0.10,
+      actionExtentRatio: _provider.isDisplayGridGet ? 0.15 : 0.1,
       secondaryActions: <Widget>[
         IconSlideAction(
           color: Colors.green,
@@ -380,13 +462,21 @@ class _PageListMapProvState extends State<PageListMapProv> {
           },
         ),
       ],
+      child: _listGridItem(index, _meter),
+    );
+  }
+
+  Widget _listGridItem(int index, double _meter) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
       child: Container(
-        color: Colors.grey,
         child: Stack(
           children: <Widget>[
             CachedNetworkImage(
               fit: BoxFit.fill,
-              height: ResponsiveScreen().heightMediaQuery(context, 150),
+              height: _provider.isDisplayGridGet
+                  ? double.infinity
+                  : ResponsiveScreen().heightMediaQuery(context, 150),
               width: double.infinity,
               imageUrl: _places[index].photos.isNotEmpty
                   ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
@@ -397,7 +487,9 @@ class _PageListMapProvState extends State<PageListMapProv> {
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
             Container(
-              height: ResponsiveScreen().heightMediaQuery(context, 150),
+              height: _provider.isDisplayGridGet
+                  ? double.infinity
+                  : ResponsiveScreen().heightMediaQuery(context, 150),
               width: double.infinity,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -449,45 +541,61 @@ class _PageListMapProvState extends State<PageListMapProv> {
   }
 
   Widget _chipsType() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: <Widget>[
-          ChipsChoice<String>.multiple(
-            value: _provider.tagsChipsGet,
-            options: ChipsChoiceOption.listFrom<String, String>(
-              source: _optionsChips,
-              value: (i, v) => v,
-              label: (i, v) => v,
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            ConstantsColors.GRAY,
+            ConstantsColors.TRANSPARENT,
+            ConstantsColors.TRANSPARENT,
+            ConstantsColors.TRANSPARENT,
+            ConstantsColors.TRANSPARENT,
+            ConstantsColors.GRAY,
+          ],
+        ),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: <Widget>[
+            ChipsChoice<String>.multiple(
+              value: _provider.tagsChipsGet,
+              options: ChipsChoiceOption.listFrom<String, String>(
+                source: _optionsChips,
+                value: (i, v) => v,
+                label: (i, v) => v,
+              ),
+              itemConfig: ChipsChoiceItemConfig(
+                  labelStyle: TextStyle(fontSize: 20),
+                  selectedBrightness: Brightness.dark,
+                  selectedColor: ConstantsColors.LIGHT_PURPLE,
+                  shapeBuilder: (selected) {
+                    return RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      side: BorderSide(
+                        color: selected
+                            ? Colors.deepPurpleAccent
+                            : Colors.blueGrey.withOpacity(.5),
+                      ),
+                    );
+                  }),
+              onChanged: (val) => {
+                _provider.tagsChips(val),
+                _provider.finalTagsChips(_provider.tagsChipsGet.toString()),
+                _provider.isSearchAfter(true),
+                _searchNearbyTotal(
+                    false,
+                    true,
+                    _provider.isSearchingAfterGet,
+                    _provider.finalTagsChipsGet.substring(
+                        _provider.finalTagsChipsGet.length == 0 ? 0 : 1),
+                    "")
+              },
             ),
-            itemConfig: ChipsChoiceItemConfig(
-                labelStyle: TextStyle(fontSize: 20),
-                selectedBrightness: Brightness.dark,
-                selectedColor: ConstantsColors.LIGHT_PURPLE,
-                shapeBuilder: (selected) {
-                  return RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    side: BorderSide(
-                      color: selected
-                          ? Colors.deepPurpleAccent
-                          : Colors.blueGrey.withOpacity(.5),
-                    ),
-                  );
-                }),
-            onChanged: (val) => {
-              _provider.tagsChips(val),
-              _provider.finalTagsChips(_provider.tagsChipsGet.toString()),
-              _provider.isSearchAfter(true),
-              _searchNearbyTotal(
-                  false,
-                  true,
-                  _provider.isSearchingAfterGet,
-                  _provider.finalTagsChipsGet.substring(
-                      _provider.finalTagsChipsGet.length == 0 ? 0 : 1),
-                  "")
-            },
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

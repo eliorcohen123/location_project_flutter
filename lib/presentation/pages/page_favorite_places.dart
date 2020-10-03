@@ -217,58 +217,61 @@ class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
           _provider.deleteItem(_provider.resultsSqflGet[index], index);
         },
       ),
-      child: Container(
-        color: Colors.grey,
-        child: Stack(
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                CachedNetworkImage(
-                  fit: BoxFit.fill,
-                  height: ResponsiveScreen().heightMediaQuery(context, 150),
-                  width: double.infinity,
-                  imageUrl: _provider.resultsSqflGet[index].photo.isNotEmpty
-                      ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                          _provider.resultsSqflGet[index].photo +
-                          "&key=$_API_KEY"
-                      : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          child: Stack(
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  CachedNetworkImage(
+                    fit: BoxFit.fill,
+                    height: ResponsiveScreen().heightMediaQuery(context, 150),
+                    width: double.infinity,
+                    imageUrl: _provider.resultsSqflGet[index].photo.isNotEmpty
+                        ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                            _provider.resultsSqflGet[index].photo +
+                            "&key=$_API_KEY"
+                        : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
+                ],
+              ),
+              Container(
+                height: ResponsiveScreen().heightMediaQuery(context, 150),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      ConstantsColors.GRAY,
+                      ConstantsColors.TRANSPARENT,
+                      ConstantsColors.TRANSPARENT,
+                      ConstantsColors.GRAY,
+                    ],
+                  ),
                 ),
-              ],
-            ),
-            Container(
-              height: ResponsiveScreen().heightMediaQuery(context, 150),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    ConstantsColors.GRAY,
-                    ConstantsColors.TRANSPARENT,
-                    ConstantsColors.TRANSPARENT,
-                    ConstantsColors.GRAY,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    _textList(
+                        _provider.resultsSqflGet[index].name, 17.0, 0xffE9FFFF),
+                    _textList(_provider.resultsSqflGet[index].vicinity, 15.0,
+                        0xFFFFFFFF),
+                    _textList(_calculateDistance(_meter), 15.0, 0xFFFFFFFF),
                   ],
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  _textList(
-                      _provider.resultsSqflGet[index].name, 17.0, 0xffE9FFFF),
-                  _textList(_provider.resultsSqflGet[index].vicinity, 15.0,
-                      0xFFFFFFFF),
-                  _textList(_calculateDistance(_meter), 15.0, 0xFFFFFFFF),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
