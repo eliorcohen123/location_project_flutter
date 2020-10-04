@@ -34,7 +34,7 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
   final Firestore _firestore = Firestore.instance;
   final FocusNode _focusNodeNickname = FocusNode();
   final FocusNode _focusNodeAboutMe = FocusNode();
-  var document;
+  var _document;
   TextEditingController _controllerNickname, _controllerAboutMe;
   String _id = '';
   ProviderSettingsChat _provider;
@@ -281,8 +281,8 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
       },
     ).then(
       (value) => {
-        document = _firestore.collection('users').document(_id),
-        document.get().then(
+        _document = _firestore.collection('users').document(_id),
+        _document.get().then(
           (document) {
             if (document.exists) {
               _provider.nickname(document['nickname']);
