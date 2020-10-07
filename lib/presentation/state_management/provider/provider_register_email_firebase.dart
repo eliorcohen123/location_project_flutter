@@ -4,12 +4,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ProviderRegisterEmailFirebase extends ChangeNotifier {
   SharedPreferences _sharedPrefs;
-  bool _iSuccess, _isLoading = false;
+  bool _isSuccess, _isLoading = false;
   String _textError = '';
 
   SharedPreferences get sharedGet => _sharedPrefs;
 
-  bool get isSuccessGet => _iSuccess;
+  bool get isSuccessGet => _isSuccess;
 
   bool get isLoadingGet => _isLoading;
 
@@ -21,7 +21,7 @@ class ProviderRegisterEmailFirebase extends ChangeNotifier {
   }
 
   void isSuccess(bool isSuccess) {
-    _iSuccess = isSuccess;
+    _isSuccess = isSuccess;
     notifyListeners();
   }
 
