@@ -653,6 +653,44 @@ class _PageListMapProvState extends State<PageListMapProv> {
     );
   }
 
+  void _newTaskModalBottomSheet(BuildContext context, int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () {
+            _provider.isCheckingBottomSheet(false);
+
+            Navigator.pop(context, false);
+
+            return Future.value(false);
+          },
+          child: StatefulBuilder(
+            builder: (BuildContext context,
+                void Function(void Function()) setState) {
+              return Container(
+                child: ListView(
+                  children: [
+                    WidgetAddEditFavoritePlaces(
+                      nameList: _places[index].name,
+                      addressList: _places[index].vicinity,
+                      latList: _places[index].geometry.location.lat,
+                      lngList: _places[index].geometry.location.lng,
+                      photoList: _places[index].photos.isNotEmpty
+                          ? _places[index].photos[0].photo_reference
+                          : "",
+                      edit: false,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
   void _createNavPlace(int index) async {
     _provider.isActiveNav(true);
 
@@ -813,43 +851,5 @@ class _PageListMapProvState extends State<PageListMapProv> {
             '\n' +
             'Photo: $photo',
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
-  }
-
-  void _newTaskModalBottomSheet(BuildContext context, int index) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () {
-            _provider.isCheckingBottomSheet(false);
-
-            Navigator.pop(context, false);
-
-            return Future.value(false);
-          },
-          child: StatefulBuilder(
-            builder: (BuildContext context,
-                void Function(void Function()) setState) {
-              return Container(
-                child: ListView(
-                  children: [
-                    WidgetAddEditFavoritePlaces(
-                      nameList: _places[index].name,
-                      addressList: _places[index].vicinity,
-                      latList: _places[index].geometry.location.lat,
-                      lngList: _places[index].geometry.location.lng,
-                      photoList: _places[index].photos.isNotEmpty
-                          ? _places[index].photos[0].photo_reference
-                          : "",
-                      edit: false,
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
   }
 }

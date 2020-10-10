@@ -270,6 +270,44 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
     );
   }
 
+  void _newTaskModalBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () {
+            Navigator.pop(context, false);
+
+            return Future.value(false);
+          },
+          child: StatefulBuilder(
+            builder: (BuildContext context,
+                void Function(void Function()) setState) {
+              return Container(
+                child: Wrap(
+                  children: [
+                    ListTile(
+                      title: Center(
+                        child: const Text('Take A Picture'),
+                      ),
+                      onTap: () => _getImage(true),
+                    ),
+                    ListTile(
+                      title: const Center(
+                        child: Text('Open A Gallery'),
+                      ),
+                      onTap: () => _getImage(false),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
   void _initControllerTextEditing() async {
     SharedPreferences.getInstance().then(
       (prefs) {
@@ -408,44 +446,6 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
 
         Fluttertoast.showToast(
           msg: err.toString(),
-        );
-      },
-    );
-  }
-
-  void _newTaskModalBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () {
-            Navigator.pop(context, false);
-
-            return Future.value(false);
-          },
-          child: StatefulBuilder(
-            builder: (BuildContext context,
-                void Function(void Function()) setState) {
-              return Container(
-                child: Wrap(
-                  children: [
-                    ListTile(
-                      title: Center(
-                        child: const Text('Take A Picture'),
-                      ),
-                      onTap: () => _getImage(true),
-                    ),
-                    ListTile(
-                      title: const Center(
-                        child: Text('Open A Gallery'),
-                      ),
-                      onTap: () => _getImage(false),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
         );
       },
     );

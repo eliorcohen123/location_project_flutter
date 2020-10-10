@@ -146,6 +146,96 @@ class _PageMapListProvState extends State<PageMapListProv> {
     );
   }
 
+  Future _showDialog(
+      String namePlace, String vicinity, double lat, double lng) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Center(
+                child: Text(
+                  namePlace,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              UtilsApp.dividerHeight(context, 20),
+              Text(
+                "Would you want to navigate to $namePlace?",
+                textAlign: TextAlign.center,
+              ),
+              UtilsApp.dividerHeight(context, 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    height: ResponsiveScreen().heightMediaQuery(context, 40),
+                    width: ResponsiveScreen().widthMediaQuery(context, 100),
+                    child: RaisedButton(
+                      highlightElevation: 0.0,
+                      splashColor: Colors.deepPurpleAccent,
+                      highlightColor: Colors.deepPurpleAccent,
+                      elevation: 0.0,
+                      color: Colors.deepPurpleAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: const Text(
+                        'No',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 15,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                  UtilsApp.dividerWidth(context, 20),
+                  Container(
+                    height: ResponsiveScreen().heightMediaQuery(context, 40),
+                    width: ResponsiveScreen().widthMediaQuery(context, 100),
+                    child: RaisedButton(
+                      highlightElevation: 0.0,
+                      splashColor: Colors.deepPurpleAccent,
+                      highlightColor: Colors.deepPurpleAccent,
+                      elevation: 0.0,
+                      color: Colors.deepPurpleAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: const Text(
+                        'Yes',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 15,
+                        ),
+                      ),
+                      onPressed: () {
+                        MapUtils()
+                            .openMaps(context, namePlace, vicinity, lat, lng);
+                      },
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   void _initGetSharedPrefs() {
     SharedPreferences.getInstance().then(
       (prefs) {
@@ -267,95 +357,5 @@ class _PageMapListProvState extends State<PageMapListProv> {
       );
     }
     _provider.isSearching(false);
-  }
-
-  Future _showDialog(
-      String namePlace, String vicinity, double lat, double lng) {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Center(
-                child: Text(
-                  namePlace,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              UtilsApp.dividerHeight(context, 20),
-              Text(
-                "Would you want to navigate to $namePlace?",
-                textAlign: TextAlign.center,
-              ),
-              UtilsApp.dividerHeight(context, 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    height: ResponsiveScreen().heightMediaQuery(context, 40),
-                    width: ResponsiveScreen().widthMediaQuery(context, 100),
-                    child: RaisedButton(
-                      highlightElevation: 0.0,
-                      splashColor: Colors.deepPurpleAccent,
-                      highlightColor: Colors.deepPurpleAccent,
-                      elevation: 0.0,
-                      color: Colors.deepPurpleAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      child: const Text(
-                        'No',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 15,
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
-                  UtilsApp.dividerWidth(context, 20),
-                  Container(
-                    height: ResponsiveScreen().heightMediaQuery(context, 40),
-                    width: ResponsiveScreen().widthMediaQuery(context, 100),
-                    child: RaisedButton(
-                      highlightElevation: 0.0,
-                      splashColor: Colors.deepPurpleAccent,
-                      highlightColor: Colors.deepPurpleAccent,
-                      elevation: 0.0,
-                      color: Colors.deepPurpleAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      child: const Text(
-                        'Yes',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 15,
-                        ),
-                      ),
-                      onPressed: () {
-                        MapUtils()
-                            .openMaps(context, namePlace, vicinity, lat, lng);
-                      },
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-        );
-      },
-    );
   }
 }

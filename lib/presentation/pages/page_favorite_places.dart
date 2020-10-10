@@ -302,33 +302,6 @@ class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
     );
   }
 
-  String _calculateDistance(double _meter) {
-    String _myMeters;
-    if (_meter < 1000.0) {
-      _myMeters = 'Meters: ' + (_meter.round()).toString();
-    } else {
-      _myMeters =
-          'KM: ' + (_meter.round() / 1000.0).toStringAsFixed(2).toString();
-    }
-    return _myMeters;
-  }
-
-  void _shareContent(
-      String name, String vicinity, double lat, double lng, String photo) {
-    final RenderBox box = context.findRenderObject();
-    Share.share(
-        'Name: $name' +
-            '\n' +
-            'Vicinity: $vicinity' +
-            '\n' +
-            'Latitude: $lat' +
-            '\n' +
-            'Longitude: $lng' +
-            '\n' +
-            'Photo: $photo',
-        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
-  }
-
   void _newTaskModalBottomSheet(BuildContext context, int index) {
     showModalBottomSheet(
       context: context,
@@ -354,9 +327,9 @@ class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
                       latList: _provider.resultsSqflGet[index].lat,
                       lngList: _provider.resultsSqflGet[index].lng,
                       photoList:
-                          _provider.resultsSqflGet[index].photo.isNotEmpty
-                              ? _provider.resultsSqflGet[index].photo
-                              : "",
+                      _provider.resultsSqflGet[index].photo.isNotEmpty
+                          ? _provider.resultsSqflGet[index].photo
+                          : "",
                       edit: true,
                     ),
                   ],
@@ -367,5 +340,32 @@ class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
         );
       },
     );
+  }
+
+  String _calculateDistance(double _meter) {
+    String _myMeters;
+    if (_meter < 1000.0) {
+      _myMeters = 'Meters: ' + (_meter.round()).toString();
+    } else {
+      _myMeters =
+          'KM: ' + (_meter.round() / 1000.0).toStringAsFixed(2).toString();
+    }
+    return _myMeters;
+  }
+
+  void _shareContent(
+      String name, String vicinity, double lat, double lng, String photo) {
+    final RenderBox box = context.findRenderObject();
+    Share.share(
+        'Name: $name' +
+            '\n' +
+            'Vicinity: $vicinity' +
+            '\n' +
+            'Latitude: $lat' +
+            '\n' +
+            'Longitude: $lng' +
+            '\n' +
+            'Photo: $photo',
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 }
