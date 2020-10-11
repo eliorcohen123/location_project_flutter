@@ -41,6 +41,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _provider = Provider.of<ProviderListMap>(context, listen: false);
+      _provider.initGetSharedPrefs();
       _provider.isCheckingBottomSheet(false);
       _provider.isSearching(true);
       _provider.isSearchAfter(false);
@@ -49,7 +50,6 @@ class _PageListMapProvState extends State<PageListMapProv> {
       _provider.isDisplayGrid(false);
       _provider.finalTagsChips('');
       _provider.tagsChips([]);
-      _provider.initGetSharedPrefs();
     });
   }
 
