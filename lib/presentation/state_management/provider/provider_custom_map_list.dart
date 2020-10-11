@@ -38,6 +38,22 @@ class ProviderCustomMapList extends ChangeNotifier {
     _currentLocation = LatLng(_userLocation.latitude, _userLocation.longitude);
   }
 
+  void addMarker(LatLng latLong, BuildContext context) {
+    clearMarkers();
+    markersGet.add(
+      Marker(
+        markerId: MarkerId(latLong.toString()),
+        position: latLong,
+        onTap: () => {
+          isCheckingBottomSheet(true),
+          _newTaskModalBottomSheet(context, latLong),
+        },
+        icon:
+        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueMagenta),
+      ),
+    );
+  }
+
   void _newTaskModalBottomSheet(BuildContext context, LatLng point) {
     showModalBottomSheet(
       context: context,
@@ -69,22 +85,6 @@ class ProviderCustomMapList extends ChangeNotifier {
           ),
         );
       },
-    );
-  }
-
-  void addMarker(LatLng latLong, BuildContext context) {
-    clearMarkers();
-    markersGet.add(
-      Marker(
-        markerId: MarkerId(latLong.toString()),
-        position: latLong,
-        onTap: () => {
-          isCheckingBottomSheet(true),
-          _newTaskModalBottomSheet(context, latLong),
-        },
-        icon:
-            BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueMagenta),
-      ),
     );
   }
 }
