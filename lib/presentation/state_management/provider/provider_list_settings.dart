@@ -34,4 +34,42 @@ class ProviderListSettings extends ChangeNotifier {
     _valueGeofence = valueGeofence;
     notifyListeners();
   }
+
+  void initGetSharedPrefs() {
+    SharedPreferences.getInstance().then(
+          (prefs) {
+        sharedPref(prefs);
+
+        valueOpen(sharedGet.getString('open') ?? '');
+
+        valueOpenGet == '&opennow=true'
+            ? valueOpen('Open')
+            : valueOpenGet == ''
+            ? valueOpen('All(Open + Close)')
+            : valueOpen('All(Open + Close)');
+
+        valueRadius(
+            sharedGet.getDouble('rangeRadius') ?? 5000.0);
+
+        valueGeofence(
+            sharedGet.getDouble('rangeGeofence') ?? 500.0);
+      },
+    );
+  }
+
+  void addOpenToSF(String value) async {
+    if (value == 'Open') {
+      sharedGet.setString('open', '&opennow=true');
+    } else if (value == 'All(Open + Close)') {
+      sharedGet.setString('open', '');
+    }
+  }
+
+  void addRadiusSearchToSF(double value) async {
+    sharedGet.setDouble('rangeRadius', value);
+  }
+
+  void addGeofenceToSF(double value) async {
+    sharedGet.setDouble('rangeGeofence', value);
+  }
 }

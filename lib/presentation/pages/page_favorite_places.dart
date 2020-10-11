@@ -5,15 +5,11 @@ import 'package:auto_animated/auto_animated.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:locationprojectflutter/core/constants/constants_colors.dart';
-import 'package:locationprojectflutter/core/constants/constants_urls_keys.dart';
-import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
-import 'package:locationprojectflutter/presentation/widgets/widget_add_edit_favorite_places.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_favorites_places.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:latlong/latlong.dart' as dis;
 import 'package:provider/provider.dart';
-import 'package:share/share.dart';
 
 class PageFavoritePlaces extends StatelessWidget {
   @override
@@ -32,8 +28,6 @@ class PageFavoritePlacesProv extends StatefulWidget {
 }
 
 class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
-  final String _API_KEY = ConstantsUrlsKeys.API_KEY_GOOGLE_MAPS;
-  UserLocation _userLocation;
   ProviderFavoritesPlaces _provider;
 
   @override
@@ -49,7 +43,7 @@ class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
 
   @override
   Widget build(BuildContext context) {
-    _userLocation = Provider.of<UserLocation>(context);
+    _provider.userLocation(context);
     return Scaffold(
       appBar: _appBar(),
       body: Stack(
@@ -157,7 +151,8 @@ class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
   Widget _childLiveList(int index) {
     final dis.Distance _distance = dis.Distance();
     final double _meter = _distance(
-      dis.LatLng(_userLocation.latitude, _userLocation.longitude),
+      dis.LatLng(_provider.userLocationGet.latitude,
+          _provider.userLocationGet.longitude),
       dis.LatLng(_provider.resultsSqflGet[index].lat,
           _provider.resultsSqflGet[index].lng),
     );
@@ -171,7 +166,7 @@ class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
           icon: Icons.edit,
           onTap: () => {
             _provider.isCheckingBottomSheet(true),
-            _newTaskModalBottomSheet(context, index),
+            _provider.newTaskModalBottomSheet(context, index),
           },
         ),
         IconSlideAction(
@@ -191,12 +186,14 @@ class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
           color: Colors.blueGrey,
           icon: Icons.share,
           onTap: () => {
-            _shareContent(
-                _provider.resultsSqflGet[index].name,
-                _provider.resultsSqflGet[index].vicinity,
-                _provider.resultsSqflGet[index].lat,
-                _provider.resultsSqflGet[index].lng,
-                _provider.resultsSqflGet[index].photo)
+            _provider.shareContent(
+              _provider.resultsSqflGet[index].name,
+              _provider.resultsSqflGet[index].vicinity,
+              _provider.resultsSqflGet[index].lat,
+              _provider.resultsSqflGet[index].lng,
+              _provider.resultsSqflGet[index].photo,
+              context,
+            )
           },
         ),
       ],
@@ -231,7 +228,7 @@ class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
                     imageUrl: _provider.resultsSqflGet[index].photo.isNotEmpty
                         ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
                             _provider.resultsSqflGet[index].photo +
-                            "&key=$_API_KEY"
+                            "&key=${_provider.API_KEYGet}"
                         : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
                     placeholder: (context, url) =>
                         const CircularProgressIndicator(),
@@ -267,7 +264,8 @@ class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
                         _provider.resultsSqflGet[index].name, 17.0, 0xffE9FFFF),
                     _textList(_provider.resultsSqflGet[index].vicinity, 15.0,
                         0xFFFFFFFF),
-                    _textList(_calculateDistance(_meter), 15.0, 0xFFFFFFFF),
+                    _textList(
+                        _provider.calculateDistance(_meter), 15.0, 0xFFFFFFFF),
                   ],
                 ),
               ),
@@ -300,72 +298,5 @@ class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
         color: Color(color),
       ),
     );
-  }
-
-  void _newTaskModalBottomSheet(BuildContext context, int index) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () {
-            _provider.isCheckingBottomSheet(false);
-
-            Navigator.pop(context, false);
-
-            return Future.value(false);
-          },
-          child: StatefulBuilder(
-            builder: (BuildContext context,
-                void Function(void Function()) setState) {
-              return Container(
-                child: ListView(
-                  children: [
-                    WidgetAddEditFavoritePlaces(
-                      id: _provider.resultsSqflGet[index].id,
-                      nameList: _provider.resultsSqflGet[index].name,
-                      addressList: _provider.resultsSqflGet[index].vicinity,
-                      latList: _provider.resultsSqflGet[index].lat,
-                      lngList: _provider.resultsSqflGet[index].lng,
-                      photoList:
-                      _provider.resultsSqflGet[index].photo.isNotEmpty
-                          ? _provider.resultsSqflGet[index].photo
-                          : "",
-                      edit: true,
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  String _calculateDistance(double _meter) {
-    String _myMeters;
-    if (_meter < 1000.0) {
-      _myMeters = 'Meters: ' + (_meter.round()).toString();
-    } else {
-      _myMeters =
-          'KM: ' + (_meter.round() / 1000.0).toStringAsFixed(2).toString();
-    }
-    return _myMeters;
-  }
-
-  void _shareContent(
-      String name, String vicinity, double lat, double lng, String photo) {
-    final RenderBox box = context.findRenderObject();
-    Share.share(
-        'Name: $name' +
-            '\n' +
-            'Vicinity: $vicinity' +
-            '\n' +
-            'Latitude: $lat' +
-            '\n' +
-            'Longitude: $lng' +
-            '\n' +
-            'Photo: $photo',
-        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 }

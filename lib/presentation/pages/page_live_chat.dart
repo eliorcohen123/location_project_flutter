@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:locationprojectflutter/data/models/model_live_chat/results_live_chat.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_live_chat.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
-import 'package:locationprojectflutter/presentation/utils/utils_app.dart';
 import 'package:locationprojectflutter/presentation/widgets/widget_app_bar_total.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PageLiveChat extends StatelessWidget {
   @override
@@ -27,32 +22,24 @@ class PageLiveChatProv extends StatefulWidget {
 }
 
 class _PageLiveChatProvState extends State<PageLiveChatProv> {
-  final Stream<QuerySnapshot> _snapshots = Firestore.instance
-      .collection('liveMessages')
-      .orderBy('date', descending: true)
-      .limit(50)
-      .snapshots();
-  final TextEditingController _messageController = TextEditingController();
-  final Firestore _firestore = Firestore.instance;
-  StreamSubscription<QuerySnapshot> _placeSub;
-  String _valueUserEmail;
   ProviderLiveChat _provider;
 
   @override
   void initState() {
     super.initState();
 
-    _provider = Provider.of<ProviderLiveChat>(context, listen: false);
-
-    _initGetSharedPrefs();
-    _readFirebase();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _provider = Provider.of<ProviderLiveChat>(context, listen: false);
+      _provider.initGetSharedPrefs();
+      _provider.readFirebase();
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
 
-    _placeSub?.cancel();
+    _provider.placeSubGet?.cancel();
   }
 
   @override
@@ -79,7 +66,7 @@ class _PageLiveChatProvState extends State<PageLiveChatProv> {
           return _message(
             _provider.placesGet[index].from,
             _provider.placesGet[index].text,
-            _valueUserEmail == _provider.placesGet[index].from,
+            _provider.valueUserEmailGet == _provider.placesGet[index].from,
           );
         },
       ),
@@ -94,10 +81,7 @@ class _PageLiveChatProvState extends State<PageLiveChatProv> {
         child: Row(
           children: <Widget>[
             _buildInput(),
-            _sendButton(
-              "Send",
-              callback,
-            ),
+            _sendButton("Send", _provider.callback),
           ],
         ),
       ),
@@ -113,7 +97,7 @@ class _PageLiveChatProvState extends State<PageLiveChatProv> {
         ),
         child: TextFormField(
           style: const TextStyle(color: Colors.blueGrey),
-          onSaved: (value) => callback(),
+          onSaved: (value) => _provider.callback(),
           decoration: InputDecoration(
             hintText: 'Type your message...',
             enabledBorder: OutlineInputBorder(
@@ -131,7 +115,7 @@ class _PageLiveChatProvState extends State<PageLiveChatProv> {
               ),
             ),
           ),
-          controller: _messageController,
+          controller: _provider.messageControllerGet,
         ),
       ),
     );
@@ -173,46 +157,6 @@ class _PageLiveChatProvState extends State<PageLiveChatProv> {
           ),
         ],
       ),
-    );
-  }
-
-  void _initGetSharedPrefs() {
-    SharedPreferences.getInstance().then(
-      (prefs) {
-        _provider.sharedPref(prefs);
-        _valueUserEmail =
-            _provider.sharedGet.getString('userEmail') ?? 'guest@gmail.com';
-      },
-    );
-  }
-
-  void callback() async {
-    if (_messageController.text.length > 0) {
-      await _firestore.collection("liveMessages").add(
-        {
-          'text': _messageController.text,
-          'from': _valueUserEmail,
-          'date': DateTime.now(),
-        },
-      ).then(
-        (value) => _messageController.text = '',
-      );
-    }
-  }
-
-  void _readFirebase() {
-    _placeSub?.cancel();
-    _placeSub = _snapshots.listen(
-      (QuerySnapshot snapshot) {
-        final List<ResultsLiveChat> places = snapshot.documents
-            .map(
-              (documentSnapshot) =>
-                  ResultsLiveChat.fromSqfl(documentSnapshot.data),
-            )
-            .toList();
-
-        _provider.places(places);
-      },
     );
   }
 }

@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_chat_settings.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
-import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
 import 'package:locationprojectflutter/presentation/widgets/widget_app_bar_total.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:locationprojectflutter/core/constants/constants_colors.dart';
 
 class PageChatSettings extends StatelessWidget {
@@ -31,21 +24,16 @@ class PageChatSettingsProv extends StatefulWidget {
 }
 
 class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
-  final Firestore _firestore = Firestore.instance;
-  final FocusNode _focusNodeNickname = FocusNode();
-  final FocusNode _focusNodeAboutMe = FocusNode();
-  var _document;
-  TextEditingController _controllerNickname, _controllerAboutMe;
-  String _id = '';
   ProviderSettingsChat _provider;
 
   @override
   void initState() {
     super.initState();
 
-    _provider = Provider.of<ProviderSettingsChat>(context, listen: false);
-
-    _initControllerTextEditing();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _provider = Provider.of<ProviderSettingsChat>(context, listen: false);
+      _provider.initControllerTextEditing();
+    });
   }
 
   @override
@@ -135,7 +123,7 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
                 Icons.camera_alt,
                 color: ConstantsColors.DARK_BLUE.withOpacity(0.5),
               ),
-              onPressed: () => _newTaskModalBottomSheet(context),
+              onPressed: () => _provider.newTaskModalBottomSheet(context),
               padding: const EdgeInsets.all(30.0),
               splashColor: Colors.transparent,
               highlightColor: ConstantsColors.DARK_BLUE,
@@ -179,11 +167,11 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
                     ResponsiveScreen().widthMediaQuery(context, 5)),
                 hintStyle: TextStyle(color: ConstantsColors.DARK_GRAY),
               ),
-              controller: _controllerNickname,
+              controller: _provider.controllerNicknameGet,
               onChanged: (value) {
                 _provider.nickname(value);
               },
-              focusNode: _focusNodeNickname,
+              focusNode: _provider.focusNodeNicknameGet,
             ),
           ),
           margin: EdgeInsets.symmetric(
@@ -216,11 +204,11 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
                     ResponsiveScreen().widthMediaQuery(context, 5)),
                 hintStyle: TextStyle(color: ConstantsColors.DARK_GRAY),
               ),
-              controller: _controllerAboutMe,
+              controller: _provider.controllerAboutMeGet,
               onChanged: (value) {
                 _provider.aboutMe(value);
               },
-              focusNode: _focusNodeAboutMe,
+              focusNode: _provider.focusNodeAboutMeGet,
             ),
           ),
           margin: EdgeInsets.symmetric(
@@ -234,7 +222,7 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
   Widget _buttonUpdate() {
     return Container(
       child: FlatButton(
-        onPressed: _handleUpdateData,
+        onPressed: _provider.handleUpdateData,
         child: const Text(
           'UPDATE',
           style: TextStyle(fontSize: 16.0),
@@ -267,187 +255,6 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
               color: Colors.white.withOpacity(0.8),
             )
           : Container(),
-    );
-  }
-
-  void _newTaskModalBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () {
-            Navigator.pop(context, false);
-
-            return Future.value(false);
-          },
-          child: StatefulBuilder(
-            builder: (BuildContext context,
-                void Function(void Function()) setState) {
-              return Container(
-                child: Wrap(
-                  children: [
-                    ListTile(
-                      title: Center(
-                        child: const Text('Take A Picture'),
-                      ),
-                      onTap: () => _getImage(true),
-                    ),
-                    ListTile(
-                      title: const Center(
-                        child: Text('Open A Gallery'),
-                      ),
-                      onTap: () => _getImage(false),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  void _initControllerTextEditing() async {
-    SharedPreferences.getInstance().then(
-      (prefs) {
-        _provider.sharedPref(prefs);
-        _id = _provider.sharedGet.getString('id') ?? '';
-        _provider.nickname(_provider.sharedGet.getString('nickname') ?? '');
-        _provider.aboutMe(_provider.sharedGet.getString('aboutMe') ?? '');
-        _provider.photoUrl(_provider.sharedGet.getString('photoUrl') ?? '');
-      },
-    ).then(
-      (value) => {
-        _document = _firestore.collection('users').document(_id),
-        _document.get().then(
-          (document) {
-            if (document.exists) {
-              _provider.nickname(document['nickname']);
-              _provider.aboutMe(document['aboutMe']);
-              _provider.photoUrl(document['photoUrl']);
-            }
-          },
-        ).then((value) => {
-              _controllerNickname =
-                  TextEditingController(text: _provider.nicknameGet),
-              _controllerAboutMe =
-                  TextEditingController(text: _provider.aboutMeGet),
-            }),
-      },
-    );
-  }
-
-  void _getImage(bool take) async {
-    File image;
-    if (take) {
-      image = await ImagePicker.pickImage(source: ImageSource.camera);
-    } else {
-      image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    }
-
-    if (image != null) {
-      image = await ShowerPages.pushPageSimpleImageCrop(context, image);
-
-      _provider.avatarImageFile(image);
-      _provider.isLoading(true);
-
-      Navigator.pop(context, false);
-
-      _uploadFile();
-    }
-  }
-
-  void _uploadFile() async {
-    StorageReference reference = FirebaseStorage.instance.ref().child(_id);
-    StorageUploadTask uploadTask =
-        reference.putFile(_provider.avatarImageFileGet);
-    StorageTaskSnapshot storageTaskSnapshot;
-    uploadTask.onComplete.then(
-      (value) {
-        if (value.error == null) {
-          storageTaskSnapshot = value;
-          storageTaskSnapshot.ref.getDownloadURL().then(
-            (downloadUrl) {
-              _provider.photoUrl(downloadUrl);
-              _firestore.collection('users').document(_id).updateData(
-                {
-                  'nickname': _provider.nicknameGet,
-                  'aboutMe': _provider.aboutMeGet,
-                  'photoUrl': _provider.photoUrlGet,
-                },
-              ).then(
-                (data) {
-                  _provider.isLoading(false);
-
-                  Fluttertoast.showToast(
-                    msg: "Upload success",
-                  );
-                },
-              ).catchError(
-                (err) {
-                  _provider.isLoading(false);
-
-                  Fluttertoast.showToast(
-                    msg: err.toString(),
-                  );
-                },
-              );
-            },
-            onError: (err) {
-              _provider.isLoading(false);
-
-              Fluttertoast.showToast(
-                msg: 'This file is not an image',
-              );
-            },
-          );
-        } else {
-          _provider.isLoading(false);
-
-          Fluttertoast.showToast(
-            msg: 'This file is not an image',
-          );
-        }
-      },
-      onError: (err) {
-        _provider.isLoading(false);
-
-        Fluttertoast.showToast(
-          msg: err.toString(),
-        );
-      },
-    );
-  }
-
-  void _handleUpdateData() {
-    _focusNodeNickname.unfocus();
-    _focusNodeAboutMe.unfocus();
-
-    _provider.isLoading(true);
-
-    _firestore.collection('users').document(_id).updateData(
-      {
-        'nickname': _provider.nicknameGet,
-        'aboutMe': _provider.aboutMeGet,
-        'photoUrl': _provider.photoUrlGet,
-      },
-    ).then(
-      (data) {
-        _provider.isLoading(false);
-
-        Fluttertoast.showToast(
-          msg: "Update Success",
-        );
-      },
-    ).catchError(
-      (err) {
-        _provider.isLoading(false);
-
-        Fluttertoast.showToast(
-          msg: err.toString(),
-        );
-      },
     );
   }
 }

@@ -1,32 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'dart:async';
 import 'dart:ui';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:auto_animated/auto_animated.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_instagram_stories/flutter_instagram_stories.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong/latlong.dart' as dis;
 import 'package:locationprojectflutter/core/constants/constants_colors.dart';
 import 'package:locationprojectflutter/core/constants/constants_images.dart';
-import 'package:locationprojectflutter/core/constants/constants_urls_keys.dart';
-import 'package:locationprojectflutter/data/models/model_googleapis/results.dart';
-import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
-import 'package:locationprojectflutter/data/repositories_impl/location_repo_impl.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_list_map.dart';
-import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
 import 'package:locationprojectflutter/presentation/utils/utils_app.dart';
 import 'package:locationprojectflutter/presentation/widgets/widget_drawer_total.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:share/share.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:math';
-import 'package:locationprojectflutter/presentation/widgets/widget_add_edit_favorite_places.dart';
-//import 'package:locationprojectflutter/core/services/service_locator.dart';
 
 class PageListMap extends StatelessWidget {
   @override
@@ -45,35 +33,7 @@ class PageListMapProv extends StatefulWidget {
 }
 
 class _PageListMapProvState extends State<PageListMapProv> {
-  final String _API_KEY = ConstantsUrlsKeys.API_KEY_GOOGLE_MAPS;
-  final GlobalKey<FormState> _formKeySearch = GlobalKey<FormState>();
-  final TextEditingController _controllerSearch = TextEditingController();
-  final Firestore _firestore = Firestore.instance;
-  final LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
-  List<Results> _places = [];
-  List<String> _optionsChips = [
-    'Banks',
-    'Bars',
-    'Beauty',
-    'Bus stations',
-    'Cars',
-    'Clothing',
-    'Doctors',
-    'Gas stations',
-    'Gym',
-    'Jewelries',
-    'Parks',
-    'Restaurants',
-    'School',
-    'Spa',
-  ];
-  double _valueRadius;
-  String _open;
-  UserLocation _userLocation;
   ProviderListMap _provider;
-
-//  LocationRepoImpl _locationRepoImpl;
-//  _ListMapState() : _locationRepoImpl = serviceLocator();
 
   @override
   void initState() {
@@ -89,15 +49,14 @@ class _PageListMapProvState extends State<PageListMapProv> {
       _provider.isDisplayGrid(false);
       _provider.finalTagsChips('');
       _provider.tagsChips([]);
+      _provider.initGetSharedPrefs();
     });
-
-    _initGetSharedPrefs();
   }
 
   @override
   Widget build(BuildContext context) {
-    _userLocation = Provider.of<UserLocation>(context);
-    _searchNearbyTotal(true, _provider.isSearchingGet, false, "", "");
+    _provider.userLocation(context);
+    _provider.searchNearbyTotal(true, _provider.isSearchingGet, false, "", "");
     return Scaffold(
       appBar: _appBar(),
       body: NestedScrollView(
@@ -148,7 +107,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
         iconTheme: IconThemeData(color: ConstantsColors.LIGHT_BLUE),
         backgroundColor: ConstantsColors.BLACK2,
         title: Form(
-          key: _formKeySearch,
+          key: _provider.formKeySearchGet,
           child: Row(
             children: <Widget>[
               Flexible(
@@ -164,7 +123,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
                       ),
                     ),
                   ),
-                  controller: _controllerSearch,
+                  controller: _provider.controllerSearchGet,
                   style: const TextStyle(color: Colors.white),
                   validator: (value) {
                     if (value.isEmpty) {
@@ -179,15 +138,15 @@ class _PageListMapProvState extends State<PageListMapProv> {
                 icon: const Icon(Icons.search),
                 color: ConstantsColors.LIGHT_BLUE,
                 onPressed: () {
-                  if (_formKeySearch.currentState.validate()) {
+                  if (_provider.formKeySearchGet.currentState.validate()) {
                     _provider.tagsChips([]);
                     _provider.isSearchAfter(true);
-                    _searchNearbyTotal(
+                    _provider.searchNearbyTotal(
                         false,
                         true,
                         _provider.isSearchingAfterGet,
                         "",
-                        _controllerSearch.text);
+                        _provider.controllerSearchGet.text);
                   }
                 },
               ),
@@ -199,7 +158,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
             icon: const Icon(Icons.close),
             color: ConstantsColors.LIGHT_BLUE,
             onPressed: () => {
-              _controllerSearch.clear(),
+              _provider.controllerSearchGet.clear(),
               _provider.isActiveSearch(false),
             },
           )
@@ -221,7 +180,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
             onPressed: () => {
               _provider.tagsChips([]),
               _provider.isSearchAfter(true),
-              _searchNearbyTotal(
+              _provider.searchNearbyTotal(
                   false, true, _provider.isSearchingAfterGet, "", ""),
             },
           ),
@@ -366,82 +325,82 @@ class _PageListMapProvState extends State<PageListMapProv> {
   Widget _listGridData() {
     return _provider.isSearchingGet || _provider.isSearchingAfterGet
         ? Padding(
-      padding: EdgeInsets.only(
-          top: ResponsiveScreen().heightMediaQuery(context, 8)),
-      child: const CircularProgressIndicator(),
-    )
-        : _places.length == 0
-        ? const Text(
-      'No Places',
-      style: TextStyle(
-        color: Colors.deepPurpleAccent,
-        fontSize: 30,
-      ),
-    )
-        : Expanded(
-      child: _provider.isDisplayGridGet
-          ? Padding(
-        padding: EdgeInsets.all(
-            ResponsiveScreen().widthMediaQuery(context, 8)),
-        child: LiveGrid(
-          showItemInterval: const Duration(milliseconds: 50),
-          showItemDuration: const Duration(milliseconds: 50),
-          reAnimateOnVisibility: true,
-          scrollDirection: Axis.vertical,
-          itemCount: _places.length,
-          itemBuilder: buildAnimatedItem,
-          gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing:
-            ResponsiveScreen().widthMediaQuery(context, 8),
-            mainAxisSpacing:
-            ResponsiveScreen().widthMediaQuery(context, 8),
-          ),
-        ),
-      )
-          : LiveList(
-        showItemInterval: const Duration(milliseconds: 50),
-        showItemDuration: const Duration(milliseconds: 50),
-        reAnimateOnVisibility: true,
-        scrollDirection: Axis.vertical,
-        itemCount: _places.length,
-        itemBuilder: buildAnimatedItem,
-        separatorBuilder: (context, i) {
-          return SizedBox(
-            height:
-            ResponsiveScreen().heightMediaQuery(context, 5),
-            width: double.infinity,
-            child: const DecoratedBox(
-              decoration: BoxDecoration(color: Colors.white),
-            ),
-          );
-        },
-      ),
-    );
+            padding: EdgeInsets.only(
+                top: ResponsiveScreen().heightMediaQuery(context, 8)),
+            child: const CircularProgressIndicator(),
+          )
+        : _provider.placesGet.length == 0
+            ? const Text(
+                'No Places',
+                style: TextStyle(
+                  color: Colors.deepPurpleAccent,
+                  fontSize: 30,
+                ),
+              )
+            : Expanded(
+                child: _provider.isDisplayGridGet
+                    ? Padding(
+                        padding: EdgeInsets.all(
+                            ResponsiveScreen().widthMediaQuery(context, 8)),
+                        child: LiveGrid(
+                          showItemInterval: const Duration(milliseconds: 50),
+                          showItemDuration: const Duration(milliseconds: 50),
+                          reAnimateOnVisibility: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: _provider.placesGet.length,
+                          itemBuilder: buildAnimatedItem,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing:
+                                ResponsiveScreen().widthMediaQuery(context, 8),
+                            mainAxisSpacing:
+                                ResponsiveScreen().widthMediaQuery(context, 8),
+                          ),
+                        ),
+                      )
+                    : LiveList(
+                        showItemInterval: const Duration(milliseconds: 50),
+                        showItemDuration: const Duration(milliseconds: 50),
+                        reAnimateOnVisibility: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: _provider.placesGet.length,
+                        itemBuilder: buildAnimatedItem,
+                        separatorBuilder: (context, i) {
+                          return SizedBox(
+                            height:
+                                ResponsiveScreen().heightMediaQuery(context, 5),
+                            width: double.infinity,
+                            child: const DecoratedBox(
+                              decoration: BoxDecoration(color: Colors.white),
+                            ),
+                          );
+                        },
+                      ),
+              );
   }
 
   Widget _blur() {
     return _provider.isCheckingBottomSheetGet == true
         ? Positioned.fill(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: ResponsiveScreen().widthMediaQuery(context, 5),
-          sigmaY: ResponsiveScreen().widthMediaQuery(context, 5),
-        ),
-        child: Container(
-          color: Colors.black.withOpacity(0),
-        ),
-      ),
-    )
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: ResponsiveScreen().widthMediaQuery(context, 5),
+                sigmaY: ResponsiveScreen().widthMediaQuery(context, 5),
+              ),
+              child: Container(
+                color: Colors.black.withOpacity(0),
+              ),
+            ),
+          )
         : Container();
   }
 
   Widget buildAnimatedItem(
-      BuildContext context,
-      int index,
-      Animation<double> animation,
-      ) =>
+    BuildContext context,
+    int index,
+    Animation<double> animation,
+  ) =>
       FadeTransition(
         opacity: Tween<double>(
           begin: 0,
@@ -459,9 +418,10 @@ class _PageListMapProvState extends State<PageListMapProv> {
   Widget _childLiveListGrid(int index) {
     final dis.Distance _distance = dis.Distance();
     final double _meter = _distance(
-      dis.LatLng(_userLocation.latitude, _userLocation.longitude),
-      dis.LatLng(_places[index].geometry.location.lat,
-          _places[index].geometry.location.lng),
+      dis.LatLng(_provider.userLocationGet.latitude,
+          _provider.userLocationGet.longitude),
+      dis.LatLng(_provider.placesGet[index].geometry.location.lat,
+          _provider.placesGet[index].geometry.location.lng),
     );
     return Slidable(
       key: UniqueKey(),
@@ -473,26 +433,28 @@ class _PageListMapProvState extends State<PageListMapProv> {
           icon: Icons.add,
           onTap: () => {
             _provider.isCheckingBottomSheet(true),
-            _newTaskModalBottomSheet(context, index),
+            _provider.newTaskModalBottomSheet(context, index),
           },
         ),
         IconSlideAction(
           color: Colors.greenAccent,
           icon: Icons.directions,
           onTap: () => {
-            _createNavPlace(index),
+            _provider.createNavPlace(index, context),
           },
         ),
         IconSlideAction(
           color: Colors.blueGrey,
           icon: Icons.share,
           onTap: () => {
-            _shareContent(
-                _places[index].name,
-                _places[index].vicinity,
-                _places[index].geometry.location.lat,
-                _places[index].geometry.location.lng,
-                _places[index].photos[0].photo_reference)
+            _provider.shareContent(
+              _provider.placesGet[index].name,
+              _provider.placesGet[index].vicinity,
+              _provider.placesGet[index].geometry.location.lat,
+              _provider.placesGet[index].geometry.location.lng,
+              _provider.placesGet[index].photos[0].photo_reference,
+              context,
+            )
           },
         ),
       ],
@@ -512,10 +474,10 @@ class _PageListMapProvState extends State<PageListMapProv> {
                   ? double.infinity
                   : ResponsiveScreen().heightMediaQuery(context, 150),
               width: double.infinity,
-              imageUrl: _places[index].photos.isNotEmpty
+              imageUrl: _provider.placesGet[index].photos.isNotEmpty
                   ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                  _places[index].photos[0].photo_reference +
-                  "&key=$_API_KEY"
+                      _provider.placesGet[index].photos[0].photo_reference +
+                      "&key=${_provider.API_KEYGet}"
                   : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
               placeholder: (context, url) => const CircularProgressIndicator(),
               errorWidget: (context, url, error) => const Icon(Icons.error),
@@ -545,21 +507,23 @@ class _PageListMapProvState extends State<PageListMapProv> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
+                  _textListView(_provider.placesGet[index].name, 17.0,
+                      ConstantsColors.LIGHT_BLUE),
                   _textListView(
-                      _places[index].name, 17.0, ConstantsColors.LIGHT_BLUE),
-                  _textListView(_places[index].vicinity, 15.0, Colors.white),
+                      _provider.placesGet[index].vicinity, 15.0, Colors.white),
                   Row(
                     children: [
-                      _textListView(
-                          _calculateDistance(_meter), 15.0, Colors.white),
+                      _textListView(_provider.calculateDistance(_meter), 15.0,
+                          Colors.white),
                       UtilsApp.dividerWidth(context, 20),
                       _textListView(
-                        _places[index].opening_hours != null
-                            ? _places[index].opening_hours.open_now
-                            ? 'Open'
-                            : !_places[index].opening_hours.open_now
-                            ? 'Close'
-                            : 'No info'
+                        _provider.placesGet[index].opening_hours != null
+                            ? _provider.placesGet[index].opening_hours.open_now
+                                ? 'Open'
+                                : !_provider
+                                        .placesGet[index].opening_hours.open_now
+                                    ? 'Close'
+                                    : 'No info'
                             : "No info",
                         15.0,
                         ConstantsColors.YELLOW,
@@ -598,7 +562,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
             ChipsChoice<String>.multiple(
               value: _provider.tagsChipsGet,
               options: ChipsChoiceOption.listFrom<String, String>(
-                source: _optionsChips,
+                source: _provider.optionsChipsGet,
                 value: (i, v) => v,
                 label: (i, v) => v,
               ),
@@ -620,7 +584,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
                 _provider.tagsChips(val),
                 _provider.finalTagsChips(_provider.tagsChipsGet.toString()),
                 _provider.isSearchAfter(true),
-                _searchNearbyTotal(
+                _provider.searchNearbyTotal(
                     false,
                     true,
                     _provider.isSearchingAfterGet,
@@ -651,205 +615,5 @@ class _PageListMapProvState extends State<PageListMapProv> {
         color: color,
       ),
     );
-  }
-
-  void _newTaskModalBottomSheet(BuildContext context, int index) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () {
-            _provider.isCheckingBottomSheet(false);
-
-            Navigator.pop(context, false);
-
-            return Future.value(false);
-          },
-          child: StatefulBuilder(
-            builder: (BuildContext context,
-                void Function(void Function()) setState) {
-              return Container(
-                child: ListView(
-                  children: [
-                    WidgetAddEditFavoritePlaces(
-                      nameList: _places[index].name,
-                      addressList: _places[index].vicinity,
-                      latList: _places[index].geometry.location.lat,
-                      lngList: _places[index].geometry.location.lng,
-                      photoList: _places[index].photos.isNotEmpty
-                          ? _places[index].photos[0].photo_reference
-                          : "",
-                      edit: false,
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  void _createNavPlace(int index) async {
-    _provider.isActiveNav(true);
-
-    var document = _firestore.collection('places').document(_places[index].id);
-    document.get().then(
-          (document) {
-        if (document.exists) {
-          _provider.count(document['count']);
-        } else {
-          _provider.count(null);
-        }
-      },
-    ).then(
-          (value) => _addToFirebase(index, _provider.countGet),
-    );
-  }
-
-  void _addToFirebase(int index, int count) async {
-    DateTime now = DateTime.now();
-
-    Map<String, dynamic> dataFile = Map();
-    dataFile["filetype"] = 'image';
-    dataFile["url"] = {
-      'en': _places[index].photos.isNotEmpty
-          ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-          _places[index].photos[0].photo_reference +
-          "&key=$_API_KEY"
-          : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
-    };
-
-    var listFile = List<Map<String, dynamic>>();
-    listFile.add(dataFile);
-
-    await _firestore
-        .collection("stories")
-        .document(_places[index].id)
-        .setData(
-      {
-        "date": now,
-        "file": listFile,
-        "previewImage": _places[index].photos.isNotEmpty
-            ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-            _places[index].photos[0].photo_reference +
-            "&key=$_API_KEY"
-            : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
-        "previewTitle": {'en': _places[index].name},
-      },
-    )
-        .then(
-          (result) async => {
-        await _firestore
-            .collection("places")
-            .document(_places[index].id)
-            .setData(
-          {
-            "date": now,
-            'idLive': _places[index].id,
-            'count': count != null ? count + 1 : 1,
-            "name": _places[index].name,
-            "vicinity": _places[index].vicinity,
-            "lat": _places[index].geometry.location.lat,
-            "lng": _places[index].geometry.location.lng,
-            "photo": _places[index].photos.isNotEmpty
-                ? _places[index].photos[0].photo_reference
-                : "",
-          },
-        ).then(
-              (result) => {
-            _provider.isActiveNav(false),
-            print(_provider.isActiveNavGet),
-            ShowerPages.pushPageMapList(
-              context,
-              _places[index].name,
-              _places[index].vicinity,
-              _places[index].geometry.location.lat,
-              _places[index].geometry.location.lng,
-            ),
-          },
-        )
-      },
-    )
-        .catchError(
-          (err) => print(err),
-    );
-  }
-
-  String _calculateDistance(double _meter) {
-    String _myMeters;
-    if (_meter < 1000.0) {
-      _myMeters = 'Meters: ' + (_meter.round()).toString();
-    } else {
-      _myMeters =
-          'KM: ' + (_meter.round() / 1000.0).toStringAsFixed(2).toString();
-    }
-    return _myMeters;
-  }
-
-  void _initGetSharedPrefs() {
-    SharedPreferences.getInstance().then(
-          (prefs) {
-        _provider.sharedPref(prefs);
-        _valueRadius = _provider.sharedGet.getDouble('rangeRadius') ?? 5000.0;
-        _open = _provider.sharedGet.getString('open') ?? '';
-      },
-    );
-  }
-
-  void _searchNearbyTotal(bool start, bool isSearching, bool isSearchingAfter,
-      String type, String text) {
-    _searchNearby(start, isSearching, isSearchingAfter, type, text).then(
-          (value) => {
-        _sortSearchNearby(value),
-      },
-    );
-  }
-
-  Future _searchNearby(bool start, bool isSearching, bool isSearchingAfter,
-      String type, String text) async {
-    if (start && isSearching) {
-      _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
-          _userLocation.longitude, _open, type, _valueRadius.round(), text);
-      _provider.isSearching(false);
-      print(_provider.isSearchingGet);
-    } else if (!start && isSearchingAfter) {
-      _places = await _locationRepoImpl.getLocationJson(_userLocation.latitude,
-          _userLocation.longitude, _open, type, _valueRadius.round(), text);
-      _provider.isSearchAfter(false);
-      print(_provider.isSearchingAfterGet);
-    }
-    return _places;
-  }
-
-  void _sortSearchNearby(List<Results> _places) {
-    _places.sort(
-          (a, b) => sqrt(
-        pow(a.geometry.location.lat - _userLocation.latitude, 2) +
-            pow(a.geometry.location.lng - _userLocation.longitude, 2),
-      ).compareTo(
-        sqrt(
-          pow(b.geometry.location.lat - _userLocation.latitude, 2) +
-              pow(b.geometry.location.lng - _userLocation.longitude, 2),
-        ),
-      ),
-    );
-  }
-
-  void _shareContent(
-      String name, String vicinity, double lat, double lng, String photo) {
-    final RenderBox box = context.findRenderObject();
-    Share.share(
-        'Name: $name' +
-            '\n' +
-            'Vicinity: $vicinity' +
-            '\n' +
-            'Latitude: $lat' +
-            '\n' +
-            'Longitude: $lng' +
-            '\n' +
-            'Photo: $photo',
-        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 }

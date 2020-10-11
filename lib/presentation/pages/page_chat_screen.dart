@@ -1,28 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'dart:async';
-import 'dart:io';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file/local.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_audio_recorder/flutter_audio_recorder.dart' as rec;
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:locationprojectflutter/core/constants/constants_images.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_chat_screen.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
-import 'package:locationprojectflutter/presentation/utils/utils_app.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:locationprojectflutter/presentation/widgets/widget_audio.dart';
 import 'package:locationprojectflutter/presentation/widgets/widget_video.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:locationprojectflutter/core/constants/constants_colors.dart';
 
 class PageChatScreen extends StatelessWidget {
@@ -55,15 +45,6 @@ class PageChatScreenProv extends StatefulWidget {
 }
 
 class _PageChatScreenProvState extends State<PageChatScreenProv> {
-  final Firestore _firestore = Firestore.instance;
-  final TextEditingController _textEditingController = TextEditingController();
-  final ScrollController _listScrollController = ScrollController();
-  final LocalFileSystem localFileSystem = LocalFileSystem();
-  final FocusNode _focusNode = FocusNode();
-  rec.FlutterAudioRecorder _recorder;
-  String _groupChatId = '', _imageVideoAudioUrl = '', _id;
-  var _listMessage;
-  File _imageVideoAudioFile;
   ProviderChatScreen _provider;
 
   @override
@@ -72,19 +53,18 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _provider = Provider.of<ProviderChatScreen>(context, listen: false);
+      _provider.initGetSharedPrefs(widget.peerId);
       _provider.isShowSticker(false);
       _provider.recordingStatus(rec.RecordingStatus.Initialized);
+      _provider.focusNode(_provider.focusNodeGet);
+      _provider.focusNodeGet.addListener(_provider.onFocusChange);
+      _provider.initRecord(context);
     });
-
-    _focusNode.addListener(_onFocusChange);
-
-    _initGetSharedPrefs();
-    _initRecord();
   }
 
   @override
   Widget build(BuildContext context) {
-    _handleCameraAndMic();
+    _provider.handleCameraAndMic();
     return Scaffold(
       appBar: _appBar(),
       body: Stack(
@@ -104,10 +84,14 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
           icon: const Icon(Icons.video_call),
           color: ConstantsColors.LIGHT_BLUE,
           onPressed: () => {
-            _onSendMessage(_idVideo(), 5),
+            _provider.onSendMessage(
+              _provider.idVideo(widget.peerId),
+              5,
+              widget.peerId,
+            ),
             ShowerPages.pushPageVideoCall(
               context,
-              _idVideo(),
+              _provider.idVideo(widget.peerId),
               ClientRole.Broadcaster,
             ),
           },
@@ -136,7 +120,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
 
   Widget _buildMessagesList() {
     return Flexible(
-      child: _groupChatId == ''
+      child: _provider.groupChatIdGet == ''
           ? Center(
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(
@@ -145,10 +129,10 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
               ),
             )
           : StreamBuilder(
-              stream: _firestore
+              stream: _provider.firestoreGet
                   .collection('messages')
-                  .document(_groupChatId)
-                  .collection(_groupChatId)
+                  .document(_provider.groupChatIdGet)
+                  .collection(_provider.groupChatIdGet)
                   .orderBy('timestamp', descending: true)
                   .limit(30)
                   .snapshots(),
@@ -162,15 +146,15 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                     ),
                   );
                 } else {
-                  _listMessage = snapshot.data.documents;
+                  _provider.listMessage(snapshot.data.documents);
                   return ListView.builder(
                     padding: EdgeInsets.all(
                         ResponsiveScreen().widthMediaQuery(context, 10)),
                     itemBuilder: (context, index) =>
-                        _buildItem(index, _listMessage[index]),
-                    itemCount: _listMessage.length,
+                        _buildItem(index, _provider.listMessageGet[index]),
+                    itemCount: _provider.listMessageGet.length,
                     reverse: true,
-                    controller: _listScrollController,
+                    controller: _provider.listScrollControllerGet,
                   );
                 }
               },
@@ -216,7 +200,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
 
   Widget _stickers(String name, String asset) {
     return FlatButton(
-      onPressed: () => _onSendMessage(name, 2),
+      onPressed: () => _provider.onSendMessage(name, 2, widget.peerId),
       child: Image.asset(
         asset,
         width: ResponsiveScreen().widthMediaQuery(context, 50),
@@ -232,15 +216,15 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
         children: <Widget>[
           _iconInput(
             const Icon(Icons.camera_alt),
-            () => _newTaskModalBottomSheet(context, 1),
+            () => _provider.newTaskModalBottomSheet(context, 1, widget.peerId),
           ),
           _iconInput(
             const Icon(Icons.video_library),
-            () => _newTaskModalBottomSheet(context, 3),
+            () => _provider.newTaskModalBottomSheet(context, 3, widget.peerId),
           ),
           _iconInput(
             const Icon(Icons.face),
-            () => _getSticker(),
+            () => _provider.getSticker(),
           ),
           _iconInput(
             _provider.isCurrentStatusGet == rec.RecordingStatus.Initialized
@@ -251,8 +235,8 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                   ),
             () =>
                 _provider.isCurrentStatusGet == rec.RecordingStatus.Initialized
-                    ? _startRecord()
-                    : _stopRecord(),
+                    ? _provider.startRecord()
+                    : _provider.stopRecord(context, widget.peerId),
           ),
           Flexible(
             child: Container(
@@ -261,18 +245,22 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                   color: ConstantsColors.DARK_BLUE,
                   fontSize: 15.0,
                 ),
-                controller: _textEditingController,
+                controller: _provider.textEditingControllerGet,
                 decoration: InputDecoration.collapsed(
                   hintText: 'Type your message...',
                   hintStyle: TextStyle(color: ConstantsColors.DARK_GRAY),
                 ),
-                focusNode: _focusNode,
+                focusNode: _provider.focusNodeGet,
               ),
             ),
           ),
           _iconInput(
             const Icon(Icons.send),
-            () => _onSendMessage(_textEditingController.text, 0),
+            () => _provider.onSendMessage(
+              _provider.textEditingControllerGet.text,
+              0,
+              widget.peerId,
+            ),
           ),
         ],
       ),
@@ -306,7 +294,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
   }
 
   Widget _buildItem(int index, DocumentSnapshot document) {
-    if (document['idFrom'] == _id) {
+    if (document['idFrom'] == _provider.idGet) {
       return Row(
         children: <Widget>[
           document['type'] == 0
@@ -325,7 +313,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                   margin: EdgeInsets.only(
-                    bottom: _isLastMessageRight(index)
+                    bottom: _provider.isLastMessageRight(index)
                         ? ResponsiveScreen().heightMediaQuery(context, 20)
                         : ResponsiveScreen().heightMediaQuery(context, 10),
                     right: ResponsiveScreen().widthMediaQuery(context, 10),
@@ -384,7 +372,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                         padding: EdgeInsets.all(0),
                       ),
                       margin: EdgeInsets.only(
-                        bottom: _isLastMessageRight(index)
+                        bottom: _provider.isLastMessageRight(index)
                             ? ResponsiveScreen().heightMediaQuery(context, 20)
                             : ResponsiveScreen().heightMediaQuery(context, 10),
                         right: ResponsiveScreen().widthMediaQuery(context, 10),
@@ -401,7 +389,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                             fit: BoxFit.cover,
                           ),
                           margin: EdgeInsets.only(
-                            bottom: _isLastMessageRight(index)
+                            bottom: _provider.isLastMessageRight(index)
                                 ? ResponsiveScreen()
                                     .heightMediaQuery(context, 20)
                                 : ResponsiveScreen()
@@ -416,7 +404,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                                 url: document['content'],
                               ),
                               margin: EdgeInsets.only(
-                                bottom: _isLastMessageRight(index)
+                                bottom: _provider.isLastMessageRight(index)
                                     ? ResponsiveScreen()
                                         .heightMediaQuery(context, 20)
                                     : ResponsiveScreen()
@@ -437,7 +425,10 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                                 )
                               : document['type'] == 5
                                   ? GestureDetector(
-                                      onTap: () => _videoSendMessage(),
+                                      onTap: () => _provider.videoSendMessage(
+                                        widget.peerId,
+                                        context,
+                                      ),
                                       child: Container(
                                         child: Text(
                                           'Join video call',
@@ -458,7 +449,8 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                                               BorderRadius.circular(8.0),
                                         ),
                                         margin: EdgeInsets.only(
-                                          bottom: _isLastMessageRight(index)
+                                          bottom: _provider
+                                                  .isLastMessageRight(index)
                                               ? ResponsiveScreen()
                                                   .heightMediaQuery(context, 20)
                                               : ResponsiveScreen()
@@ -479,7 +471,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                _isLastMessageLeft(index)
+                _provider.isLastMessageLeft(index)
                     ? Material(
                         child: CachedNetworkImage(
                           placeholder: (context, url) => Container(
@@ -652,7 +644,9 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                                       )
                                     : document['type'] == 5
                                         ? GestureDetector(
-                                            onTap: () => _videoSendMessage(),
+                                            onTap: () =>
+                                                _provider.videoSendMessage(
+                                                    widget.peerId, context),
                                             child: Container(
                                               child: const Text(
                                                 'Join video call',
@@ -685,7 +679,7 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                                         : Container(),
               ],
             ),
-            _isLastMessageLeft(index)
+            _provider.isLastMessageLeft(index)
                 ? Container(
                     child: Text(
                       DateFormat('dd MMM kk:mm').format(
@@ -730,399 +724,5 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
             ),
           )
         : Container();
-  }
-
-  Future _showDialog(int type) {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return WillPopScope(
-          onWillPop: () {
-            _provider.isLoading(false);
-
-            Navigator.pop(context, false);
-
-            return Future.value(false);
-          },
-          child: AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  type == 1
-                      ? "Would you want to send this image?"
-                      : type == 3
-                      ? "Would you want to send this video?"
-                      : type == 4
-                      ? "Would you want to send this audio?"
-                      : '',
-                  textAlign: TextAlign.center,
-                ),
-                UtilsApp.dividerHeight(context, 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: ResponsiveScreen().heightMediaQuery(context, 40),
-                      width: ResponsiveScreen().widthMediaQuery(context, 100),
-                      child: RaisedButton(
-                        highlightElevation: 0.0,
-                        splashColor: Colors.deepPurpleAccent,
-                        highlightColor: Colors.deepPurpleAccent,
-                        elevation: 0.0,
-                        color: Colors.deepPurpleAccent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        child: const Text(
-                          'No',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 15,
-                          ),
-                        ),
-                        onPressed: () {
-                          _provider.isLoading(false);
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ),
-                    UtilsApp.dividerWidth(context, 20),
-                    Container(
-                      height: ResponsiveScreen().heightMediaQuery(context, 40),
-                      width: ResponsiveScreen().widthMediaQuery(context, 100),
-                      child: RaisedButton(
-                        highlightElevation: 0.0,
-                        splashColor: Colors.deepPurpleAccent,
-                        highlightColor: Colors.deepPurpleAccent,
-                        elevation: 0.0,
-                        color: Colors.deepPurpleAccent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        child: const Text(
-                          'Yes',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 15,
-                          ),
-                        ),
-                        onPressed: () {
-                          _uploadFile(type);
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _newTaskModalBottomSheet(BuildContext context, int type) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () {
-            Navigator.pop(context, false);
-
-            return Future.value(false);
-          },
-          child: StatefulBuilder(
-            builder: (BuildContext context,
-                void Function(void Function()) setState) {
-              return Container(
-                child: Wrap(
-                  children: [
-                    ListTile(
-                      title: Center(
-                        child: type == 1
-                            ? const Text('Take A Picture')
-                            : const Text('Take A Video'),
-                      ),
-                      onTap: () => _getImageVideo(type, true),
-                    ),
-                    ListTile(
-                      title: Center(
-                        child: type == 1
-                            ? const Text('Open A Picture Gallery')
-                            : const Text('Open A Video Gallery'),
-                      ),
-                      onTap: () => _getImageVideo(type, false),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  void _initGetSharedPrefs() {
-    SharedPreferences.getInstance().then(
-      (prefs) {
-        _provider.sharedPref(prefs);
-        _id = _provider.sharedPrefsGet.getString('id') ?? '';
-        if (_id.hashCode <= widget.peerId.hashCode) {
-          _groupChatId = '$_id-${widget.peerId}';
-        } else {
-          _groupChatId = '${widget.peerId}-$_id';
-        }
-      },
-    ).then(
-      (value) => _readLocal(),
-    );
-  }
-
-  void _readLocal() async {
-    await _firestore.collection('users').document(_id).updateData(
-      {
-        'chattingWith': widget.peerId,
-      },
-    ).then(
-      (value) => print(widget.peerId),
-    );
-  }
-
-  void _getImageVideo(int type, bool take) async {
-    if (type == 1) {
-      if (take) {
-        _imageVideoAudioFile =
-            await ImagePicker.pickImage(source: ImageSource.camera);
-      } else {
-        _imageVideoAudioFile =
-            await ImagePicker.pickImage(source: ImageSource.gallery);
-      }
-    } else if (type == 3) {
-      if (take) {
-        _imageVideoAudioFile =
-            await ImagePicker.pickVideo(source: ImageSource.camera);
-      } else {
-        _imageVideoAudioFile =
-            await ImagePicker.pickVideo(source: ImageSource.gallery);
-      }
-    }
-
-    if (_imageVideoAudioFile != null) {
-      Navigator.pop(context, false);
-
-      _provider.isLoading(true);
-
-      _showDialog(type);
-    }
-  }
-
-  void _onFocusChange() {
-    if (_focusNode.hasFocus) {
-      _provider.isShowSticker(false);
-    }
-  }
-
-  void _getSticker() {
-    _focusNode.unfocus();
-
-    _provider.isShowSticker(!_provider.isShowStickerGet);
-  }
-
-  void _uploadFile(int type) async {
-    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
-    StorageUploadTask uploadTask;
-    if (type == 1) {
-      uploadTask = reference.putFile(
-        _imageVideoAudioFile,
-      );
-    } else if (type == 3) {
-      uploadTask = reference.putFile(
-        _imageVideoAudioFile,
-        StorageMetadata(contentType: 'video/mp4'),
-      );
-    } else if (type == 4) {
-      uploadTask = reference.putFile(
-        _imageVideoAudioFile,
-        StorageMetadata(contentType: 'audio/mp3'),
-      );
-    }
-    StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
-    storageTaskSnapshot.ref.getDownloadURL().then(
-      (downloadUrl) {
-        _imageVideoAudioUrl = downloadUrl;
-
-        _provider.isLoading(false);
-        _onSendMessage(_imageVideoAudioUrl, type);
-      },
-      onError: (err) {
-        _provider.isLoading(false);
-        Fluttertoast.showToast(
-          msg: err.toString(),
-        );
-      },
-    );
-  }
-
-  void _onSendMessage(String content, int type) {
-    if (content.trim() != '') {
-      _textEditingController.clear();
-
-      var documentReference = _firestore
-          .collection('messages')
-          .document(_groupChatId)
-          .collection(_groupChatId)
-          .document(DateTime.now().millisecondsSinceEpoch.toString());
-
-      _firestore.runTransaction(
-        (transaction) async {
-          await transaction.set(
-            documentReference,
-            {
-              'idFrom': _id,
-              'idTo': widget.peerId,
-              'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-              'content': content,
-              'type': type,
-            },
-          );
-        },
-      );
-      _listScrollController.animateTo(
-        0.0,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
-    } else {
-      Fluttertoast.showToast(
-        msg: 'Nothing to send',
-      );
-    }
-  }
-
-  bool _isLastMessageLeft(int index) {
-    if ((index > 0 &&
-            _listMessage != null &&
-            _listMessage[index - 1]['idFrom'] == _id) ||
-        index == 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  bool _isLastMessageRight(int index) {
-    if ((index > 0 &&
-            _listMessage != null &&
-            _listMessage[index - 1]['idFrom'] != _id) ||
-        index == 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  String _idVideo() {
-    List<String> _strList = [];
-    _strList.add(_id);
-    _strList.add(widget.peerId);
-    _strList.sort((a, b) => a.compareTo(b));
-    String _strId = _strList[0] + _strList[1];
-    return _strId;
-  }
-
-  void _videoSendMessage() {
-    ShowerPages.pushPageVideoCall(
-      context,
-      _idVideo(),
-      ClientRole.Broadcaster,
-    );
-  }
-
-  void _initRecord() async {
-    try {
-      if (await rec.FlutterAudioRecorder.hasPermissions) {
-        String customPath = '/flutter_audio_recorder_';
-        Directory appDocDirectory;
-        if (kIsWeb) {
-          print('Web');
-        } else {
-          if (Platform.isIOS) {
-            appDocDirectory = await getApplicationDocumentsDirectory();
-          } else {
-            appDocDirectory = await getExternalStorageDirectory();
-          }
-        }
-
-        customPath = appDocDirectory.path +
-            customPath +
-            DateTime.now().millisecondsSinceEpoch.toString();
-
-        _recorder = rec.FlutterAudioRecorder(customPath,
-            audioFormat: rec.AudioFormat.WAV);
-
-        await _recorder.initialized;
-        var current = await _recorder.current(channel: 0);
-        _provider.recording(current);
-        _provider.recordingStatus(current.status);
-      } else {
-        Scaffold.of(context).showSnackBar(
-            SnackBar(content: const Text("You must accept permissions")));
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  void _startRecord() async {
-    try {
-      await _recorder.start();
-      var recording = await _recorder.current(channel: 0);
-      _provider.recording(recording);
-
-      const tick = const Duration(milliseconds: 50);
-      Timer.periodic(tick, (Timer t) async {
-        if (_provider.isCurrentStatusGet == rec.RecordingStatus.Stopped) {
-          t.cancel();
-        }
-
-        var current = await _recorder.current(channel: 0);
-        _provider.recording(current);
-        _provider.recordingStatus(_provider.isCurrentGet.status);
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  void _stopRecord() async {
-    var result = await _recorder.stop();
-    _imageVideoAudioFile = localFileSystem.file(result.path);
-
-    _provider.recording(result);
-    _provider.recordingStatus(_provider.isCurrentGet.status);
-
-    if (_imageVideoAudioFile != null) {
-      _provider.isLoading(true);
-
-      _showDialog(4);
-    }
-
-    _initRecord();
-  }
-
-  void _handleCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.camera, PermissionGroup.microphone],
-    );
   }
 }

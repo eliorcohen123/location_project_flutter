@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_register_email_firebase.dart';
 import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
 import 'package:locationprojectflutter/presentation/utils/utils_app.dart';
-import 'package:locationprojectflutter/presentation/utils/validations.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/widget_btn_firebase.dart';
 import 'package:locationprojectflutter/presentation/widgets/widget_tff_firebase.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PageRegisterEmailFirebase extends StatelessWidget {
   @override
@@ -31,11 +27,6 @@ class PageRegisterEmailFirebaseProv extends StatefulWidget {
 
 class _PageRegisterEmailFirebaseProvState
     extends State<PageRegisterEmailFirebaseProv> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final Firestore _firestore = Firestore.instance;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
   ProviderRegisterEmailFirebase _provider;
 
   @override
@@ -45,27 +36,18 @@ class _PageRegisterEmailFirebaseProvState
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _provider =
           Provider.of<ProviderRegisterEmailFirebase>(context, listen: false);
+      _provider.initGetSharedPrefs();
       _provider.isSuccess(null);
       _provider.isLoading(false);
       _provider.textError('');
     });
-
-    _initGetSharedPrefs();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    _emailController.dispose();
-    _passwordController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
-        key: _formKey,
+        key: _provider.formKeyGet,
         child: Container(
           color: Colors.blueGrey,
           child: Center(
@@ -113,7 +95,7 @@ class _PageRegisterEmailFirebaseProvState
           child: WidgetTFFFirebase(
             icon: const Icon(Icons.email),
             hint: "Email",
-            controller: _emailController,
+            controller: _provider.emailControllerGet,
             textInputType: TextInputType.emailAddress,
             obSecure: false,
           ),
@@ -125,7 +107,7 @@ class _PageRegisterEmailFirebaseProvState
           child: WidgetTFFFirebase(
             icon: const Icon(Icons.lock),
             hint: "Password",
-            controller: _passwordController,
+            controller: _provider.passwordControllerGet,
             textInputType: TextInputType.text,
             obSecure: true,
           ),
@@ -142,7 +124,7 @@ class _PageRegisterEmailFirebaseProvState
           bottom: MediaQuery.of(context).viewInsets.bottom),
       child: WidgetBtnFirebase(
         text: 'Register',
-        onTap: () => _checkClickBtnRegister(),
+        onTap: () => _provider.checkClickBtnRegister(context),
       ),
     );
   }
@@ -153,7 +135,9 @@ class _PageRegisterEmailFirebaseProvState
       child: Text(
         _provider.isSuccessGet == null
             ? ''
-            : _provider.isSuccessGet ? '' : _provider.textErrorGet,
+            : _provider.isSuccessGet
+                ? ''
+                : _provider.textErrorGet,
         style: const TextStyle(
           color: Colors.redAccent,
           fontSize: 15,
@@ -182,96 +166,5 @@ class _PageRegisterEmailFirebaseProvState
     return _provider.isLoadingGet == true
         ? const CircularProgressIndicator()
         : Container();
-  }
-
-  void _checkClickBtnRegister() {
-    if (_formKey.currentState.validate()) {
-      if (Validations().validateEmail(_emailController.text) &&
-          Validations().validatePassword(_passwordController.text)) {
-        _provider.isLoading(true);
-        _provider.textError('');
-
-        _registerEmailFirebase();
-      } else if (!Validations().validateEmail(_emailController.text)) {
-        _provider.isSuccess(false);
-        _provider.textError('Invalid Email');
-      } else if (!Validations().validatePassword(_passwordController.text)) {
-        _provider.isSuccess(false);
-        _provider.textError('Password must be at least 8 characters');
-      }
-    }
-  }
-
-  void _registerEmailFirebase() async {
-    final FirebaseUser user = (await _auth
-            .createUserWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-    )
-            .catchError(
-      (error) {
-        _provider.isSuccess(false);
-        _provider.isLoading(false);
-        _provider.textError(error.message);
-      },
-    ))
-        .user;
-    if (user != null) {
-      _provider.isSuccess(true);
-      _provider.isLoading(false);
-      _provider.textError('');
-
-      final QuerySnapshot result = await _firestore
-          .collection('users')
-          .where('id', isEqualTo: user.uid)
-          .getDocuments();
-      final List<DocumentSnapshot> documents = result.documents;
-      if (documents.length == 0) {
-        _firestore.collection('users').document(user.uid).setData(
-          {
-            'nickname': user.displayName,
-            'photoUrl': user.photoUrl,
-            'id': user.uid,
-            'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
-            'chattingWith': null
-          },
-        );
-
-        await _provider.sharedGet.setString('id', user.uid);
-        await _provider.sharedGet.setString('nickname', user.displayName);
-        await _provider.sharedGet.setString('photoUrl', user.photoUrl);
-      } else {
-        await _provider.sharedGet.setString('id', documents[0]['id']);
-        await _provider.sharedGet
-            .setString('nickname', documents[0]['nickname']);
-        await _provider.sharedGet.setString('aboutMe', documents[0]['aboutMe']);
-        await _provider.sharedGet
-            .setString('photoUrl', documents[0]['photoUrl']);
-      }
-
-      print(user.email);
-      _addUserEmail(user.email);
-      _addIdEmail(user.uid);
-      ShowerPages.pushRemoveReplacementPageListMap(context);
-    } else {
-      _provider.isSuccess(false);
-      _provider.isLoading(false);
-    }
-  }
-
-  void _initGetSharedPrefs() {
-    SharedPreferences.getInstance().then(
-      (prefs) {
-        _provider.sharedPref(prefs);
-      },
-    );
-  }
-
-  void _addUserEmail(String value) async {
-    _provider.sharedGet.setString('userEmail', value);
-  }
-
-  void _addIdEmail(String value) async {
-    _provider.sharedGet.setString('userIdEmail', value);
   }
 }

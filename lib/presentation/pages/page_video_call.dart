@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:locationprojectflutter/core/constants/constants_urls_keys.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_video_call.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/widget_app_bar_total.dart';
@@ -40,7 +39,6 @@ class PageVideoCallProv extends StatefulWidget {
 }
 
 class _PageVideoCallProvState extends State<PageVideoCallProv> {
-  final String _AGORA_KEY = ConstantsUrlsKeys.API_KEY_AGORA;
   ProviderVideoCall _provider;
 
   @override
@@ -54,14 +52,12 @@ class _PageVideoCallProvState extends State<PageVideoCallProv> {
       _provider.usersClear();
     });
 
-    _initialize();
+    _provider.initialize(widget.channelName, widget.role);
   }
 
   @override
   void dispose() {
     super.dispose();
-
-    _provider.usersClear();
 
     AgoraRtcEngine.leaveChannel();
     AgoraRtcEngine.destroy();
@@ -153,7 +149,7 @@ class _PageVideoCallProvState extends State<PageVideoCallProv> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           RawMaterialButton(
-            onPressed: _onToggleMute,
+            onPressed: _provider.onToggleMute,
             child: Icon(
               _provider.isMutedGet ? Icons.mic_off : Icons.mic,
               color: _provider.isMutedGet ? Colors.white : Colors.blueAccent,
@@ -166,7 +162,7 @@ class _PageVideoCallProvState extends State<PageVideoCallProv> {
                 EdgeInsets.all(ResponsiveScreen().widthMediaQuery(context, 12)),
           ),
           RawMaterialButton(
-            onPressed: () => _onCallEnd(context),
+            onPressed: () => _provider.onCallEnd(context),
             child: const Icon(
               Icons.call_end,
               color: Colors.white,
@@ -179,7 +175,7 @@ class _PageVideoCallProvState extends State<PageVideoCallProv> {
                 EdgeInsets.all(ResponsiveScreen().widthMediaQuery(context, 15)),
           ),
           RawMaterialButton(
-            onPressed: _onSwitchCamera,
+            onPressed: _provider.onSwitchCamera,
             child: Icon(
               Icons.switch_camera,
               color: Colors.blueAccent,
@@ -196,134 +192,55 @@ class _PageVideoCallProvState extends State<PageVideoCallProv> {
     );
   }
 
-  // Widget _panel() {
-  //   return Container(
-  //     padding: const EdgeInsets.symmetric(vertical: ResponsiveScreen().heightMediaQuery(context, 48)),
-  //     alignment: Alignment.bottomCenter,
-  //     child: FractionallySizedBox(
-  //       heightFactor: 0.5,
-  //       child: Container(
-  //         padding: const EdgeInsets.symmetric(vertical: 48),
-  //         child: ListView.builder(
-  //           reverse: true,
-  //           itemCount: _provider.isInfoStringsGet.length,
-  //           itemBuilder: (BuildContext context, int index) {
-  //             if (_provider.isInfoStringsGet.isEmpty) {
-  //               return null;
-  //             }
-  //             return Padding(
-  //               padding: EdgeInsets.symmetric(
-  //                 vertical: ResponsiveScreen().heightMediaQuery(context, 3),
-  //                 horizontal: ResponsiveScreen().widthMediaQuery(context, 10),
-  //               ),
-  //               child: Row(
-  //                 mainAxisSize: MainAxisSize.min,
-  //                 children: [
-  //                   Flexible(
-  //                     child: Container(
-  //                       padding: EdgeInsets.symmetric(
-  //                         vertical:
-  //                             ResponsiveScreen().heightMediaQuery(context, 2),
-  //                         horizontal:
-  //                             ResponsiveScreen().widthMediaQuery(context, 5),
-  //                       ),
-  //                       decoration: BoxDecoration(
-  //                         color: Colors.yellowAccent,
-  //                         borderRadius: BorderRadius.circular(5),
-  //                       ),
-  //                       child: Text(
-  //                         _provider.isInfoStringsGet[index],
-  //                         style: const TextStyle(color: Colors.blueGrey),
-  //                       ),
-  //                     ),
-  //                   )
-  //                 ],
-  //               ),
-  //             );
-  //           },
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  void _initialize() async {
-    if (_AGORA_KEY.isEmpty) {
-      _provider.infoStringsAdd(
-          'APP_ID missing, please provide your APP_ID in settings.dart');
-      _provider.infoStringsAdd('Agora Engine is not starting');
-      return;
-    }
-
-    _initAgoraRtcEngine();
-    _addAgoraEventHandlers();
-    await AgoraRtcEngine.enableWebSdkInteroperability(true);
-    VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
-    configuration.dimensions = const Size(1920, 1080);
-    await AgoraRtcEngine.setVideoEncoderConfiguration(configuration);
-    await AgoraRtcEngine.joinChannel(null, widget.channelName, null, 0);
-  }
-
-  void _initAgoraRtcEngine() async {
-    await AgoraRtcEngine.create(_AGORA_KEY);
-    await AgoraRtcEngine.enableVideo();
-    await AgoraRtcEngine.setChannelProfile(ChannelProfile.LiveBroadcasting);
-    await AgoraRtcEngine.setClientRole(widget.role);
-  }
-
-  void _addAgoraEventHandlers() {
-    AgoraRtcEngine.onError = (dynamic code) {
-      final info = 'onError: $code';
-      _provider.infoStringsAdd(info);
-    };
-
-    AgoraRtcEngine.onJoinChannelSuccess = (
-      String channel,
-      int uid,
-      int elapsed,
-    ) {
-      final info = 'onJoinChannel: $channel, uid: $uid';
-      _provider.infoStringsAdd(info);
-    };
-
-    AgoraRtcEngine.onLeaveChannel = () {
-      _provider.infoStringsAdd('onLeaveChannel');
-      _provider.usersClear();
-    };
-
-    AgoraRtcEngine.onUserJoined = (int uid, int elapsed) {
-      final info = 'userJoined: $uid';
-      _provider.infoStringsAdd(info);
-      _provider.usersAdd(uid);
-    };
-
-    AgoraRtcEngine.onUserOffline = (int uid, int reason) {
-      final info = 'userOffline: $uid';
-      _provider.infoStringsAdd(info);
-      _provider.usersRemove(uid);
-    };
-
-    AgoraRtcEngine.onFirstRemoteVideoFrame = (
-      int uid,
-      int width,
-      int height,
-      int elapsed,
-    ) {
-      final info = 'firstRemoteVideo: $uid ${width}x $height';
-      _provider.infoStringsAdd(info);
-    };
-  }
-
-  void _onCallEnd(BuildContext context) {
-    Navigator.pop(context);
-  }
-
-  void _onToggleMute() {
-    _provider.isMuted(!_provider.isMutedGet);
-    AgoraRtcEngine.muteLocalAudioStream(_provider.isMutedGet);
-  }
-
-  void _onSwitchCamera() {
-    AgoraRtcEngine.switchCamera();
-  }
+// Widget _panel() {
+//   return Container(
+//     padding: EdgeInsets.symmetric(
+//         vertical: ResponsiveScreen().heightMediaQuery(context, 48)),
+//     alignment: Alignment.bottomCenter,
+//     child: FractionallySizedBox(
+//       heightFactor: 0.5,
+//       child: Container(
+//         padding: const EdgeInsets.symmetric(vertical: 48),
+//         child: ListView.builder(
+//           reverse: true,
+//           itemCount: _provider.isInfoStringsGet.length,
+//           itemBuilder: (BuildContext context, int index) {
+//             if (_provider.isInfoStringsGet.isEmpty) {
+//               return null;
+//             }
+//             return Padding(
+//               padding: EdgeInsets.symmetric(
+//                 vertical: ResponsiveScreen().heightMediaQuery(context, 3),
+//                 horizontal: ResponsiveScreen().widthMediaQuery(context, 10),
+//               ),
+//               child: Row(
+//                 mainAxisSize: MainAxisSize.min,
+//                 children: [
+//                   Flexible(
+//                     child: Container(
+//                       padding: EdgeInsets.symmetric(
+//                         vertical:
+//                             ResponsiveScreen().heightMediaQuery(context, 2),
+//                         horizontal:
+//                             ResponsiveScreen().widthMediaQuery(context, 5),
+//                       ),
+//                       decoration: BoxDecoration(
+//                         color: Colors.yellowAccent,
+//                         borderRadius: BorderRadius.circular(5),
+//                       ),
+//                       child: Text(
+//                         _provider.isInfoStringsGet[index],
+//                         style: const TextStyle(color: Colors.blueGrey),
+//                       ),
+//                     ),
+//                   )
+//                 ],
+//               ),
+//             );
+//           },
+//         ),
+//       ),
+//     ),
+//   );
+// }
 }

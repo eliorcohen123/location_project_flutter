@@ -6,7 +6,6 @@ import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
 import 'package:locationprojectflutter/presentation/utils/utils_app.dart';
 import 'package:locationprojectflutter/presentation/widgets/widget_app_bar_total.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PageListSettings extends StatelessWidget {
   @override
@@ -31,9 +30,10 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
   void initState() {
     super.initState();
 
-    _provider = Provider.of<ProviderListSettings>(context, listen: false);
-
-    _initGetSharedPrefs();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _provider = Provider.of<ProviderListSettings>(context, listen: false);
+      _provider.initGetSharedPrefs();
+    });
   }
 
   @override
@@ -176,49 +176,11 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
       child: const Text('Save'),
       color: Colors.greenAccent,
       onPressed: () => {
-        _addOpenToSF(_provider.valueOpenGet),
-        _addRadiusSearchToSF(_provider.valueRadiusGet),
-        _addGeofenceToSF(_provider.valueGeofenceGet),
-        ShowerPages.pushPageListMap(context),
+        _provider.addOpenToSF(_provider.valueOpenGet),
+        _provider.addRadiusSearchToSF(_provider.valueRadiusGet),
+        _provider.addGeofenceToSF(_provider.valueGeofenceGet),
+        ShowerPages.pushRemoveReplacementPageListMap(context),
       },
     );
-  }
-
-  void _initGetSharedPrefs() {
-    SharedPreferences.getInstance().then(
-      (prefs) {
-        _provider.sharedPref(prefs);
-
-        _provider.valueOpen(_provider.sharedGet.getString('open') ?? '');
-
-        _provider.valueOpenGet == '&opennow=true'
-            ? _provider.valueOpen('Open')
-            : _provider.valueOpenGet == ''
-                ? _provider.valueOpen('All(Open + Close)')
-                : _provider.valueOpen('All(Open + Close)');
-
-        _provider.valueRadius(
-            _provider.sharedGet.getDouble('rangeRadius') ?? 5000.0);
-
-        _provider.valueGeofence(
-            _provider.sharedGet.getDouble('rangeGeofence') ?? 500.0);
-      },
-    );
-  }
-
-  void _addOpenToSF(String value) async {
-    if (value == 'Open') {
-      _provider.sharedGet.setString('open', '&opennow=true');
-    } else if (value == 'All(Open + Close)') {
-      _provider.sharedGet.setString('open', '');
-    }
-  }
-
-  void _addRadiusSearchToSF(double value) async {
-    _provider.sharedGet.setDouble('rangeRadius', value);
-  }
-
-  void _addGeofenceToSF(double value) async {
-    _provider.sharedGet.setDouble('rangeGeofence', value);
   }
 }
