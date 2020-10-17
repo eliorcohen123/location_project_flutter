@@ -74,7 +74,7 @@ class SQFLiteHelper {
         columnVicinity,
         columnLat,
         columnLng,
-        columnPhoto
+        columnPhoto,
       ],
     );
     return result.toList();

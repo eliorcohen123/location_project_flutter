@@ -44,12 +44,7 @@ class LocationRemoteDataSource {
       print(_error.errorMessage);
     } else if (data['status'] == "OK") {
       _places = List<Results>.from(
-        data['results']
-            .map(
-              (i) => Results.fromJson(i),
-            )
-            .toList(),
-      );
+          data['results'].map((i) => Results.fromJson(i)).toList());
     } else {
       _places = [];
       print(data);

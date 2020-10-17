@@ -4,8 +4,6 @@ class Geometry {
   Location location;
 
   Geometry.fromJson(Map<String, dynamic> json) {
-    this.location = Location.fromJson(
-      json['location'],
-    );
+    this.location = Location.fromJson(json['location']);
   }
 }
