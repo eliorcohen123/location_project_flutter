@@ -198,7 +198,8 @@ class ProviderListMap extends ChangeNotifier {
   void createNavPlace(int index, BuildContext context) async {
     isActiveNav(true);
 
-    DocumentReference document = _firestore.collection('places').document(_places[index].id);
+    DocumentReference document =
+        _firestore.collection('places').document(_places[index].id);
     document.get().then(
       (document) {
         if (document.exists) {
@@ -309,6 +310,7 @@ class ProviderListMap extends ChangeNotifier {
         _sortSearchNearby(value),
       },
     );
+    notifyListeners();
   }
 
   Future _searchNearby(bool start, bool bIsSearching, bool isSearchingAfter,
