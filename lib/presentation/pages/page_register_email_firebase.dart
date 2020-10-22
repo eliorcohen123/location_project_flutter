@@ -46,10 +46,10 @@ class _PageRegisterEmailFirebaseProvState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blueGrey,
       body: Form(
         key: _provider.formKeyGet,
         child: Container(
-          color: Colors.blueGrey,
           child: Center(
             child: SingleChildScrollView(
               child: Column(
