@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ProviderPhoneSMSAuth extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final Firestore _firestore = Firestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final GlobalKey<FormState> _formKeyPhone = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeySms = GlobalKey<FormState>();
   final TextEditingController _phoneController = TextEditingController();
@@ -115,7 +115,7 @@ class ProviderPhoneSMSAuth extends ChangeNotifier {
     };
 
     final PhoneVerificationFailed verificationFailed =
-        (AuthException authException) {
+        (FirebaseAuthException authException) {
       textError(
           'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
       isSuccess(false);
@@ -156,7 +156,7 @@ class ProviderPhoneSMSAuth extends ChangeNotifier {
   }
 
   void signInWithPhoneNumber(BuildContext context) async {
-    final AuthCredential credential = PhoneAuthProvider.getCredential(
+    final AuthCredential credential = PhoneAuthProvider.credential(
       verificationId: verificationIdGet,
       smsCode: _smsController1.text +
           _smsController2.text +
@@ -165,22 +165,21 @@ class ProviderPhoneSMSAuth extends ChangeNotifier {
           _smsController5.text +
           _smsController6.text,
     );
-    final FirebaseUser user =
-        (await _auth.signInWithCredential(credential).catchError(
+    final User user = (await _auth.signInWithCredential(credential).catchError(
       (error) {
         isSuccess(false);
         isLoading(false);
         textError(error.message);
       },
     ))
-            .user;
-    final FirebaseUser currentUser = await _auth.currentUser();
+        .user;
+    final User currentUser = _auth.currentUser;
     assert(user.uid == currentUser.uid);
 
     _addToFirebase(user, context);
   }
 
-  void _addToFirebase(FirebaseUser user, BuildContext context) async {
+  void _addToFirebase(User user, BuildContext context) async {
     if (user != null) {
       isSuccess(true);
       isLoading(false);
@@ -190,12 +189,12 @@ class ProviderPhoneSMSAuth extends ChangeNotifier {
       final QuerySnapshot result = await _firestore
           .collection('users')
           .where('id', isEqualTo: user.uid)
-          .getDocuments();
-      final List<DocumentSnapshot> documents = result.documents;
+          .get();
+      final List<DocumentSnapshot> documents = result.docs;
       if (documents.length == 0) {
-        _firestore.collection('users').document(user.uid).setData({
+        _firestore.collection('users').doc(user.uid).set({
           'nickname': user.displayName,
-          'photoUrl': user.photoUrl,
+          'photoUrl': user.photoURL,
           'id': user.uid,
           'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
           'chattingWith': null
@@ -203,12 +202,11 @@ class ProviderPhoneSMSAuth extends ChangeNotifier {
 
         await sharedGet.setString('id', user.uid);
         await sharedGet.setString('nickname', user.displayName);
-        await sharedGet.setString('photoUrl', user.photoUrl);
+        await sharedGet.setString('photoUrl', user.photoURL);
       } else {
         await sharedGet.setString('id', documents[0]['id']);
         await sharedGet.setString('nickname', documents[0]['nickname']);
         await sharedGet.setString('photoUrl', documents[0]['photoUrl']);
-        await sharedGet.setString('aboutMe', documents[0]['aboutMe']);
       }
 
       print(user.email);

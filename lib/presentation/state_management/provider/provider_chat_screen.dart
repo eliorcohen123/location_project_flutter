@@ -18,7 +18,7 @@ import 'package:flutter_audio_recorder/flutter_audio_recorder.dart' as rec;
 import 'package:file/local.dart';
 
 class ProviderChatScreen extends ChangeNotifier {
-  final Firestore _firestore = Firestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final TextEditingController _textEditingController = TextEditingController();
   final ScrollController _listScrollController = ScrollController();
   final LocalFileSystem localFileSystem = LocalFileSystem();
@@ -32,7 +32,7 @@ class ProviderChatScreen extends ChangeNotifier {
   List<DocumentSnapshot> _listMessage;
   File _imageVideoAudioFile;
 
-  Firestore get firestoreGet => _firestore;
+  FirebaseFirestore get firestoreGet => _firestore;
 
   TextEditingController get textEditingControllerGet => _textEditingController;
 
@@ -246,7 +246,7 @@ class ProviderChatScreen extends ChangeNotifier {
   }
 
   void _readLocal(String peerId) async {
-    await _firestore.collection('users').document(_id).updateData(
+    await _firestore.collection('users').doc(_id).update(
       {
         'chattingWith': peerId,
       },
@@ -336,13 +336,13 @@ class ProviderChatScreen extends ChangeNotifier {
 
       DocumentReference documentReference = _firestore
           .collection('messages')
-          .document(_groupChatId)
+          .doc(_groupChatId)
           .collection(_groupChatId)
-          .document(DateTime.now().millisecondsSinceEpoch.toString());
+          .doc(DateTime.now().millisecondsSinceEpoch.toString());
 
       _firestore.runTransaction(
         (transaction) async {
-          await transaction.set(
+          transaction.set(
             documentReference,
             {
               'idFrom': _id,

@@ -17,7 +17,7 @@ class ProviderListMap extends ChangeNotifier {
   final String _API_KEY = ConstantsUrlsKeys.API_KEY_GOOGLE_MAPS;
   final GlobalKey<FormState> _formKeySearch = GlobalKey<FormState>();
   final TextEditingController _controllerSearch = TextEditingController();
-  final Firestore _firestore = Firestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final LocationRepoImpl _locationRepoImpl = LocationRepoImpl();
   SharedPreferences _sharedPrefs;
   bool _isActiveSearch = false,
@@ -199,11 +199,11 @@ class ProviderListMap extends ChangeNotifier {
     isActiveNav(true);
 
     DocumentReference document =
-        _firestore.collection('places').document(_places[index].id);
+        _firestore.collection('places').doc(_places[index].id);
     document.get().then(
       (document) {
         if (document.exists) {
-          count(document['count']);
+          count(document.data()['count']);
         } else {
           count(null);
         }
@@ -231,8 +231,8 @@ class ProviderListMap extends ChangeNotifier {
 
     await _firestore
         .collection("stories")
-        .document(_places[index].id)
-        .setData(
+        .doc(_places[index].id)
+        .set(
           {
             "date": now,
             "file": listFile,
@@ -246,10 +246,7 @@ class ProviderListMap extends ChangeNotifier {
         )
         .then(
           (result) async => {
-            await _firestore
-                .collection("places")
-                .document(_places[index].id)
-                .setData(
+            await _firestore.collection("places").doc(_places[index].id).set(
               {
                 "date": now,
                 'idLive': _places[index].id,

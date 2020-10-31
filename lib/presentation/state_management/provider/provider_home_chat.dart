@@ -10,7 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProviderHomeChat extends ChangeNotifier {
-  final Firestore _firestore = Firestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -18,7 +18,7 @@ class ProviderHomeChat extends ChangeNotifier {
   String _valueIdUser;
   List<DocumentSnapshot> _listMessage;
 
-  Firestore get firestoreGet => _firestore;
+  FirebaseFirestore get firestoreGet => _firestore;
 
   SharedPreferences get sharedGet => _sharedPrefs;
 
@@ -74,7 +74,7 @@ class ProviderHomeChat extends ChangeNotifier {
     _firebaseMessaging.getToken().then(
       (token) {
         print('token: $token');
-        _firestore.collection('users').document(_valueIdUser).updateData(
+        _firestore.collection('users').doc(_valueIdUser).update(
           {
             'pushToken': token,
           },

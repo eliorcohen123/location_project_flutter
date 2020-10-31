@@ -6,13 +6,13 @@ import 'package:locationprojectflutter/data/models/model_live_chat/results_live_
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProviderLiveChat extends ChangeNotifier {
-  final Stream<QuerySnapshot> _snapshots = Firestore.instance
+  final Stream<QuerySnapshot> _snapshots = FirebaseFirestore.instance
       .collection('liveMessages')
       .orderBy('date', descending: true)
       .limit(50)
       .snapshots();
   final TextEditingController _messageController = TextEditingController();
-  final Firestore _firestore = Firestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   SharedPreferences _sharedPrefs;
   List<ResultsLiveChat> _places = [];
   StreamSubscription<QuerySnapshot> _placeSub;
@@ -65,10 +65,10 @@ class ProviderLiveChat extends ChangeNotifier {
     _placeSub?.cancel();
     _placeSub = _snapshots.listen(
       (QuerySnapshot snapshot) {
-        final List<ResultsLiveChat> places = snapshot.documents
+        final List<ResultsLiveChat> places = snapshot.docs
             .map(
               (documentSnapshot) =>
-                  ResultsLiveChat.fromSqfl(documentSnapshot.data),
+                  ResultsLiveChat.fromSqfl(documentSnapshot.data()),
             )
             .toList();
 

@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
 
 class ProviderSettingsChat extends ChangeNotifier {
-  final Firestore _firestore = Firestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FocusNode _focusNodeNickname = FocusNode();
   final FocusNode _focusNodeAboutMe = FocusNode();
   bool _isLoading = false;
@@ -119,13 +119,13 @@ class ProviderSettingsChat extends ChangeNotifier {
       },
     ).then(
       (value) => {
-        _document = _firestore.collection('users').document(_id),
+        _document = _firestore.collection('users').doc(_id),
         _document.get().then(
           (document) {
             if (document.exists) {
-              nickname(document['nickname']);
-              aboutMe(document['aboutMe']);
-              photoUrl(document['photoUrl']);
+              nickname(document.data()['nickname']);
+              aboutMe(document.data()['aboutMe']);
+              photoUrl(document.data()['photoUrl']);
             }
           },
         ).then((value) => {
@@ -167,7 +167,7 @@ class ProviderSettingsChat extends ChangeNotifier {
           storageTaskSnapshot.ref.getDownloadURL().then(
             (downloadUrl) {
               photoUrl(downloadUrl);
-              _firestore.collection('users').document(_id).updateData(
+              _firestore.collection('users').doc(_id).update(
                 {
                   'nickname': nicknameGet,
                   'aboutMe': aboutMeGet,
@@ -213,7 +213,7 @@ class ProviderSettingsChat extends ChangeNotifier {
 
     isLoading(true);
 
-    _firestore.collection('users').document(_id).updateData(
+    _firestore.collection('users').doc(_id).update(
       {
         'nickname': nicknameGet,
         'aboutMe': aboutMeGet,

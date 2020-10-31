@@ -1,7 +1,7 @@
 name: locationprojectflutter
 description: A new Flutter application.
 
-version: 1.0.0+45
+version: 1.0.0+46
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -27,11 +27,12 @@ dependencies:
   image_picker: ^0.6.7+2
   photo_view: ^0.5.0
   intl: ^0.16.1
-  firebase_auth: ^0.16.0
-  cloud_firestore: ^0.13.5
-  firebase_messaging: ^6.0.15
-  firebase_storage: ^3.0.6
-  google_sign_in: ^4.0.0
+  firebase_auth: ^0.18.2
+  cloud_firestore: ^0.14.2
+  firebase_messaging: ^7.0.3
+  firebase_storage: ^4.0.1
+  firebase_core: ^0.5.1
+  google_sign_in: ^4.5.5
   flutter_facebook_login: ^3.0.0
   auto_animated: ^2.1.0
   map_launcher: ^0.4.5
@@ -42,6 +43,7 @@ dependencies:
   path_provider: ^1.1.0
   audioplayers: ^0.13.2
   audioplayer: ^0.8.1
+  flutter_audio_recorder: ^0.5.5
   permission_handler: ^3.0.0
   agora_rtc_engine: ^1.0.13
   chips_choice: ^1.4.1
@@ -56,7 +58,6 @@ dev_dependencies:
   test: any
   mockito: ^4.1.1
   flutter_launcher_icons: ^0.7.4
-  flutter_audio_recorder: ^0.5.5
 
 flutter_icons:
   android: true
