@@ -29,6 +29,7 @@ class ProviderListMap extends ChangeNotifier {
   int _count;
   String _finalTagsChips;
   List<String> _tagsChips = [];
+  List<DocumentSnapshot> _listMessage;
   List<String> _optionsChips = [
     'Banks',
     'Bars',
@@ -80,6 +81,10 @@ class ProviderListMap extends ChangeNotifier {
   List<String> get tagsChipsGet => _tagsChips;
 
   List<String> get optionsChipsGet => _optionsChips;
+
+  FirebaseFirestore get firestoreGet => _firestore;
+
+  List<DocumentSnapshot> get listMessageGet => _listMessage;
 
   List<Results> get placesGet => _places;
 
@@ -151,6 +156,10 @@ class ProviderListMap extends ChangeNotifier {
   void tagsChips(List<String> tagsChips) {
     _tagsChips = tagsChips;
     notifyListeners();
+  }
+
+  void listMessage(List<DocumentSnapshot> listMessage) {
+    _listMessage = listMessage;
   }
 
   void userLocation(BuildContext context) {

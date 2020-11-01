@@ -84,7 +84,7 @@ packages:
       name: cached_network_image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0+1"
+    version: "2.3.3"
   characters:
     dependency: transitive
     description:
@@ -190,13 +190,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.3"
-  dotted_border:
-    dependency: transitive
-    description:
-      name: dotted_border
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.6"
   fake_async:
     dependency: transitive
     description:
@@ -286,6 +279,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.5.5"
+  flutter_blurhash:
+    dependency: transitive
+    description:
+      name: flutter_blurhash
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.0"
   flutter_cache_manager:
     dependency: transitive
     description:
@@ -307,13 +307,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
-  flutter_instagram_stories:
-    dependency: "direct main"
-    description:
-      name: flutter_instagram_stories
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.5"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -354,6 +347,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.5.4"
+  flutter_stories:
+    dependency: "direct main"
+    description:
+      name: flutter_stories
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.1+1"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -497,13 +497,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.3-nullsafety.1"
-  json_annotation:
-    dependency: transitive
-    description:
-      name: json_annotation
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.1"
   latlong:
     dependency: "direct main"
     description:
@@ -602,6 +595,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.12"
+  octo_image:
+    dependency: transitive
+    description:
+      name: octo_image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0"
   open_iconic_flutter:
     dependency: transitive
     description:
@@ -819,13 +819,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.3"
-  skeleton_text:
-    dependency: transitive
-    description:
-      name: skeleton_text
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -977,7 +970,7 @@ packages:
       name: video_player_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.3+1"
+    version: "0.1.4"
   visibility_detector:
     dependency: transitive
     description:
@@ -998,7 +991,7 @@ packages:
       name: wakelock
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.4+1"
+    version: "0.1.4+2"
   watcher:
     dependency: transitive
     description:
@@ -1043,4 +1036,4 @@ packages:
     version: "2.2.1"
 sdks:
   dart: ">=2.10.0-110 <=2.11.0-213.1.beta"
-  flutter: ">=1.18.0-6.0.pre <2.0.0"
+  flutter: ">=1.20.0 <2.0.0"

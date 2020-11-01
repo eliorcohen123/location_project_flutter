@@ -4,8 +4,8 @@ import 'dart:ui';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:auto_animated/auto_animated.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_instagram_stories/flutter_instagram_stories.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_stories/flutter_stories.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:latlong/latlong.dart' as dis;
 import 'package:locationprojectflutter/core/constants/constants_colors.dart';
@@ -78,7 +78,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _storiesInstagram(),
+                      _stories(),
                       _dividerGrey(),
                       _chipsType(),
                       _dividerGrey(),
@@ -209,57 +209,115 @@ class _PageListMapProvState extends State<PageListMapProv> {
     );
   }
 
-  Widget _storiesInstagram() {
-    return FlutterInstagramStories(
-      collectionDbName: 'stories',
-      showTitleOnIcon: true,
-      iconTextStyle: TextStyle(
-        shadows: <Shadow>[
-          Shadow(
-            offset: Offset(ResponsiveScreen().widthMediaQuery(context, 1),
-                ResponsiveScreen().widthMediaQuery(context, 1)),
-            blurRadius: ResponsiveScreen().widthMediaQuery(context, 1),
-            color: ConstantsColors.GRAY,
-          ),
-        ],
-        fontSize: 6,
-        color: Colors.white,
-      ),
-      iconImageBorderRadius: BorderRadius.circular(30),
-      iconBoxDecoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-          Radius.circular(30),
-        ),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: ConstantsColors.BLACK2,
-            blurRadius: ResponsiveScreen().widthMediaQuery(context, 10),
-            offset: Offset(
-              ResponsiveScreen().widthMediaQuery(context, 0),
-              ResponsiveScreen().widthMediaQuery(context, 4),
+  Widget _stories() {
+    return StreamBuilder(
+      stream: _provider.firestoreGet
+          .collection('stories')
+          .orderBy('date', descending: true)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                ConstantsColors.ORANGE,
+              ),
             ),
-          ),
-        ],
-      ),
-      iconWidth: ResponsiveScreen().widthMediaQuery(context, 50),
-      iconHeight: ResponsiveScreen().widthMediaQuery(context, 50),
-      imageStoryDuration: 7,
-      progressPosition: ProgressPosition.top,
-      repeat: true,
-      inline: false,
-      languageCode: 'en',
-      backgroundColorBetweenStories: Colors.black,
-      closeButtonIcon: const Icon(
-        Icons.close,
-        color: Colors.white,
-        size: 28.0,
-      ),
-      closeButtonBackgroundColor: ConstantsColors.LIGHT_GRAY2,
-      sortingOrderDesc: true,
-      lastIconHighlight: true,
-      lastIconHighlightColor: Colors.deepOrange,
-      lastIconHighlightRadius: const Radius.circular(30),
+          );
+        } else {
+          _provider.listMessage(snapshot.data.documents);
+          final images = List.generate(
+            _provider.listMessageGet.length,
+            (idx) => Image.network(
+                _provider.listMessageGet[idx].data()['file'][0]['url']['en']),
+          );
+          return CupertinoPageScaffold(
+            child: Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(
+                    color: CupertinoColors.activeOrange,
+                    width: ResponsiveScreen().widthMediaQuery(context, 2),
+                    style: BorderStyle.solid,
+                  ),
+                ),
+                width: ResponsiveScreen().widthMediaQuery(context, 50),
+                height: ResponsiveScreen().widthMediaQuery(context, 50),
+                padding: const EdgeInsets.all(2.0),
+                child: GestureDetector(
+                  onTap: () {
+                    showCupertinoDialog(
+                      context: context,
+                      builder: (context) {
+                        return CupertinoPageScaffold(
+                          backgroundColor: Colors.black,
+                          child: Stack(
+                            children: [
+                              Story(
+                                onFlashForward: Navigator.of(context).pop,
+                                onFlashBack: Navigator.of(context).pop,
+                                momentCount: _provider.listMessageGet.length,
+                                momentDurationGetter: (idx) =>
+                                    const Duration(seconds: 5),
+                                momentBuilder: (context, idx) => images[idx],
+                              ),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Padding(
+                                  padding: EdgeInsets.all(ResponsiveScreen()
+                                      .widthMediaQuery(context, 20)),
+                                  child: ClipOval(
+                                    child: Material(
+                                      child: InkWell(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            color: Colors.blueGrey,
+                                          ),
+                                          child: const Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                            size: 28.0,
+                                          ),
+                                        ),
+                                        onTap: () =>
+                                            Navigator.of(context).pop(),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: CachedNetworkImage(
+                        fit: BoxFit.fill,
+                        imageUrl: _provider.listMessageGet[0].data()['file'][0]
+                            ['url']['en'],
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 
