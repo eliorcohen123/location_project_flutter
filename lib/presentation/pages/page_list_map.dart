@@ -219,9 +219,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
         if (!snapshot.hasData) {
           return Center(
             child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                ConstantsColors.ORANGE,
-              ),
+              valueColor: AlwaysStoppedAnimation<Color>(ConstantsColors.ORANGE),
             ),
           );
         } else {

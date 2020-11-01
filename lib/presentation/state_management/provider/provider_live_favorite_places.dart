@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:locationprojectflutter/core/constants/constants_urls_keys.dart';
-import 'package:locationprojectflutter/data/models/model_live_favorites/results_live_favorites.dart';
 import 'package:locationprojectflutter/data/models/model_stream_location/user_location.dart';
 import 'package:locationprojectflutter/presentation/widgets/widget_add_edit_favorite_places.dart';
 import 'package:provider/provider.dart';
@@ -11,31 +10,28 @@ import 'package:share/share.dart';
 
 class ProviderLiveFavoritePlaces extends ChangeNotifier {
   final String _API_KEY = ConstantsUrlsKeys.API_KEY_GOOGLE_MAPS;
-  final Stream<QuerySnapshot> _snapshots =
-      FirebaseFirestore.instance.collection('places').snapshots();
-  List<ResultsFirestore> _places = [];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool _isCheckingBottomSheet = false;
-  StreamSubscription<QuerySnapshot> _placeSub;
+  List<DocumentSnapshot> _listMessage;
   UserLocation _userLocation;
 
   String get API_KEYGet => _API_KEY;
 
-  List<ResultsFirestore> get placesGet => _places;
-
   bool get isCheckingBottomSheetGet => _isCheckingBottomSheet;
 
-  StreamSubscription<QuerySnapshot> get placeSubGet => _placeSub;
+  FirebaseFirestore get firestoreGet => _firestore;
+
+  List<DocumentSnapshot> get listMessageGet => _listMessage;
 
   UserLocation get userLocationGet => _userLocation;
-
-  void lPlaces(List<ResultsFirestore> places) {
-    _places = places;
-    notifyListeners();
-  }
 
   void isCheckingBottomSheet(bool isCheckingBottomSheet) {
     _isCheckingBottomSheet = isCheckingBottomSheet;
     notifyListeners();
+  }
+
+  void listMessage(List<DocumentSnapshot> listMessage) {
+    _listMessage = listMessage;
   }
 
   void userLocation(BuildContext context) {
@@ -61,12 +57,12 @@ class ProviderLiveFavoritePlaces extends ChangeNotifier {
                 child: ListView(
                   children: [
                     WidgetAddEditFavoritePlaces(
-                      nameList: placesGet[index].name,
-                      addressList: placesGet[index].vicinity,
-                      latList: placesGet[index].lat,
-                      lngList: placesGet[index].lng,
-                      photoList: placesGet[index].photo.isNotEmpty
-                          ? placesGet[index].photo
+                      nameList: listMessageGet[index]['name'],
+                      addressList: listMessageGet[index]['vicinity'],
+                      latList: listMessageGet[index]['lat'],
+                      lngList: listMessageGet[index]['lng'],
+                      photoList: listMessageGet[index]['photo'].isNotEmpty
+                          ? listMessageGet[index]['photo']
                           : "",
                       edit: false,
                     ),
@@ -76,28 +72,6 @@ class ProviderLiveFavoritePlaces extends ChangeNotifier {
             },
           ),
         );
-      },
-    );
-  }
-
-  void readFirebase() {
-    _placeSub?.cancel();
-    _placeSub = _snapshots.listen(
-      (QuerySnapshot snapshot) {
-        final List<ResultsFirestore> places = snapshot.docs
-            .map(
-              (documentSnapshot) =>
-                  ResultsFirestore.fromSqfl(documentSnapshot.data()),
-            )
-            .toList();
-
-        places.sort(
-          (a, b) {
-            return b.count.compareTo(a.count);
-          },
-        );
-
-        lPlaces(places);
       },
     );
   }

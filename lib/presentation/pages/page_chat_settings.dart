@@ -77,8 +77,7 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
                               strokeWidth: ResponsiveScreen()
                                   .widthMediaQuery(context, 2),
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                ConstantsColors.ORANGE,
-                              ),
+                                  ConstantsColors.ORANGE),
                             ),
                             width:
                                 ResponsiveScreen().widthMediaQuery(context, 90),
@@ -247,9 +246,8 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
           ? Container(
               child: Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    ConstantsColors.ORANGE,
-                  ),
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(ConstantsColors.ORANGE),
                 ),
               ),
               color: Colors.white.withOpacity(0.8),

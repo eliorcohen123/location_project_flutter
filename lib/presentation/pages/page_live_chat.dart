@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:locationprojectflutter/core/constants/constants_colors.dart';
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_live_chat.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/widgets/widget_app_bar_total.dart';
@@ -31,15 +32,7 @@ class _PageLiveChatProvState extends State<PageLiveChatProv> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _provider = Provider.of<ProviderLiveChat>(context, listen: false);
       _provider.initGetSharedPrefs();
-      _provider.readFirebase();
     });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    _provider.placeSubGet?.cancel();
   }
 
   @override
@@ -58,18 +51,37 @@ class _PageLiveChatProvState extends State<PageLiveChatProv> {
   }
 
   Widget _listViewData() {
-    return Expanded(
-      child: ListView.builder(
-        reverse: true,
-        itemCount: _provider.placesGet.length,
-        itemBuilder: (BuildContext ctx, int index) {
-          return _message(
-            _provider.placesGet[index].from,
-            _provider.placesGet[index].text,
-            _provider.valueUserEmailGet == _provider.placesGet[index].from,
+    return StreamBuilder(
+      stream: _provider.firestoreGet
+          .collection('liveMessages')
+          .orderBy('date', descending: true)
+          .limit(50)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(ConstantsColors.ORANGE),
+            ),
           );
-        },
-      ),
+        } else {
+          _provider.listMessage(snapshot.data.documents);
+          return Expanded(
+            child: ListView.builder(
+              reverse: true,
+              itemCount: _provider.listMessageGet.length,
+              itemBuilder: (BuildContext ctx, int index) {
+                return _message(
+                  _provider.listMessageGet[index].data()['from'],
+                  _provider.listMessageGet[index].data()['text'],
+                  _provider.valueUserEmailGet ==
+                      _provider.listMessageGet[index].data()['from'],
+                );
+              },
+            ),
+          );
+        }
+      },
     );
   }
 

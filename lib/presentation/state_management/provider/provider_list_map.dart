@@ -316,7 +316,6 @@ class ProviderListMap extends ChangeNotifier {
         _sortSearchNearby(value),
       },
     );
-    notifyListeners();
   }
 
   Future _searchNearby(bool start, bool bIsSearching, bool isSearchingAfter,

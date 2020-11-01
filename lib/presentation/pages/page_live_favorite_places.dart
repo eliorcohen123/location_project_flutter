@@ -41,15 +41,7 @@ class _PageLiveFavoritePlacesProvState
       _provider =
           Provider.of<ProviderLiveFavoritePlaces>(context, listen: false);
       _provider.isCheckingBottomSheet(false);
-      _provider.readFirebase();
     });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    _provider.placeSubGet?.cancel();
   }
 
   @override
@@ -67,43 +59,61 @@ class _PageLiveFavoritePlacesProvState
   }
 
   Widget _listViewData() {
-    return Column(
-      children: <Widget>[
-        _provider.placesGet.length == 0
-            ? const Align(
-                alignment: Alignment.center,
-                child: Text(
-                  'No Top Places',
-                  style: TextStyle(
-                    color: Colors.deepPurpleAccent,
-                    fontSize: 30,
-                  ),
-                ),
-              )
-            : Expanded(
-                child: LiveList(
-                  showItemInterval: const Duration(milliseconds: 50),
-                  showItemDuration: const Duration(milliseconds: 50),
-                  reAnimateOnVisibility: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: _provider.placesGet.length,
-                  itemBuilder: buildAnimatedItem,
-                  separatorBuilder: (context, i) {
-                    return SizedBox(
-                      height: ResponsiveScreen().heightMediaQuery(context, 5),
-                      width: double.infinity,
-                      child: const DecoratedBox(
-                        decoration: BoxDecoration(color: Colors.white),
+    return StreamBuilder(
+      stream: _provider.firestoreGet
+          .collection('places')
+          .orderBy('date', descending: true)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(ConstantsColors.ORANGE),
+            ),
+          );
+        } else {
+          _provider.listMessage(snapshot.data.documents);
+          return Column(
+            children: <Widget>[
+              _provider.listMessageGet.length == 0
+                  ? const Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'No Top Places',
+                        style: TextStyle(
+                          color: Colors.deepPurpleAccent,
+                          fontSize: 30,
+                        ),
                       ),
-                    );
-                  },
-                ),
-              ),
-      ],
+                    )
+                  : Expanded(
+                      child: LiveList(
+                        showItemInterval: const Duration(milliseconds: 50),
+                        showItemDuration: const Duration(milliseconds: 50),
+                        reAnimateOnVisibility: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: _provider.listMessageGet.length,
+                        itemBuilder: _buildAnimatedItem,
+                        separatorBuilder: (context, i) {
+                          return SizedBox(
+                            height:
+                                ResponsiveScreen().heightMediaQuery(context, 5),
+                            width: double.infinity,
+                            child: const DecoratedBox(
+                              decoration: BoxDecoration(color: Colors.white),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+            ],
+          );
+        }
+      },
     );
   }
 
-  Widget buildAnimatedItem(
+  Widget _buildAnimatedItem(
     BuildContext context,
     int index,
     Animation<double> animation,
@@ -127,8 +137,8 @@ class _PageLiveFavoritePlacesProvState
     final double _meter = _distance(
       dis.LatLng(_provider.userLocationGet.latitude,
           _provider.userLocationGet.longitude),
-      dis.LatLng(
-          _provider.placesGet[index].lat, _provider.placesGet[index].lng),
+      dis.LatLng(_provider.listMessageGet[index]['lat'],
+          _provider.listMessageGet[index]['lng']),
     );
     return Slidable(
       key: UniqueKey(),
@@ -149,10 +159,10 @@ class _PageLiveFavoritePlacesProvState
           onTap: () => {
             ShowerPages.pushPageMapList(
               context,
-              _provider.placesGet[index].name,
-              _provider.placesGet[index].vicinity,
-              _provider.placesGet[index].lat,
-              _provider.placesGet[index].lng,
+              _provider.listMessageGet[index]['name'],
+              _provider.listMessageGet[index]['vicinity'],
+              _provider.listMessageGet[index]['lat'],
+              _provider.listMessageGet[index]['lng'],
             ),
           },
         ),
@@ -161,11 +171,11 @@ class _PageLiveFavoritePlacesProvState
           icon: Icons.share,
           onTap: () => {
             _provider.shareContent(
-              _provider.placesGet[index].name,
-              _provider.placesGet[index].vicinity,
-              _provider.placesGet[index].lat,
-              _provider.placesGet[index].lng,
-              _provider.placesGet[index].photo,
+              _provider.listMessageGet[index]['name'],
+              _provider.listMessageGet[index]['vicinity'],
+              _provider.listMessageGet[index]['lat'],
+              _provider.listMessageGet[index]['lng'],
+              _provider.listMessageGet[index]['photo'],
               context,
             )
           },
@@ -182,9 +192,10 @@ class _PageLiveFavoritePlacesProvState
                     fit: BoxFit.fill,
                     height: ResponsiveScreen().heightMediaQuery(context, 150),
                     width: double.infinity,
-                    imageUrl: _provider.placesGet[index].photo.isNotEmpty
+                    imageUrl: _provider
+                            .listMessageGet[index]['photo'].isNotEmpty
                         ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                            _provider.placesGet[index].photo +
+                            _provider.listMessageGet[index]['photo'] +
                             "&key=${_provider.API_KEYGet}"
                         : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
                     placeholder: (context, url) =>
@@ -217,9 +228,9 @@ class _PageLiveFavoritePlacesProvState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    _textList(_provider.placesGet[index].name, 17.0,
+                    _textList(_provider.listMessageGet[index]['name'], 17.0,
                         ConstantsColors.LIGHT_BLUE),
-                    _textList(_provider.placesGet[index].vicinity, 15.0,
+                    _textList(_provider.listMessageGet[index]['vicinity'], 15.0,
                         Colors.white),
                     _textList(_provider.calculateDistance(_meter), 15.0,
                         Colors.white),
