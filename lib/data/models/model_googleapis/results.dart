@@ -3,7 +3,7 @@ import 'photos.dart';
 import 'geometry.dart';
 
 class Results {
-  String id;
+  String place_id;
   String name;
   String vicinity;
   Geometry geometry;
@@ -11,7 +11,7 @@ class Results {
   OpeningHours opening_hours;
 
   Results.fromJson(Map<String, dynamic> json) {
-    this.id = json['id'];
+    this.place_id = json['place_id'];
     this.name = json['name'];
     this.vicinity = json['vicinity'];
     this.geometry = Geometry.fromJson(json['geometry']);

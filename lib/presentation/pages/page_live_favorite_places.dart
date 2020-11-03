@@ -62,7 +62,7 @@ class _PageLiveFavoritePlacesProvState
     return StreamBuilder(
       stream: _provider.firestoreGet
           .collection('places')
-          .orderBy('date', descending: true)
+          .orderBy('count', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {

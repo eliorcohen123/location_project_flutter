@@ -212,7 +212,7 @@ class _PageListMapProvState extends State<PageListMapProv> {
   Widget _stories() {
     return StreamBuilder(
       stream: _provider.firestoreGet
-          .collection('stories')
+          .collection('places')
           .orderBy('date', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
@@ -226,8 +226,13 @@ class _PageListMapProvState extends State<PageListMapProv> {
           _provider.listMessage(snapshot.data.documents);
           final images = List.generate(
             _provider.listMessageGet.length,
-            (idx) => Image.network(
-                _provider.listMessageGet[idx].data()['file'][0]['url']['en']),
+            (index) => Image.network(_provider.listMessageGet[index]
+                    .data()['photo']
+                    .isNotEmpty
+                ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                    _provider.listMessageGet[index].data()['photo'] +
+                    "&key=${_provider.API_KEYGet}"
+                : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png"),
           );
           return CupertinoPageScaffold(
             child: Center(
@@ -301,8 +306,13 @@ class _PageListMapProvState extends State<PageListMapProv> {
                       borderRadius: BorderRadius.circular(30),
                       child: CachedNetworkImage(
                         fit: BoxFit.fill,
-                        imageUrl: _provider.listMessageGet[0].data()['file'][0]
-                            ['url']['en'],
+                        imageUrl: _provider.listMessageGet[0]
+                                .data()['photo']
+                                .isNotEmpty
+                            ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                                _provider.listMessageGet[0].data()['photo'] +
+                                "&key=${_provider.API_KEYGet}"
+                            : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
                         placeholder: (context, url) =>
                             const CircularProgressIndicator(),
                         errorWidget: (context, url, error) =>

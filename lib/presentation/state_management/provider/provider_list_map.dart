@@ -208,7 +208,7 @@ class ProviderListMap extends ChangeNotifier {
     isActiveNav(true);
 
     DocumentReference document =
-        _firestore.collection('places').doc(_places[index].id);
+        _firestore.collection('places').doc(_places[index].place_id);
     document.get().then(
       (document) {
         if (document.exists) {
@@ -223,69 +223,32 @@ class ProviderListMap extends ChangeNotifier {
   }
 
   void _addToFirebase(int index, int count, BuildContext context) async {
-    DateTime now = DateTime.now();
-
-    Map<String, dynamic> dataFile = Map();
-    dataFile["filetype"] = 'image';
-    dataFile["url"] = {
-      'en': _places[index].photos.isNotEmpty
-          ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-              _places[index].photos[0].photo_reference +
-              "&key=$_API_KEY"
-          : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
-    };
-
-    var listFile = List<Map<String, dynamic>>();
-    listFile.add(dataFile);
-
-    await _firestore
-        .collection("stories")
-        .doc(_places[index].id)
-        .set(
-          {
-            "date": now,
-            "file": listFile,
-            "previewImage": _places[index].photos.isNotEmpty
-                ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                    _places[index].photos[0].photo_reference +
-                    "&key=$_API_KEY"
-                : "https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png",
-            "previewTitle": {'en': _places[index].name},
-          },
-        )
-        .then(
-          (result) async => {
-            await _firestore.collection("places").doc(_places[index].id).set(
-              {
-                "date": now,
-                'idLive': _places[index].id,
-                'count': count != null ? count + 1 : 1,
-                "name": _places[index].name,
-                "vicinity": _places[index].vicinity,
-                "lat": _places[index].geometry.location.lat,
-                "lng": _places[index].geometry.location.lng,
-                "photo": _places[index].photos.isNotEmpty
-                    ? _places[index].photos[0].photo_reference
-                    : "",
-              },
-            ).then(
-              (result) => {
-                isActiveNav(false),
-                print(isActiveNavGet),
-                ShowerPages.pushPageMapList(
-                  context,
-                  _places[index].name,
-                  _places[index].vicinity,
-                  _places[index].geometry.location.lat,
-                  _places[index].geometry.location.lng,
-                ),
-              },
-            )
-          },
-        )
-        .catchError(
-          (err) => print(err),
-        );
+    await _firestore.collection("places").doc(_places[index].place_id).set(
+      {
+        "date": DateTime.now(),
+        'idLive': _places[index].place_id,
+        'count': count != null ? count + 1 : 1,
+        "name": _places[index].name,
+        "vicinity": _places[index].vicinity,
+        "lat": _places[index].geometry.location.lat,
+        "lng": _places[index].geometry.location.lng,
+        "photo": _places[index].photos.isNotEmpty
+            ? _places[index].photos[0].photo_reference
+            : "",
+      },
+    ).then(
+      (result) => {
+        isActiveNav(false),
+        print(isActiveNavGet),
+        ShowerPages.pushPageMapList(
+          context,
+          _places[index].name,
+          _places[index].vicinity,
+          _places[index].geometry.location.lat,
+          _places[index].geometry.location.lng,
+        ),
+      },
+    );
   }
 
   String calculateDistance(double _meter) {
