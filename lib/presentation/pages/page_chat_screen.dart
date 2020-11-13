@@ -236,9 +236,11 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
                     ? _provider.startRecord()
                     : _provider.stopRecord(context, widget.peerId),
           ),
-          Flexible(
+          Expanded(
             child: Container(
               child: TextField(
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
                 style: TextStyle(
                   color: ConstantsColors.DARK_BLUE,
                   fontSize: 15.0,

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:ui';
@@ -376,8 +377,10 @@ class _PageListMapProvState extends State<PageListMapProv> {
         child: InkWell(
           child: Container(
             child: IconButton(
-              icon: SvgPicture.asset(
-                  _provider.isDisplayGridGet ? showTrue : showFalse),
+              icon: !kIsWeb
+                  ? SvgPicture.asset(
+                      _provider.isDisplayGridGet ? showTrue : showFalse)
+                  : Container(),
               onPressed: () {
                 _provider.isDisplayGrid(isDisplayGrid);
               },
