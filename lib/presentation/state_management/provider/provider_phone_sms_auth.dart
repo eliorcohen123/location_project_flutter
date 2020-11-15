@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
+import 'package:locationprojectflutter/presentation/utils/validations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProviderPhoneSMSAuth extends ChangeNotifier {
@@ -216,6 +217,39 @@ class ProviderPhoneSMSAuth extends ChangeNotifier {
     } else {
       isSuccess(false);
       isLoading(false);
+    }
+  }
+
+  void buttonClickSendSms() {
+    if (formKeyPhoneGet.currentState.validate()) {
+      if (phoneControllerGet.text.isNotEmpty) {
+        if (Validations().validatePhone(phoneControllerGet.text)) {
+          isLoading(true);
+          textError('');
+          textOk('');
+
+          verifyPhoneNumber();
+        } else if (!Validations().validatePhone(phoneControllerGet.text)) {
+          isSuccess(false);
+          textError('Invalid Phone');
+        }
+      }
+    }
+  }
+
+  void buttonClickLogin(BuildContext context) {
+    if (formKeySmsGet.currentState.validate()) {
+      if (smsController1Get.text.isNotEmpty &&
+          smsController2Get.text.isNotEmpty &&
+          smsController3Get.text.isNotEmpty &&
+          smsController4Get.text.isNotEmpty &&
+          smsController5Get.text.isNotEmpty &&
+          smsController6Get.text.isNotEmpty) {
+        isLoading(true);
+        textError('');
+
+        signInWithPhoneNumber(context);
+      }
     }
   }
 

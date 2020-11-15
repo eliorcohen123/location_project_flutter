@@ -5,7 +5,7 @@ import 'package:locationprojectflutter/core/constants/constants_font_families.da
 import 'package:locationprojectflutter/presentation/state_management/provider/provider_phone_sms_auth.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:locationprojectflutter/presentation/utils/utils_app.dart';
-import 'package:locationprojectflutter/presentation/utils/validations.dart';
+import 'package:locationprojectflutter/presentation/widgets/widget_btn_firebase.dart';
 import 'package:locationprojectflutter/presentation/widgets/widget_tff_firebase.dart';
 import 'package:provider/provider.dart';
 
@@ -172,49 +172,12 @@ class _PagePhoneSMSAuthProvState extends State<PagePhoneSMSAuthProv> {
   Widget _buttonSendSms() {
     return Padding(
       padding: EdgeInsets.only(
-        left: ResponsiveScreen().widthMediaQuery(context, 20),
-        right: ResponsiveScreen().widthMediaQuery(context, 20),
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
-      child: Container(
-        height: ResponsiveScreen().heightMediaQuery(context, 50),
-        width: MediaQuery.of(context).size.width,
-        child: RaisedButton(
-          highlightElevation: 0.0,
-          splashColor: Colors.greenAccent,
-          highlightColor: Colors.lightGreenAccent,
-          elevation: 0.0,
-          color: Colors.greenAccent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
-          ),
-          child: const Text(
-            'Send SMS',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              fontSize: 20,
-            ),
-          ),
-          onPressed: () {
-            if (_provider.formKeyPhoneGet.currentState.validate()) {
-              if (_provider.phoneControllerGet.text.isNotEmpty) {
-                if (Validations()
-                    .validatePhone(_provider.phoneControllerGet.text)) {
-                  _provider.isLoading(true);
-                  _provider.textError('');
-                  _provider.textOk('');
-
-                  _provider.verifyPhoneNumber();
-                } else if (!Validations()
-                    .validatePhone(_provider.phoneControllerGet.text)) {
-                  _provider.isSuccess(false);
-                  _provider.textError('Invalid Phone');
-                }
-              }
-            }
-          },
-        ),
+          left: ResponsiveScreen().widthMediaQuery(context, 20),
+          right: ResponsiveScreen().widthMediaQuery(context, 20),
+          bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: WidgetBtnFirebase(
+        text: 'Send SMS',
+        onTap: () => _provider.buttonClickSendSms(),
       ),
     );
   }
@@ -222,46 +185,12 @@ class _PagePhoneSMSAuthProvState extends State<PagePhoneSMSAuthProv> {
   Widget _buttonLogin() {
     return Padding(
       padding: EdgeInsets.only(
-        left: ResponsiveScreen().widthMediaQuery(context, 20),
-        right: ResponsiveScreen().widthMediaQuery(context, 20),
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
-      child: Container(
-        height: ResponsiveScreen().heightMediaQuery(context, 50),
-        width: MediaQuery.of(context).size.width,
-        child: RaisedButton(
-          highlightElevation: 0.0,
-          splashColor: Colors.greenAccent,
-          highlightColor: Colors.lightGreenAccent,
-          elevation: 0.0,
-          color: Colors.greenAccent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
-          ),
-          child: const Text(
-            'Login after SMS',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              fontSize: 20,
-            ),
-          ),
-          onPressed: () {
-            if (_provider.formKeySmsGet.currentState.validate()) {
-              if (_provider.smsController1Get.text.isNotEmpty &&
-                  _provider.smsController2Get.text.isNotEmpty &&
-                  _provider.smsController3Get.text.isNotEmpty &&
-                  _provider.smsController4Get.text.isNotEmpty &&
-                  _provider.smsController5Get.text.isNotEmpty &&
-                  _provider.smsController6Get.text.isNotEmpty) {
-                _provider.isLoading(true);
-                _provider.textError('');
-
-                _provider.signInWithPhoneNumber(context);
-              }
-            }
-          },
-        ),
+          left: ResponsiveScreen().widthMediaQuery(context, 20),
+          right: ResponsiveScreen().widthMediaQuery(context, 20),
+          bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: WidgetBtnFirebase(
+        text: 'Login after SMS',
+        onTap: () => _provider.buttonClickLogin(context),
       ),
     );
   }
