@@ -34,8 +34,9 @@ class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
   void initState() {
     super.initState();
 
+    _provider = Provider.of<ProviderFavoritesPlaces>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _provider = Provider.of<ProviderFavoritesPlaces>(context, listen: false);
       _provider.isCheckingBottomSheet(false);
       _provider.getItems();
     });

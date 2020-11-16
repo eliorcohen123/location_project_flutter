@@ -30,8 +30,9 @@ class _PageChatSettingsProvState extends State<PageChatSettingsProv> {
   void initState() {
     super.initState();
 
+    _provider = Provider.of<ProviderSettingsChat>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _provider = Provider.of<ProviderSettingsChat>(context, listen: false);
       _provider.initControllerTextEditing();
     });
   }

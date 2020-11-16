@@ -29,8 +29,9 @@ class _PageLiveChatProvState extends State<PageLiveChatProv> {
   void initState() {
     super.initState();
 
+    _provider = Provider.of<ProviderLiveChat>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _provider = Provider.of<ProviderLiveChat>(context, listen: false);
       _provider.initGetSharedPrefs();
     });
   }

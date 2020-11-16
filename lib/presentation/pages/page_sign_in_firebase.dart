@@ -32,8 +32,9 @@ class _PageSignInFirebaseProvState extends State<PageSignInFirebaseProv> {
   void initState() {
     super.initState();
 
+    _provider = Provider.of<ProviderSignInFirebase>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _provider = Provider.of<ProviderSignInFirebase>(context, listen: false);
       _provider.checkUserLogin(context);
       _provider.initGetSharedPrefs();
       _provider.isSuccess(null);

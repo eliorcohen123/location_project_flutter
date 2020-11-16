@@ -37,9 +37,9 @@ class _PageLiveFavoritePlacesProvState
   void initState() {
     super.initState();
 
+    _provider = Provider.of<ProviderLiveFavoritePlaces>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _provider =
-          Provider.of<ProviderLiveFavoritePlaces>(context, listen: false);
       _provider.isCheckingBottomSheet(false);
     });
   }

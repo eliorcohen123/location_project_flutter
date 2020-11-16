@@ -33,9 +33,10 @@ class _PageRegisterEmailFirebaseProvState
   void initState() {
     super.initState();
 
+    _provider =
+        Provider.of<ProviderRegisterEmailFirebase>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _provider =
-          Provider.of<ProviderRegisterEmailFirebase>(context, listen: false);
       _provider.initGetSharedPrefs();
       _provider.isSuccess(null);
       _provider.isLoading(false);

@@ -31,8 +31,9 @@ class _PageHomeChatProvState extends State<PageHomeChatProv> {
   void initState() {
     super.initState();
 
+    _provider = Provider.of<ProviderHomeChat>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _provider = Provider.of<ProviderHomeChat>(context, listen: false);
       _provider.initGetSharedPrefs();
       _provider.initNotifications();
     });

@@ -51,8 +51,9 @@ class _PageChatScreenProvState extends State<PageChatScreenProv> {
   void initState() {
     super.initState();
 
+    _provider = Provider.of<ProviderChatScreen>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _provider = Provider.of<ProviderChatScreen>(context, listen: false);
       _provider.initGetSharedPrefs(widget.peerId);
       _provider.isShowSticker(false);
       _provider.recordingStatus(rec.RecordingStatus.Initialized);

@@ -52,8 +52,9 @@ class _PageMapListProvState extends State<PageMapListProv> {
   void initState() {
     super.initState();
 
+    _provider = Provider.of<ProviderMapList>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _provider = Provider.of<ProviderMapList>(context, listen: false);
       _provider.initGetSharedPrefs();
       _provider.initMarker(widget.nameList, widget.vicinityList, widget.latList,
           widget.lngList, context);

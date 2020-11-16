@@ -45,8 +45,9 @@ class _PageVideoCallProvState extends State<PageVideoCallProv> {
   void initState() {
     super.initState();
 
+    _provider = Provider.of<ProviderVideoCall>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _provider = Provider.of<ProviderVideoCall>(context, listen: false);
       _provider.isMuted(false);
       _provider.infoStringsClear();
       _provider.usersClear();

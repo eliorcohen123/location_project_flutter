@@ -32,8 +32,9 @@ class _PagePhoneSMSAuthProvState extends State<PagePhoneSMSAuthProv> {
   void initState() {
     super.initState();
 
+    _provider = Provider.of<ProviderPhoneSMSAuth>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _provider = Provider.of<ProviderPhoneSMSAuth>(context, listen: false);
       _provider.initGetSharedPrefs();
       _provider.isSuccess(null);
       _provider.isLoading(false);

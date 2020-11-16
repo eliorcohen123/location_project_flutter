@@ -30,8 +30,9 @@ class _PageCustomMapListProvState extends State<PageCustomMapListProv> {
   void initState() {
     super.initState();
 
+    _provider = Provider.of<ProviderCustomMapList>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _provider = Provider.of<ProviderCustomMapList>(context, listen: false);
       _provider.isCheckingBottomSheet(false);
       _provider.clearMarkers();
     });

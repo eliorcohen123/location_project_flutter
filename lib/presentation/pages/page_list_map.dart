@@ -40,8 +40,9 @@ class _PageListMapProvState extends State<PageListMapProv> {
   void initState() {
     super.initState();
 
+    _provider = Provider.of<ProviderListMap>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _provider = Provider.of<ProviderListMap>(context, listen: false);
       _provider.initGetSharedPrefs();
       _provider.isCheckingBottomSheet(false);
       _provider.isSearching(true);
