@@ -100,17 +100,21 @@ class ProviderPhoneSMSAuth extends ChangeNotifier {
     notifyListeners();
   }
 
-  void verifyPhoneNumber() async {
+  void _verifyPhoneNumber(BuildContext context) async {
     final PhoneVerificationCompleted verificationCompleted =
-        (AuthCredential phoneAuthCredential) {
-      _auth.signInWithCredential(phoneAuthCredential).catchError(
+        (AuthCredential phoneAuthCredential) async {
+      UserCredential result =
+          await _auth.signInWithCredential(phoneAuthCredential).catchError(
         (error) {
-          isSuccess(false);
-          isLoading(false);
           textError(error.message);
         },
       );
-      textOk('Received phone auth credential: $phoneAuthCredential');
+
+      final User user = result.user;
+      if (user != null) {
+        ShowerPages.pushRemoveReplacementPageListMap(context);
+      }
+
       isSuccess(false);
       isLoading(false);
     };
@@ -220,7 +224,7 @@ class ProviderPhoneSMSAuth extends ChangeNotifier {
     }
   }
 
-  void buttonClickSendSms() {
+  void buttonClickSendSms(BuildContext context) {
     if (formKeyPhoneGet.currentState.validate()) {
       if (phoneControllerGet.text.isNotEmpty) {
         if (Validations().validatePhone(phoneControllerGet.text)) {
@@ -228,7 +232,7 @@ class ProviderPhoneSMSAuth extends ChangeNotifier {
           textError('');
           textOk('');
 
-          verifyPhoneNumber();
+          _verifyPhoneNumber(context);
         } else if (!Validations().validatePhone(phoneControllerGet.text)) {
           isSuccess(false);
           textError('Invalid Phone');

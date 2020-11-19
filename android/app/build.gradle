@@ -13,12 +13,12 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '53'
+    flutterVersionCode = '54'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '53.0'
+    flutterVersionName = '54.0'
 }
 
 apply plugin: 'com.android.application'
@@ -39,7 +39,7 @@ android {
     }
 
     lintOptions {
-        disable 'InvalidPackage'
+        checkReleaseBuilds false
     }
 
     defaultConfig {
@@ -47,8 +47,8 @@ android {
         applicationId "com.eliorcohen.locationprojectflutter"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode '53'.toInteger()
-        versionName '53.0.0'
+        versionCode '54'.toInteger()
+        versionName '54.0.0'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }

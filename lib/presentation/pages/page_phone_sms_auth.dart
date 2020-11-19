@@ -178,7 +178,7 @@ class _PagePhoneSMSAuthProvState extends State<PagePhoneSMSAuthProv> {
           bottom: MediaQuery.of(context).viewInsets.bottom),
       child: WidgetBtnFirebase(
         text: 'Send SMS',
-        onTap: () => _provider.buttonClickSendSms(),
+        onTap: () => _provider.buttonClickSendSms(context),
       ),
     );
   }
