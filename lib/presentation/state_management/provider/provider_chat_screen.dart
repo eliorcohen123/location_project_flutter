@@ -130,7 +130,7 @@ class ProviderChatScreen extends ChangeNotifier {
                       child: RaisedButton(
                         highlightElevation: 0.0,
                         splashColor: Colors.deepPurpleAccent,
-                        highlightColor: Colors.deepPurpleAccent,
+                        highlightColor: Colors.purpleAccent,
                         elevation: 0.0,
                         color: Colors.deepPurpleAccent,
                         shape: RoundedRectangleBorder(
