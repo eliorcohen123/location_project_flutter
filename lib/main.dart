@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'presentation/pages/page_sign_in_firebase.dart';
-import 'presentation/state_management/provider/provider_favorites_places.dart';
+import 'presentation/state_management/provider/provider_favorite_places.dart';
 import 'presentation/state_management/provider/provider_chat_screen.dart';
 import 'presentation/state_management/provider/provider_custom_map_list.dart';
 import 'presentation/state_management/provider/provider_home_chat.dart';
@@ -42,8 +42,8 @@ class MyApp extends StatelessWidget {
         StreamProvider<UserLocation>(
           create: (context) => LocationService().locationStream,
         ),
-        ChangeNotifierProvider<ProviderFavoritesPlaces>(
-          create: (context) => ProviderFavoritesPlaces(),
+        ChangeNotifierProvider<ProviderFavoritePlaces>(
+          create: (context) => ProviderFavoritePlaces(),
         ),
         ChangeNotifierProvider<ProviderChatScreen>(
           create: (context) => ProviderChatScreen(),

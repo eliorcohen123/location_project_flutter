@@ -6,7 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:locationprojectflutter/core/constants/constants_colors.dart';
 import 'package:locationprojectflutter/presentation/utils/shower_pages.dart';
-import 'package:locationprojectflutter/presentation/state_management/provider/provider_favorites_places.dart';
+import 'package:locationprojectflutter/presentation/state_management/provider/provider_favorite_places.dart';
 import 'package:locationprojectflutter/presentation/utils/responsive_screen.dart';
 import 'package:latlong/latlong.dart' as dis;
 import 'package:provider/provider.dart';
@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 class PageFavoritePlaces extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ProviderFavoritesPlaces>(
+    return Consumer<ProviderFavoritePlaces>(
       builder: (context, results, child) {
         return PageFavoritePlacesProv();
       },
@@ -28,13 +28,13 @@ class PageFavoritePlacesProv extends StatefulWidget {
 }
 
 class _PageFavoritePlacesProvState extends State<PageFavoritePlacesProv> {
-  ProviderFavoritesPlaces _provider;
+  ProviderFavoritePlaces _provider;
 
   @override
   void initState() {
     super.initState();
 
-    _provider = Provider.of<ProviderFavoritesPlaces>(context, listen: false);
+    _provider = Provider.of<ProviderFavoritePlaces>(context, listen: false);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _provider.isCheckingBottomSheet(false);

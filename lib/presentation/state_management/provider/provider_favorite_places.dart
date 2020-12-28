@@ -8,7 +8,7 @@ import 'package:locationprojectflutter/presentation/widgets/widget_add_edit_favo
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
-class ProviderFavoritesPlaces extends ChangeNotifier {
+class ProviderFavoritePlaces extends ChangeNotifier {
   final String _API_KEY = ConstantsUrlsKeys.API_KEY_GOOGLE_MAPS;
   SQFLiteHelper _db = SQFLiteHelper();
   bool _isCheckingBottomSheet = false;
@@ -55,9 +55,9 @@ class ProviderFavoritesPlaces extends ChangeNotifier {
             _resultsSqfl.add(
               ResultsSqfl.fromSqfl(result),
             );
-            notifyListeners();
           },
         );
+        notifyListeners();
       },
     );
   }
